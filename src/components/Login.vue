@@ -19,141 +19,135 @@
 				<div class="row"><span><a href="#">Forgot Password?</a></span></div>
 				<div class="row"><button type = "submit">Sign In</button></div>
 				<div class="row"><label>Or</label></div>
-				<router-link to="/register" tag="button">Sign Up</router-link>
-				<!-- <div class="row"><button v-on:click="" >Sign Up</button></div> -->
-		
+				<!-- <router-link to="/register" tag="button">Sign Up</router-link> -->
+				<div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
 		</div>
 	</div>
 	</form>
-
 </template>
 
 <script>
 export default {
 	name: 'LoginComponent',
-  	data: function() {
+  	data() {
       return {
 		errors: [],
 		name: null,
     pswd: null
-    }
+    };
   },
   methods:{
-    checkForm: function(e) {
-      /* if (this.name && this.pswd) {
-        return true;
-      } */
-
+    checkForm() {
       this.errors = [];
-
       if (!this.name) {
         this.errors.push('Name required.');
       }
       if (!this.pswd) {
         this.errors.push('Password required.');
       }
-
-      else{
-        this.$router.push("/welcome");
-      }
       if(this.errors.length == 0)
       {
-        this.$router.push("/welcome"); 
+        this.$router.push("/welcome");
+        //this.$router.push({name: 'welcome'});
+        this.$router.go();
       }
       //console.log("checkform WORKS");
-      e.preventDefault();
+      //e.preventDefault();
+    },
+    registerClicked() {
+      this.$router.push("/register")
     }
   },
   mounted() {
-            //console.log("IT WORKS");
-        }
-}
+    //console.log("IT WORKS");
+  }
+};
 </script>
 
 <style scoped>
-/* Bordered form */
-form {
-  /* border: 3px solid #f1f1f1; */
-  height:auto;
-  width:auto;
-  
-}
+  /* Bordered form */
+  form {
+    /* border: 3px solid #f1f1f1; */
+    height:auto;
+    width:auto;
+    
+  }
 
-/* Full-width inputs */
-input[type=text], input[type=password] {
-  border-radius: 5px;
-  padding: 15px 20px;
-  margin: 20px 20px;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  align-content: center;
-}
+  /* Full-width inputs */
+  input[type=text], input[type=password] {
+    border-radius: 5px;
+    padding: 15px 20px;
+    margin: 20px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    align-content: center;
+  }
 
-/* Set a style for all buttons */
-button {
-  background-color: #2C5B7F;
-  color: #E9972D;
-  font:bold;
-  padding: 14px 20px;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border: none;
-  cursor: pointer;
-  border-radius: 15px;
-}
+  /* Set a style for all buttons */
+  button {
+    background-color: #2C5B7F;
+    color: #E9972D;
+    font:bold;
+    padding: 14px 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+  }
 
-/* Add a hover effect for buttons */
-button:hover {
-  opacity: 0.8;
-}
+  /* Add a hover effect for buttons */
+  button:hover {
+    opacity: 0.8;
+  }
 
-/* Center the avatar image inside this container */
-.imgcontainer, img {
- height: 100%;
- width: 100%;
-}
+  /* Center the avatar image inside this container */
+  .imgcontainer, img {
+  height: 100%;
+  width: 100%;
+  }
 
 
-/* Add padding to containers */
-.container {
-  border-radius: 25px;
-  border: 1px solid;
-  padding: 20px 20px;
-  width: 40%;
-  display: inline-block
-}
+  /* Add padding to containers */
+  .container {
+    border-radius: 25px;
+    border: 1px solid;
+    padding: 20px 20px;
+    width: 40%;
+    display: inline-block
+  }
 
-.error {
-  padding: 20px 100px;
-  color: red;
-}
+  .error {
+    padding: 20px 100px;
+    color: red;
+  }
 
-ul{
-list-style: none;
-} 
+  ul{
+  list-style: none;
+  } 
 
-li span {
-  width : 70%;
-  padding-left: 100px;
-  padding-right: 100px;
-}
+  li span {
+    width : 70%;
+    padding-left: 100px;
+    padding-right: 100px;
+  }
 
-p {
-  width:70%;
-  text-align: center;
-  margin:auto;
-}
+  p {
+    width:70%;
+    text-align: center;
+    margin:auto;
+  }
 
-.form {
-  text-align: center;
-}
+  .form {
+    text-align: center;
+  }
 
-.row {
-  text-align: center;
-  padding:5px 10px;
-}
+  .row {
+    text-align: center;
+    padding:5px 10px;
+  }
 
 </style>

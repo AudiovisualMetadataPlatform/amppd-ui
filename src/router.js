@@ -15,13 +15,13 @@ export default new Router({
       path: "/register",
       name: "register",
       component: () =>
-        import(/* webpackChunkName: "about" */ "./components/Register.vue")
+        import("./components/Register.vue")
     },
     {
       path: "/welcome",
       name: "welcome",
       component: () =>
-        import(/* webpackChunkName: "about" */ "./components/Welcome.vue")
+        import("./components/Welcome.vue")
     }
     // {
     //   path: '/about',
