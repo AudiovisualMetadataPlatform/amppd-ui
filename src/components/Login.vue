@@ -24,7 +24,7 @@
 		</div>
 	</div>
 	</form>
-</template>
+</template>  
 
 <script>
 export default {
