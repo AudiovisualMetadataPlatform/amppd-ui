@@ -2,7 +2,7 @@
 	<form id="register" v-on:submit="validateRegisterForm" action="WelcomeComponent/welcome.html" method="post">
 	<div class="form">
 		<div class="imgcontainer">
-			<img src="Images/amp_header.png" >
+			<img src="../assets/amp_horizontal.jpg" >
 		</div>
 	<div class="error">
 	<p v-if="errors.length">
@@ -34,7 +34,8 @@
     }
   },
   methods:{
-    validateRegisterForm() {
+    validateRegisterForm(event) {
+      event.preventDefault();
       this.errors = [];
       if (!this.name) {
         this.errors.push('Name required.');

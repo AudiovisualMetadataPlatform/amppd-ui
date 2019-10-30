@@ -2,7 +2,7 @@
 	<form id="app" v-on:submit="signout" action="index.html" method="post">
 	<div class="form">
 		<div class="imgcontainer">
-			<img src="Images/amp_header.png" >
+			<img src="../assets/amp_horizontal.jpg" >
 		</div>
 		<div class="container" id="welcome">
 				<div class="row"><h1>Welcome to AMP!</h1> </div>
