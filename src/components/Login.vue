@@ -1,5 +1,5 @@
 <template id = "app">
-	<form id="app" v-on:submit="checkForm" action="/RegisterComponent/register.html" method="post">
+	<form id="app" v-on:submit="checkForm">
 	<div class="form">
 		<div class="imgcontainer">
 			<img src="../assets/amp_horizontal.jpg" >
@@ -37,7 +37,8 @@ export default {
     };
   },
   methods:{
-    checkForm() {
+    checkForm(event) {
+      event.preventDefault();
       this.errors = [];
       if (!this.name) {
         this.errors.push('Name required.');
@@ -49,10 +50,8 @@ export default {
       {
         this.$router.push("/welcome");
         //this.$router.push({name: 'welcome'});
-        this.$router.go();
       }
       //console.log("checkform WORKS");
-      //e.preventDefault();
     },
     registerClicked() {
       this.$router.push("/register")
