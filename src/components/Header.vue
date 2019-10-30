@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-      <img alt="AMP Logo" src="../assets/amp_horizontal.jpg">
+      <img alt="AMP Logo" src="../assets/amp_horizontal_cropped.jpg">
   </div>
 </template>
 

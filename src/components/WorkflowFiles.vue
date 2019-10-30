@@ -1,28 +1,59 @@
 <template>
   <div>
     <div class="file-selection">
-      <span class="sub-header">Primary files to include in batch WF Submission</span>
-      <i id="addFile" class="fa fa-plus" v-on:click="addFiles"></i>
-      <div v-for="(value, index) in object">
-      {{ index }} {{ value }}
-    </div>
+      <div class="sub-header-container">
+        <span class="section-title">Primary files to include in batch WF submission</span>
+        <i id="addFile" class="fa fa-plus" v-on:click="addFiles"></i>
+      </div>
+      <div class="file-container">
+        <div v-for="(file, index) in files" v-bind:key="index" class="file" href="javascript:void(0)">
+          <span class="file-name">{{file.name}}</span>
+          <i class="remove-file fa fa-minus-circle" v-on:click="deleteFile(file.id)"></i>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { get, sync } from 'vuex-pathify';
 export default {
   name: 'FileSelection',
   props: {
   },
   data(){
     return {
-      files: []
+      fileIndex: 1
     }
   },
+  computed: {
+      files: sync('files')
+  },
   methods:{
+    // TEMPORARY:  Generate a pseudo file
+    generateFile(){
+      let self = this;
+      var file = {
+        name: "File " + self.fileIndex,
+        id: self.fileIndex
+      };
+      self.fileIndex++;
+      return file;
+    },
     addFiles(){
-      console.log("Adding file...")
+      let self = this;
+      // THIS IS TEMPORARY.  SHOULD BE REPLACED WITH MODAL FXN
+      self.files.push(self.generateFile());
+    },
+    deleteFile(id){
+      let self = this;
+      console.log("deleting file " + id);
+      for( var i = 0; i < self.files.length; i++){ 
+        if (self.files[i].id === id) {
+          console.log("deleting");
+          self.files.splice(i, 1); 
+        }
+      }
     }
   }
 }
@@ -32,16 +63,42 @@ export default {
 <style scoped>
   .file-selection{
     min-height:200px;
-    background-color:white;
+    padding:0 30px;
   }
-  .sub-header{
-    margin-right: 10px;
+  .sub-header-container{
+    padding-bottom:20px;
+    display:flex;
+    flex-basis: row;
+  }
+  .section-title{
+    margin-right: 20px;
+    font-size: 14px;
   }
   #addFile{
     font-weight: 700;
   }
-  #addFile:hover{
+  i:hover{
     background-color:#133C4E;
     color:white;
+  }
+  i{
+    
+    padding:2px;
+    font-size:12px;
+  }
+  .file-name{
+    width:250px;
+  }
+  .file{
+    color: #000000;
+    text-align: left;
+    font-size:13px;
+    padding: 5px 5px 5px 5px;
+    background-color:#eff0f1;
+    width:300px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #000000;
+
   }
 </style>

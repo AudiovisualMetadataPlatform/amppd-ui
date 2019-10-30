@@ -22,6 +22,12 @@ export default new Router({
       name: "welcome",
       component: () =>
         import("./components/Welcome.vue")
+    },
+    {
+      path: "/workflow",
+      name: "workflow",
+      component: () =>
+        import("./components/Workflow.vue")
     }
     // {
     //   path: '/about',

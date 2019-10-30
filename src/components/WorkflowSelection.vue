@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>Workflow selection</h2>
     <div class="workflow-selection">
       <select id="workflows" v-on:change="selection">
         <option value="None">Select a workflow...</option>
@@ -13,26 +12,29 @@
 </template>
 
 <script>
+import { get, sync } from 'vuex-pathify'
 export default {
   name: 'WorkflowSelection',
   props: {
   },
-  data(){
+  data() {
     return {
-      selectedWorkflow: null
     }
   },
+  computed:{
+      selectedWorkflow: sync('selectedWorkflow')
+  },
   methods:{
-    getWorkflows(){
+    getWorkflows() {
       console.log("Getting workflows");
     },
-    selection(event){
+    selection(event) {
       let self = this;
       self.selectedWorkflow = event.target.value;
       console.log("Selection changed to: " + self.selectedWorkflow);
     }
   },
-  mounted(){
+  mounted() {
     let self = this;
     self.getWorkflows();
   }
@@ -43,14 +45,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .workflow-selection{
-    height:125px;
-    background-color: aqua;
+    height:70px;
     display:flex;
-    align-items: center;
-    justify-content:center;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding:0 30px;
   }
   #workflows{
-    width: 200px;
+    width: 310px;
     padding:3px;
     margin-right:10px;
   }
