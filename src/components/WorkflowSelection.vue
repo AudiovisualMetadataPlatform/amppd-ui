@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { get, sync } from 'vuex-pathify'
+import { sync } from 'vuex-pathify'
 export default {
   name: 'WorkflowSelection',
   props: {
@@ -27,6 +27,7 @@ export default {
   methods:{
     getWorkflows() {
       console.log("Getting workflows");
+      //axios.get('/amp/workflows/list', {});
     },
     selection(event) {
       let self = this;

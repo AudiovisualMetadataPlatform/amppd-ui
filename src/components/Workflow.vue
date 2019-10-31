@@ -1,41 +1,46 @@
 <template>
-  <div class="workflow-content">
-    <h1>Workflow Submission</h1>
-    <div class="workflow-body">
-      <div class="left-pane">
-        <WorkflowSelection/>
-        <WorkflowFiles/>
-      </div>
-      <div class="right-pane">
-        <div>
-          <h2>Workflow Node Parameters</h2>
-          <div class="workflow-parameter-nodes">
-            <div v-for="(node, index) in parameters" v-bind:key="index" class="node">
-                  <div class="node-name">Node: {{node.nodeName}}</div>
-                  <div class="parameters" v-for="(parameter, subindex) in node.params" v-bind:key="subindex" >
-                    <span class="parameter-name">{{parameter.name}}</span> <input type="text" />
-                  </div>
+  <div>
+    <Header />
+    <div class="workflow-content">
+      <h1>Workflow Submission</h1>
+      <div class="workflow-body">
+        <div class="left-pane">
+          <WorkflowSelection/>
+          <WorkflowFiles/>
+        </div>
+        <div class="right-pane">
+          <div>
+            <h2>Workflow Node Parameters</h2>
+            <div class="workflow-parameter-nodes">
+              <div v-for="(node, index) in parameters" v-bind:key="index" class="node">
+                    <div class="node-name">Node: {{node.nodeName}}</div>
+                    <div class="parameters" v-for="(parameter, subindex) in node.params" v-bind:key="subindex" >
+                      <span class="parameter-name">{{parameter.name}}</span> <input type="text" />
+                    </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="workflow-submit">
-            <input v-on:click="submit" type="button" value="Submit" class="primary-button">
+          <div class="workflow-submit">
+              <input v-on:click="submit" type="button" value="Submit" class="primary-button">
+          </div>
         </div>
       </div>
-    </div>
 
+    </div>
   </div>
 </template>
 
 <script>
 import WorkflowSelection from '@/components/WorkflowSelection.vue'
 import WorkflowFiles from '@/components/WorkflowFiles.vue'
+import Header from '@/components/Header.vue'
 import { sync } from 'vuex-pathify'
 export default {
   name: 'Workflow',
   components:{
     WorkflowSelection,
-    WorkflowFiles
+    WorkflowFiles,
+    Header
   },
   data(){
     return {
@@ -77,7 +82,7 @@ h2{
   margin-top: 0;
 }
 .workflow-content{
-  padding-top:20px;
+  padding-top:100px;
 }
 .workflow-body{
   padding:25px 10px 10px 10px;
