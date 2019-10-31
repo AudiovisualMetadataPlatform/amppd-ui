@@ -88,6 +88,9 @@ h2{
   flex: 50%;
   flex-wrap: wrap;
 }
+h1{
+  text-align: center;
+}
 .workflow-parameter-nodes{
   display:flex;
   flex-direction: column;
