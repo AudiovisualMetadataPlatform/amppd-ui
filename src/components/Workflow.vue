@@ -30,7 +30,7 @@
 <script>
 import WorkflowSelection from '@/components/WorkflowSelection.vue'
 import WorkflowFiles from '@/components/WorkflowFiles.vue'
-import { get, sync } from 'vuex-pathify'
+import { sync } from 'vuex-pathify'
 export default {
   name: 'Workflow',
   components:{
@@ -48,6 +48,7 @@ export default {
   },
   methods:{
     addParameter(nodeName, name){
+      console.log("adding param");
       let self = this;
       self.parameters.push({
         nodeName: nodeName,
