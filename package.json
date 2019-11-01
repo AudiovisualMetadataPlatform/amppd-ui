@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "core-js": "^3.3.2",
     "eslint-config-standard": "^14.1.0",
     "eslint-loader": "^3.0.2",

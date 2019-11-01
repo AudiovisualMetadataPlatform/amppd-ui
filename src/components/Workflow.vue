@@ -1,39 +1,45 @@
 <template>
-  <div class="workflow-content">
-    <h1>Workflow Submission</h1>
-    <div class="workflow-body">
-      <div class="left-pane">
-        <WorkflowSelection/>
-        <WorkflowFiles/>
-      </div>
-      <div class="right-pane">
-        <div>
-          <h2>Workflow Node Parameters</h2>
-          <div class="workflow-parameter-nodes">
-            <div v-for="(node, index) in parameters" v-bind:key="index" class="node">
-                  <div class="node-name">Node: {{node.nodeName}}</div>
-                  <div class="parameters" v-for="(parameter, subindex) in node.params" v-bind:key="subindex" >
-                    <span class="parameter-name">{{parameter.name}}</span> <input type="text" />
-                  </div>
+<div>
+    <Header/>
+    <div class="workflow-content">
+      <h1>Workflow Submission</h1>
+      <div class="workflow-body">
+        <div class="left-pane">
+          <WorkflowSelection/>
+          <WorkflowFiles/>
+        </div>
+        <div class="right-pane">
+          <div>
+            <h2>Workflow Node Parameters</h2>
+            <div class="workflow-parameter-nodes">
+              <div v-for="(node, index) in parameters" v-bind:key="index" class="node">
+                    <div class="node-name">Node: {{node.nodeName}}</div>
+                    <div class="parameters" v-for="(parameter, subindex) in node.params" v-bind:key="subindex" >
+                      <span class="parameter-name">{{parameter.name}}</span> <input :value="parameter.value" type="text"/>
+                    </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="workflow-submit">
-            <input v-on:click="submit" type="button" value="Submit" class="primary-button">
+          <div class="workflow-submit">
+              <input v-on:click="submit" type="button" value="Submit" class="primary-button">
+          </div>
         </div>
       </div>
-    </div>
 
+    </div>
   </div>
 </template>
 
 <script>
+import Header from '@/components/Header.vue'
 import WorkflowSelection from '@/components/WorkflowSelection.vue'
 import WorkflowFiles from '@/components/WorkflowFiles.vue'
 import { sync } from 'vuex-pathify'
+
 export default {
   name: 'Workflow',
   components:{
+    Header,
     WorkflowSelection,
     WorkflowFiles
   },
@@ -47,25 +53,11 @@ export default {
   props: {
   },
   methods:{
-    addParameter(nodeName, name){
-      console.log("adding param");
-      let self = this;
-      self.parameters.push({
-        nodeName: nodeName,
-        params:[{
-          name: name,
-          type: "text"
-        }]
-      });
-    },
     submit(){
       console.log("Form submitted");
     }
   },
   mounted(){
-    let self = this;
-    self.addParameter("Silence Remove", "Silence Threshold");
-    self.addParameter("Segmentation", "Segments to Remove");
   }
 
 }
@@ -76,8 +68,12 @@ export default {
 h2{
   margin-top: 0;
 }
+h1 {
+
+  text-align: center;
+}
 .workflow-content{
-  padding-top:20px;
+  padding-top:100px;
 }
 .workflow-body{
   padding:25px 10px 10px 10px;
@@ -87,6 +83,9 @@ h2{
   justify-content: space-evenly;
   flex: 50%;
   flex-wrap: wrap;
+}
+h1{
+  text-align: center;
 }
 .workflow-parameter-nodes{
   display:flex;
@@ -133,6 +132,9 @@ h2{
   justify-content: space-between;
   width:400px;
   padding-top:10px;
+}
+.parameters input{
+  flex-basis: 60%;
 }
 .node{
   padding: 20px 0;
