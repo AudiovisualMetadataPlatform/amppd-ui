@@ -41,8 +41,7 @@ export default {
   components:{
     Header,
     WorkflowSelection,
-    WorkflowFiles,
-    Header
+    WorkflowFiles
   },
   data(){
     return {
