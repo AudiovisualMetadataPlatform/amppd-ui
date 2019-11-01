@@ -1,22 +1,22 @@
 <template id = "welcome" >
-	<form id="app" v-on:submit="signout" action="index.html" method="post">
 	<div class="form">
-		<div class="imgcontainer">
-			<img src="../assets/amp_horizontal.jpg" >
-		</div>
-		<div class="container" id="welcome">
-				<div class="row"><h1>Welcome to AMP!</h1> </div>
-				<div class="row"><button type="submit">Logout</button></div>
-		</div>
+    <Header></Header>
+		<form id="app" v-on:submit="signout" action="index.html" method="post">
+      <div class="container" id="welcome">
+          <div class="row"><h1>Welcome to AMP!</h1> </div>
+          <div class="row"><button type="submit">Logout</button></div>
+      </div>
+    </form>
 	</div>
-<!-- 		<script src="../LoginComponent/index.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>				-->
-	</form>
 </template>
 
 <script>
+import Header from "./Header";
 export default {
   name: 'WelcomeComponent',
+  components: {
+    Header
+    },
   data() {
     return {
       errors: [],
@@ -41,7 +41,7 @@ export default {
     /* border: 3px solid #f1f1f1; */
     height:auto;
     width:auto;
-    
+    margin-block-start: 110px;
   }
 
   /* Full-width inputs */

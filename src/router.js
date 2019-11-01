@@ -1,6 +1,10 @@
 import Vue from "vue";
 import Router from "vue-router";
 /* import Home from './views/Home.vue' */
+import Login from "./components/Login.vue";
+import Register from "./components/Register.vue";
+import Welcome from "./components/Welcome.vue";
+import Workflow from "./components/Workflow.vue";
 
 Vue.use(Router);
 
@@ -9,33 +13,22 @@ export default new Router({
     {
       path: "/",
       name: "home",
-      component: () => import("./components/Login.vue")
+      component: Login
     },
     {
       path: "/register",
       name: "register",
-      component: () =>
-        import("./components/Register.vue")
+      component: Register
     },
     {
       path: "/welcome",
       name: "welcome",
-      component: () =>
-        import("./components/Welcome.vue")
+      component: Welcome
     },
     {
       path: "/workflow",
       name: "workflow",
-      component: () =>
-        import("./components/Workflow.vue")
+      component: Workflow
     }
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (about.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-    // }
   ]
 });
