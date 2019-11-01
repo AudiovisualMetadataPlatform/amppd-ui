@@ -36,7 +36,8 @@ const actions = {
         var tempParams = [];
         commit("SET_LOADING", true);
         // Get a the workflow details from 
-        tempParams = await axios.get(Vue.config.publicPath + 'workflows/' + selectedWorkflow)
+        console.log(process.env);// eslint-disable-line
+        tempParams = await axios.get(process.env.VUE_APP_AMP_URL + 'workflows/' + selectedWorkflow) // eslint-disable-line
           .then(response => {
               // Get the steps from the response
               var data = response.data.steps;
