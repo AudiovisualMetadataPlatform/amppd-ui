@@ -104,17 +104,9 @@ const getters = {
 =======================================================*/
 
 export default new Vuex.Store({
-<<<<<<< HEAD
     state,
     mutations,
     actions,
     getters,
     plugins: [ pathify.plugin ]
-=======
-	state,
-	mutations,
-	actions,
-	getters,
-	plugins: [ pathify.plugin ]
->>>>>>> master
 });
