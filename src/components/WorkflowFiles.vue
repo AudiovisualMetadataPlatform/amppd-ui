@@ -3,7 +3,8 @@
     <div class="file-selection">
       <div class="sub-header-container">
         <span class="section-title">Primary files to include in batch WF submission</span>
-        <i id="addFile" class="fa fa-plus" v-on:click="addFiles"></i>
+        <i id="addFile" class="fa fa-plus" @click="showModal"></i>
+        <filepicker v-show="isModalVisible" @close="closeModal"/>
       </div>
       <div class="file-container">
         <div v-for="(file, index) in files" v-bind:key="index" class="file" href="javascript:void(0)">
@@ -16,13 +17,18 @@
 </template>
 
 <script>
+import filepicker from './Filepicker';
 import { sync } from 'vuex-pathify';
 export default {
   name: 'FileSelection',
+  components: {
+    filepicker,
+  },
   props: {
   },
   data(){
     return {
+      isModalVisible: false,
       fileIndex: 1
     }
   },
@@ -30,6 +36,12 @@ export default {
       files: sync('files')
   },
   methods:{
+    showModal() {
+        this.isModalVisible = true;
+      },
+    closeModal() {
+        this.isModalVisible = false;
+      },
     // TEMPORARY:  Generate a pseudo file
     generateFile(){
       let self = this;
@@ -40,11 +52,12 @@ export default {
       self.fileIndex++;
       return file;
     },
-    addFiles(){
-      let self = this;
+   /*  addFiles(){
+       let self = this;
       // THIS IS TEMPORARY.  SHOULD BE REPLACED WITH MODAL FXN
-      self.files.push(self.generateFile());
-    },
+      self.files.push(self.generateFile()); 
+      this.$router.push("/filepicker")
+    }, */
     deleteFile(id){
       let self = this;
       console.log("deleting file " + id);

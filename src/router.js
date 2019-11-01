@@ -3,7 +3,7 @@ import Router from "vue-router";
 /* import Home from './views/Home.vue' */
 import Login from "./components/Login.vue";
 import Register from "./components/Register.vue";
-import Welcome from "./components/Welcome.vue";
+//import Welcome from "./components/Welcome.vue";
 import Workflow from "./components/Workflow.vue";
 
 Vue.use(Router);
@@ -22,8 +22,8 @@ export default new Router({
     },
     {
       path: "/welcome",
-      name: "welcome",
-      component: Welcome
+      name: "workflow",
+      component: Workflow
     },
     {
       path: "/workflow",
