@@ -15,7 +15,7 @@
               <div v-for="(node, index) in parameters" v-bind:key="index" class="node">
                     <div class="node-name">Node: {{node.nodeName}}</div>
                     <div class="parameters" v-for="(parameter, subindex) in node.params" v-bind:key="subindex" >
-                      <span class="parameter-name">{{parameter.name}}</span> <input type="text" />
+                      <span class="parameter-name">{{parameter.name}}</span> <input :value="parameter.value" type="text"/>
                     </div>
               </div>
             </div>
@@ -53,25 +53,11 @@ export default {
   props: {
   },
   methods:{
-    addParameter(nodeName, name){
-      console.log("adding param");
-      let self = this;
-      self.parameters.push({
-        nodeName: nodeName,
-        params:[{
-          name: name,
-          type: "text"
-        }]
-      });
-    },
     submit(){
       console.log("Form submitted");
     }
   },
   mounted(){
-    let self = this;
-    self.addParameter("Silence Remove", "Silence Threshold");
-    self.addParameter("Segmentation", "Segments to Remove");
   }
 
 }
@@ -143,6 +129,9 @@ h1 {
   justify-content: space-between;
   width:400px;
   padding-top:10px;
+}
+.parameters input{
+  flex-basis: 60%;
 }
 .node{
   padding: 20px 0;

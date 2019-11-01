@@ -1,38 +1,38 @@
 <template id = "app">
-	<form id="app" v-on:submit="checkForm">
-	<div class="form">
-		<div class="imgcontainer">
-			<img src="../assets/amp_horizontal.jpg" >
-		</div>
-		<div class="error">
-		<p v-if="errors.length">
-			<b>Please correct the following error(s):</b>
-			<ul>
-				<li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
-			</ul>
-		</p>
-		</div>
-		<div class="container" id="login">
-				<div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Username" name="name"> </div>
-				<div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
-				<div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
-				<div class="row"><span><a href="#">Forgot Password?</a></span></div>
-				<div class="row"><button type = "submit">Sign In</button></div>
-				<div class="row"><label>Or</label></div>
-				<!-- <router-link to="/register" tag="button">Sign Up</router-link> -->
-				<div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
-		</div>
-	</div>
-	</form>
+  <form id="app" v-on:submit="checkForm">
+  <div class="form">
+    <div class="imgcontainer">
+      <img src="../assets/amp_horizontal.jpg" >
+    </div>
+    <div class="error">
+    <p v-if="errors.length">
+      <b>Please correct the following error(s):</b>
+      <ul>
+        <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
+      </ul>
+    </p>
+    </div>
+    <div class="container" id="login">
+        <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Username" name="name"> </div>
+        <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
+        <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
+        <div class="row"><span><a href="#">Forgot Password?</a></span></div>
+        <div class="row"><button type = "submit">Sign In</button></div>
+        <div class="row"><label>Or</label></div>
+        <!-- <router-link to="/register" tag="button">Sign Up</router-link> -->
+        <div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
+    </div>
+  </div>
+  </form>
 </template>
 
 <script>
 export default {
-	name: 'LoginComponent',
-  	data() {
+  name: 'LoginComponent',
+    data() {
       return {
-		errors: [],
-		name: null,
+    errors: [],
+    name: null,
     pswd: null
     };
   },

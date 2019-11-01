@@ -1,36 +1,36 @@
 <template id = "register">
-	<form id="register" v-on:submit="validateRegisterForm" action="WelcomeComponent/welcome.html" method="post">
-	<div class="form">
-		<div class="imgcontainer">
-			<img src="../assets/amp_horizontal.jpg" >
-		</div>
-	<div class="error">
-	<p v-if="errors.length">
+  <form id="register" v-on:submit="validateRegisterForm" action="WelcomeComponent/welcome.html" method="post">
+  <div class="form">
+    <div class="imgcontainer">
+      <img src="../assets/amp_horizontal.jpg" >
+    </div>
+  <div class="error">
+  <p v-if="errors.length">
     <b>Please correct the following error(s):</b>
     <ul>
       <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
     </ul>
-	</p>
-	</div>
+  </p>
+  </div>
   <div class="container" >
       <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Username" name="uname" > </div>
       <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create New Password" name="psw" ></div> 
       <div class="row"><input id="pswd" v-model="confirm_pswd" type="password" placeholder="Confirm New Password" name="cpsw" ></div>
       <div class="row"><button type="submit">Sign Up</button></div>  
-	</div>
-	</div>
-	</form>
+  </div>
+  </div>
+  </form>
 </template>
 
 <script>
   export default {
-	  name: 'RegisterComponent',
-  	data: function() {
+    name: 'RegisterComponent',
+    data: function() {
       return {
-		errors: [],
-		name: null,
-		pswd: null,
-		confirm_pswd: null
+    errors: [],
+    name: null,
+    pswd: null,
+    confirm_pswd: null
     }
   },
   methods:{
