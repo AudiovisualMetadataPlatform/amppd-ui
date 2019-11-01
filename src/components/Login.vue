@@ -1,36 +1,39 @@
 <template id = "app">
-	<form id="app" v-on:submit="checkForm">
-	<div class="form">
-		<div class="imgcontainer">
-			<img src="../assets/amp_horizontal.jpg" >
-		</div>
-		<div class="error">
-		<p v-if="errors.length">
-			<b>Please correct the following error(s):</b>
-			<ul>
-				<li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
-			</ul>
-		</p>
-		</div>
-		<div class="container" id="login">
-				<div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Username" name="name"> </div>
-				<div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
-				<div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
-				<div class="row"><span><a href="#">Forgot Password?</a></span></div>
-				<div class="row"><button type = "submit">Sign In</button></div>
-				<div class="row"><label>Or</label></div>
-				<!-- <router-link to="/register" tag="button">Sign Up</router-link> -->
-				<div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
-		</div>
-	</div>
-	</form>
-</template>
+  <div class="form">
+    <Header></Header>
+    <form id="app" v-on:submit="checkForm">
+        <div class="error">
+        <p v-if="errors.length">
+          <b>Please correct the following error(s):</b>
+          <ul>
+            <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
+          </ul>
+        </p>
+        </div>
+        <div class="container" id="login">
+            <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Username" name="name"> </div>
+            <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
+            <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
+            <div class="row"><span><a href="#">Forgot Password?</a></span></div>
+            <div class="row"><button type = "submit">Sign In</button></div>
+            <div class="row"><label>Or</label></div>
+            <!-- <router-link to="/register" tag="button">Sign Up</router-link> -->
+            <div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
+        </div>
+    
+    </form>
+  </div>
+</template>  
 
 <script>
+import Header from "./Header";
 export default {
-	name: 'LoginComponent',
-  	data() {
-      return {
+  name: 'LoginComponent',
+  components: {
+    Header
+  },
+  data() {
+    return {
 		errors: [],
 		name: null,
     pswd: null
@@ -68,7 +71,7 @@ export default {
     /* border: 3px solid #f1f1f1; */
     height:auto;
     width:auto;
-    
+    margin-block-start: 100px;
   }
 
   /* Full-width inputs */
@@ -86,7 +89,7 @@ export default {
   button {
     background-color: #2C5B7F;
     color: #E9972D;
-    font:bold;
+    font:bolder;
     padding: 14px 20px;
     margin-left: 20px;
     margin-right: 20px;
@@ -103,10 +106,10 @@ export default {
   }
 
   /* Center the avatar image inside this container */
-  .imgcontainer, img {
+  /* .imgcontainer, img {
   height: 100%;
   width: 100%;
-  }
+  } */
 
 
   /* Add padding to containers */
