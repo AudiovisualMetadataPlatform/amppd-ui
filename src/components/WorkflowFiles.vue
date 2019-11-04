@@ -4,7 +4,7 @@
       <div class="sub-header-container">
         <span class="section-title">Primary files to include in batch WF submission</span>
         <i id="addFile" class="fa fa-plus" @click="showModal"></i>
-        <filepicker v-show="isModalVisible" @close="closeModal"/>
+        <modal v-show="isModalVisible" @close="closeModal" @addItems="addFiles"/>
       </div>
       <div class="file-container">
         <div v-for="(file, index) in files" v-bind:key="index" class="file" href="javascript:void(0)">
@@ -17,12 +17,12 @@
 </template>
 
 <script>
-import filepicker from './Filepicker';
+import modal from './modal.vue';
 import { sync } from 'vuex-pathify';
 export default {
   name: 'FileSelection',
   components: {
-    filepicker,
+    modal
   },
   props: {
   },
@@ -52,12 +52,14 @@ export default {
       self.fileIndex++;
       return file;
     },
-   /*  addFiles(){
+    addFiles(fileList){
        let self = this;
       // THIS IS TEMPORARY.  SHOULD BE REPLACED WITH MODAL FXN
-      self.files.push(self.generateFile()); 
-      this.$router.push("/filepicker")
-    }, */
+      console.log("files added are:",fileList);
+      self.files.push(fileList); 
+      this.isModalVisible = false;
+      
+    },
     deleteFile(id){
       let self = this;
       console.log("deleting file " + id);
@@ -68,7 +70,8 @@ export default {
         }
       }
     }
-  }
+  },
+  
 }
 </script>
 
