@@ -8,15 +8,17 @@
       </header> -->
       <section class="modal-body">
         <slot name="body">
-          <autocomplete :items="[ 'File12.pdf', 'File123.mp4', '2018Yearbook.mp4', 'File123.mp3', '1994Yearbook.mp4', '1994Yearbook_supp.txt', '2018Yearbook_supp.pdf', 'File123_supp.txt', 'File12_supp.txt']" 
-            @updateItemList="updateItemList"/>
+          <div class="row"><input placeholder="Search here"/></div>
+          <div class="row"><button type="button"  @click="searchItems">Search</button></div></slot>
+          <!-- <autocomplete :items="[ 'File12.pdf', 'File123.mp4', '2018Yearbook.mp4', 'File123.mp3', '1994Yearbook.mp4', '1994Yearbook_supp.txt', '2018Yearbook_supp.pdf', 'File123_supp.txt', 'File12_supp.txt']" 
+            @updateItemList="updateItemList"/> -->
           
-        </slot>
+        
        </section>
        <footer class="modal-footer">
           <slot name="footer">
-            <button type="button" class="btn-green" @click="addItems">Add</button>
-            <button type="button" class="btn-green" @click="close">Close</button>
+            <button type="button"  @click="addItems">Add</button>
+            <button type="button"  @click="close">Close</button>
           </slot>
         </footer>
     </div>
@@ -25,12 +27,12 @@
 
 
 <script>
-import autocomplete from "./Autocomplete.vue"
+//import autocomplete from "./Autocomplete.vue"
 export default {
     name: 'filepicker',
-    components: {
+    /* components: {
       autocomplete
-    },
+    }, */
     data() {
       return {
         selectedItems:""
@@ -40,7 +42,7 @@ export default {
       close() {
         this.$emit('close');
       },
-      searchFileNames() {
+      searchItems() {
 
       },
       updateItemList(str1) {
@@ -113,7 +115,7 @@ export default {
     padding: 20px 10px;
   }
 
-  .btn-close {
+  /* .btn-close {
     border: none;
     font-size: 20px;
     padding: 20px;
@@ -121,16 +123,16 @@ export default {
     font-weight: bold;
     color: #4AAE9B;
     background: transparent;
-  }
+  } */
 
-  .btn-green {
+  /* .btn-green {
     color: white;
     background: #4AAE9B;
     border: 1px solid #4AAE9B;
     border-radius: 2px;
-  }
+  } */
 
-  .autocomplete {
+  /* .autocomplete {
     position: relative;
     width: 130px;
   }
@@ -153,7 +155,7 @@ export default {
   .autocomplete-result:hover {
     background-color: #4AAE9B;
     color: white;
-  }
+  } */
 
   button {
     background-color: #2C5B7F;
@@ -168,4 +170,10 @@ export default {
     cursor: pointer;
     border-radius: 15px;
   }
+
+    .row {
+    text-align: center;
+    /* padding:5px 10px; */
+  }
+
 </style>
