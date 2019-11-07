@@ -13,7 +13,7 @@
             <h2>Workflow Node Parameters</h2>
             <div class="workflow-parameter-nodes">
               <div v-for="(node, index) in parameters" v-bind:key="index" class="node">
-                    <div class="node-name">Node: {{node.nodeName}}</div>
+                    <div class="node-name">Step {{node.step}}: {{node.nodeName}}</div>
                     <div class="parameters" v-for="(parameter, subindex) in node.params" v-bind:key="subindex" >
                       <span class="parameter-name">{{parameter.name}}</span> <input :value="parameter.value" type="text"/>
                     </div>
@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="workflow-submit">
-              <input v-on:click="submit" type="button" value="Submit" class="primary-button">
+              <input :disabled="isSubmitDisabled === true" v-on:click="submit" type="button" value="Submit" class="primary-button">
           </div>
         </div>
       </div>
@@ -48,7 +48,12 @@ export default {
     }
   },
   computed:{
-      parameters: sync('parameters')
+      parameters: sync('parameters'),
+      selectedWorkflow: sync('selectedWorkflow'),
+      isSubmitDisabled: function(){
+        let self = this;
+        return !self.selectedWorkflow;
+      }
   },
   props: {
   },
@@ -67,6 +72,11 @@ export default {
 <style scoped>
 h2{
   margin-top: 0;
+}
+@media only screen and (max-width: 1046px) {
+  h2 {
+    text-align: center !important;
+  }
 }
 h1 {
 

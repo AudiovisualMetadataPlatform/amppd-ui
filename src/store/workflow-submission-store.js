@@ -55,6 +55,7 @@ const actions = {
                 // Create a new node object
                 var newNode = {
                     nodeName: thisNode.toolId,
+                    step: nodeKey,
                     params:[]
                 };
 
@@ -64,9 +65,8 @@ const actions = {
                     // Get the input
                     var toolInputKey = toolInputKeys[input];
                     var thisInput = thisNode.toolInputs[toolInputKey];
-
                     // If we don't have an input, skip it
-                    if(!thisInput) continue;
+                    if(toolInputKey.substr(0, 2)=='__') continue;
                     // __class__ as far as I can tell, is an indication it is not a parameter
                     if(thisInput.__class__) continue;
 
