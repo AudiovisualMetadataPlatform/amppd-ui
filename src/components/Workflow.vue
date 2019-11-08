@@ -54,6 +54,8 @@ export default {
   },
   methods:{
     submit(){
+      createBundle();
+      submitWorkflow();
       console.log("Form submitted");
     }
   },
