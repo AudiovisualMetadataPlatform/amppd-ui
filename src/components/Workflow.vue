@@ -35,6 +35,7 @@ import Header from '@/components/Header.vue'
 import WorkflowSelection from '@/components/WorkflowSelection.vue'
 import WorkflowFiles from '@/components/WorkflowFiles.vue'
 import { sync } from 'vuex-pathify'
+import Axios from 'axios'
 
 export default {
   name: 'Workflow',
@@ -48,15 +49,34 @@ export default {
     }
   },
   computed:{
-      parameters: sync('parameters')
+      parameters: sync('parameters'),
+      bundle: sync('bundle')
   },
   props: {
   },
   methods:{
     submit(){
-      createBundle();
-      submitWorkflow();
+      bundle = createBundle();
+      submitWorkflow(bundle, selectedWorkflow);
       console.log("Form submitted");
+    },
+    createBundle(){
+      // create a new bundle with default name/description
+      bundle = { 
+        name: "Bundle {{files[0].id}} ~  {{files[files.size-1].id}}", 
+        description: "Bundle with {{files.size}} primary files"
+      }      
+      axios.post(process.env.VUE_APP_AMP_URL + '/bundles', bundle)
+        .then(response => {
+          bundle = response.data;
+        })
+        .catch(e => {
+          console.log(e);
+          // TODO:  Think about global error handling
+        });;
+  
+      // add currently selected primaryfiles to the bundle
+      axios.post(process.env.VUE_APP_AMP_URL + '/bundles/' + bundle.id + "/add/items/")
     }
   },
   mounted(){

@@ -19,6 +19,7 @@ const state = {
     parameters: [], // Workflow node parameters
     files: [], // List of files
     selectedWorkflow: null, // Selected workflow
+    bundle: null, // bundle created for primaryfiles upon submission
     loading: false // For future use...can spawn loading indicator
 };
 
@@ -37,7 +38,7 @@ const actions = {
         commit("SET_LOADING", true);
         // Get a the workflow details from 
         console.log(process.env);// eslint-disable-line
-        tempParams = await axios.get(process.env.VUE_APP_AMP_URL + 'workflows/' + selectedWorkflow) // eslint-disable-line
+        tempParams = await axios.get(process.env.VUE_APP_AMP_URL + '/workflows/' + selectedWorkflow) // eslint-disable-line
           .then(response => {
               // Get the steps from the response
               var data = response.data.steps;
