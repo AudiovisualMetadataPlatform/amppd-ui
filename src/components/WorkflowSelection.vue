@@ -28,7 +28,7 @@ export default {
   methods:{
     getWorkflows() {
       let self = this;
-      axios.get(process.env.VUE_APP_AMP_URL + 'workflows')// eslint-disable-line
+      axios.get(process.env.VUE_APP_AMP_URL + '/workflows')// eslint-disable-line
         .then(response => {
           self.workflows = response.data;
         })
