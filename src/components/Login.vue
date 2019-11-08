@@ -51,7 +51,7 @@ export default {
       }
       if(this.errors.length == 0)
       {
-        this.$router.push("/welcome");
+        this.$router.push("/workflow");
       }
       //console.log("checkform WORKS");
     },
