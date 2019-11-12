@@ -20,6 +20,7 @@ const state = {
     files: [], // List of files
     selectedWorkflow: null, // Selected workflow
     bundle: null, // bundle created for primaryfiles upon submission
+    jobs: [], // jobs successfully created
     loading: false // For future use...can spawn loading indicator
 };
 

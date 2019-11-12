@@ -55,16 +55,18 @@ export default {
   props: {
   },
   methods:{
+
     submit(){
       bundle = createBundle();
-      submitWorkflow(bundle, selectedWorkflow);
-      console.log("Form submitted");
+      submitWorkflow();
+      console.log("Workflow submitted");
     },
+
     createBundle(){
       // create a new bundle with default name/description
       bundle = { 
         name: "Bundle {{files[0].id}} ~  {{files[files.size-1].id}}", 
-        description: "Bundle with {{files.size}} primary files"
+        description: "Bundle with {{files.size}} primaryfiles"
       }      
       axios.post(process.env.VUE_APP_AMP_URL + '/bundles', bundle)
         .then(response => {
@@ -76,8 +78,32 @@ export default {
         });;
   
       // add currently selected primaryfiles to the bundle
-      axios.post(process.env.VUE_APP_AMP_URL + '/bundles/' + bundle.id + "/add/items/")
-    }
+      var primaryfileIds = files[0]; 
+      for (i=1; i<files.length; i++) {
+        primaryfileIds += "," + files[i].id;
+      }
+      axios.post(process.env.VUE_APP_AMP_URL + '/bundles/' + bundle.id + '/addPrimaryfiles?primaryfileIds={{primaryfileIds}}')
+       .then(response => {
+          bundle = response.data;
+        })
+        .catch(e => {
+          console.log(e);
+          // TODO:  Think about global error handling
+        });;
+      },
+
+      submitWorkflow(){
+        axios.post(process.env.VUE_APP_AMP_URL + '/jobs?workflowId=' + selectedWorkflow.id + '&&bundleId=' + bundle.id)
+        .then(response => {
+            jobs = response.data;
+            this.$router.push("/jobs");
+          })
+          .catch(e => {
+            console.log(e);
+            // TODO:  Think about global error handling
+          });;
+        }
+
   },
   mounted(){
   }
