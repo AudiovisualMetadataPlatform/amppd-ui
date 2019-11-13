@@ -79,10 +79,9 @@ export default {
     border-radius: 5px;
     padding: 15px 20px;
     margin: 20px 20px;
-    display: inline-block;
     border: 1px solid #ccc;
-    box-sizing: border-box;
     align-content: center;
+    width: 50%;
   }
 
   /* Set a style for all buttons */

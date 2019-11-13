@@ -48,14 +48,15 @@ export default {
 },
     methods: {
       close() {
+        this.searchWord = '';
         this.$emit('close');
       },
       searchItems() {
 		let self = this;
-		console.log("the search word is:", this.searchWord);
-		axios.get( 'http://129.79.38.16:8200/items/search/findByKeyword?keyword='+this.searchWord)
+    console.log("the search word is:", this.searchWord);
+    axios.get(process.env.VUE_APP_AMP_URL + 'primaryfiles/search/findByKeyword?keyword='+this.searchWord)
 		.then(response => {
-          self.searchedItems = response.data._embedded.items;
+          self.searchedItems = response.data._embedded.primaryfiles;
         })
         .catch(e => {
           console.log(e);

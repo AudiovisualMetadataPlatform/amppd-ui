@@ -4,7 +4,7 @@
       <div class="sub-header-container">
         <span class="section-title">Primary files to include in batch WF submission</span>
         <i id="addFile" class="fa fa-plus" v-on:click="showModal"></i>
-        <Modal v-show="isModalVisible" @close="closeModal" @addItems="addFiles"/>
+        <Modal v-show="isModalVisible" @close="closeModal"/>
       </div>
       <div class="file-container">
         <div v-for="(file, index) in files" v-bind:key="index" class="file" href="javascript:void(0)">

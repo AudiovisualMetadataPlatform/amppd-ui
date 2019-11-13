@@ -83,6 +83,7 @@ import Header from "./Header";
     border: 1px solid #ccc;
     box-sizing: border-box;
     align-content: center;
+    width: 50%;
   }
 
   /* Set a style for all buttons */
