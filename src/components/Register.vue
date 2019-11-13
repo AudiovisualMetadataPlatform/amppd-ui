@@ -53,7 +53,7 @@ import Header from "./Header";
       }
       if (this.errors.length == 0)
       {
-        this.$router.push("/welcome");
+        this.$router.push("/workflow");
       }
       //console.log("checkform WORKS"+this.errors.length);
       //e.preventDefault();
