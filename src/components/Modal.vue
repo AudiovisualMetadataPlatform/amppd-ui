@@ -7,27 +7,22 @@
 						<span class="search-icon"><i class="fas fa-search"></i></span>
 						<input v-model="searchWord" type="text" placeholder="Search by Name"/>
 						<button type="button" style="align:right"  @click="searchItems">Search</button>
-    </div>
-    
-	
-      <div class="left-align-row">
-        <div v-for="(file, index) in searchedItems" v-bind:key="index">
-			<input type="checkbox" :id = "file.name" :value="file" v-model="selectedItems" @change="addItems()"/>
-			<span class="file-name">{{file.name}}</span>
-			
-					</div>
-					</div>
-					
-				</slot>
-			</section>
-		<div>
-        <slot>
-				<!-- <button type="button"  @click="addItems()">Add</button> -->
-				<button type="button"  @click="close()">Close</button>
+          </div>
+          <div class="left-align-row">
+            <div v-for="(file, index) in searchedItems" v-bind:key="index">
+              <input type="checkbox" :id = "file.name" :value="file" v-model="selectedItems" @change="addItems()"/>
+              <span class="file-name">{{file.name}}</span>
+            </div>
+          </div>
         </slot>
-        </div>
+      </section>
+      <div>
+        <slot>
+          <button type="button"  @click="close()">Close</button>
+        </slot>
+      </div>
     </div>
-</div>
+  </div>
 </template>
 
 
@@ -38,53 +33,46 @@ export default {
     name: 'filepicker',
     data() {
       return {
-		searchWord:'',
-		searchedItems:[],
+        searchWord:'',
+        searchedItems:[],
         selectedItems:[]
-      };
-	},
-	computed:{
-    files: sync('files')
-},
+        };
+    },
+    computed:{
+      files: sync('files')
+    },
     methods: {
       close() {
         this.searchWord = '';
         this.$emit('close');
       },
       searchItems() {
-		let self = this;
-    console.log("the search word is:", this.searchWord);
-    axios.get(process.env.VUE_APP_AMP_URL + 'primaryfiles/search/findByKeyword?keyword='+this.searchWord)
-		.then(response => {
-          self.searchedItems = response.data._embedded.primaryfiles;
-        })
+        let self = this;
+        console.log("the search word is:", this.searchWord);
+        axios.get(process.env.VUE_APP_AMP_URL + 'primaryfiles/search/findByKeyword?keyword='+this.searchWord)
+        .then(response => {
+          self.searchedItems = response.data._embedded.primaryfiles;})
         .catch(e => {
-          console.log(e);
-          
-		});
-		console.log("The file names fetched are:",self.searchedItems);
+          console.log(e);});
+        console.log("The file names fetched are:",self.searchedItems);
       },
-     
-    addItems() {
-		let self = this;
-		self.files = this.selectedItems;
-		console.log("The file names checked are:",this.selectedItems);
-      }
-	},
-	
-  };
+      addItems() {
+        let self = this;
+        self.files = this.selectedItems;
+        console.log("The file names checked are:",this.selectedItems);
+        }
+      },
+};
 </script>
 
 <style>
 	.search-bar {
-	border-radius: 5px;
-    /* padding: 0px 10px;
-    margin: 10px; */
+    border-radius: 5px;
     border: 1px solid #ccc;
 	}
 
 	.search-icon {
-	position: relative;
+    position: relative;
 	}
   .modal-backdrop {
     position: fixed;
@@ -109,20 +97,6 @@ export default {
     display: inline-block
   
   }
-  /* .modal-header,
-  .modal-footer {
-    padding: 15px;
-    display: flex;
-  }
-  .modal-header {
-    border-bottom: 1px solid #eeeeee;
-    color: #4AAE9B;
-    justify-content: space-between;
-  }
-  .modal-footer {
-    border-top: 1px solid #eeeeee;
-    justify-content: flex-end;
-  } */
   .modal-body {
     position: relative;
     padding: 20px 10px;
@@ -133,7 +107,7 @@ export default {
     padding: 10px 10px;
     margin: 10px;
     border: 0px solid #ccc;
-	width: 75%
+    width: 75%
   }
 
   button {
@@ -149,9 +123,9 @@ export default {
     cursor: pointer;
     border-radius: 15px;
   }
-    .left-align-row {
+  .left-align-row {
     text-align: left;
-	padding: 0px 10px;
+    padding: 0px 10px;
     margin: 10px;
   }
 </style>

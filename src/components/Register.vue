@@ -108,8 +108,8 @@ import Header from "./Header";
 
   /* Center the avatar image inside this container */
   .imgcontainer, img {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
   }
 
   /* Add padding to containers */
@@ -127,7 +127,7 @@ import Header from "./Header";
   }
 
   ul{
-  list-style: none;
+    list-style: none;
   } 
 
   li span {
