@@ -5,7 +5,7 @@ import Login from "./components/Login.vue";
 import Register from "./components/Register.vue";
 import Welcome from "./components/Welcome.vue";
 import Workflow from "./components/Workflow.vue";
-import Jobs from "./components/Jobs.vue";
+// import Jobs from "./components/Jobs.vue";
 
 Vue.use(Router);
 
@@ -30,10 +30,11 @@ export default new Router({
       path: "/workflow",
       name: "workflow",
       component: Workflow
-    },
-    {
-      path: "/jobs",
-      name: "jobs",
-      component: Jobs
-    }      ]
+    }
+    // {
+    //   path: "/jobs",
+    //   name: "jobs",
+    //   component: Jobs
+    // }      
+  ]
 });

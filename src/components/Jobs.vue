@@ -15,28 +15,48 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
+						<tr v-for="(primaryfileId, job) in jobs" v-bind:key="primaryfileId" class="job">
+							<td>{{primarifileId}}</td>
 							<td>{{job.id}}</td>
-							<td>{{job.id}}</td>
+							<td>{{job.historyId}}</td>
+							<td>{{job.updateTime}}</td>
+							<td>{{job.state}}</td>
 						</tr>
 					</tbody>
 				</table>
-
-				<div v-for="(primaryfileId, output) in jobs" v-bind:key="index" class="job">
-					<div class="job-id">Job {{job.id}}</div>
-					<div class="parameters" v-for="(parameter, subindex) in node.params" v-bind:key="subindex" >
-					<span class="parameter-name">{{parameter.name}}</span> <input :value="parameter.value" type="text"/>
-				</div>
 			</div>
 			<!-- if jobs.size < files.size -->
-			<h3>The rest of of the primaryfiles failed to have AMPPD jobs created to run workflow {{selectedWorkflow.id}}:</h3>
+			<h3 v-if="nFailed > 0" class="error">The rest of the {{nFailed}} primaryfiles failed to have AMPPD jobs created to run workflow {{selectedWorkflow.id}}.</h3>
 		</div>
 	</div>
 </template>
 
 <script>
 import Header from '@/components/Header.vue'
-import WorkflowSelection from '@/components/WorkflowSelection.vue'
-import WorkflowFiles from '@/components/WorkflowFiles.vue'
 import { sync } from 'vuex-pathify'
+import Axios from 'axios'
+
+export default {
+  name: 'Jobs',
+  components:{
+    Header
+  },
+  data(){
+    return {
+    }
+  },
+  computed:{
+	  files: sync('files'),
+	  jobs: sync('jobs'),
+	  nFailed: files.size - jobs.size 
+  },
+  props: {
+  },
+  methods:{
+  },
+  mounted(){
+  }
+}
+</script>
+
 

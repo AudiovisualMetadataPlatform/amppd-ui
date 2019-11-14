@@ -1,7 +1,7 @@
 <template>
 <div>
     <Header/>
-    <div class="workflow-content">
+    <div class="workflow-content" v-if="!workflowsubmitted">
       <h1>Workflow Submission</h1>
       <div class="workflow-body">
         <div class="left-pane">
@@ -25,7 +25,9 @@
           </div>
         </div>
       </div>
-
+    </div>
+    <div v-if="workflowSubmitted"> 
+      <Jobs/>>
     </div>
   </div>
 </template>
@@ -34,6 +36,7 @@
 import Header from '@/components/Header.vue'
 import WorkflowSelection from '@/components/WorkflowSelection.vue'
 import WorkflowFiles from '@/components/WorkflowFiles.vue'
+import Jobs from '@/components/Jobs.vue'
 import { sync } from 'vuex-pathify'
 import Axios from 'axios'
 
@@ -46,31 +49,35 @@ export default {
   },
   data(){
     return {
+      workflowSubmitted: false,
+      bundle: null
     }
   },
   computed:{
       parameters: sync('parameters'),
-      bundle: sync('bundle')
+      files: sync('files'),
+      jobs: sync('jobs')
   },
   props: {
   },
   methods:{
 
     submit(){
-      bundle = createBundle();
+      createBundle();
       submitWorkflow();
+      workflowSubmitted = true;
       console.log("Workflow submitted");
     },
 
     createBundle(){
       // create a new bundle with default name/description
-      bundle = { 
-        name: "Bundle {{files[0].id}} ~  {{files[files.size-1].id}}", 
-        description: "Bundle with {{files.size}} primaryfiles"
+      newBundle = { 
+        name: "Bundle #{this.files[0].id} ~ #{this.files[this.files.size-1].id}", 
+        description: "Bundle with #{this.files.size} primaryfiles"
       }      
-      axios.post(process.env.VUE_APP_AMP_URL + '/bundles', bundle)
+      await axios.post(process.env.VUE_APP_AMP_URL + '/bundles', newBundle)
         .then(response => {
-          bundle = response.data;
+          this.bundle = response.data;
         })
         .catch(e => {
           console.log(e);
@@ -78,13 +85,13 @@ export default {
         });;
   
       // add currently selected primaryfiles to the bundle
-      var primaryfileIds = files[0]; 
-      for (i=1; i<files.length; i++) {
-        primaryfileIds += "," + files[i].id;
+      var primaryfileIds = this.files[0]; 
+      for (i=1; i<this.files.length; i++) {
+        primaryfileIds += "," + this.files[i].id;
       }
-      axios.post(process.env.VUE_APP_AMP_URL + '/bundles/' + bundle.id + '/addPrimaryfiles?primaryfileIds={{primaryfileIds}}')
+      await axios.post(process.env.VUE_APP_AMP_URL + '/bundles/' + this.bundle.id + '/addPrimaryfiles?primaryfileIds=' + primaryfileIds)
        .then(response => {
-          bundle = response.data;
+          this.bundle = response.data;
         })
         .catch(e => {
           console.log(e);
@@ -93,16 +100,16 @@ export default {
       },
 
       submitWorkflow(){
-        axios.post(process.env.VUE_APP_AMP_URL + '/jobs?workflowId=' + selectedWorkflow.id + '&&bundleId=' + bundle.id)
+        await axios.post(process.env.VUE_APP_AMP_URL + '/jobs/bundle?workflowId=' + selectedWorkflow.id + '&bundleId=' + this.bundle.id + '&parameters={}')
         .then(response => {
-            jobs = response.data;
-            this.$router.push("/jobs");
+            this.jobs = response.data;
+            // this.$router.push("/jobs");
           })
           .catch(e => {
             console.log(e);
             // TODO:  Think about global error handling
           });;
-        }
+      }
 
   },
   mounted(){
