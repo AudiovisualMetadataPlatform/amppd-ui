@@ -40,9 +40,6 @@ export default {
     async selection(event) {
       let self = this;
       self.selectedWorkflow = event.target.value;
-      //self.$workflowService.getWorkflowParameters(self.selectedWorkflow);
-      //console.log("Selection changed to: " + self.selectedWorkflow);
-      
       self.parameters = await self.$store.dispatch('getWorkflowDetails', self.selectedWorkflow);
 
     }

@@ -53,7 +53,7 @@ import Header from "./Header";
       }
       if (this.errors.length == 0)
       {
-        this.$router.push("/welcome");
+        this.$router.push("/workflow");
       }
       //console.log("checkform WORKS"+this.errors.length);
       //e.preventDefault();
@@ -83,6 +83,7 @@ import Header from "./Header";
     border: 1px solid #ccc;
     box-sizing: border-box;
     align-content: center;
+    width: 50%;
   }
 
   /* Set a style for all buttons */
@@ -107,8 +108,8 @@ import Header from "./Header";
 
   /* Center the avatar image inside this container */
   .imgcontainer, img {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
   }
 
   /* Add padding to containers */
@@ -126,7 +127,7 @@ import Header from "./Header";
   }
 
   ul{
-  list-style: none;
+    list-style: none;
   } 
 
   li span {

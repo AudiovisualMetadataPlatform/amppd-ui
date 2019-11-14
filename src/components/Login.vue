@@ -17,7 +17,6 @@
             <div class="row"><span><a href="#">Forgot Password?</a></span></div>
             <div class="row"><button type = "submit">Sign In</button></div>
             <div class="row"><label>Or</label></div>
-            <!-- <router-link to="/register" tag="button">Sign Up</router-link> -->
             <div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
         </div>
     
@@ -51,9 +50,8 @@ export default {
       }
       if(this.errors.length == 0)
       {
-        this.$router.push("/welcome");
+        this.$router.push("/workflow");
       }
-      //console.log("checkform WORKS");
     },
     registerClicked() {
       this.$router.push("/register")
@@ -79,10 +77,9 @@ export default {
     border-radius: 5px;
     padding: 15px 20px;
     margin: 20px 20px;
-    display: inline-block;
     border: 1px solid #ccc;
-    box-sizing: border-box;
     align-content: center;
+    width: 50%;
   }
 
   /* Set a style for all buttons */
@@ -104,13 +101,6 @@ export default {
   button:hover {
     opacity: 0.8;
   }
-
-  /* Center the avatar image inside this container */
-  /* .imgcontainer, img {
-  height: 100%;
-  width: 100%;
-  } */
-
 
   /* Add padding to containers */
   .container {
