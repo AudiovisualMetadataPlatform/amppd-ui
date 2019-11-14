@@ -53,7 +53,24 @@ import Header from "./Header";
       }
       if (this.errors.length == 0)
       {
-        this.$router.push("/workflow");
+        axios.post(process.env.VUE_APP_AMP_URL + 'amp/register?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
+        .then(response => {
+          self.auth_status = response.data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
+
+        if(self.auth_status)
+        {
+          console.log("register result is:"+self.auth_status);
+          this.$router.push("/workflow");
+        }
+        else
+        {
+          console.log("auth status is:"+self.auth_status);
+          this.errors.push('Register Unsuccessful as the usename might already exist or due to network error');
+        }
       }
       //console.log("checkform WORKS"+this.errors.length);
       //e.preventDefault();
