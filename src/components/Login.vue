@@ -26,6 +26,7 @@
 
 <script>
 import Header from "./Header";
+import axios from 'axios';
 export default {
   name: 'LoginComponent',
   components: {
@@ -35,7 +36,8 @@ export default {
     return {
 		errors: [],
 		name: null,
-    pswd: null
+    pswd: null,
+    auth_status: false
     };
   },
   methods:{
@@ -50,7 +52,23 @@ export default {
       }
       if(this.errors.length == 0)
       {
-        this.$router.push("/workflow");
+        axios.get(process.env.VUE_APP_AMP_URL + 'amp/auth?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
+        .then(response => {
+          self.auth_status = response.data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
+        if(self.auth_status)
+        {
+          console.log("auth status is:"+self.auth_status);
+          this.$router.push("/workflow");
+        }
+        else
+        {
+          console.log("auth status is:"+self.auth_status);
+          this.errors.push('Username and password do not match');
+        }
       }
     },
     registerClicked() {
