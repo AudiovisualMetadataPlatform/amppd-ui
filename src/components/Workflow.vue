@@ -80,13 +80,16 @@ export default {
         });
   
       // add currently selected primaryfiles to the bundle
-      var primaryfileIds = this.files[0]; 
+      var primaryfileIds = this.files[0].id; 
       for (var i=1; i<this.files.length; i++) {
         primaryfileIds += "," + this.files[i].id;
       }
+      console.log("Adding primaryfiles " + primaryfileIds + " to bundle " + this.bundle.id);
+      console.log("bundleId = " + this.bundle.id);
+      console.log("primaryfileIds = " + primaryfileIds);
       await axios.post(process.env.VUE_APP_AMP_URL + '/bundles/' + this.bundle.id + '/addPrimaryfiles?primaryfileIds=' + primaryfileIds)
        .then(response => {
-          this.bundle = response.data;
+          this.bundle = JSON.parse(response.data);
         })
         .catch(e => {
           console.log(e);
@@ -95,7 +98,9 @@ export default {
       },
 
       async submitWorkflow(){
-        await axios.post(process.env.VUE_APP_AMP_URL + '/jobs/bundle?workflowId=' + this.selectedWorkflow.id + '&bundleId=' + this.bundle.id + '&parameters={}')
+        console.log("workflowId = " + this.selectedWorkflow);
+        console.log("bundleId = " + this.bundle.id);
+        await axios.post(process.env.VUE_APP_AMP_URL + '/jobs/bundle?workflowId=' + this.selectedWorkflow + '&bundleId=' + this.bundle.id)
         .then(response => {
             this.jobs = response.data;
             // this.$router.push("/jobs");
@@ -106,9 +111,9 @@ export default {
           });
       },
 
-    submit(){
-      this.createBundle();
-      this.submitWorkflow();
+    async submit(){
+      await this.createBundle();
+      await this.submitWorkflow();
       this.workflowSubmitted = true;
       console.log("Workflow submitted");
     }
