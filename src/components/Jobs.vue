@@ -15,8 +15,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="(primaryfileId, job) in jobs" v-bind:key="primaryfileId" class="job">
-							<td>{{primarifileId}}</td>
+						<tr v-for="(job, primaryfileId) in jobs" v-bind:key="primaryfileId" class="job">
+							<td>{{primaryfileId}}</td>
 							<td>{{job.id}}</td>
 							<td>{{job.historyId}}</td>
 							<td>{{job.updateTime}}</td>
@@ -25,7 +25,7 @@
 					</tbody>
 				</table>
 			</div>
-			<!-- <h3 v-if="nFailed > 0" class="error">The rest of the {{nFailed}} primaryfiles failed to have AMPPD jobs created to run workflow {{selectedWorkflow.id}}.</h3> -->
+			<h3 v-if="nFailed > 0" class="error">The rest of the {{nFailed}} primaryfiles failed to have AMPPD jobs created to run workflow {{selectedWorkflow.id}}.</h3>
 		</div>
 	</div>
 </template>
@@ -40,22 +40,50 @@ export default {
     Header
   },
   data(){
-    return {
+    return {		
     }
   },
   computed:{
 	selectedWorkflow: sync('selectedWorkflow'),
 	files: sync('files'),
-	jobs: sync('jobs')
-	//   nFailed: this.files.size - this.jobs.size 
+	jobs: sync('jobs'),
+	nFailed: function() {
+		console.log("files.length: " + this.files.length);
+		console.log("jobs.size: " + this.jobs.size);
+		return this.files.length - this.jobs.size
+	} 
   },
   props: {
   },
   methods:{
   },
   mounted(){
+    // for (var job in this.jobs) {
+	// 	console.log("key=" + job);
+	// 	console.log("value=" + this.jobs[job]);
+	// }
+	// console.log("files.length: " + this.files.length);
+	// console.log("jobs.size: " + this.jobs.size);
   }
 }
 </script>
 
-
+<style scoped>
+h3{
+  margin-top: 0;
+  text-align: left;
+}
+table {
+  border-collapse: collapse;
+}
+table, th, td {
+  border: 1px solid black;
+}
+th, td {
+  padding: 15px;
+  text-align: left;
+}
+.jobs{
+  padding-top:100px;
+}
+</style>

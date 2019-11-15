@@ -66,9 +66,11 @@ export default {
 
     async createBundle(){
       // create a new bundle with default name/description
-      var bundle = { 
+      var bundle = {
         name: "Bundle #{this.files[0].id} ~ #{this.files[this.files.size-1].id}", 
         description: "Bundle with #{this.files.size} primaryfiles"
+        // name: "Bundle " + this.files[0].id + " ~ " + this.files[this.files.size-1].id, 
+        // description: "Bundle with " + this.files.size + " primaryfiles"
       }      
       await axios.post(process.env.VUE_APP_AMP_URL + '/bundles', bundle)
         .then(response => {
@@ -84,7 +86,7 @@ export default {
       for (var i=1; i<this.files.length; i++) {
         primaryfileIds += "," + this.files[i].id;
       }
-      console.log("Adding primaryfiles " + primaryfileIds + " to bundle " + this.bundle.id);
+      // console.log("Adding primaryfiles " + primaryfileIds + " to bundle " + this.bundle.id);
       console.log("bundleId = " + this.bundle.id);
       console.log("primaryfileIds = " + primaryfileIds);
       await axios.post(process.env.VUE_APP_AMP_URL + '/bundles/' + this.bundle.id + '/addPrimaryfiles?primaryfileIds=' + primaryfileIds)
@@ -98,8 +100,9 @@ export default {
       },
 
       async submitWorkflow(){
-        console.log("workflowId = " + this.selectedWorkflow);
-        console.log("bundleId = " + this.bundle.id);
+        console.log("Submitting workflow " + this.selectedWorkflow + " on bundle " + this.bundle.id);
+        // console.log("workflowId = " + this.selectedWorkflow);
+        // console.log("bundleId = " + this.bundle.id);
         await axios.post(process.env.VUE_APP_AMP_URL + '/jobs/bundle?workflowId=' + this.selectedWorkflow + '&bundleId=' + this.bundle.id)
         .then(response => {
             this.jobs = response.data;
@@ -131,7 +134,6 @@ h2{
   margin-top: 0;
 }
 h1 {
-
   text-align: center;
 }
 .workflow-content{
