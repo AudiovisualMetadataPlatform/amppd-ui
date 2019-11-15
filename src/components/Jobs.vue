@@ -25,8 +25,7 @@
 					</tbody>
 				</table>
 			</div>
-			<!-- if jobs.size < files.size -->
-			<h3 v-if="nFailed > 0" class="error">The rest of the {{nFailed}} primaryfiles failed to have AMPPD jobs created to run workflow {{selectedWorkflow.id}}.</h3>
+			<!-- <h3 v-if="nFailed > 0" class="error">The rest of the {{nFailed}} primaryfiles failed to have AMPPD jobs created to run workflow {{selectedWorkflow.id}}.</h3> -->
 		</div>
 	</div>
 </template>
@@ -34,7 +33,6 @@
 <script>
 import Header from '@/components/Header.vue'
 import { sync } from 'vuex-pathify'
-import Axios from 'axios'
 
 export default {
   name: 'Jobs',
@@ -46,9 +44,10 @@ export default {
     }
   },
   computed:{
-	  files: sync('files'),
-	  jobs: sync('jobs'),
-	  nFailed: files.size - jobs.size 
+	selectedWorkflow: sync('selectedWorkflow'),
+	files: sync('files'),
+	jobs: sync('jobs')
+	//   nFailed: this.files.size - this.jobs.size 
   },
   props: {
   },
