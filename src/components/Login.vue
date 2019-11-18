@@ -1,7 +1,7 @@
 <template id = "app">
   <div class="form">
     <Header></Header>
-    <form id="app" v-on:submit="checkForm">
+    <form id="app" >
         <div class="error">
         <p v-if="errors.length">
           <b>Please correct the following error(s):</b>
@@ -15,7 +15,7 @@
             <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
             <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
             <div class="row"><span><a href="#">Forgot Password?</a></span></div>
-            <div class="row"><button type = "submit">Sign In</button></div>
+            <div class="row"><button v-on:click="checkForm()">Sign In</button></div>
             <div class="row"><label>Or</label></div>
             <div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
         </div>
@@ -41,8 +41,9 @@ export default {
     };
   },
   methods:{
-    checkForm(event) {
+    checkForm() {
       event.preventDefault();
+      let self = this;
       this.errors = [];
       if (!this.name) {
         this.errors.push('Name required.');
@@ -59,14 +60,14 @@ export default {
         .catch(e => {
           console.log(e);
         });
+        console.log("auth status is:"+self.auth_status);
         if(self.auth_status)
         {
-          console.log("auth status is:"+self.auth_status);
           this.$router.push("/workflow");
         }
         else
         {
-          console.log("auth status is:"+self.auth_status);
+          //console.log("auth status is:"+self.auth_status);
           this.errors.push('Username and password do not match');
         }
       }
