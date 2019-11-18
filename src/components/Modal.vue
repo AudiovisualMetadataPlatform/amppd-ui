@@ -49,7 +49,7 @@ export default {
       searchItems() {
         let self = this;
         console.log("the search word is:", this.searchWord);
-        axios.get(process.env.VUE_APP_AMP_URL + 'primaryfiles/search/findByKeyword?keyword='+this.searchWord)
+        axios.get(process.env.VUE_APP_AMP_URL + '/primaryfiles/search/findByKeyword?keyword='+this.searchWord)
         .then(response => {
           self.searchedItems = response.data._embedded.primaryfiles;})
         .catch(e => {
