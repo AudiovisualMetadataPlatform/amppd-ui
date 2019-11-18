@@ -25,7 +25,7 @@
 					</tbody>
 				</table>
 			</div>
-			<h3 v-if="nFailed > 0" class="error">The rest of the {{nFailed}} primaryfiles failed to have AMPPD jobs created to run workflow {{selectedWorkflow.id}}.</h3>
+			<h3 v-if="nFailed > 0" class="error">The rest of the {{nFailed}} primaryfiles failed to have AMPPD jobs created to run workflow {{selectedWorkflow}}:</h3>
 		</div>
 	</div>
 </template>
