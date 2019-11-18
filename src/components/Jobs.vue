@@ -2,7 +2,7 @@
 	<div>
 		<Header/>
 		<div class="jobs">
-			<h3>The following primaryfiles had AMPPD jobs successfully created and scheduled to run workflow {{selectedWorkflow.id}}:</h3>
+			<h3>The following primaryfiles had AMPPD jobs successfully created and scheduled to run workflow {{selectedWorkflow}}:</h3>
 			<div class="jobs-list">
 				<table class="jobs-table">
 					<thead>
