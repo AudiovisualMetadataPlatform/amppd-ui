@@ -1,7 +1,7 @@
 <template id = "register">
 	<div class="form">
     <Header></Header>
-    <form id="register" v-on:submit="validateRegisterForm">
+     <form id="register" v-on:submit="validateRegisterForm()">
       <div class="error">
         <p v-if="errors.length">
           <b>Please correct the following error(s):</b>
@@ -13,7 +13,7 @@
       <div class="container" >
         <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Username" name="uname" > </div>
         <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create New Password" name="psw" ></div> 
-        <div class="row"><input id="pswd" v-model="confirm_pswd" type="password" placeholder="Confirm New Password" name="cpsw" ></div>
+        <div class="row"><input id="cpswd" v-model="confirm_pswd" type="password" placeholder="Confirm New Password" name="cpsw" ></div>
         <div class="row"><button type="submit">Sign Up</button></div>  
       </div>
 	</form>
@@ -22,6 +22,7 @@
 
 <script>
 import Header from "./Header";
+import axios from 'axios';
   export default {
     name: 'RegisterComponent',
     components: {
@@ -32,12 +33,14 @@ import Header from "./Header";
       errors: [],
       name: null,
       pswd: null,
-      confirm_pswd: null
+      confirm_pswd: null,
+      register_status: 0
     }
   },
   methods:{
-    validateRegisterForm(event) {
-      event.preventDefault();
+    validateRegisterForm() {
+      //event.preventDefault();
+      let self = this;
       this.errors = [];
       if (!this.name) {
         this.errors.push('Name required.');
@@ -53,22 +56,21 @@ import Header from "./Header";
       }
       if (this.errors.length == 0)
       {
-        axios.post(process.env.VUE_APP_AMP_URL + 'amp/register?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
+        axios.get(process.env.VUE_APP_AMP_URL + 'amp/register?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
         .then(response => {
-          self.auth_status = response.data;
+          self.register_status = response.data;
         })
         .catch(e => {
           console.log(e);
         });
-
-        if(self.auth_status)
+        console.log("register result is:"+self.register_status);
+        if(self.register_status == "1")
         {
-          console.log("register result is:"+self.auth_status);
           this.$router.push("/workflow");
         }
         else
         {
-          console.log("auth status is:"+self.auth_status);
+          //console.log("auth status is:"+self.register_status);
           this.errors.push('Register Unsuccessful as the usename might already exist or due to network error');
         }
       }
