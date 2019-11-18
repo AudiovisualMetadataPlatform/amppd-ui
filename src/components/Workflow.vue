@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="workflow-submit">
-              <input v-on:click="submit" type="button" value="Submit" class="primary-button">
+              <input v-on:click="submit" type="button" value="Submit" :disabled="!(selectedWorkflow && files)" class="primary-button">
           </div>
         </div>
       </div>
