@@ -7,20 +7,12 @@
 <script>
 export default {
   name: 'logout',
-  /* data() {
-    return {
-      errors: [],
-      name: null,
-      pswd: null
-    }
-  }, */
   methods:{
     signout() {  
       this.$router.push("/");
     }
   },
   mounted() {
-    //console.log("IT WORKS");
   }
 };
 </script>
