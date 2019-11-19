@@ -12,7 +12,7 @@ export default {
       this.$router.push("/");
     }
   },
-  mounted() {
+  mounted() { 
   }
 };
 </script>
