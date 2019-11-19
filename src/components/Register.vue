@@ -58,7 +58,7 @@ import axios from 'axios';
       }
       if (this.errors.length == 0)
       {
-        await axios.get(process.env.VUE_APP_AMP_URL + 'amp/register?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
+        await axios.get(process.env.VUE_APP_AMP_URL + '/amp/register?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
         .then(response => {
           self.register_status = response.data;
         })
