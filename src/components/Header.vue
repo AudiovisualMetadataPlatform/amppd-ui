@@ -1,7 +1,7 @@
 <template>
   <div class="header">
       <img alt="AMP Logo" src="../assets/amp_horizontal_cropped.jpg">
-      <div class="right-pane"><button type = "submit" v-on:submit="signout()">Logout</button></div>
+      <!-- <div class="right-pane"><button type = "button" v-on:click="signout()">Logout</button></div> -->
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <template id = "register">
 	<div class="form">
     <Header></Header>
-     <form id="register" v-on:submit="validateRegisterForm()">
+     <form id="register" >
       <div class="error">
         <p v-if="errors.length">
           <b>Please correct the following error(s):</b>
@@ -12,16 +12,18 @@
       </div>
       <div class="container" >
         <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Username" name="uname" > </div>
-        <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create New Password" name="psw" ></div> 
-        <div class="row"><input id="cpswd" v-model="confirm_pswd" type="password" placeholder="Confirm New Password" name="cpsw" ></div>
-        <div class="row"><button type="submit">Sign Up</button></div>  
+        <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create Password" name="psw" ></div> 
+        <div class="row"><input id="cpswd" v-model="confirm_pswd" type="password" placeholder="Confirm Password" name="cpsw" ></div>
+        <div class="row"><button type="submit" v-on:click="validateRegisterForm()">Sign Up</button></div> 
+        <div class="row"><label>Or</label></div>
+        <div class="row"><span><a href="#" v-on:click="login()">Already a User?</a></span></div> 
       </div>
 	</form>
   </div>
 </template>
 
 <script>
-import Header from "./Header";
+import Header from '@/components/Header.vue';
 import axios from 'axios';
   export default {
     name: 'RegisterComponent',
@@ -38,8 +40,8 @@ import axios from 'axios';
     }
   },
   methods:{
-    validateRegisterForm() {
-      //event.preventDefault();
+    async validateRegisterForm() {
+      event.preventDefault();
       let self = this;
       this.errors = [];
       if (!this.name) {
@@ -56,7 +58,7 @@ import axios from 'axios';
       }
       if (this.errors.length == 0)
       {
-        axios.get(process.env.VUE_APP_AMP_URL + 'amp/register?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
+        await axios.get(process.env.VUE_APP_AMP_URL + 'amp/register?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
         .then(response => {
           self.register_status = response.data;
         })
@@ -64,18 +66,19 @@ import axios from 'axios';
           console.log(e);
         });
         console.log("register result is:"+self.register_status);
-        if(self.register_status == "1")
+        if(self.register_status)
         {
           this.$router.push("/workflow");
         }
         else
         {
-          //console.log("auth status is:"+self.register_status);
           this.errors.push('Register Unsuccessful as the usename might already exist or due to network error');
         }
       }
-      //console.log("checkform WORKS"+this.errors.length);
-      //e.preventDefault();
+    },
+
+    login(){
+      this.$router.push("/");
     }
   },
   mounted() {
