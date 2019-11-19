@@ -6,11 +6,11 @@
 					<div class="search-bar left-align-row">
 						<span class="search-icon"><i class="fas fa-search"></i></span>
 						<input v-model="searchWord" type="text" placeholder="Search by Name"/>
-						<button type="button" style="align:right"  @click="searchItems">Search</button>
+						<button type="button" style="align:right"  @click="search()">Search</button>
           </div>
           <div class="left-align-row">
-            <div v-for="(file, index) in searchedItems" v-bind:key="index">
-              <input type="checkbox" :id = "file.name" :value="file" v-model="selectedItems" @change="addItems()"/>
+            <div v-for="(file, index) in searchedFiles" v-bind:key="index">
+              <input type="checkbox" :id = "file.name" :value="file" v-model="selectedFiles" @change="addFiles()"/>
               <span class="file-name">{{file.name}}</span>
             </div>
           </div>
@@ -34,8 +34,8 @@ export default {
     data() {
       return {
         searchWord:'',
-        searchedItems:[],
-        selectedItems:[]
+        searchedFiles:[],
+        selectedFiles:[]
         };
     },
     computed:{
@@ -46,20 +46,20 @@ export default {
         this.searchWord = '';
         this.$emit('close');
       },
-      searchItems() {
+      search() {
         let self = this;
         console.log("the search word is:", this.searchWord);
         axios.get(process.env.VUE_APP_AMP_URL + '/primaryfiles/search/findByKeyword?keyword='+this.searchWord)
         .then(response => {
-          self.searchedItems = response.data._embedded.primaryfiles;})
+          self.searchedFiles = response.data._embedded.primaryfiles;})
         .catch(e => {
           console.log(e);});
-        console.log("The file names fetched are:",self.searchedItems);
+        console.log("The file names fetched are:",self.searchedFiles);
       },
-      addItems() {
+      addFiles() {
         let self = this;
-        self.files = this.selectedItems;
-        console.log("The file names checked are:",this.selectedItems);
+        self.files = this.selectedFiles;
+        console.log("The file names checked are:",this.selectedFiles);
         }
       },
 };

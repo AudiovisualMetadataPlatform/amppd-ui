@@ -25,7 +25,7 @@
 </template>  
 
 <script>
-import Header from "./Header";
+import Header from '@/components/Header.vue';
 import axios from 'axios';
 export default {
   name: 'LoginComponent',
@@ -41,7 +41,7 @@ export default {
     };
   },
   methods:{
-    checkForm() {
+    async checkForm() {
       event.preventDefault();
       let self = this;
       this.errors = [];
@@ -53,7 +53,7 @@ export default {
       }
       if(this.errors.length == 0)
       {
-        axios.get(process.env.VUE_APP_AMP_URL + 'amp/auth?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
+        await axios.get(process.env.VUE_APP_AMP_URL + 'amp/auth?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
         .then(response => {
           self.auth_status = response.data;
         })

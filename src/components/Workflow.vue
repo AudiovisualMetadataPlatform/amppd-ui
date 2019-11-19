@@ -1,6 +1,7 @@
 <template>
 <div>
     <Header/>
+    <Logout/>
     <div class="workflow-content" v-if="!workflowSubmitted">
       <h1>Workflow Submission</h1>
       <div class="workflow-body">
@@ -34,9 +35,9 @@
 
 <script>
 import Header from '@/components/Header.vue'
+import Logout from '@/components/Logout.vue'
 import WorkflowSelection from '@/components/WorkflowSelection.vue'
 import WorkflowFiles from '@/components/WorkflowFiles.vue'
-import Jobs from '@/components/Jobs.vue'
 import { sync } from 'vuex-pathify'
 import axios from 'axios'
 
@@ -44,6 +45,7 @@ export default {
   name: 'Workflow',
   components:{
     Header,
+    Logout,
     WorkflowSelection,
     WorkflowFiles,
     Jobs
