@@ -1,6 +1,5 @@
 <template>
-  <div class="header">
-      <img alt="AMP Logo" src="../assets/amp_horizontal_cropped.jpg">
+  <div class="logout">
       <div class="right-pane"><button type = "button" v-on:click="signout()">Logout</button></div>
   </div>
 </template>
@@ -27,25 +26,18 @@ export default {
 </script>
 
 <style scoped>
-.header {
+.logout {
     left: 0px;
     position: fixed;
     top: 0px;
     width: 100%;
     height:100px;
     z-index: 1000;
-    background-color: #133C4E;
+    
 }
-.header .container {
+.logout .container {
     background: blue;
     height: 100px;
-}
-.header img{
-    height:100px;
-    left:0;
-    top: 0;
-    position: fixed;
-    color: #F9871D;
 }
 
 div button {
