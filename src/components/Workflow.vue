@@ -1,6 +1,7 @@
 <template>
 <div>
     <Header/>
+    <Logout/>
     <div class="workflow-content" v-if="!workflowSubmitted">
       <h1>Workflow Submission</h1>
       <div class="workflow-body">
@@ -21,7 +22,7 @@
             </div>
           </div>
           <div class="workflow-submit">
-              <input v-on:click="submit" type="button" value="Submit" :disabled="!(selectedWorkflow && files)" class="primary-button">
+              <input v-on:click="submit" type="button" value="Submit" :disabled="!(selectedWorkflow && files.length>0)" class="primary-button">
           </div>
         </div>
       </div>
@@ -34,6 +35,7 @@
 
 <script>
 import Header from '@/components/Header.vue'
+import Logout from '@/components/Logout.vue'
 import WorkflowSelection from '@/components/WorkflowSelection.vue'
 import WorkflowFiles from '@/components/WorkflowFiles.vue'
 import Jobs from '@/components/Jobs.vue'
@@ -44,6 +46,7 @@ export default {
   name: 'Workflow',
   components:{
     Header,
+    Logout,
     WorkflowSelection,
     WorkflowFiles,
     Jobs

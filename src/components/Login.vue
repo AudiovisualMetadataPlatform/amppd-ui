@@ -1,7 +1,7 @@
 <template id = "app">
   <div class="form">
     <Header></Header>
-    <form id="app" v-on:submit="checkForm">
+    <form id="app" >
         <div class="error">
         <p v-if="errors.length">
           <b>Please correct the following error(s):</b>
@@ -15,7 +15,7 @@
             <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
             <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
             <div class="row"><span><a href="#">Forgot Password?</a></span></div>
-            <div class="row"><button type = "submit">Sign In</button></div>
+            <div class="row"><button v-on:click="checkForm()">Sign In</button></div>
             <div class="row"><label>Or</label></div>
             <div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
         </div>
@@ -25,7 +25,8 @@
 </template>  
 
 <script>
-import Header from "./Header";
+import Header from '@/components/Header.vue';
+import axios from 'axios';
 export default {
   name: 'LoginComponent',
   components: {
@@ -35,12 +36,14 @@ export default {
     return {
 		errors: [],
 		name: null,
-    pswd: null
+    pswd: null,
+    auth_status: false
     };
   },
   methods:{
-    checkForm(event) {
+    async checkForm() {
       event.preventDefault();
+      let self = this;
       this.errors = [];
       if (!this.name) {
         this.errors.push('Name required.');
@@ -50,7 +53,23 @@ export default {
       }
       if(this.errors.length == 0)
       {
-        this.$router.push("/workflow");
+        await axios.get(process.env.VUE_APP_AMP_URL + '/amp/auth?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
+        .then(response => {
+          self.auth_status = response.data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
+        console.log("auth status is:"+self.auth_status);
+        if(self.auth_status)
+        {
+          this.$router.push("/workflow");
+        }
+        else
+        {
+          //console.log("auth status is:"+self.auth_status);
+          this.errors.push('Username and password do not match');
+        }
       }
     },
     registerClicked() {
