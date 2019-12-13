@@ -17,5 +17,7 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
+process.title = "amppd-ui";
+
 console.log(process); // eslint-disable-line
 
