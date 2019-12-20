@@ -12,6 +12,7 @@
       </div>
       <div class="container" >
         <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Username" name="uname" > </div>
+        <div class="row"><input id="email" v-model="email" type="text" placeholder="Email Address" name="email" ></div> 
         <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create Password" name="psw" ></div> 
         <div class="row"><input id="cpswd" v-model="confirm_pswd" type="password" placeholder="Confirm Password" name="cpsw" ></div>
         <div class="row"><button type="submit" v-on:click="validateRegisterForm()">Sign Up</button></div> 
@@ -35,6 +36,7 @@ import axios from 'axios';
       errors: [],
       name: null,
       pswd: null,
+      email: null,
       confirm_pswd: null,
       register_status: 0
     }
@@ -47,8 +49,17 @@ import axios from 'axios';
       if (!this.name) {
         this.errors.push('Name required.');
       }
+      else if(this.name.length < 3){
+        this.errors.push('Username must be at least 3 characters');
+      }
+      if (!this.validateEmail(this.email)) {
+        this.errors.push('Invalid email address');
+      }
       if (!this.pswd) {
         this.errors.push('Password required.');
+      }
+      else if(this.pswd.length < 8){
+        this.errors.push('Password must be at least 8 characters');
       }
       if (!this.confirm_pswd) {
         this.errors.push('Confirm Password required.');
@@ -58,9 +69,15 @@ import axios from 'axios';
       }
       if (this.errors.length == 0)
       {
-        await axios.get(process.env.VUE_APP_AMP_URL + '/amp/register?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
+        await axios.post(process.env.VUE_APP_AMP_URL + '/amp/register',
+        {
+          username: this.name,
+          password: this.pswd,
+          email: this.email
+        })
         .then(response => {
-          self.register_status = response.data;
+          self.register_status = response.data.success;
+          self.errors = response.data.errors;
         })
         .catch(e => {
           console.log(e);
@@ -68,15 +85,14 @@ import axios from 'axios';
         console.log("register result is:"+self.register_status);
         if(self.register_status)
         {
-          this.$router.push("/workflow");
-        }
-        else
-        {
-          this.errors.push('Register Unsuccessful as the usename might already exist or due to network error');
+          this.$router.push("/");
         }
       }
     },
-
+    validateEmail(email){
+      var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;// eslint-disable-line
+      return re.test(email);
+    },
     login(){
       this.$router.push("/");
     }
