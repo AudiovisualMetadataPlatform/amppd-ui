@@ -53,9 +53,13 @@ export default {
       }
       if(this.errors.length == 0)
       {
-        await axios.get(process.env.VUE_APP_AMP_URL + '/amp/auth?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
+        await axios.post(process.env.VUE_APP_AMP_URL+ '/amp/auth',
+          {
+            username: this.name,
+            password: this.pswd
+          })
         .then(response => {
-          self.auth_status = response.data;
+          self.auth_status = response.data.success;
         })
         .catch(e => {
           console.log(e);
@@ -67,7 +71,6 @@ export default {
         }
         else
         {
-          //console.log("auth status is:"+self.auth_status);
           this.errors.push('Username and password do not match');
         }
       }
