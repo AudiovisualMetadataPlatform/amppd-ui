@@ -1,4 +1,4 @@
-<template id = "app">
+<template>
   <div class="form">
     <Header></Header>
     <form id="app" >
@@ -11,52 +11,44 @@
         </p>
         </div>
         <div class="container" id="login">
-            <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Email Address" name="name"> </div>
-            <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
-            <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
-            <div class="row"><span><a href="#" @click="forgotPassword()">Forgot Password?</a></span></div>
-            <div class="row"><button v-on:click="checkForm()">Sign In</button></div>
-            <div class="row"><label>Or</label></div>
-            <div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
+            <div class="row"><input id="email" v-model="email" type="text" placeholder="Email address" name="email"> </div> 
+            <div class="row"><label>A reset token will be sent to this email address.</label></div>
+            <div class="row"><button v-on:click="sendToken()">Submit</button></div>
         </div>
     
     </form>
   </div>
 </template>  
-
 <script>
 import Header from '@/components/Header.vue';
 import axios from 'axios';
 export default {
-  name: 'LoginComponent',
+  name: 'ForgotPassword',
   components: {
-    Header,
+    Header
   },
   data() {
     return {
-		errors: [],
-		name: null,
-    pswd: null,
+    errors: [],
+    email:'',
     auth_status: false
     };
   },
   methods:{
-    async checkForm() {
+    async sendToken() {
       event.preventDefault();
       let self = this;
       this.errors = [];
-      if (!this.name) {
-        this.errors.push('Name required.');
+      if (!this.email) {
+        this.errors.push('Email required.');
       }
-      if (!this.pswd) {
-        this.errors.push('Password required.');
-      }
+      
       if(this.errors.length == 0)
       {
-        await axios.post(process.env.VUE_APP_AMP_URL+ '/login',
+        console.log("email id entered is:"+this.email);
+        await axios.post(process.env.VUE_APP_AMP_URL+ '/forgot-password',
           {
-            username: this.name,
-            password: this.pswd
+            email: this.email
           })
         .then(response => {
           self.auth_status = response.data.success;
@@ -67,21 +59,16 @@ export default {
         console.log("auth status is:"+self.auth_status);
         if(self.auth_status)
         {
-          this.$router.push("/workflow");
+          this.$router.push("/reset-password");
         }
         else
         {
-          this.errors.push('Username and password do not match');
+          this.errors.push('Username not found');
         }
       }
-    },
-    registerClicked() {
-      this.$router.push("/register")
-    },
-    forgotPassword() {
-      this.$router.push("/forgot-password")
     }
   },
+  
   mounted() {
     //console.log("IT WORKS");
   }
@@ -132,7 +119,7 @@ export default {
     border-radius: 25px;
     border: 1px solid;
     padding: 20px 20px;
-    width: 50%;
+    width: 40%;
     display: inline-block
   }
 
