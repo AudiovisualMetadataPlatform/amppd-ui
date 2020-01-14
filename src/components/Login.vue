@@ -53,7 +53,7 @@ export default {
       }
       if(this.errors.length == 0)
       {
-        await axios.post(process.env.VUE_APP_AMP_URL+ '/amp/auth',
+        await axios.post(process.env.VUE_APP_AMP_URL+ '/login',
           {
             username: this.name,
             password: this.pswd
