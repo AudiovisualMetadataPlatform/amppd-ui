@@ -12,10 +12,11 @@
         </p>
         </div>
         <div class="form-content" id="login">
-            <div class="row"><input id="token" v-model="token" type="text" placeholder="Enter reset token here" name="token"> </div>
-            <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create New Password" name="pswd"></div> 
-			<div class="row"><input id="cpswd" v-model="cpswd" type="password" placeholder="Confirm New Password" name="cpswd"></div>
-            <div class="row"><button v-on:click="reset()">Reset</button></div>
+          <div class="row"><input id="token" v-model="token" type="text" placeholder="Enter reset token here" name="token"> </div>
+          <div class="row"><input id="token" v-model="token" type="text" placeholder="Enter reset token here" name="token"> </div>
+          <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create New Password" name="pswd"></div>
+          <div class="row"><input id="cpswd" v-model="cpswd" type="password" placeholder="Confirm New Password" name="cpswd"></div>
+          <div class="row"><button v-on:click="reset()">Reset</button></div>
         </div>
     
 	</div>
