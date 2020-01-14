@@ -53,7 +53,7 @@ export default {
       }
       if(this.errors.length == 0)
       {
-        await axios.get(process.env.VUE_APP_AMP_URL + '/amp/auth?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
+        await axios.get(process.env.VUE_APP_AMP_URL + '/login?name='+this.name+'&pswd='+this.pswd)// eslint-disable-line
         .then(response => {
           self.auth_status = response.data;
         })
