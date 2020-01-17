@@ -39,8 +39,8 @@ export default new Router({
       component: ForgotPassword
     },
     {
-      //path: "/reset-password/:id&:token", 
-      path: "/reset-password",
+      path: "/reset-password/:token", 
+      //path: "/reset-password",
       name: 'reset-password', 
       component: ResetPassword, 
     } 
