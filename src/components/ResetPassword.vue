@@ -1,9 +1,9 @@
 <template>
-  <div >
-
+  <div>
     <Header/>
-	<div class="form-body">
-        <div class="error">
+    <div class="form-body">
+      <h1>Reset Password</h1>
+      <div class="error">
         <p v-if="errors.length">
           <b>Please correct the following error(s):</b>
           <ul>
@@ -13,7 +13,6 @@
         </div>
         <div class="form-content" id="login">
           <div class="row"><input id="emailid" v-model="emailid" type="text" placeholder="Enter Email Address" name="emailid"> </div>
-          <div class="row"><input id="reset_token" v-model="reset_token" type="text" placeholder="Enter reset token here" name="reset_token"> </div>
           <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create New Password" name="pswd"></div>
           <div class="row"><input id="cpswd" v-model="cpswd" type="password" placeholder="Confirm New Password" name="cpswd"></div>
           <div class="row"><button v-on:click="reset()">Reset</button></div>
@@ -59,19 +58,18 @@ export default {
         this.errors.push('Password must be at least 8 characters');
       }
       if (!this.cpswd) {
-        this.errors.push('Confirm Password required.');
+        this.errors.push('Confirm Password required.'); 
       }
       if (this.pswd && this.cpswd && this.cpswd != this.pswd) {
         this.errors.push('Passwords do not match.');
       }
       if (this.errors.length == 0)
       {   
-        console.log("TOKEN=====>>>>"+this.$route);
         await axios.post(process.env.VUE_APP_AMP_URL + '/reset-password',
         {
           emailid: this.emailid,
           password: this.pswd,
-          token: this.reset_token
+          token: this.$route.params.token
         })
         .then(response => {
           self.reset_status = response.data.success;
@@ -81,9 +79,9 @@ export default {
           console.log(e);
         });
         console.log("reset result is:"+self.reset_status);
-        if(self.reset_status)
+        if(this.errors.length == 0 && self.reset_status)
         {
-          this.$router.push("/workflow");
+          this.$router.push("/welcome");
         }
       }
     },
@@ -96,20 +94,25 @@ export default {
 </script>
 
 <style scoped>
-
  .form-body{
-  padding-top:100px;
-  width: 50%;
-  display: inline-block;
-}
+  margin-block-start: 100px;
+  width: auto;
+  height: auto;
+  text-align: center;
+  }
 
-.form-content{
-  padding-top:50px;
-  
-  border-radius: 25px;
-  border: 1px solid;
-  
-}
+  h1 {
+  text-align: center;
+  }
+
+  .form-content{
+  /*padding-top:50px;*/
+    border-radius: 25px;
+    border: 1px solid;
+    padding: 20px 20px;
+    width: 50%;
+    display: inline-block;
+  }
 
   /* Full-width inputs */
   input[type=text], input[type=password] {

@@ -1,8 +1,9 @@
-<template id = "app">
-  <div class="form">
-    <Header></Header>
-    <form id="app" >
-        <div class="error">
+<template>
+  <div>
+    <Header/>
+    <div class="form-body">
+      <h1>Login</h1>
+      <div class="error">
         <p v-if="errors.length">
           <b>Please correct the following error(s):</b>
           <ul>
@@ -10,17 +11,16 @@
           </ul>
         </p>
         </div>
-        <div class="container" id="login">
+        <div class="form-content" id="login">
             <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Email Address" name="name"></div>
             <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
             <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
-            <div class="row"><span><a href="#" @click="forgotPassword()">Forgot Password?</a></span></div>
+            <router-link :to="{ name: 'forgot-password', query: { email: name }}">Forgot Password?</router-link>
             <div class="row"><button v-on:click="checkForm()">Sign In</button></div>
             <div class="row"><label>Or</label></div>
             <div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
         </div>
-    
-    </form>
+  </div>
   </div>
 </template>  
 
@@ -35,7 +35,7 @@ export default {
   data() {
     return {
 		errors: [],
-		name: null,
+		name: ' ',
     pswd: null,
     auth_status: false
     };
@@ -67,7 +67,7 @@ export default {
         console.log("auth status is:"+self.auth_status);
         if(self.auth_status)
         {
-          this.$router.push("/workflow");
+          this.$router.push("/welcome");
         }
         else
         {
@@ -80,7 +80,7 @@ export default {
     },
     forgotPassword() {
       this.$router.push('/forgot-password')
-    },forgotPassword() {      this.$router.push("/forgot-password")    }
+    }
   },
   mounted() {
     //console.log("IT WORKS");
@@ -88,16 +88,28 @@ export default {
 };
 </script>
 
+
 <style scoped>
-  /* Bordered form */
-  form {
-    /* border: 3px solid #f1f1f1; */
-    height:auto;
-    width:auto;
-    margin-block-start: 100px;
+ .form-body{
+  margin-block-start: 100px;
+  width: auto;
+  height: auto;
+  text-align: center;
   }
 
-  /* Full-width inputs */
+  h1 {
+  text-align: center;
+  }
+
+  .form-content{
+  /*padding-top:50px;*/
+    border-radius: 25px;
+    border: 1px solid;
+    padding: 20px 20px;
+    width: 50%;
+    display: inline-block;
+  }
+
   input[type=text], input[type=password] {
     border-radius: 5px;
     padding: 15px 20px;
@@ -107,7 +119,6 @@ export default {
     width: 50%;
   }
 
-  /* Set a style for all buttons */
   button {
     background-color: #2C5B7F;
     color: #E9972D;
@@ -127,15 +138,6 @@ export default {
     opacity: 0.8;
   }
 
-  /* Add padding to containers */
-  .container {
-    border-radius: 25px;
-    border: 1px solid;
-    padding: 20px 20px;
-    width: 50%;
-    display: inline-block
-  }
-
   .error {
     padding: 20px 100px;
     color: red;
@@ -150,20 +152,15 @@ export default {
     padding-left: 100px;
     padding-right: 100px;
   }
-
+ 
   p {
     width:70%;
     text-align: center;
     margin:auto;
   }
 
-  .form {
-    text-align: center;
-  }
-
   .row {
     text-align: center;
     padding:5px 10px;
   }
-
 </style>
