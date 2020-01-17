@@ -83,6 +83,10 @@ export default {
         {
           this.$router.push("/welcome");
         }
+        if(self.reset_status == 0)
+        {
+          this.errors.push('Password reset was unsuccessful');
+        }
       }
     },
     
