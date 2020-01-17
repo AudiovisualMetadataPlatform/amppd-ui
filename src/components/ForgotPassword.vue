@@ -1,7 +1,8 @@
 <template>
-  <div class="form">
-    <Header></Header>
-    <form id="app" >
+  <div>
+    <Header/>
+    <div class="form-body">
+      <h1>Forgot Password</h1>
         <div class="error">
         <p v-if="errors.length">
           <b>Please correct the following error(s):</b>
@@ -10,13 +11,17 @@
           </ul>
         </p>
         </div>
-        <div class="container" id="login">
+        <div class="form-content" id="login">
             <div class="row"><input id="email" v-model="email" type="text" placeholder="Email address" name="email"> </div> 
-            <div class="row"><label>A reset token will be sent to this email address.</label></div>
-            <div class="row"><button v-on:click="sendToken()">Submit</button></div>
+            <div class="row"><label>A password reset link will be sent to this email address.</label></div>
+            <div class="row"><button v-on:click="sendEmail()">Submit</button></div>
+            <div v-if="resend_email">
+              <label>An email has been sent. </label>
+              <span><a href="#" @click="sendEmail()">Resend Email?</a></span>
+            </div>
         </div>
     
-    </form>
+    </div>
   </div>
 </template>  
 <script>
@@ -30,13 +35,17 @@ export default {
   data() {
     return {
     errors: [],
-    email:'',
+    email:null,
     auth_status: false,
-    reset_token: ''
+    reset_token: '',
+    resend_email: false
     };
   },
+  created() {
+    this.email = this.$route.query.email;
+  },
   methods:{
-    async sendToken() {
+    async sendEmail() {
       event.preventDefault();
       let self = this;
       this.errors = [];
@@ -53,15 +62,15 @@ export default {
           })
         .then(response => {
           self.auth_status = response.data.success;
-          self.reset_token = response.data.token;
+          self.errors = response.data.errors;
         })
         .catch(e => {
           console.log(e);
         });
         console.log("auth status is:"+self.auth_status+" and token is:"+self.reset_token);
-        if(self.auth_status)
+        if(this.errors.length == 0 && self.auth_status)
         {
-          //this.$router.push("/reset-password/"+self.reset_token);
+          this.resend_email = true;
         }
         else
         {
@@ -78,15 +87,25 @@ export default {
 </script>
 
 <style scoped>
-  /* Bordered form */
-  form {
-    /* border: 3px solid #f1f1f1; */
-    height:auto;
-    width:auto;
-    margin-block-start: 100px;
+ .form-body{
+  margin-block-start: 100px;
+  width: auto;
+  height: auto;
+  text-align: center;
   }
 
-  /* Full-width inputs */
+  h1 {
+  text-align: center;
+  }
+
+  .form-content{
+    border-radius: 25px;
+    border: 1px solid;
+    padding: 20px 20px;
+    width: 50%;
+    display: inline-block;
+  }
+
   input[type=text], input[type=password] {
     border-radius: 5px;
     padding: 15px 20px;
@@ -96,7 +115,6 @@ export default {
     width: 50%;
   }
 
-  /* Set a style for all buttons */
   button {
     background-color: #2C5B7F;
     color: #E9972D;
@@ -111,18 +129,8 @@ export default {
     border-radius: 15px;
   }
 
-  /* Add a hover effect for buttons */
   button:hover {
     opacity: 0.8;
-  }
-
-  /* Add padding to containers */
-  .container {
-    border-radius: 25px;
-    border: 1px solid;
-    padding: 20px 20px;
-    width: 40%;
-    display: inline-block
   }
 
   .error {
@@ -144,10 +152,6 @@ export default {
     width:70%;
     text-align: center;
     margin:auto;
-  }
-
-  .form {
-    text-align: center;
   }
 
   .row {
