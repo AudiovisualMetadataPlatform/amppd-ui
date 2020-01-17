@@ -31,7 +31,8 @@ export default {
     return {
     errors: [],
     email:'',
-    auth_status: false
+    auth_status: false,
+    reset_token: ''
     };
   },
   methods:{
@@ -48,18 +49,19 @@ export default {
         console.log("email id entered is:"+this.email);
         await axios.post(process.env.VUE_APP_AMP_URL+ '/forgot-password',
           {
-            email: this.email
+            emailid: this.email
           })
         .then(response => {
           self.auth_status = response.data.success;
+          self.reset_token = response.data.token;
         })
         .catch(e => {
           console.log(e);
         });
-        console.log("auth status is:"+self.auth_status);
+        console.log("auth status is:"+self.auth_status+" and token is:"+self.reset_token);
         if(self.auth_status)
         {
-          this.$router.push("/reset-password");
+          //this.$router.push("/reset-password/"+self.reset_token);
         }
         else
         {

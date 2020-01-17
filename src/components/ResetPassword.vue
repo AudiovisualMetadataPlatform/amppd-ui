@@ -12,8 +12,8 @@
         </p>
         </div>
         <div class="form-content" id="login">
-          <div class="row"><input id="token" v-model="token" type="text" placeholder="Enter reset token here" name="token"> </div>
-          <div class="row"><input id="token" v-model="token" type="text" placeholder="Enter reset token here" name="token"> </div>
+          <div class="row"><input id="emailid" v-model="emailid" type="text" placeholder="Enter Email Address" name="emailid"> </div>
+          <div class="row"><input id="reset_token" v-model="reset_token" type="text" placeholder="Enter reset token here" name="reset_token"> </div>
           <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create New Password" name="pswd"></div>
           <div class="row"><input id="cpswd" v-model="cpswd" type="password" placeholder="Confirm New Password" name="cpswd"></div>
           <div class="row"><button v-on:click="reset()">Reset</button></div>
@@ -38,7 +38,7 @@ export default {
 		pswd: null,
 		cpswd: null,
 		reset_status: 0,
-		email: null
+		emailid: null
     };
   },
   methods:{
@@ -58,19 +58,20 @@ export default {
       else if(this.pswd.length < 8){
         this.errors.push('Password must be at least 8 characters');
       }
-      if (!this.confirm_pswd) {
+      if (!this.cpswd) {
         this.errors.push('Confirm Password required.');
       }
-      if (this.pswd && this.confirm_pswd && this.confirm_pswd != this.pswd) {
+      if (this.pswd && this.cpswd && this.cpswd != this.pswd) {
         this.errors.push('Passwords do not match.');
       }
       if (this.errors.length == 0)
-      {
+      {   
+        console.log("TOKEN=====>>>>"+this.$route);
         await axios.post(process.env.VUE_APP_AMP_URL + '/reset-password',
         {
-          email: this.email,
+          emailid: this.emailid,
           password: this.pswd,
-          token: this.token
+          token: this.reset_token
         })
         .then(response => {
           self.reset_status = response.data.success;

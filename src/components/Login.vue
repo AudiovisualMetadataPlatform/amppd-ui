@@ -11,7 +11,7 @@
         </p>
         </div>
         <div class="container" id="login">
-            <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Email Address" name="name"> </div>
+            <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Email Address" name="name"></div>
             <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
             <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
             <div class="row"><span><a href="#" @click="forgotPassword()">Forgot Password?</a></span></div>
@@ -76,11 +76,11 @@ export default {
       }
     },
     registerClicked() {
-      this.$router.push("/register")
+      this.$router.push('/register')
     },
     forgotPassword() {
-      this.$router.push("/forgot-password")
-    }
+      this.$router.push('/forgot-password')
+    },forgotPassword() {      this.$router.push("/forgot-password")    }
   },
   mounted() {
     //console.log("IT WORKS");
