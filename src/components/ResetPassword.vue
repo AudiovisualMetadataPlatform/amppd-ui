@@ -19,7 +19,7 @@
         </div>
     
 	</div>
-  </div>  
+  </div>
 </template>  
 
 <script>
@@ -48,8 +48,9 @@ export default {
       event.preventDefault();
       let self = this;
       this.errors = [];
+
       if (!this.reset_token || this.reset_token.length < 6) {
-        this.errors.push('Invalid link');
+        this.errors.push('Invalid link');     
       }
       if (!this.pswd) {
         this.errors.push('Password required.');
