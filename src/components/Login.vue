@@ -56,7 +56,7 @@ export default {
         await axios.post(process.env.VUE_APP_AMP_URL+ '/login',
           {
             emailid: this.email,
-            password: this.pswd
+            password: this.pswd  
           })
         .then(response => {
           self.auth_status = response.data.success;
