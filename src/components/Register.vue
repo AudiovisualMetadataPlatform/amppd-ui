@@ -73,7 +73,7 @@ import axios from 'axios';
         {
           username: this.name,
           password: this.pswd,
-          email: this.email
+          email: this.email  
         })
         .then(response => {
           self.register_status = response.data.success;

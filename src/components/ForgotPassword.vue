@@ -2,8 +2,8 @@
   <div>
     <Header/>
     <div class="form-body">
-      <h1>Login</h1>
-      <div class="error">
+      <h1>Forgot Password</h1>
+        <div class="error">
         <p v-if="errors.length">
           <b>Please correct the following error(s):</b>
           <ul>
@@ -12,82 +12,79 @@
         </p>
         </div>
         <div class="form-content" id="login">
-            <div class="row"><input id="email" v-model="email" type="text" placeholder="Enter Email Address" name="email"></div>
-            <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
-            <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
-            <router-link :to="{ name: 'forgot-password', query: { email: email }}">Forgot Password?</router-link>
-            <div class="row"><button v-on:click="checkForm()">Sign In</button></div>
-            <div class="row"><label>Or</label></div>
-            <div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
+            <div class="row"><input id="email" v-model="email" type="text" placeholder="Email address" name="email"> </div> 
+            <div class="row"><label>A password reset link will be sent to this email address.</label></div>
+            <div class="row"><button v-on:click="sendEmail()">Submit</button></div>
+            <div v-if="resend_email">
+              <label>An email has been sent. </label>
+              <span><a href="#" @click="sendEmail()">Resend Email?</a></span>
+            </div>
         </div>
-  </div>
+    
+    </div>
   </div>
 </template>  
-
 <script>
 import Header from '@/components/Header.vue';
 import axios from 'axios';
 export default {
-  name: 'LoginComponent',
+  name: 'ForgotPassword',
   components: {
-    Header,
+    Header
   },
   data() {
     return {
-		errors: [],
-		email: null,
-    pswd: null,
-    auth_status: false
+    errors: [],
+    email:null,
+    auth_status: false,
+    reset_token: '',
+    resend_email: false
     };
   },
+  created() {
+    this.email = this.$route.query.email;
+  },
   methods:{
-    async checkForm() {
+    async sendEmail() {
       event.preventDefault();
       let self = this;
       this.errors = [];
       if (!this.email) {
         this.errors.push('Email required.');
       }
-      if (!this.pswd) {
-        this.errors.push('Password required.');
-      }
+      
       if(this.errors.length == 0)
       {
-        await axios.post(process.env.VUE_APP_AMP_URL+ '/login',
+        console.log("email id entered is:"+this.email);
+        await axios.post(process.env.VUE_APP_AMP_URL+ '/forgot-password',
           {
-            emailid: this.email,
-            password: this.pswd  
+            emailid: this.email
           })
         .then(response => {
           self.auth_status = response.data.success;
+          self.errors = response.data.errors;
         })
         .catch(e => {
           console.log(e);
         });
-        console.log("auth status is:"+self.auth_status);
-        if(self.auth_status)
+        console.log("auth status is:"+self.auth_status+" and token is:"+self.reset_token);
+        if(this.errors.length == 0 && self.auth_status)
         {
-          this.$router.push("/welcome");
+          this.resend_email = true;
         }
         else
         {
-          this.errors.push('Email and password do not match');
+          this.errors.push('Username not found');
         }
       }
-    },
-    registerClicked() {
-      this.$router.push('/register')
-    },
-    forgotPassword() {
-      this.$router.push('/forgot-password')
     }
   },
+  
   mounted() {
     //console.log("IT WORKS");
   }
 };
 </script>
-
 
 <style scoped>
  .form-body{
@@ -102,7 +99,6 @@ export default {
   }
 
   .form-content{
-  /*padding-top:50px;*/
     border-radius: 25px;
     border: 1px solid;
     padding: 20px 20px;
@@ -133,7 +129,6 @@ export default {
     border-radius: 15px;
   }
 
-  /* Add a hover effect for buttons */
   button:hover {
     opacity: 0.8;
   }
@@ -152,7 +147,7 @@ export default {
     padding-left: 100px;
     padding-right: 100px;
   }
- 
+
   p {
     width:70%;
     text-align: center;
@@ -163,4 +158,5 @@ export default {
     text-align: center;
     padding:5px 10px;
   }
+
 </style>
