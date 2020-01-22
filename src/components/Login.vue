@@ -12,7 +12,7 @@
         </p>
         </div>
         <div class="form-content" id="login">
-            <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Email Address" name="name"></div>
+            <div class="row"><input id="email" v-model="email" type="text" placeholder="Enter Email Address" name="email"></div>
             <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
             <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
             <router-link :to="{ name: 'forgot-password', query: { email: name }}">Forgot Password?</router-link>
@@ -35,7 +35,7 @@ export default {
   data() {
     return {
 		errors: [],
-		name: ' ',
+		email: ' ',
     pswd: null,
     auth_status: false
     };
@@ -45,8 +45,8 @@ export default {
       event.preventDefault();
       let self = this;
       this.errors = [];
-      if (!this.name) {
-        this.errors.push('Name required.');
+      if (!this.email) {
+        this.errors.push('Email required.');
       }
       if (!this.pswd) {
         this.errors.push('Password required.');
@@ -55,7 +55,7 @@ export default {
       {
         await axios.post(process.env.VUE_APP_AMP_URL+ '/login',
           {
-            username: this.name,
+            emailid: this.email,
             password: this.pswd
           })
         .then(response => {
@@ -71,7 +71,7 @@ export default {
         }
         else
         {
-          this.errors.push('Username and password do not match');
+          this.errors.push('Email and password do not match');
         }
       }
     },
