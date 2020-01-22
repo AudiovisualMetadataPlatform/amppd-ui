@@ -154,7 +154,7 @@ import axios from 'axios';
   }
 
   .error {
-    padding: 20px 100px;
+    padding: 20px 100px;  
     color: red;
   }
 
