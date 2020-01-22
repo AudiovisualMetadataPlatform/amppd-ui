@@ -40,16 +40,16 @@ export default {
 		emailid: null
     };
   },
+  created() {
+    this.reset_token = this.$route.params.token;
+  },
   methods:{
     async reset() {
       event.preventDefault();
       let self = this;
       this.errors = [];
-      if (!this.reset_token) {
-        this.errors.push('reset_token required.');
-      }
-      if (this.reset_token.length < 6) {
-        this.errors.push('Invalid reset_token ');
+      if (!this.reset_token || this.reset_token.length < 6) {
+        this.errors.push('Invalid link');
       }
       if (!this.pswd) {
         this.errors.push('Password required.');
