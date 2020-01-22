@@ -15,7 +15,7 @@
             <div class="row"><input id="email" v-model="email" type="text" placeholder="Enter Email Address" name="email"></div>
             <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
             <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
-            <router-link :to="{ name: 'forgot-password', query: { email: name }}">Forgot Password?</router-link>
+            <router-link :to="{ name: 'forgot-password', query: { email: email }}">Forgot Password?</router-link>
             <div class="row"><button v-on:click="checkForm()">Sign In</button></div>
             <div class="row"><label>Or</label></div>
             <div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
@@ -35,7 +35,7 @@ export default {
   data() {
     return {
 		errors: [],
-		email: ' ',
+		email: null,
     pswd: null,
     auth_status: false
     };

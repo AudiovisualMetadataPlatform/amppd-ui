@@ -33,7 +33,7 @@ export default {
   data() {
     return {
 		errors: [],
-		reset_token: 123456,
+		reset_token: null,
 		pswd: null,
 		cpswd: null,
 		reset_status: 0,
