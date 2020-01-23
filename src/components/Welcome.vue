@@ -1,25 +1,28 @@
-<template id = "welcome" >
-	<div class="form">
-    <Header></Header>
-		<form id="app" v-on:submit="signout" action="index.html" method="post">
-      <div class="container" id="welcome">
-          <div class="row"><h1>Welcome to AMP!</h1> </div>
-          <div class="row"><button type="submit">Logout</button></div>
-      </div>
-    </form>
-	</div>
+<template>
+<div>
+  <Header/>
+  <Logout/>
+  <div class="form-body">
+    <h1>Welcome</h1>      
+        <div class="form-content">
+          <div class="row"><router-link :to="{ name: 'welcome', query: { email: name }}">Batch Ingest</router-link></div>
+          <div class="row"><router-link :to="{ name: 'workflow', query: { email: name }}">Workflow Selection</router-link></div>
+        </div>
+    </div>
+</div>
 </template>
 
 <script>
 import Header from "./Header";
+import Logout from '@/components/Logout.vue'
 export default {
   name: 'WelcomeComponent',
   components: {
-    Header
+    Header,
+    Logout
     },
   data() {
     return {
-      errors: [],
       name: null,
       pswd: null
     }
@@ -36,15 +39,25 @@ export default {
 </script>
 
 <style scoped>
-  /* Bordered form */
-  form {
-    /* border: 3px solid #f1f1f1; */
-    height:auto;
-    width:auto;
-    margin-block-start: 110px;
+ .form-body{
+  margin-block-start: 100px;
+  width: auto;
+  height: auto;
+  text-align: center;
   }
 
-  /* Full-width inputs */
+  h1 {
+  text-align: center;
+  }
+
+  .form-content{
+    border-radius: 25px;
+    border: 1px solid;
+    padding: 20px 20px;
+    width: 50%;
+    display: inline-block;
+  }
+
   input[type=text], input[type=password] {
     border-radius: 5px;
     padding: 15px 20px;
@@ -55,7 +68,6 @@ export default {
     align-content: center;
   }
 
-  /* Set a style for all buttons */
   button {
     background-color: #2C5B7F;
     color: #E9972D;
@@ -70,30 +82,8 @@ export default {
     border-radius: 15px;
   }
 
-  /* Add a hover effect for buttons */
   button:hover {
     opacity: 0.8;
-  }
-
-  /* Center the avatar image inside this container */
-  .imgcontainer, img {
-  height: 100%;
-  width: 100%;
-  }
-
-
-  /* Add padding to containers */
-  .container {
-    border-radius: 25px;
-    border: 1px solid;
-    padding: 20px 20px;
-    width: 40%;
-    display: inline-block
-  }
-
-  .error {
-    padding: 20px 100px;
-    color: red;
   }
 
   ul{
@@ -112,12 +102,8 @@ export default {
     margin:auto;
   }
 
-  .form {
-    text-align: center;
-  }
-
   .row {
-    text-align: center;
+    text-align: left;
     padding:5px 10px;
   }
 </style>

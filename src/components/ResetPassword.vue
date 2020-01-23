@@ -2,7 +2,7 @@
   <div>
     <Header/>
     <div class="form-body">
-      <h1>Login</h1>
+      <h1>Reset Password</h1>
       <div class="error">
         <p v-if="errors.length">
           <b>Please correct the following error(s):</b>
@@ -12,15 +12,13 @@
         </p>
         </div>
         <div class="form-content" id="login">
-            <div class="row"><input id="email" v-model="email" type="text" placeholder="Enter Email Address" name="email"></div>
-            <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
-            <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
-            <router-link :to="{ name: 'forgot-password', query: { email: email }}">Forgot Password?</router-link>
-            <div class="row"><button v-on:click="checkForm()">Sign In</button></div>
-            <div class="row"><label>Or</label></div>
-            <div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
+          <div class="row"><input id="emailid" v-model="emailid" type="text" placeholder="Enter Email Address" name="emailid"> </div>
+          <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create New Password" name="pswd"></div>
+          <div class="row"><input id="cpswd" v-model="cpswd" type="password" placeholder="Confirm New Password" name="cpswd"></div>
+          <div class="row"><button v-on:click="reset()">Reset</button></div>
         </div>
-  </div>
+    
+	</div>
   </div>
 </template>  
 
@@ -28,66 +26,76 @@
 import Header from '@/components/Header.vue';
 import axios from 'axios';
 export default {
-  name: 'LoginComponent',
+  name: 'ResetPasswordForm',
   components: {
     Header,
   },
   data() {
     return {
 		errors: [],
-		email: null,
-    pswd: null,
-    auth_status: false
+		reset_token: null,
+		pswd: null,
+		cpswd: null,
+		reset_status: 0,
+		emailid: null
     };
   },
   methods:{
-    async checkForm() {
+    async reset() {
       event.preventDefault();
       let self = this;
       this.errors = [];
-      if (!this.email) {
-        this.errors.push('Email required.');
+      if (!this.reset_token) {
+        this.errors.push('reset_token required.');
+      }
+      if (this.reset_token.length < 6) {
+        this.errors.push('Invalid reset_token ');
       }
       if (!this.pswd) {
         this.errors.push('Password required.');
       }
-      if(this.errors.length == 0)
-      {
-        await axios.post(process.env.VUE_APP_AMP_URL+ '/login',
-          {
-            emailid: this.email,
-            password: this.pswd  
-          })
+      else if(this.pswd.length < 8){
+        this.errors.push('Password must be at least 8 characters');
+      }
+      if (!this.cpswd) {
+        this.errors.push('Confirm Password required.'); 
+      }
+      if (this.pswd && this.cpswd && this.cpswd != this.pswd) {
+        this.errors.push('Passwords do not match.');
+      }
+      if (this.errors.length == 0)
+      {   
+        await axios.post(process.env.VUE_APP_AMP_URL + '/reset-password',
+        {
+          emailid: this.emailid,
+          password: this.pswd,
+          token: this.$route.params.token
+        })
         .then(response => {
-          self.auth_status = response.data.success;
+          self.reset_status = response.data.success;
+          self.errors = response.data.errors;
         })
         .catch(e => {
           console.log(e);
         });
-        console.log("auth status is:"+self.auth_status);
-        if(self.auth_status)
+        console.log("reset result is:"+self.reset_status);
+        if(this.errors.length == 0 && self.reset_status)
         {
           this.$router.push("/welcome");
         }
-        else
+        if(self.reset_status == 0)
         {
-          this.errors.push('Email and password do not match');
+          this.errors.push('Password reset was unsuccessful');
         }
       }
     },
-    registerClicked() {
-      this.$router.push('/register')
-    },
-    forgotPassword() {
-      this.$router.push('/forgot-password')
-    }
+    
   },
   mounted() {
     //console.log("IT WORKS");
   }
 };
 </script>
-
 
 <style scoped>
  .form-body{
@@ -110,6 +118,7 @@ export default {
     display: inline-block;
   }
 
+  /* Full-width inputs */
   input[type=text], input[type=password] {
     border-radius: 5px;
     padding: 15px 20px;
@@ -119,6 +128,7 @@ export default {
     width: 50%;
   }
 
+  /* Set a style for all buttons */
   button {
     background-color: #2C5B7F;
     color: #E9972D;
@@ -152,7 +162,7 @@ export default {
     padding-left: 100px;
     padding-right: 100px;
   }
- 
+
   p {
     width:70%;
     text-align: center;
@@ -163,4 +173,5 @@ export default {
     text-align: center;
     padding:5px 10px;
   }
+
 </style>
