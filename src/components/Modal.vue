@@ -65,7 +65,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 	.search-bar {
     border-radius: 5px;
     border: 1px solid #ccc;
