@@ -48,6 +48,11 @@ export default new Router({
       path: "/approve-user/:id", 
       name: 'approve-user', 
       component: ApproveUser, 
+    },
+    {
+      path: "/activate-account/:id", 
+      name: 'activate-account', 
+      component: Login, 
     }
 
     // {
