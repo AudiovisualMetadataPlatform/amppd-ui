@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'header',
+  name: 'ampheader',
   /* data() {
     return {
       errors: [],
