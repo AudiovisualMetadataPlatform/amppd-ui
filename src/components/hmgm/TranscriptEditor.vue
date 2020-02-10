@@ -62,8 +62,12 @@ export default {
       modalHeader:"",
       modalBody:"",
       showModal: false,
-      modalDismiss: null
+      modalDismiss: null,
+      transcriptType: 1
     }
+  },
+  computed:{
+
   },
   methods:{
     // Set data for editor
@@ -73,7 +77,12 @@ export default {
         this.sttType = "draftjs";
       }
       else {
-        this.sttType = "amazontranscribe";
+        if(!this.transcriptType || this.transcriptType==1){
+          this.sttType = "amazontranscribe";
+        }
+        else {
+          this.sttType = "bbckaldi";
+        }
       }
     },
     handleAlreadyComplete(){
@@ -142,6 +151,8 @@ export default {
     
   },
   mounted(){
+    this.transcriptType = this.$route.query.type;
+    console.log(this.transcriptType);
     this.getFile(this.$route.query.datasetUrl);
     this.mediaUrl = this.$route.query.mediaUrl;
   },
