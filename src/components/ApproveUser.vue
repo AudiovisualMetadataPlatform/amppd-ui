@@ -12,6 +12,7 @@
         </p>
         </div>
         <div class="form-content" id="approve">
+			<div class= "row"> User ID : {{this.$route.params.id}}</div>
 			<div class="row">Click <span><a href="#" v-on:click="approveUser()">here</a></span> to approve</div>
 			<div v-if="approve_user">
 				<label>The user has been approved. </label>
