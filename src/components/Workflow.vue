@@ -11,10 +11,10 @@
         </div>
         <div class="right-pane">
           <div>
-            <h2>Workflow Node Parameters</h2>
+            <h2>Workflow Step Parameters</h2>
             <div class="workflow-parameter-nodes">
               <div v-for="(node, index) in parameters" v-bind:key="index" class="node">
-                    <div class="node-name">Node: {{node.nodeName}}</div>
+                    <div class="node-name">Step {{node.nodeId}}: {{node.nodeName}} ({{node.annotation}})</div>
                     <div class="parameters" v-for="(parameter, subindex) in node.params" v-bind:key="subindex" >
                       <span class="parameter-name">{{parameter.name}}</span> <input :value="parameter.value" type="text"/>
                     </div>

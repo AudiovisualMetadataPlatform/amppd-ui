@@ -16,7 +16,7 @@ Vue.use(Vuex);
 =======================================================*/
 
 const state = {
-    parameters: [], // Workflow node parameters
+    parameters: [], // Workflow step parameters
     files: [], // List of files
     selectedWorkflow: null, // Selected workflow
     // bundle: null, // bundle created for primaryfiles upon submission
@@ -56,7 +56,9 @@ const actions = {
 
                 // Create a new node object
                 var newNode = {
+                    nodeId: nodeKey,
                     nodeName: thisNode.toolId,
+                    annotation: thisNode.annotation,
                     params:[]
                 };
 
