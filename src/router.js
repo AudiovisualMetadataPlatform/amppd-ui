@@ -7,6 +7,7 @@ import Welcome from "./components/Welcome.vue";
 import Workflow from "./components/Workflow.vue";
 import ForgotPassword from "./components/ForgotPassword.vue";
 import ResetPassword from "./components/ResetPassword.vue";
+import ApproveUser from "./components/ApproveUser.vue";
 import BatchIngest from "./components/batch/BatchIngest.vue";
 // import Jobs from "./components/Jobs.vue";
 
@@ -43,6 +44,16 @@ export default new Router({
       path: "/reset-password/:token", 
       name: 'reset-password', 
       component: ResetPassword, 
+    }, 
+    {
+      path: "/approve-user/:id", 
+      name: 'approve-user', 
+      component: ApproveUser, 
+    },
+    {
+      path: "/activate-account/:id", 
+      name: 'activate-account', 
+      component: Login, 
     } ,  
     {
       path: "/batch/ingest", 
