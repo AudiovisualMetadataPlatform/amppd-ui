@@ -8,6 +8,7 @@ import Workflow from "./components/Workflow.vue";
 import ForgotPassword from "./components/ForgotPassword.vue";
 import ResetPassword from "./components/ResetPassword.vue";
 import ApproveUser from "./components/ApproveUser.vue";
+import BatchIngest from "./components/batch/BatchIngest.vue";
 // import Jobs from "./components/Jobs.vue";
 
 Vue.use(Router);
@@ -53,7 +54,12 @@ export default new Router({
       path: "/activate-account/:id", 
       name: 'activate-account', 
       component: Login, 
-    }
+    } ,  
+    {
+      path: "/batch/ingest", 
+      name: 'batch-ingest', 
+      component: BatchIngest, 
+    } 
 
     // {
     //   path: "/jobs",
