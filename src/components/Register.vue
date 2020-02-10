@@ -1,7 +1,8 @@
-<template id = "register">
-	<div class="form">
-    <Header></Header>
-     <form id="register" >
+<template>
+  <div>
+    <Header/>
+    <div class="form-body">
+      <h1>Register</h1>
       <div class="error">
         <p v-if="errors.length">
           <b>Please correct the following error(s):</b>
@@ -10,7 +11,7 @@
           </ul>
         </p>
       </div>
-      <div class="container" >
+      <div class="form-content" id="register">
         <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Username" name="uname" > </div>
         <div class="row"><input id="email" v-model="email" type="text" placeholder="Email Address" name="email" ></div> 
         <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create Password" name="psw" ></div> 
@@ -19,9 +20,9 @@
         <div class="row"><label>Or</label></div>
         <div class="row"><span><a href="#" v-on:click="login()">Already a User?</a></span></div> 
       </div>
-	</form>
   </div>
-</template>
+  </div>
+</template>  
 
 <script>
 import Header from '@/components/Header.vue';
@@ -104,31 +105,39 @@ import axios from 'axios';
 </script>
 
 <style scoped>
-  /* Bordered form */
-  form {
-    /* border: 3px solid #f1f1f1; */
-    height:auto;
-    width:auto;
-    margin-block-start: 100px;
+ .form-body{
+  margin-block-start: 100px;
+  width: auto;
+  height: auto;
+  text-align: center;
   }
 
-  /* Full-width inputs */
+  h1 {
+  text-align: center;
+  }
+
+  .form-content{
+  /*padding-top:50px;*/
+    border-radius: 25px;
+    border: 1px solid;
+    padding: 20px 20px;
+    width: 50%;
+    display: inline-block;
+  }
+
   input[type=text], input[type=password] {
     border-radius: 5px;
     padding: 15px 20px;
     margin: 20px 20px;
-    display: inline-block;
     border: 1px solid #ccc;
-    box-sizing: border-box;
     align-content: center;
     width: 50%;
   }
 
-  /* Set a style for all buttons */
   button {
     background-color: #2C5B7F;
     color: #E9972D;
-    font:bold;
+    font:bolder;
     padding: 14px 20px;
     margin-left: 20px;
     margin-right: 20px;
@@ -144,28 +153,13 @@ import axios from 'axios';
     opacity: 0.8;
   }
 
-  /* Center the avatar image inside this container */
-  .imgcontainer, img {
-    height: 100%;
-    width: 100%;
-  }
-
-  /* Add padding to containers */
-  .container {
-    border-radius: 25px;
-    border: 1px solid;
-    padding: 20px 20px;
-    width: 40%;
-    display: inline-block
-  }
-
   .error {
-    padding: 20px 100px;
+    padding: 20px 100px;  
     color: red;
   }
 
   ul{
-    list-style: none;
+  list-style: none;
   } 
 
   li span {
@@ -173,15 +167,11 @@ import axios from 'axios';
     padding-left: 100px;
     padding-right: 100px;
   }
-
+ 
   p {
     width:70%;
     text-align: center;
     margin:auto;
-  }
-
-  .form {
-    text-align: center;
   }
 
   .row {
