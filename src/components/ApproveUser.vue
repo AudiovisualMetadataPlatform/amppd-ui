@@ -44,7 +44,7 @@ import axios from 'axios';
 		event.preventDefault();
 		await axios.post(process.env.VUE_APP_AMP_URL+ '/approve-user',
           {
-            id: this.$route.params.id 
+            userId: this.$route.params.id 
           })
         .then(response => {
           self.approve_status = response.data.success;
