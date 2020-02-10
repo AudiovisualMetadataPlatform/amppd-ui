@@ -31,7 +31,7 @@ import axios from 'axios';
     components: {
       Header
       },
-    data: function() {
+    data: function() { 
 		return {
 			errors: [],
 			id: null,
