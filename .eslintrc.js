@@ -16,7 +16,8 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "vue"
+        "vue",
+        "react"
     ],
     "rules": {
       'no-console': 'off',
