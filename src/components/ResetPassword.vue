@@ -74,7 +74,7 @@ export default {
         this.errors.push('Confirm Password required.'); 
       }
       if (this.pswd && this.cpswd && this.cpswd != this.pswd) {
-        this.errors.push('Passwords do not match.');
+        this.errors.push('Both password fields must match.');
       }
       if (this.errors.length == 0)
       {   
