@@ -12,10 +12,10 @@
         </p>
         </div>
         <div class="form-content" id="login">
-          <div class="row"><input id="emailid" v-model="emailid" type="text" placeholder="Enter Email Address" name="emailid"> </div>
+          <div class="row"><input id="emailid" v-model="emailid" v-bind:readonly="isReadOnly" type="text" placeholder="Enter Email Address" name="emailid"> </div>
           <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create New Password" name="pswd"></div>
           <div class="row"><input id="cpswd" v-model="cpswd" type="password" placeholder="Confirm New Password" name="cpswd"></div>
-          <div class="row"><button v-on:click="reset()">Reset</button></div>
+          <div class="row"><button v-bind:disabled="isDisabled" v-on:click="reset()">Reset</button></div>
         </div>
     
 	</div>
@@ -36,12 +36,24 @@ export default {
 		reset_token: null,
 		pswd: null,
 		cpswd: null,
-		reset_status: 0,
-		emailid: null
+    reset_status: 0,
+    fetch_status: 0,
+    emailid: null,
+    isReadOnly: false,
     };
   },
+  
   created() {
-    this.reset_token = this.$route.params.token;
+    this.reset_token = this.$route.params.token;  
+  },
+  computed:{
+    isDisabled: function(){
+      if(this.emailid==null || this.emailid=='' || this.pswd==null || this.pswd=='' || this.cpswd=='' || this.cpswd==null)
+      {
+          return true;
+      }
+      return false;
+    }
   },
   methods:{
     async reset() {
@@ -62,7 +74,7 @@ export default {
         this.errors.push('Confirm Password required.'); 
       }
       if (this.pswd && this.cpswd && this.cpswd != this.pswd) {
-        this.errors.push('Passwords do not match.');
+        this.errors.push('Both password fields must match.');
       }
       if (this.errors.length == 0)
       {   
@@ -90,11 +102,30 @@ export default {
         }
       }
     },
+    fetch_emailID() {
+      axios.post(process.env.VUE_APP_AMP_URL + '/reset-password-getEmail',
+        {
+          token: this.$route.params.token
+        })
+        .then(response => {
+          this.fetch_status = response.data.success;
+          this.errors = response.data.errors;
+          this.emailid = response.data.emailid;
+        })
+        .catch(e => {
+          console.log(e);
+        });
+        //if(this.emailid)
+        this.isReadOnly = true;
+    }
     
   },
-  mounted() {
-    //console.log("IT WORKS");
+  mounted(){
+    //this.reset_token = this.$route.params.token;
+    let self = this;
+    self.fetch_emailID();
   }
+  
 };
 </script>
 
@@ -147,6 +178,12 @@ export default {
   /* Add a hover effect for buttons */
   button:hover {
     opacity: 0.8;
+  }
+
+  button:disabled,
+  button[disabled]{
+  background-color: #6d8291;
+  color: #E9972D;
   }
 
   .error {

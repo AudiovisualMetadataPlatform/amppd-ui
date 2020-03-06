@@ -12,9 +12,9 @@
         </p>
         </div>
         <div class="form-content" id="login">
-            <div class="row"><input id="email" v-model="email" type="text" placeholder="Email address" name="email"> </div> 
+            <div class="row"><input id="email" v-model="email" v-bind:readonly="isReadOnly" type="text" placeholder="Email address" name="email"> </div> 
             <div class="row"><label>A password reset link will be sent to this email address.</label></div>
-            <div class="row"><button v-on:click="sendEmail()">Submit</button></div>
+            <div class="row"><button v-bind:disabled="isDisabled" v-on:click="sendEmail()">Submit</button></div>
             <div v-if="resend_email">
               <label>An email has been sent. </label>
               <span><a href="#" @click="sendEmail()">Resend Email?</a></span>
@@ -38,18 +38,30 @@ export default {
     email:null,
     auth_status: false,
     reset_token: '',
-    resend_email: false
+    resend_email: false,
+    isReadOnly: false
     };
   },
   created() {
     this.email = this.$route.query.email;
+    if(this.email != null)
+      this.isReadOnly = true;
+  },
+  computed:{
+    isDisabled: function(){
+      if(this.email==null || this.email=='')
+      {
+          return true;
+      }
+      return false;
+    }
   },
   methods:{
     async sendEmail() {
       event.preventDefault();
       let self = this;
       this.errors = [];
-      if (!this.email) {
+      if (this.email==null) {
         this.errors.push('Email required.');
       }
       
@@ -131,6 +143,12 @@ export default {
 
   button:hover {
     opacity: 0.8;
+  }
+
+  button:disabled,
+  button[disabled]{
+  background-color: #6d8291;
+  color: #E9972D;
   }
 
   .error {
