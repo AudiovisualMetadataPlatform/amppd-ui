@@ -40,15 +40,15 @@
           <li v-for="(error, index) in validationResponse.validationErrors" v-bind:key="index">{{error}}</li>
         </ul>
       </div>
-      <div v-else-if="validationResponse && !validationResponse.success && validationResponse.processingErrors.length>0" class="batch-errors">
+      <div v-else-if="validationResponse && !validationResponse.success " class="batch-errors">
         <p>There was an error processing your batch.</p>
         <ul>
           <li v-for="(error, index) in validationResponse.processingErrors" v-bind:key="index">{{error}}</li>
         </ul>
       </div>
-      <div v-else-if="validationResponse && !validationResponse.success" class="batch-errors">
+      <!-- <div v-else-if="validationResponse && !validationResponse.success" class="batch-errors">
         <p>There was an error processing your batch.</p>
-      </div>
+      </div> -->
       <div v-else>
         Your batch has been successfully submitted and all files are ready to be submitted to a workflow.
       </div>
@@ -147,6 +147,7 @@ export default {
 
   },
   mounted(){
+    console.log("reached batchingest.vue");
   }
 
 }
