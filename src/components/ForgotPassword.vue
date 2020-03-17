@@ -34,7 +34,7 @@ export default {
   },
   data() {
     return {
-    errors: [],
+    errors: [],  
     email:null,
     auth_status: false,
     reset_token: '',
