@@ -115,8 +115,10 @@ export default {
         .catch(e => {
           console.log(e);
         });
-        //if(this.emailid)
-        this.isReadOnly = true;
+
+        if(this.emailid.length >= 0)
+          this.isReadOnly = true;
+
     }
     
   },
