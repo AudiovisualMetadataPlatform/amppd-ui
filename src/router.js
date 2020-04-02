@@ -65,8 +65,12 @@ export default new Router({
       path: "/hmgm/transcript-editor", 
       name: 'transcript-editor', 
       component: TranscriptEditor, 
+    } ,
+    {
+      path: "/hmgm/ner-editor", 
+      name: 'ner-editor', 
+      component: NerEditor, 
     }
-
     // {
     //   path: "/jobs",
     //   name: "jobs",
