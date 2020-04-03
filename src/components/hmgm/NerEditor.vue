@@ -5,22 +5,21 @@
     <div class="ner-content">
       <div>
         <div class="header-row">
-          <h1>Transcript Editor</h1>
+          <h1>NER Editor</h1>
           <div class="action-buttons">
             <input type="button" class="primary-button" v-on:click="complete" value="Complete"/>
             <input type="button" class="secondary-button" v-on:click="reset" value="Reset"/>
           </div>
         </div>
         <VariationsMainView :key="key"
-          v-if="nerDataValue && sttType"
-          :nerData="nerDataValue"
-          :mediaUrl="mediaUrl"
-          :sttJsonType="sttType"
-          :fileName="fileName"
-          :isEditable="true"
-          :handleAutoSaveChanges="saveTemporary"
-          :autoSaveContentType="'draftjs'"
-          :ref="player"
+          :hasResource="true"
+          :noSourceLink="false"
+          :noHeader="true"
+          :noFooter="true"
+          :resource="resouce"
+          :callback="callback"
+          :store="store"
+          :persistor="persistor"
         >
         </VariationsMainView>
       </div>
@@ -37,33 +36,30 @@
 <script>
 import AmpHeader from '@/components/Header.vue'
 import Logout from '@/components/Logout.vue'
-import BBCTranscriptEditor from "@bbc/react-ner-editor";
+import VariationsMainView from '@/components/hmgm/Timeliner.js';
 import Modal from '@/components/shared/Modal.vue'
-import { getTranscript, saveTranscript, completeTranscript } from '@/service/hmgm-service'; 
+import { getNer, saveNer, completeNer } from '@/service/hmgm-service'; 
 
 export default {
-  name: 'TranscriptEditor',
+  name: 'NerEditor',
   components:{
     AmpHeader,
     Logout,
-    BBCTranscriptEditor,
+    NerEditor,
     Modal
   },
   data(){
     return {
-      nerDataValue:null, 
+      resource:"",
+      callback:"",
       fileCount: 0,
-      mediaUrl: "",
-      sttType: null,
       fileName:"",
       originalFileName:"",
-      player:null,
       key: 1,
       modalHeader:"",
       modalBody:"",
       showModal: false,
       modalDismiss: null,
-      nerType: 1
     }
   },
   computed:{
@@ -72,18 +68,7 @@ export default {
   methods:{
     // Set data for editor
     setData(content, temporaryFile){
-      this.nerDataValue = JSON.parse(content);
-      if(temporaryFile===true){  
-        this.sttType = "draftjs";
-      }
-      else {
-        if(!this.nerType || this.nerType==1){
-          this.sttType = "amazontranscribe";
-        }
-        else {
-          this.sttType = "bbckaldi";
-        }
-      }
+      // reload iiif manifest
     },
     handleAlreadyComplete(){
       let self = this;
@@ -117,7 +102,7 @@ export default {
       let self = this;
       this.originalFileName = datasetPath;
       this.fileName = datasetPath + ".tmp";
-      var response = await getTranscript(datasetPath, false);
+      var response = await getNer(datasetPath, false);
       if(response.complete){
         self.handleAlreadyComplete();
         return;
@@ -126,7 +111,7 @@ export default {
     },
     // Complete the edits
     async complete(){
-      var response = await completeTranscript(this.fileName);
+      var response = await completeNer(this.fileName);
       if(response===true){
         this.handleComplete();
       }
@@ -136,13 +121,13 @@ export default {
     },
     // Reset to original
     async reset(){
-      var response = await getTranscript(this.originalFileName, true);
+      var response = await getNer(this.originalFileName, true);
       this.setData(response.content, response.temporaryFile);
       this.forceRender();
     },
     // Save temporary changes
     async saveTemporary(request){
-      saveTranscript(JSON.stringify(request.data), this.fileName);
+      saveNer(JSON.stringify(request.data), this.fileName);
     },
     // Force re-render of the editor when we reset.  Use key to do this.
     forceRender(){
@@ -151,13 +136,15 @@ export default {
     
   },
   mounted(){
-    this.nerType = this.$route.query.type;
-    console.log(this.nerType);
+    this.resource = this.$route.query.datasetUrl;
+    this.callback = this.$route.query.datasetUrl + ".completed";
+    console.log(this.resource);
     this.getFile(this.$route.query.datasetUrl);
-    this.mediaUrl = this.$route.query.mediaUrl;
   },
   setData(data){
-      this.nerDataValue = data;
+      this.resource = data;
+      this.callback = data + ".tmp"
+      // need to reload the tmp file
   }
 }
 </script>
