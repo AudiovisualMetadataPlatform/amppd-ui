@@ -2,14 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store/workflow-submission-store'
+import { VuePlugin } from 'vuera'
 
-// let WorkflowPlugins = {
-// 	install(Vue) {
-// 		Vue.prototype.$workflowService = new workflowService();
-// 	}
-// };
-
-//Vue.use(WorkflowPlugins);
+Vue.use(VuePlugin)
 
 new Vue({
   router,
