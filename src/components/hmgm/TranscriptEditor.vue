@@ -112,6 +112,15 @@ export default {
         self.$router.push({ path: '/' });
       }
     },
+    handleGetTranscriptError(){
+      let self = this;
+      self.modalHeader = "Error"
+      self.modalBody = "There was an error getting the transcript.";
+      self.showModal = true;
+      self.modalDismiss = function(){
+        self.$router.push({ path: '/' });
+      }
+    },
     // Get the transcript
     async getFile(datasetPath) {
       let self = this;
@@ -120,6 +129,10 @@ export default {
       var response = await getTranscript(datasetPath, false);
       if(response.complete){
         self.handleAlreadyComplete();
+        return;
+      }
+      if(!response.success){
+        self.handleGetTranscriptError();
         return;
       }
       this.setData(response.content, response.temporaryFile);
