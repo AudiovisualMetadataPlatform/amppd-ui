@@ -9,6 +9,7 @@ function getTranscript(datasetPath, reset) {
         // get data
         .then(x => x.data)
 }
+
 function saveTranscript(json, filePath) {
     var formData = new FormData();
     
@@ -19,6 +20,7 @@ function saveTranscript(json, filePath) {
         // get data
         .then(x => x.data)
 }
+
 function completeTranscript(filePath) {
     const url = `${BASE_URL}/hmgm/transcript-editor/complete`;
     return axios.post(url, {filePath:filePath})
@@ -26,28 +28,18 @@ function completeTranscript(filePath) {
         .then(x => x.data)
 }
 
-function getNer(datasetPath, reset) {
-
-    const url = `${BASE_URL}/hmgm/ner-editor?datasetPath=${datasetPath}&reset=${reset}`;
-    return axios.get(url)
-        // get data
-        .then(x => x.data)
-}
-function saveNer(json, filePath) {
-    var formData = new FormData();
-    
-    formData.append('data', json);
-    formData.append('filePath', filePath);
-    const url = `${BASE_URL}/hmgm/ner-editor/save`;
-    return axios.post(url, {json, filePath})
-        // get data
-        .then(x => x.data)
-}
-function completeNer(filePath) {
+function completeNer(resourcePath) {
     const url = `${BASE_URL}/hmgm/ner-editor/complete`;
-    return axios.post(url, {filePath:filePath})
+    return axios.post(url, {resourcePath:resourcePath})
         // get data
         .then(x => x.data)
 }
 
-export { getTranscript, saveTranscript, completeTranscript, getNer, saveNer, completeNer}
+function resetNer(resourcePath) {
+    const url = `${BASE_URL}/hmgm/ner-editor/reset`;
+    return axios.post(url, {resourcePath:resourcePath})
+        // get data
+        .then(x => x.data)
+}
+
+export { getTranscript, saveTranscript, completeTranscript, completeNer, resetNer }

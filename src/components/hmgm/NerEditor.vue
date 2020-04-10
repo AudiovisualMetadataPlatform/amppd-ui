@@ -11,21 +11,21 @@
             <input type="button" class="secondary-button" v-on:click="reset" value="Reset"/>
           </div>
         </div>
-        <VariationsMainView :key="key"
+        <Timeliner :key="key"
+          :resource="resouce"
+          :callback="callback"
           :hasResource="true"
           :noSourceLink="false"
           :noHeader="true"
           :noFooter="true"
-          :resource="resouce"
-          :callback="callback"
           :store="store"
           :persistor="persistor"
         >
-        </VariationsMainView>
+        </Timeliner>
       </div>
     </div>
     <modal v-if="showModal" @close="modalDismiss">
-    <h3  slot="header">{{modalHeader}}</h3>
+    <h3 slot="header">{{modalHeader}}</h3>
     <div slot="body">
        {{modalBody}}
     </div>
@@ -36,9 +36,9 @@
 <script>
 import AmpHeader from '@/components/Header.vue'
 import Logout from '@/components/Logout.vue'
-import VariationsMainView from '@/components/hmgm/Timeliner.js';
+import Timeliner from '@/components/hmgm/Timeliner.js';
 import Modal from '@/components/shared/Modal.vue'
-import { getNer, saveNer, completeNer } from '@/service/hmgm-service'; 
+import { completeNer, resetNer } from '@/service/hmgm-service'; 
 
 export default {
   name: 'NerEditor',
@@ -50,11 +50,9 @@ export default {
   },
   data(){
     return {
+      resourcePath:"",
       resource:"",
       callback:"",
-      fileCount: 0,
-      fileName:"",
-      originalFileName:"",
       key: 1,
       modalHeader:"",
       modalBody:"",
@@ -66,85 +64,65 @@ export default {
 
   },
   methods:{
-    // Set data for editor
-    setData(content, temporaryFile){
-      // reload iiif manifest
-    },
-    handleAlreadyComplete(){
-      let self = this;
-      self.modalHeader = "File Already Complete"
-      self.modalBody = "This file has already been completed.";
-      self.showModal = true;
-      self.modalDismiss = function(){
-        self.$router.push({ path: '/' });
-      }
-    },
-    handleComplete(){
+    handleSuccess(action){
       let self = this;
       self.modalHeader = "Success"
-      self.modalBody = "The ner edits have been successfully saved.";
+      self.modalBody = "The NER edits have been successfully $action}.";
       self.showModal = true;
       self.modalDismiss = function(){
         self.$router.push({ path: '/' });
       }
     },
-    handleError(){
+    handleError(action){
       let self = this;
       self.modalHeader = "Error"
-      self.modalBody = "There was an error saving the ner.";
+      self.modalBody = "There was an error ${action} the NER edits.";
       self.showModal = true;
       self.modalDismiss = function(){
         self.$router.push({ path: '/' });
       }
-    },
-    // Get the ner
-    async getFile(datasetPath) {
-      let self = this;
-      this.originalFileName = datasetPath;
-      this.fileName = datasetPath + ".tmp";
-      var response = await getNer(datasetPath, false);
-      if(response.complete){
-        self.handleAlreadyComplete();
-        return;
-      }
-      this.setData(response.content, response.temporaryFile);
     },
     // Complete the edits
     async complete(){
-      var response = await completeNer(this.fileName);
+      var response = await completeNer(this.resourcePath);
       if(response===true){
-        this.handleComplete();
+        this.handleComplete("completed");
       }
       else {
-        this.handleError();
+        this.handleError("completing");
       }
     },
     // Reset to original
     async reset(){
-      var response = await getNer(this.originalFileName, true);
-      this.setData(response.content, response.temporaryFile);
+      var response = await resetNer(this.resourcePath);
+      if(response===true){
+        this.handleSuccess("reset");
+      }
+      else {
+        this.handleError("resetting");
+      }      
       this.forceRender();
     },
-    // Save temporary changes
-    async saveTemporary(request){
-      saveNer(JSON.stringify(request.data), this.fileName);
-    },
-    // Force re-render of the editor when we reset.  Use key to do this.
     forceRender(){
       this.key+=1;
-    }
-    
+    },
+    getFileUrl(resourcePath) {
+      const BASE_URL = process.env.VUE_APP_AMP_URL;
+      const url = `${BASE_URL}/hmgm/ner-editor?resourcePath=${resourcePath}`;
+      return url; 
+    },
   },
   mounted(){
-    this.resource = this.$route.query.datasetUrl;
-    this.callback = this.$route.query.datasetUrl + ".completed";
-    console.log(this.resource);
-    this.getFile(this.$route.query.datasetUrl);
+    this.resourcePath = this.$route.query.resourcePath;
+    this.resource = getFileUrl(this.resourcePath);
+    this.callback = this.resource;
+    console.log("resource = " + this.resource);
+    console.log("callback = " + this.callback);
   },
   setData(data){
+      // TODO how to trigger reload of the tmp file after each save?
       this.resource = data;
-      this.callback = data + ".tmp"
-      // need to reload the tmp file
+      this.callback = data;
   }
 }
 </script>
