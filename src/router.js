@@ -10,6 +10,7 @@ import ResetPassword from "./components/ResetPassword.vue";
 import ApproveUser from "./components/ApproveUser.vue";
 import BatchIngest from "./components/batch/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
+import NerEditor from "./components/hmgm/NerEditor.vue";
 // import Jobs from "./components/Jobs.vue";
 
 Vue.use(Router);
