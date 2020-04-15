@@ -32,16 +32,16 @@ export default {
     position: fixed;
     top: 0px;
     width: 100%;
-    height:100px;
+    height:120px;
     z-index: 1000;
     background-color: #133C4E;
 }
 .header .container {
     background: blue;
-    height: 100px;
+    height: 120px;
 }
 .header img{
-    height:100px;
+    height:120px;
     left:0;
     top: 0;
     position: fixed;

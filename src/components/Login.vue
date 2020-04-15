@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="main-body">
     <Header/>
     <div class="form-body">
-      <h1>Login</h1>
+      <h1>Welcome to the Audiovisual Metadata Platform</h1>
       <div class="error">
         <p v-if="errors.length">
           <b>Please correct the following error(s):</b>
@@ -10,16 +10,23 @@
             <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
           </ul>
         </p>
-        </div>
-        <div class="form-content" id="login">
-            <div class="row"><input id="email" v-model="email" type="text" placeholder="Enter Email Address" name="email"></div>
-            <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Enter Password" name="pswd"></div> 
-            <div class="row"><label><input type="checkbox" checked="checked" name="remember"> Remember me</label></div>
-            <router-link :to="{ name: 'forgot-password', query: { email: email }}">Forgot Password?</router-link>
-            <div class="row"><button v-on:click="checkForm()">Sign In</button></div>
-            <div class="row"><label>Or</label></div>
-            <div class="row"><button v-on:click="registerClicked()" >Sign Up</button></div>		
-        </div>
+      </div>
+      <div class="form-content" id="login">
+        <h2>Sign In</h2>
+        <form>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email address">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="pswd" v-model="pswd" placeholder="Password">
+          </div>
+          <!-- <router-link :to="{ name: 'forgot-password', query: { email: email }}">Forgot Password?</router-link> -->
+          <button class="btn btn-primary marg-bot-4" v-on:click="checkForm()">Sign In</button>
+          <p class="form-text text-muted">Don't have an account? <a href="#" v-on:click="registerClicked()" class="active-link">Sign Up</a>.</p>
+        </form>
+        </div>  
   </div>
   </div>
 </template>  
@@ -90,57 +97,165 @@ export default {
 
 
 <style scoped>
+
  .form-body{
-  margin-block-start: 100px;
-  width: auto;
+  max-width: 960px;
   height: auto;
   text-align: center;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 9em;
+  margin-bottom: 2em;
+  font-size: 1rem;
+  text-align: left;
+  line-height: 1.5;
   }
 
   h1 {
-  text-align: center;
+  text-align: center!important;
+  font-size: 2.5rem;
+  margin-bottom: .5rem;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #000;
+
   }
+
+  h2 {
+    margin-bottom: .50rem;
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-top: 0;
+    display: block;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    color: #000;
+  }
+
+  btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #F4871E;
+    border-color: #F4871E;
+    color: #153c4d;
+}
+
+.marg-bot-4 {
+    margin-bottom: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
 
   .form-content{
-  /*padding-top:50px;*/
-    border-radius: 25px;
-    border: 1px solid;
-    padding: 20px 20px;
-    width: 50%;
+    margin-top: 2.5rem;
+    margin-right: auto;
+    margin-bottom: 2.5rem;
+    margin-left: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    flex: 0 0 50%;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 50%;
+    max-width: 60%;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 25px;
+    padding-left: 25px;
+    text-align: left;
+  }
+
+  .text-muted {
+    color: #6c757d!important;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  label {
     display: inline-block;
+    margin-bottom: .5rem;
+    cursor: default;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+button, input {
+    overflow: visible;
+    margin: 0;
+    font-family: inherit;
+    
+}
+button:hover {
+    color: #F4871E;
+    background-color: #153c4d;
   }
 
-  input[type=text], input[type=password] {
-    border-radius: 5px;
-    padding: 15px 20px;
-    margin: 20px 20px;
-    border: 1px solid #ccc;
-    align-content: center;
-    width: 50%;
-  }
+.active-link {
+  color: #153c4d;
+}
 
-  button {
-    background-color: #2C5B7F;
-    color: #E9972D;
-    font:bolder;
-    padding: 14px 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 15px;
-  }
+.active-link:hover {
+  color: #F4871E;
+}
 
-  /* Add a hover effect for buttons */
-  button:hover {
-    opacity: 0.8;
-  }
+input {
+  text-rendering: auto;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  text-align: start;
+  cursor: text;
+  font: 400 13.3333px Arial;
+}
 
   .error {
-    padding: 20px 100px;
+    padding: 5px 100px;
     color: red;
+    text-align: center!important;
   }
 
   ul{
@@ -155,12 +270,28 @@ export default {
  
   p {
     width:70%;
-    text-align: center;
-    margin:auto;
+    text-align: left;
+    margin-bottom: 1rem;
+    /* margin:auto; */
   }
 
-  .row {
-    text-align: center;
-    padding:5px 10px;
-  }
+  *, ::after, ::before {
+    box-sizing: border-box;
+}
+
+ .main-body {
+  background: #fff;
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  background-color: #fff;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #404040;
+  text-align: left;
+  display: block;
+ }
+  
 </style>
