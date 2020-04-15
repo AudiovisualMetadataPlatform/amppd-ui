@@ -15,12 +15,13 @@
         <h2>Sign In</h2>
         <form>
           <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
+            <label for="email">Email address</label>
             <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email address">
           </div>
           <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
+            <label for="password">Password</label>
             <input type="password" class="form-control" id="pswd" v-model="pswd" placeholder="Password">
+            <p class="forgot-psw form-text text-muted"><a href="#" v-on:click="forgotPassword()" class="active-link">Forgot Password</a></p>
           </div>
           <!-- <router-link :to="{ name: 'forgot-password', query: { email: email }}">Forgot Password?</router-link> -->
           <button class="btn btn-primary marg-bot-4" v-on:click="checkForm()">Sign In</button>
@@ -111,6 +112,12 @@ export default {
   font-size: 1rem;
   text-align: left;
   line-height: 1.5;
+  }
+
+  .forgot-psw {
+    font-size: 0.9rem;
+    margin-top: 0!important;
+
   }
 
   h1 {

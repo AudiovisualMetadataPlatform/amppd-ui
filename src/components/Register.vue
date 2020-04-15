@@ -1,43 +1,44 @@
 <template>
   <div class="main-body">
-  <Header/>
-  <div class="form-body">
-  <h1>Welcome to the Audiovisual Metadata Platform</h1>
-  <div class="error">
-  <p v-if="errors.length">
-  <b>Please correct the following error(s):</b>
-  <ul>
-  <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
-  </ul>
-  </p>
-  </div>
-  <div class="form-content" id="login">
-  <h2>Register</h2>
-  <form>
-  <div class="form-group">
-  <label for="fname">First Name</label>
-  <input type="txt" class="form-control" id="fname" v-model="fname" placeholder="First Name">
-  </div>
-  <div class="form-group">
-  <label for="lname">Last Name</label><input type="text" class="form-control" id="lname" v-model="lname" placeholder="Last Name">
-  </div>
-  <div class="form-group">
-  <label for="emailAddress">Email address</label>
-  <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email address">
-  </div>
-  <div class="form-group">
-  <label for="Password1">Password</label>
-  <input type="password" class="form-control" id="pswd" v-model="pswd" placeholder="Password">
-  </div>
-  <div class="form-group">
-  <label for="Password2">Confirm Password</label>
-  <input type="password" class="form-control" id="cpswd" v-model="confirm_pswd" placeholder="Confirm Password">
-  </div>
-  <button type="submit" class="btn btn-primary marg-bot-4" v-on:click="validateRegisterForm()">Sign Up</button>
-  <p class="form-text text-muted">Already have an account? <a href="#" v-on:click="login()" class="active-link">Sign In</a>.</p>
-  </form>
-  </div>  
-  </div>
+    <Header/>
+    <div class="form-body">
+      <h1>Welcome to the Audiovisual Metadata Platform</h1>
+      <div class="error">
+        <p v-if="errors.length">
+        <b>Please correct the following error(s):</b>
+        <ul>
+        <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
+        </ul>
+        </p>
+      </div>
+      <div class="form-content" id="login">
+        <h2>Register</h2>
+        <form>
+          <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="txt" class="form-control" id="fname" v-model="fname" placeholder="First Name">
+          </div>
+          <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input type="text" class="form-control" id="lname" v-model="lname" placeholder="Last Name">
+          </div>
+          <div class="form-group">
+            <label for="emailAddress">Email address</label>
+            <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email address">
+          </div>
+          <div class="form-group">
+            <label for="Password1">Password</label>
+            <input type="password" class="form-control" id="pswd" v-model="pswd" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <label for="Password2">Confirm Password</label>
+            <input type="password" class="form-control" id="cpswd" v-model="confirm_pswd" placeholder="Confirm Password">
+          </div>
+          <button type="submit" class="btn btn-primary marg-bot-4" v-on:click="validateRegisterForm()">Sign Up</button>
+          <p class="form-text text-muted">Already have an account? <a href="#" v-on:click="login()" class="active-link">Sign In</a>.</p>
+        </form>
+      </div>  
+    </div>
   </div>
 </template>
 
