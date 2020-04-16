@@ -6,8 +6,8 @@
       <div class="form-content" id="login">
         <h2>Reset Password</h2>
         <form>
-          <div class="form-group">
-            <label class="form-errors" v-if="errors.length">{{errors}}</label>
+          <div class="form-group" v-if="errors.length">
+            <label class="form-errors" v-for="error in errors" v-bind:key="error">{{error}}</label>
           </div>
           <div class="form-group">
             <label for="email">Email address</label>

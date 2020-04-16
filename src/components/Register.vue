@@ -6,8 +6,8 @@
       <div class="form-content" id="login">
         <h2>Register</h2>
         <form>
-          <div class="form-group">
-            <label class="form-errors" v-if="errors.other_errors.length">{{errors.other_errors}}</label>
+          <div class="form-group" v-if="errors.other_errors.length">
+            <label class="form-errors" v-for="error in errors.other_errors" v-bind:key="error">{{error}}</label>
           </div>
           <div class="form-group">
             <label for="fname">First Name</label>
@@ -16,7 +16,7 @@
           </div>
           <div class="form-group">
             <label for="lname">Last Name</label>
-            <input type="text" class="form-control" id="lname" v-model="lname" placeholder="Last Name">
+            <input type="txt" class="form-control" id="lname" v-model="lname" placeholder="Last Name">
           </div>
           <div class="form-group">
             <label for="emailAddress">Email address</label>

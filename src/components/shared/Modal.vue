@@ -72,12 +72,12 @@ export default {
   }
 
     /* Full-width inputs */
-  /*input[type=text] {
+  input[type=text] {
     padding: 10px 10px;
     margin: 10px;
     border: 0px solid #ccc;
     width: 75%
-  } */
+  }
   .modal-footer{
     display:flex;
     justify-content: flex-end;
