@@ -54,7 +54,7 @@ export default {
       transcriptDataValue:null, 
       fileCount: 0,
       mediaUrl: "",
-      sttType: "bbckaldi",
+      sttType: null,
       fileName:"",
       originalFileName:"",
       player:null,
@@ -63,7 +63,7 @@ export default {
       modalBody:"",
       showModal: false,
       modalDismiss: null,
-      transcriptType: 2
+      transcriptType: 1
     }
   },
   computed:{
