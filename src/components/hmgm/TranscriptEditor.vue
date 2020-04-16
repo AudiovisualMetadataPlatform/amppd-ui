@@ -96,7 +96,6 @@ export default {
           this.transcriptDataValue = tempData;
         }
       }
-      this.forceRender()
     },
     handleAlreadyComplete(){
       let self = this;
