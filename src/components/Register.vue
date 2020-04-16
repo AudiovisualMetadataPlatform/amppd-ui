@@ -3,20 +3,16 @@
     <Header/>
     <div class="form-body">
       <h1>Welcome to the Audiovisual Metadata Platform</h1>
-      <div class="error">
-        <p v-if="errors.length">
-        <b>Please correct the following error(s):</b>
-        <ul>
-        <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
-        </ul>
-        </p>
-      </div>
       <div class="form-content" id="login">
         <h2>Register</h2>
         <form>
           <div class="form-group">
+            <label class="form-errors" v-if="errors.other_errors.length">{{errors.other_errors}}</label>
+          </div>
+          <div class="form-group">
             <label for="fname">First Name</label>
-            <input type="txt" class="form-control" id="fname" v-model="fname" placeholder="First Name">
+            <label class="form-errors" v-if="errors.fname_error.length">{{errors.fname_error}}</label>
+            <input type="txt" class="form-control" id="fname" v-model="fname" placeholder="First Name" v-on:click="onClick(`fname`)">
           </div>
           <div class="form-group">
             <label for="lname">Last Name</label>
@@ -24,15 +20,18 @@
           </div>
           <div class="form-group">
             <label for="emailAddress">Email address</label>
-            <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email address">
+            <label class="form-errors" v-if="errors.email_error.length">{{errors.email_error}}</label>
+            <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email address" v-on:click="onClick(`email`)">
           </div>
           <div class="form-group">
             <label for="Password1">Password</label>
-            <input type="password" class="form-control" id="pswd" v-model="pswd" placeholder="Password">
+            <label class="form-errors" v-if="errors.pswd_error.length">{{errors.pswd_error}}</label>
+            <input type="password" class="form-control" id="pswd" v-model="pswd" placeholder="Password" v-on:click="onClick(`pswd`)">
           </div>
           <div class="form-group">
             <label for="Password2">Confirm Password</label>
-            <input type="password" class="form-control" id="cpswd" v-model="confirm_pswd" placeholder="Confirm Password">
+            <label class="form-errors" v-if="errors.cpswd_error.length">{{errors.cpswd_error}}</label>
+            <input type="password" class="form-control" id="cpswd" v-model="confirm_pswd" placeholder="Confirm Password" v-on:click="onClick(`cpswd`)">
           </div>
           <button type="submit" class="btn btn-primary marg-bot-4" v-on:click="validateRegisterForm()">Sign Up</button>
           <p class="form-text text-muted">Already have an account? <a href="#" v-on:click="login()" class="active-link">Sign In</a>.</p>
@@ -52,7 +51,14 @@ import axios from 'axios';
       },
     data: function() {
       return {
-      errors: [],
+      errors: {
+        fname_error:'',
+        cpswd_error:'',
+        email_error:'',
+        pswd_error:'',
+        other_errors: [],
+        errorExist: false
+      },
       fname: null,
       lname: null,
       pswd: null,
@@ -65,39 +71,46 @@ import axios from 'axios';
     async validateRegisterForm() {
       event.preventDefault();
       let self = this;
-      this.errors = [];
+      this.errors.other_errors = [];
       if (!this.fname) {
-        this.errors.push('Name required.');
+        this.errors.fname_error='Email required.';
+        this.errorExist=true;
       }
       else if(this.fname.length < 3){
-        this.errors.push('Username must be at least 3 characters');
+        this.errors.fname_error='Name must be atleast 3 characters';
+        this.errorExist=true;
       }
       if (!this.validateEmail(this.email)) {
-        this.errors.push('Invalid email address');
+        this.errors.email_error='Invalid Email.';
+        this.errorExist=true;
       }
       if (!this.pswd) {
-        this.errors.push('Password required.');
+        this.errors.pswd_error='Password required.';
+        this.errorExist=true;
       }
       else if(this.pswd.length < 8){
-        this.errors.push('Password must be at least 8 characters');
+        this.errors.pswd_error = 'Password must be at least 8 characters';
+        this.errorExist=true;
       }
       if (!this.confirm_pswd) {
-        this.errors.push('Confirm Password required.');
+        this.errors.cpswd_error='Confirm Password required.';
+        this.errorExist=true;
       }
       if (this.pswd && this.confirm_pswd && this.confirm_pswd != this.pswd) {
-        this.errors.push('Passwords do not match.');
+        this.errors.other_errors.push('Passwords do not match.');
+        this.errorExist=true;
       }
-      if (this.errors.length == 0)
+      if (this.errors.other_errors.length == 0 && !this.errorExist) 
       {
         await axios.post(process.env.VUE_APP_AMP_URL + '/register',
         {
-          username: this.fname,
+          username: this.fname+this.lname,
           password: this.pswd,
           email: this.email  
         })
         .then(response => {
           self.register_status = response.data.success;
-          self.errors = response.data.errors;
+          self.errors.other_errors = response.data.errors;
         })
         .catch(e => {
           console.log(e);
@@ -115,6 +128,16 @@ import axios from 'axios';
     },
     login(){
       this.$router.push("/");
+    },
+    onClick(data) {
+      if(data == 'fname')
+        this.errors.fname_error = '';
+      else if(data == 'email')
+        this.errors.email_error = '';
+      else if(data == 'pswd')
+        this.errors.pswd_error = '';
+      else
+        this.errors.cpswd_error = '';
     }
   },
   mounted() {
@@ -230,7 +253,8 @@ import axios from 'axios';
     display: inline-block;
     margin-bottom: .5rem;
     cursor: default;
-}
+    width: 100%;
+  }
 
 .form-control {
     display: block;
@@ -278,20 +302,10 @@ input {
   font: 400 13.3333px Arial;
 }
 
-  .error {
-    padding: 5px 100px;
+  .form-errors {
     color: red;
-    text-align: center!important;
-  }
-
-  ul{
-  list-style: none;
-  } 
-
-  li span {
-    width : 70%;
-    padding-left: 100px;
-    padding-right: 100px;
+    margin: 0%!important;
+    font-size: 0.9rem;
   }
  
   p {

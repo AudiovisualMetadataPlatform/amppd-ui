@@ -3,27 +3,24 @@
     <Header/>
     <div class="form-body">
       <h1>Welcome to the Audiovisual Metadata Platform</h1>
-      <div class="error">
-        <p v-if="errors.length">
-          <b>Please correct the following error(s):</b>
-          <ul>
-            <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
-          </ul>
-        </p>
-      </div>
       <div class="form-content" id="login">
         <h2>Sign In</h2>
         <form>
           <div class="form-group">
+            <label class="form-errors" v-if="errors.other_errors.length">{{errors.other_errors}}</label>
+          </div>
+          <div class="form-group">
             <label for="email">Email address</label>
-            <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email address">
+            <label class="form-errors" v-if="errors.email_error.length">{{errors.email_error}}</label>
+            <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email address" v-on:click="onClick(`email`)">
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="pswd" v-model="pswd" placeholder="Password">
-            <p class="forgot-psw form-text text-muted"><a href="#" v-on:click="forgotPassword()" class="active-link">Forgot Password</a></p>
+            <label class="form-errors" v-if="errors.pswd_error.length">{{errors.pswd_error}}</label>
+            <input type="password" class="form-control" id="pswd" v-model="pswd" placeholder="Password" v-on:click="onClick(`pswd`)">
+            <p class="forgot-psw form-text text-muted"><router-link :to="{ name: 'forgot-password', query: { email: email }}">Forgot Password?</router-link></p>
           </div>
-          <!-- <router-link :to="{ name: 'forgot-password', query: { email: email }}">Forgot Password?</router-link> -->
+          
           <button class="btn btn-primary marg-bot-4" v-on:click="checkForm()">Sign In</button>
           <p class="form-text text-muted">Don't have an account? <a href="#" v-on:click="registerClicked()" class="active-link">Sign Up</a>.</p>
         </form>
@@ -42,7 +39,11 @@ export default {
   },
   data() {
     return {
-		errors: [],
+		errors: {
+      email_error:'',
+      pswd_error:'',
+      other_errors: []
+    },
 		email: null,
     pswd: null,
     auth_status: false
@@ -52,14 +53,14 @@ export default {
     async checkForm() {
       event.preventDefault();
       let self = this;
-      this.errors = [];
+      this.errors.other_errors = [];
       if (!this.email) {
-        this.errors.push('Email required.');
+        this.errors.email_error='Email required.';
       }
       if (!this.pswd) {
-        this.errors.push('Password required.');
+        this.errors.pswd_error='Password required.';
       }
-      if(this.errors.length == 0)
+      if(this.errors.email_error == '' && this.errors.pswd_error == '')
       {
         await axios.post(process.env.VUE_APP_AMP_URL+ '/login',
           {
@@ -79,7 +80,7 @@ export default {
         }
         else
         {
-          this.errors.push('Email and password do not match');
+          this.errors.other_errors.push('Email and password do not match');
         }
       }
     },
@@ -88,6 +89,12 @@ export default {
     },
     forgotPassword() {
       this.$router.push('/forgot-password')
+    },
+    onClick(data) {
+      if(data == 'email')
+        this.errors.email_error = '';
+      else
+        this.errors.pswd_error = '';
     }
   },
   mounted() {
@@ -211,7 +218,8 @@ export default {
     display: inline-block;
     margin-bottom: .5rem;
     cursor: default;
-}
+    width: 100%;
+  }
 
 .form-control {
     display: block;
@@ -259,20 +267,10 @@ input {
   font: 400 13.3333px Arial;
 }
 
-  .error {
-    padding: 5px 100px;
+  .form-errors {
     color: red;
-    text-align: center!important;
-  }
-
-  ul{
-  list-style: none;
-  } 
-
-  li span {
-    width : 70%;
-    padding-left: 100px;
-    padding-right: 100px;
+    margin: 0%!important;
+    font-size: 0.9rem;
   }
  
   p {

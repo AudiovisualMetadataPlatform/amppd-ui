@@ -3,23 +3,19 @@
     <Header/>
     <div class="form-body">
       <h1>Welcome to the Audiovisual Metadata Platform</h1>
-      <div class="error">
-        <p v-if="errors.length">
-          <b>Please correct the following error(s):</b>
-          <ul>
-            <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
-          </ul>
-        </p>
-      </div>
       <div class="form-content" id="login">
         <h2>Forgot Password</h2>
         <form>
           <div class="form-group">
+            <label class="form-errors" v-if="errors.other_errors.length">{{errors.other_errors}}</label>
+          </div>
+          <div class="form-group">
             <label for="Email">Email address</label>
-            <input type="email" class="form-control" id="email" v-model="email" v-bind:readonly="isReadOnly" placeholder="Registered Email Address">
+            <label class="form-errors" v-if="errors.email_error.length">{{errors.email_error}}</label>
+            <input type="email" class="form-control" id="email" v-model="email" placeholder="Registered Email Address" v-on:click="onClick(`email`)">
           </div>
           
-          <button class="btn btn-primary marg-bot-4" v-bind:disabled="isDisabled" v-on:click="sendEmail()">Send Email</button>
+          <button class="btn btn-primary marg-bot-4" v-on:click="sendEmail()">Send Email</button>
           <p class="form-text text-muted">Click to <a href="#" v-on:click="loginClicked()" class="active-link">Sign In</a>.</p>
           <div class="form-group">
             <div v-if="resend_email">
@@ -43,18 +39,18 @@ export default {
   },
   data() {
     return {
-    errors: [],  
+    errors: {
+      email_error:'',
+      other_errors: []
+    }, 
     email:null,
     auth_status: false,
     reset_token: '',
     resend_email: false,
-    isReadOnly: false
     };
   },
   created() {
     this.email = this.$route.query.email;
-    if(this.email != null)
-      this.isReadOnly = true;
   },
   computed:{
     isDisabled: function(){
@@ -69,39 +65,39 @@ export default {
     async sendEmail() {
       event.preventDefault();
       let self = this;
-      this.errors = [];
-      if (this.email==null) {
-        this.errors.push('Email required.');
+      this.errors.other_errors = [];
+      if (!this.email) {
+        console.log("email blank");
+        this.errors.email_error='Email required.';
       }
       
-      if(this.errors.length == 0)
+      if(this.errors.email_error == '')
       {
-        console.log("email id entered is:"+this.email);
         await axios.post(process.env.VUE_APP_AMP_URL+ '/forgot-password',
           {
             emailid: this.email
           })
         .then(response => {
           self.auth_status = response.data.success;
-          self.errors = response.data.errors;
+          self.errors.other_errors = response.data.errors;
         })
         .catch(e => {
           console.log(e);
         });
         console.log("auth status is:"+self.auth_status+" and token is:"+self.reset_token);
-        if(this.errors.length == 0 && self.auth_status)
+        if(this.errors.other_errors.length == 0 && self.auth_status)
         {
           this.resend_email = true;
-        }
-        else
-        {
-          this.errors.push('Username not found');
         }
       }
     },
     loginClicked() {
       this.$router.push('/')
     },
+    onClick(data) {
+      if(data == 'email')
+        this.errors.email_error = '';
+    }
   },
   
   mounted() {
@@ -218,7 +214,8 @@ export default {
     display: inline-block;
     margin-bottom: .5rem;
     cursor: default;
-}
+    width: 100%;
+  }
 
 .form-control {
     display: block;
@@ -266,20 +263,10 @@ input {
   font: 400 13.3333px Arial;
 }
 
-  .error {
-    padding: 5px 100px;
+  .form-errors {
     color: red;
-    text-align: center!important;
-  }
-
-  ul{
-  list-style: none;
-  } 
-
-  li span {
-    width : 70%;
-    padding-left: 100px;
-    padding-right: 100px;
+    margin: 0%!important;
+    font-size: 0.9rem;
   }
  
   p {
