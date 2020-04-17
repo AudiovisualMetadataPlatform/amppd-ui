@@ -1,28 +1,45 @@
 <template>
-  <div>
+  <div class="main-body">
     <Header/>
     <div class="form-body">
-      <h1>Register</h1>
-      <div class="error">
-        <p v-if="errors.length">
-          <b>Please correct the following error(s):</b>
-          <ul>
-            <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
-          </ul>
-        </p>
-      </div>
-      <div class="form-content" id="register">
-        <div class="row"><input id="name" v-model="name" type="text" placeholder="Enter Username" name="uname" > </div>
-        <div class="row"><input id="email" v-model="email" type="text" placeholder="Email Address" name="email" ></div> 
-        <div class="row"><input id="pswd" v-model="pswd" type="password" placeholder="Create Password" name="psw" ></div> 
-        <div class="row"><input id="cpswd" v-model="confirm_pswd" type="password" placeholder="Confirm Password" name="cpsw" ></div>
-        <div class="row"><button type="submit" v-on:click="validateRegisterForm()">Sign Up</button></div> 
-        <div class="row"><label>Or</label></div>
-        <div class="row"><span><a href="#" v-on:click="login()">Already a User?</a></span></div> 
-      </div>
+      <h1>Welcome to the Audiovisual Metadata Platform</h1>
+      <div class="form-content" id="login">
+        <h2>Register</h2>
+        <form>
+          <div class="form-group" v-if="errors.other_errors.length">
+            <label class="form-errors" v-for="error in errors.other_errors" v-bind:key="error">{{error}}</label>
+          </div>
+          <div class="form-group">
+            <label for="fname">First Name</label>
+            <label class="form-errors" v-if="errors.fname_error.length">{{errors.fname_error}}</label>
+            <input type="txt" class="form-control" id="fname" v-model="fname" placeholder="First Name" v-on:click="onClick(`fname`)">
+          </div>
+          <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input type="txt" class="form-control" id="lname" v-model="lname" placeholder="Last Name">
+          </div>
+          <div class="form-group">
+            <label for="emailAddress">Email address</label>
+            <label class="form-errors" v-if="errors.email_error.length">{{errors.email_error}}</label>
+            <input type="email" class="form-control" id="email" v-model="email" placeholder="Enter email address" v-on:click="onClick(`email`)">
+          </div>
+          <div class="form-group">
+            <label for="Password1">Password</label>
+            <label class="form-errors" v-if="errors.pswd_error.length">{{errors.pswd_error}}</label>
+            <input type="password" class="form-control" id="pswd" v-model="pswd" placeholder="Password" v-on:click="onClick(`pswd`)">
+          </div>
+          <div class="form-group">
+            <label for="Password2">Confirm Password</label>
+            <label class="form-errors" v-if="errors.cpswd_error.length">{{errors.cpswd_error}}</label>
+            <input type="password" class="form-control" id="cpswd" v-model="confirm_pswd" placeholder="Confirm Password" v-on:click="onClick(`cpswd`)">
+          </div>
+          <button type="submit" class="btn btn-primary marg-bot-4" v-on:click="validateRegisterForm()">Sign Up</button>
+          <p class="form-text text-muted">Already have an account? <a href="#" v-on:click="login()" class="active-link">Sign In</a>.</p>
+        </form>
+      </div>  
+    </div>
   </div>
-  </div>
-</template>  
+</template>
 
 <script>
 import Header from '@/components/Header.vue';
@@ -34,8 +51,16 @@ import axios from 'axios';
       },
     data: function() {
       return {
-      errors: [],
-      name: null,
+      errors: {
+        fname_error:'',
+        cpswd_error:'',
+        email_error:'',
+        pswd_error:'',
+        other_errors: [],
+        errorExist: false
+      },
+      fname: null,
+      lname: null,
       pswd: null,
       email: null,
       confirm_pswd: null,
@@ -46,39 +71,46 @@ import axios from 'axios';
     async validateRegisterForm() {
       event.preventDefault();
       let self = this;
-      this.errors = [];
-      if (!this.name) {
-        this.errors.push('Name required.');
+      this.errors.other_errors = [];
+      if (!this.fname) {
+        this.errors.fname_error='Email required.';
+        this.errorExist=true;
       }
-      else if(this.name.length < 3){
-        this.errors.push('Username must be at least 3 characters');
+      else if(this.fname.length < 3){
+        this.errors.fname_error='Name must be atleast 3 characters';
+        this.errorExist=true;
       }
       if (!this.validateEmail(this.email)) {
-        this.errors.push('Invalid email address');
+        this.errors.email_error='Invalid Email.';
+        this.errorExist=true;
       }
       if (!this.pswd) {
-        this.errors.push('Password required.');
+        this.errors.pswd_error='Password required.';
+        this.errorExist=true;
       }
       else if(this.pswd.length < 8){
-        this.errors.push('Password must be at least 8 characters');
+        this.errors.pswd_error = 'Password must be at least 8 characters';
+        this.errorExist=true;
       }
       if (!this.confirm_pswd) {
-        this.errors.push('Confirm Password required.');
+        this.errors.cpswd_error='Confirm Password required.';
+        this.errorExist=true;
       }
       if (this.pswd && this.confirm_pswd && this.confirm_pswd != this.pswd) {
-        this.errors.push('Passwords do not match.');
+        this.errors.other_errors.push('Passwords do not match.');
+        this.errorExist=true;
       }
-      if (this.errors.length == 0)
+      if (this.errors.other_errors.length == 0 && !this.errorExist) 
       {
         await axios.post(process.env.VUE_APP_AMP_URL + '/register',
         {
-          username: this.name,
+          username: this.fname+this.lname,
           password: this.pswd,
           email: this.email  
         })
         .then(response => {
           self.register_status = response.data.success;
-          self.errors = response.data.errors;
+          self.errors.other_errors = response.data.errors;
         })
         .catch(e => {
           console.log(e);
@@ -96,6 +128,16 @@ import axios from 'axios';
     },
     login(){
       this.$router.push("/");
+    },
+    onClick(data) {
+      if(data == 'fname')
+        this.errors.fname_error = '';
+      else if(data == 'email')
+        this.errors.email_error = '';
+      else if(data == 'pswd')
+        this.errors.pswd_error = '';
+      else
+        this.errors.cpswd_error = '';
     }
   },
   mounted() {
@@ -106,76 +148,202 @@ import axios from 'axios';
 
 <style scoped>
  .form-body{
-  margin-block-start: 100px;
-  width: auto;
+  max-width: 960px;
   height: auto;
   text-align: center;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 9em;
+  margin-bottom: 2em;
+  font-size: 1rem;
+  text-align: left;
+  line-height: 1.5;
   }
 
   h1 {
-  text-align: center;
+  text-align: center!important;
+  font-size: 2.5rem;
+  margin-bottom: .5rem;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #000;
+
   }
+
+  h2 {
+    margin-bottom: .50rem;
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-top: 0;
+    display: block;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    color: #000;
+  }
+
+  btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #F4871E;
+    border-color: #F4871E;
+    color: #153c4d;
+}
+
+.marg-bot-4 {
+    margin-bottom: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
 
   .form-content{
-  /*padding-top:50px;*/
-    border-radius: 25px;
-    border: 1px solid;
-    padding: 20px 20px;
-    width: 50%;
+    margin-top: 1rem;
+    margin-right: auto;
+    margin-bottom: 2.5rem;
+    margin-left: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    flex: 0 0 50%;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 50%;
+    max-width: 60%;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 25px;
+    padding-left: 25px;
+    text-align: left;
+  }
+
+  .text-muted {
+    color: #6c757d!important;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  label {
     display: inline-block;
+    margin-bottom: .5rem;
+    cursor: default;
+    width: 100%;
   }
 
-  input[type=text], input[type=password] {
-    border-radius: 5px;
-    padding: 15px 20px;
-    margin: 20px 20px;
-    border: 1px solid #ccc;
-    align-content: center;
-    width: 50%;
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+button, input {
+    overflow: visible;
+    margin:0;
+    font-family: inherit;
+    
+}
+button:hover {
+    color: #F4871E;
+    background-color: #153c4d;
   }
 
-  button {
-    background-color: #2C5B7F;
-    color: #E9972D;
-    font:bolder;
-    padding: 14px 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 15px;
-  }
+.active-link {
+  color: #153c4d;
+}
 
-  /* Add a hover effect for buttons */
-  button:hover {
-    opacity: 0.8;
-  }
+.active-link:hover {
+  color: #F4871E;
+}
 
-  .error {
-    padding: 20px 100px;  
+input {
+  text-rendering: auto;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  text-align: start;
+  cursor: text;
+  font: 400 13.3333px Arial;
+}
+
+  .form-errors {
     color: red;
-  }
-
-  ul{
-  list-style: none;
-  } 
-
-  li span {
-    width : 70%;
-    padding-left: 100px;
-    padding-right: 100px;
+    margin: 0%!important;
+    font-size: 0.9rem;
   }
  
   p {
     width:70%;
-    text-align: center;
-    margin:auto;
+    text-align: left;
+    margin-bottom: 1rem;
+    /* margin:auto; */
   }
 
-  .row {
-    text-align: center;
-    padding:5px 10px;
-  }
+  *, ::after, ::before {
+    box-sizing: border-box;
+}
+
+ .main-body {
+  background: #fff;
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  background-color: #fff;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #404040;
+  text-align: left;
+  display: block;
+ }
+  
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
