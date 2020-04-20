@@ -1,5 +1,5 @@
 <template>
-  <div class="main-body">
+  <div class="container">
     <Header/>
     <div class="form-body">
       <h1>Welcome to the Audiovisual Metadata Platform</h1>
@@ -284,19 +284,6 @@ input {
     box-sizing: border-box;
 }
 
- .main-body {
-  background: #fff;
-  height: 100%;
-  min-height: 100%;
-  margin: 0;
-  background-color: #fff;
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #404040;
-  text-align: left;
-  display: block;
- }
+ 
   
 </style>
