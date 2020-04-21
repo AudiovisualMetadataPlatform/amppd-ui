@@ -11,6 +11,9 @@
             <input type="button" class="secondary-button" v-on:click="reset" value="Reset"/>
           </div>
         </div>
+        <iframe class="" src="${iframeUrl}" width="1500" height="600" frameborder="1"></iframe>
+        <!-- 
+        <iframe class="" src="http://localhost:5000/" width="1500" height="600" frameborder="1"></iframe>
         <Timeliner :key="key"
           :resource="resouce"
           :callback="callback"
@@ -21,7 +24,8 @@
           :store="store"
           :persistor="persistor"
         >
-        </Timeliner>
+        </Timeliner> 
+        -->
       </div>
     </div>
     <modal v-if="showModal" @close="modalDismiss">
@@ -36,7 +40,7 @@
 <script>
 import AmpHeader from '@/components/Header.vue'
 import Logout from '@/components/Logout.vue'
-import Timeliner from '@/components/hmgm/Timeliner.js';
+// import Timeliner from '@/components/hmgm/Timeliner.js';
 import Modal from '@/components/shared/Modal.vue'
 import { completeNer, resetNer } from '@/service/hmgm-service'; 
 
@@ -45,11 +49,12 @@ export default {
   components:{
     AmpHeader,
     Logout,
-    NerEditor,
+    // Timeliner,
     Modal
   },
   data(){
     return {
+      iframeUrl:"",
       resourcePath:"",
       resource:"",
       callback:"",
@@ -67,7 +72,7 @@ export default {
     handleSuccess(action){
       let self = this;
       self.modalHeader = "Success"
-      self.modalBody = "The NER edits have been successfully $action}.";
+      self.modalBody = "The NER edits have been successfully " + action;
       self.showModal = true;
       self.modalDismiss = function(){
         self.$router.push({ path: '/' });
@@ -76,7 +81,7 @@ export default {
     handleError(action){
       let self = this;
       self.modalHeader = "Error"
-      self.modalBody = "There was an error ${action} the NER edits.";
+      self.modalBody = "There was an error " + action + " the NER edits.";
       self.showModal = true;
       self.modalDismiss = function(){
         self.$router.push({ path: '/' });
@@ -111,19 +116,29 @@ export default {
       const url = `${BASE_URL}/hmgm/ner-editor?resourcePath=${resourcePath}`;
       return url; 
     },
+    getIframeUrl(resource, callback) {
+      const TIMELINER_BASE_URL = "http://localhost:5000/"; //"timeliner.html";
+      var url = TIMELINER_BASE_URL + "?noHeader=true&noFooter=true&noSourceLink=false";
+      url += "&resouce=" + resource + "&callback=" + callback;
+      url = encodeURIComponent(url);
+      return url;
+    }
   },
   mounted(){
     this.resourcePath = this.$route.query.resourcePath;
-    this.resource = getFileUrl(this.resourcePath);
+    this.resource = this.getFileUrl(this.resourcePath);
     this.callback = this.resource;
+    this.iframeUrl = this.getIframeUrl(this.resource, this.callback);
     console.log("resource = " + this.resource);
     console.log("callback = " + this.callback);
+    console.log("iframeUrl = " + this.iframeUrl);
   },
-  setData(data){
-      // TODO how to trigger reload of the tmp file after each save?
-      this.resource = data;
-      this.callback = data;
-  }
+  // setData(data){
+  //     // TODO how to trigger reload of the tmp file after each save?
+  //     this.resource = data;
+  //     this.callback = data;
+  //     this.iframeUrl = data;
+  // }
 }
 </script>
 
