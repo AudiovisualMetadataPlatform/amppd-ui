@@ -29,15 +29,23 @@ function completeTranscript(filePath) {
 }
 
 function completeNer(resourcePath) {
-    const url = `${BASE_URL}/hmgm/ner-editor/complete`;
+    // const url = `${BASE_URL}/hmgm/ner-editor/complete`;
+    const url = `${BASE_URL}/hmgm/ner-editor/complete?resourcePath=${resourcePath}`;
+    console.log("axios completeNer: url = " + url);
+    console.log("axios completeNer: resourcePath = " + resourcePath);
     return axios.post(url, {resourcePath:resourcePath})
+    // return axios.post(url, {resourcePath:resourcePath})
         // get data
         .then(x => x.data)
 }
 
 function resetNer(resourcePath) {
-    const url = `${BASE_URL}/hmgm/ner-editor/reset`;
-    return axios.post(url, {resourcePath:resourcePath})
+    // const url = `${BASE_URL}/hmgm/ner-editor/reset`;
+    const url = `${BASE_URL}/hmgm/ner-editor/reset?resourcePath=${resourcePath}`;
+    console.log("axios resetNer: url = " + url);
+    console.log("axios resetNer: resourcePath = " + resourcePath);
+    return axios.post(url)
+    // return axios.post(url, {resourcePath:resourcePath})
         // get data
         .then(x => x.data)
 }
