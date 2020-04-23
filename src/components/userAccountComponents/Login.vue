@@ -36,8 +36,8 @@
 </template>  
 
 <script>
-import Header from '@/components/Header.vue';
-import axios from 'axios';
+import Header from '@/components/sharedComponents/Header.vue';
+import { sendLoginRequest } from '@/service/userAccountService';
 export default {
   name: 'LoginComponent',
   components: {
@@ -50,6 +50,7 @@ export default {
       pswd_error:'',
       other_errors: []
     },
+    formData: new FormData(),
 		email: null,
     pswd: null,
     auth_status: false
@@ -68,13 +69,9 @@ export default {
       }
       if(this.errors.email_error == '' && this.errors.pswd_error == '')
       {
-        await axios.post(process.env.VUE_APP_AMP_URL+ '/login',
-          {
-            emailid: this.email,
-            password: this.pswd  
-          })
-        .then(response => {
-          self.auth_status = response.data.success;
+        await sendLoginRequest(this.email, this.pswd)
+        .then(x => {
+          self.auth_status = x.success;
         })
         .catch(e => {
           console.log(e);

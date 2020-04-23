@@ -6,7 +6,7 @@
         <h1 class="text-center">Welcome to the Audiovisual Metadata Platform</h1>
         <div class="card col-6">
         <div class="card-body">
-        <h2 class="card-title">Sign In</h2>
+        <h2 class="card-title">Forgot Password</h2>
 
         <form>
         <div class="form-group" v-if="errors.other_errors.length">
@@ -36,8 +36,8 @@
 </template>  
 
 <script>
-import Header from '@/components/Header.vue';
-import axios from 'axios';
+import Header from '@/components/sharedComponents/Header.vue';
+import {sendForgotPswdEmailRequest} from '@/service/userAccountService';
 export default {
   name: 'ForgotPassword',
   components: {
@@ -79,13 +79,10 @@ export default {
       
       if(this.errors.email_error == '')
       {
-        await axios.post(process.env.VUE_APP_AMP_URL+ '/forgot-password',
-          {
-            emailid: this.email
-          })
+        await sendForgotPswdEmailRequest(this.email)
         .then(response => {
-          self.auth_status = response.data.success;
-          self.errors.other_errors = response.data.errors;
+          self.auth_status = response.success;
+          self.errors.other_errors = response.errors;
         })
         .catch(e => {
           console.log(e);

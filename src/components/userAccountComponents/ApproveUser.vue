@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue';
-import axios from 'axios';
+import Header from '@/components/sharedComponents/Header.vue';
+import {sendApproveUserRequest} from '@/service/userAccountService';
   export default {
     name: 'ApproveUser',
     components: {
@@ -42,15 +42,12 @@ import axios from 'axios';
   methods:{
 	async approveUser() {
 		event.preventDefault();
-		await axios.post(process.env.VUE_APP_AMP_URL+ '/approve-user',
-          {
-            userId: this.$route.params.id 
-          })
-        .then(response => {
-          self.approve_status = response.data.success;
-        })
-        .catch(e => {
-          console.log(e);
+    await sendApproveUserRequest(this.$route.params.id )
+    .then(response => {
+      self.approve_status = response.success;
+      })
+    .catch(e => {
+      console.log(e);
 		});
 		console.log("approve result is:"+self.approve_status);
 		if(this.errors.length == 0 && self.approve_status)

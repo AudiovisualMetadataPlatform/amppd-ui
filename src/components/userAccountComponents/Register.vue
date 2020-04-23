@@ -47,8 +47,8 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue';
-import axios from 'axios';
+import Header from '@/components/sharedComponents/Header.vue';
+import {sendRegisterRequest} from '@/service/userAccountService';
   export default {
     name: 'RegisterComponent',
     components: {
@@ -113,15 +113,10 @@ import axios from 'axios';
       }
       if (this.errors.other_errors.length == 0 && !this.errorExist) 
       {
-        await axios.post(process.env.VUE_APP_AMP_URL + '/register',
-        {
-          username: this.fname+this.lname,
-          password: this.pswd,
-          email: this.email  
-        })
+        await sendRegisterRequest(this.fname+this.lname, this.pswd, this.email)
         .then(response => {
-          self.register_status = response.data.success;
-          self.errors.other_errors = response.data.errors;
+          self.register_status = response.success;
+          self.errors.other_errors = response.errors;
         })
         .catch(e => {
           console.log(e);
@@ -129,7 +124,7 @@ import axios from 'axios';
         console.log("register result is:"+self.register_status);
         if(self.register_status)
         {
-          alert("Successfully registered. Please wait for the admin to approve before you can login.")
+          alert("Successfully registered. Please wait for an account approval email before you can login.")
           this.$router.push("/");
         }
       }

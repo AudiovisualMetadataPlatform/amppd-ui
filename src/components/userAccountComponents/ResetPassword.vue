@@ -42,8 +42,8 @@
 </template>  
 
 <script>
-import Header from '@/components/Header.vue';
-import axios from 'axios';
+import Header from '@/components/sharedComponents/Header.vue';
+import {sendResetRequest, sendfetchEmailRequest} from '@/service/userAccountService';
 export default {
   name: 'ResetPasswordForm',
   components: {
@@ -97,15 +97,10 @@ export default {
       
       if (this.errors.other_errors.length == 0 && !this.errors.errorExist)
       {   console.log("entered axios if");
-        await axios.post(process.env.VUE_APP_AMP_URL + '/reset-password',
-        {
-          emailid: this.emailid,
-          password: this.pswd,
-          token: this.$route.params.token
-        })
+        await sendResetRequest(this.reset_token, this.pswd, this.emailid)
         .then(response => {
-          self.reset_status = response.data.success;
-          self.errors.other_errors = response.data.errors;
+          self.reset_status = response.success;
+          self.errors.other_errors = response.errors;
         })
         .catch(e => {
           console.log(e);
@@ -124,19 +119,16 @@ export default {
     },
     fetch_emailID() {
       let self = this;
-      axios.post(process.env.VUE_APP_AMP_URL + '/reset-password-getEmail',
-        {
-          token: self.$route.params.token
-        })
-        .then(response => {
-          self.fetch_status = response.data.success;
-          self.errors.other_errors = response.data.errors;
-          self.emailid = response.data.emailid;
-        })
-        .catch(e => {
-          self.errors.other_errors.push("Invalid Url or Account")
-          console.log(e);
-        });
+      sendfetchEmailRequest(this.$route.params.token)
+      .then(response => {
+        self.fetch_status = response.success;
+        self.errors.other_errors = response.errors;
+        self.emailid = response.emailid;
+      })
+      .catch(e => {
+        self.errors.other_errors.push("Invalid Url or Account")
+        console.log(e);
+      });
         
     },
     loginClicked() {

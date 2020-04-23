@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import Header from "./Header";
-import Logout from '@/components/Logout.vue'
+import Header from "@/components/sharedComponents/Header";
+import Logout from '@/components/sharedComponents/Logout.vue'
 export default {
   name: 'WelcomeComponent',
   components: {
