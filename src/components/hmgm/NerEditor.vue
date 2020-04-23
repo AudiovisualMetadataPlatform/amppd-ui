@@ -11,11 +11,11 @@
             <input type="button" class="secondary-button" v-on:click="reset" value="Reset"/>
           </div>
         </div>
-        <iframe class="" src="${iframeUrl}" width="1500" height="600" frameborder="1"></iframe>
+        <iframe class="" :src="iframeUrl" width="1500" height="600" frameborder="1"></iframe>
         <!-- 
         <iframe class="" src="http://localhost:5000/" width="1500" height="600" frameborder="1"></iframe>
         <Timeliner :key="key"
-          :resource="resouce"
+          :resource="resource"
           :callback="callback"
           :hasResource="true"
           :noSourceLink="false"
@@ -117,18 +117,24 @@ export default {
       return url; 
     },
     getIframeUrl(resource, callback) {
-      const TIMELINER_BASE_URL = "http://localhost:5000/"; //"timeliner.html";
+      // const TIMELINER_BASE_URL = "http://localhost:5000/"; 
+      const TIMELINER_BASE_URL = "timeliner.html";
       var url = TIMELINER_BASE_URL + "?noHeader=true&noFooter=true&noSourceLink=false";
-      url += "&resouce=" + resource + "&callback=" + callback;
-      url = encodeURIComponent(url);
+      url += "&resource=" + encodeURIComponent(resource) + "&callback=" + encodeURIComponent(callback);
+      // console.log("url = " + url);
+      // url = encodeURIComponent(url);
       return url;
     }
   },
   mounted(){
     this.resourcePath = this.$route.query.resourcePath;
     this.resource = this.getFileUrl(this.resourcePath);
+    // this.resource = "https://dlib.indiana.edu/iiif_av/jwd/chopin.json";
     this.callback = this.resource;
     this.iframeUrl = this.getIframeUrl(this.resource, this.callback);
+    // this.iframeUrl = "http://localhost:5000/"; 
+    // this.iframeUrl = "http://localhost:5000/?noHeader=true&noFooter=true&noSourceLink=false&resource=https://dlib.indiana.edu/iiif_av/jwd/chopin.json&callback=https://dlib.indiana.edu/iiif_av/jwd/chopin.json"
+    console.log("resourcePath = " + this.resourcePath);
     console.log("resource = " + this.resource);
     console.log("callback = " + this.callback);
     console.log("iframeUrl = " + this.iframeUrl);
