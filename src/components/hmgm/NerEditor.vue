@@ -119,7 +119,8 @@ export default {
     getIframeUrl(resource, callback) {
       // const TIMELINER_BASE_URL = "http://localhost:5000/"; 
       const TIMELINER_BASE_URL = "timeliner.html";
-      var url = TIMELINER_BASE_URL + "?noHeader=true&noFooter=true&noSourceLink=false";
+      // var url = TIMELINER_BASE_URL + "?noHeader=true&noFooter=true&noSourceLink=false";
+      var url = TIMELINER_BASE_URL + "/#noHeader=true&noFooter=true&noSourceLink=false";
       url += "&resource=" + encodeURIComponent(resource) + "&callback=" + encodeURIComponent(callback);
       // console.log("url = " + url);
       // url = encodeURIComponent(url);
