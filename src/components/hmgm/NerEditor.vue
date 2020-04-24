@@ -59,7 +59,6 @@ export default {
       resourcePath:"",
       resource:"",
       callback:"",
-      // key: 1,
       modalHeader:"",
       modalBody:"",
       showModal: false,
@@ -125,7 +124,6 @@ export default {
       // below code also works as an alternative way to reload the iframe, but using reload as above is preferred
       // document.getElementById('timeliner').src += ''; 
       console.log("Reload Timeliner, iframe src = " + document.getElementById('timeliner').src);
-      // this.key+=1;
     },
     getFileUrl(resourcePath) {
       const BASE_URL = process.env.VUE_APP_AMP_URL;
