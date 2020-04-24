@@ -72,16 +72,28 @@ export default {
   methods:{
     // Set data for editor
     setData(content, temporaryFile){
-      this.transcriptDataValue = JSON.parse(content);
       if(temporaryFile===true){  
         this.sttType = "draftjs";
+        this.transcriptDataValue = JSON.parse(content);
       }
       else {
         if(!this.transcriptType || this.transcriptType==1){
           this.sttType = "amazontranscribe";
+          this.transcriptDataValue = JSON.parse(content);
         }
         else {
           this.sttType = "bbckaldi";
+          var tempData = JSON.parse(content);
+          for(var w = 0; w < tempData.words.length; w++){
+            var thisWord = tempData.words[w];
+            tempData.words[w].punct = thisWord.word;
+            tempData.words[w].start = thisWord.time;
+            tempData.words[w].end = thisWord.time + thisWord.duration;
+            if(w==tempData.words.length-1){
+              tempData.words[w].punct = thisWord.punct + ".";
+            }
+          }
+          this.transcriptDataValue = tempData;
         }
       }
     },
