@@ -11,7 +11,7 @@
             <input type="button" class="secondary-button" v-on:click="reset" value="Reset"/>
           </div>
         </div>
-        <iframe class="" :src="iframeUrl" width="1500" height="600" frameborder="1"></iframe>
+        <iframe class="" :src="iframeUrl" id="timeliner" width="1500" height="600" frameborder="1"></iframe>
         <!-- TODO 
           Below code is for importing Timeliner as a React component and it didn't work, 
           possibly need extra code in Timeliner to export Timeliner root component along with its properties.
@@ -59,7 +59,7 @@ export default {
       resourcePath:"",
       resource:"",
       callback:"",
-      key: 1,
+      // key: 1,
       modalHeader:"",
       modalBody:"",
       showModal: false,
@@ -77,7 +77,7 @@ export default {
       self.modalBody = "The NER edits have been successfully " + action;
       self.showModal = true;
       self.modalDismiss = function() {
-        if (action == "completed") {
+        if (action === "completed") {
           console.log("Redirect to root upon successful completion");
           self.$router.push({ path: '/' });
         }
@@ -91,7 +91,7 @@ export default {
       self.modalBody = "There was an error " + action + " the NER edits.";
       self.showModal = true;
       self.modalDismiss = function() {
-        if (action == "completing") {
+        if (action === "completing") {
           console.log("Redirect to root upon failed completion");
           self.$router.push({ path: '/' });
         }
@@ -101,7 +101,7 @@ export default {
     // Complete the edits
     async complete(){
       var response = await completeNer(this.resourcePath);
-      if(response===true){
+      if (response === true) {
         this.handleSuccess("completed");
       }
       else {
@@ -111,16 +111,21 @@ export default {
     // Reset to original
     async reset(){
       var response = await resetNer(this.resourcePath);
-      if(response===true){
+      if (response === true) {
         this.handleSuccess("reset");
+        // reload Timeliner iframe
+        this.forceReload();
       }
       else {
         this.handleError("resetting");
       }      
-      this.forceRender();
     },
-    forceRender(){
-      this.key+=1;
+    forceReload(){
+      document.getElementById('timeliner').contentDocument.location.reload(true);
+      // below code also works as an alternative way to reload the iframe, but using reload as above is preferred
+      // document.getElementById('timeliner').src += ''; 
+      console.log("Reload Timeliner, iframe src = " + document.getElementById('timeliner').src);
+      // this.key+=1;
     },
     getFileUrl(resourcePath) {
       const BASE_URL = process.env.VUE_APP_AMP_URL;
