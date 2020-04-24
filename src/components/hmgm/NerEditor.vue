@@ -44,6 +44,11 @@ import Logout from '@/components/Logout.vue'
 import Modal from '@/components/shared/Modal.vue'
 import { completeNer, resetNer } from '@/service/hmgm-service'; 
 
+// const RESET = "reset";
+// const RESETTING = "resetting";
+// const COMPLETED = "completed";
+// const COMPLETING = "completing";
+
 export default {
   name: 'NerEditor',
   components:{
@@ -74,8 +79,13 @@ export default {
       self.modalHeader = "Success"
       self.modalBody = "The NER edits have been successfully " + action;
       self.showModal = true;
-      self.modalDismiss = function(){
-        self.$router.push({ path: '/' });
+      console.log("inside handle success, action = " + action);
+      self.modalDismiss = function() {
+        if (action == "completed") {
+          console.log("redirect to root");
+          self.$router.push({ path: '/' });
+        }
+        self.showModal = false;
       }
     },
     handleError(action){
@@ -83,17 +93,24 @@ export default {
       self.modalHeader = "Error"
       self.modalBody = "There was an error " + action + " the NER edits.";
       self.showModal = true;
-      self.modalDismiss = function(){
-        self.$router.push({ path: '/' });
+      console.log("inside handle error, action = " + action);
+      self.modalDismiss = function() {
+        if (action == "completing") {
+          console.log("redirect to root");
+          self.$router.push({ path: '/' });
+        }
+        self.showModal = false;
       }
     },
     // Complete the edits
     async complete(){
       var response = await completeNer(this.resourcePath);
       if(response===true){
-        this.handleComplete("completed");
+        console.log("complete = true");
+        this.handleSuccess("completed");
       }
       else {
+        console.log("complete = false");
         this.handleError("completing");
       }
     },
