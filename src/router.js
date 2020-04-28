@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+
 import Login from "./components/userAccountComponents/Login.vue";
 import Register from "./components/userAccountComponents/Register.vue";
 import Workflow from "./components/workflowComponents/Workflow.vue";
@@ -8,6 +9,9 @@ import ResetPassword from "./components/userAccountComponents/ResetPassword.vue"
 import ApproveUser from "./components/userAccountComponents/ApproveUser.vue";
 import BatchIngest from "./components/batchComponents/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgmComponents/TranscriptEditor.vue";
+
+import NerEditor from "./components/hmgm/NerEditor.vue";
+
 // import Jobs from "./components/Jobs.vue";
 
 Vue.use(Router);
@@ -63,8 +67,12 @@ export default new Router({
       path: "/hmgm/transcript-editor", 
       name: 'transcript-editor', 
       component: TranscriptEditor, 
+    } ,
+    {
+      path: "/hmgm/ner-editor", 
+      name: 'ner-editor', 
+      component: NerEditor, 
     }
-
     // {
     //   path: "/jobs",
     //   name: "jobs",
