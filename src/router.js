@@ -10,6 +10,7 @@ import ResetPassword from "./components/ResetPassword.vue";
 import ApproveUser from "./components/ApproveUser.vue";
 import BatchIngest from "./components/batch/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
+import NerEditor from "./components/hmgm/NerEditor.vue";
 // import Jobs from "./components/Jobs.vue";
 
 Vue.use(Router);
@@ -65,8 +66,12 @@ export default new Router({
       path: "/hmgm/transcript-editor", 
       name: 'transcript-editor', 
       component: TranscriptEditor, 
+    } ,
+    {
+      path: "/hmgm/ner-editor", 
+      name: 'ner-editor', 
+      component: NerEditor, 
     }
-
     // {
     //   path: "/jobs",
     //   name: "jobs",
