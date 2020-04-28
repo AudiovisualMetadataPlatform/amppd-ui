@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import Header from '@/components/sharedComponents/Header.vue';
+import Header from '@/components/shared/Header.vue';
 import {sendRegisterRequest} from '@/service/userAccountService';
   export default {
     name: 'RegisterComponent',

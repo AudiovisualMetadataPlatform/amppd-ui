@@ -34,10 +34,10 @@
 </template>
 
 <script>
-import Header from '@/components/sharedComponents/Header.vue'
-import Logout from '@/components/sharedComponents/Logout.vue'
-import WorkflowSelection from '@/components/workflowComponents/WorkflowSelection.vue'
-import WorkflowFiles from '@/components/workflowComponents/WorkflowFiles.vue'
+import Header from '@/components/shared/Header.vue'
+import Logout from '@/components/shared/Logout.vue'
+import WorkflowSelection from '@/components/workflow/WorkflowSelection.vue'
+import WorkflowFiles from '@/components/workflow/WorkflowFiles.vue'
 import Jobs from '@/components/Jobs.vue'
 import { sync } from 'vuex-pathify'
 import axios from 'axios'
