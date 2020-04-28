@@ -1,15 +1,16 @@
 import Vue from "vue";
 import Router from "vue-router";
-/* import Home from './views/Home.vue' */
-import Login from "./components/Login.vue";
-import Register from "./components/Register.vue";
-import Welcome from "./components/Welcome.vue";
-import Workflow from "./components/Workflow.vue";
-import ForgotPassword from "./components/ForgotPassword.vue";
-import ResetPassword from "./components/ResetPassword.vue";
-import ApproveUser from "./components/ApproveUser.vue";
+
+import Login from "./components/userAccount/Login.vue";
+import Register from "./components/userAccount/Register.vue";
+import Workflow from "./components/workflow/Workflow.vue";
+import ForgotPassword from "./components/userAccount/ForgotPassword.vue";
+import ResetPassword from "./components/userAccount/ResetPassword.vue";
+import ApproveUser from "./components/userAccount/ApproveUser.vue";
 import BatchIngest from "./components/batch/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
+import NerEditor from "./components/hmgm/NerEditor.vue";
+
 // import Jobs from "./components/Jobs.vue";
 
 Vue.use(Router);
@@ -28,8 +29,8 @@ export default new Router({
     },
     {
       path: "/welcome",
-      name: "welcome",
-      component: Welcome
+      name: 'batch-ingest', 
+      component: BatchIngest,
     },
     {
       path: "/workflow",
@@ -65,8 +66,12 @@ export default new Router({
       path: "/hmgm/transcript-editor", 
       name: 'transcript-editor', 
       component: TranscriptEditor, 
+    } ,
+    {
+      path: "/hmgm/ner-editor", 
+      name: 'ner-editor', 
+      component: NerEditor, 
     }
-
     // {
     //   path: "/jobs",
     //   name: "jobs",
