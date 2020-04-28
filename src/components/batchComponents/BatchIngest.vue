@@ -1,33 +1,40 @@
-<template>
-<div>
-    <AmpHeader/>
-    <Logout/>
-    <div class="batch-content" v-if="!batchSubmitted">
-      <div class="batch-body">
-      <h1>Batch Ingest Items</h1>
-        <p v-if="errors.length>0" class="errors">
-            <b>Please correct the following error(s):</b>
-            <ul>
-              <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
-            </ul>
-        </p>
-        <div class="unit-name">
-          <label style="display:block;">Unit Name</label>
-          <input v-model="unitName" type="text" disabled />
-        </div>
-        <div class="file-select">
-          <label style="display:block;">Upload Batch Manifest</label>
-          <input type="text" v-model="displayFileName" disabled/>
-          <label for="inputFile" class="primary-button">Browse</label>
-          <input id="inputFile" ref="inputFile" name="inputFile" class="inputfile" type="file" 
-          :disabled="inProgress"
-          v-bind="filename" accept=".csv" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" />
-        </div>
-        <div class="batch-submit">
-            <input type="button" value="Submit" class="primary-button" @click="save" :disabled="inProgress">
-        </div>
-      </div>
-    </div>
+<template> 
+  <div calss="collections">
+  <div class="container col-12">   
+      <div class="row expand-h">        
+      <Sidebar/>    
+      <div class="col-10 bg-light-gray-1">
+        <Logout/>
+        <main>
+          <div class="pad-all-3">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <h1 class="col-lg-12">Batch Ingest</h1>
+                  <p class="text-muted col-lg-12">
+                    Add items to Unit: {{unitName}}
+                  </p>
+                  <div class="col-lg-9">
+                    To add items as a batch, please use the <a href="#">AMP Batch Item template</a>. Once items have been prepared using the template, click upload below.
+                  </div>
+                  <div class="col-lg-3">
+                  <button class="btn btn-outline-primary btn-lg marg-bot-3">Batch manifest template</button>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col">
+                    <input type="file" class="form-control-file btn btn-light btn-lg" id="exampleFormControlFile1" ref="inputFile" value="Upload batch manifest" :disabled="inProgress" v-bind="filename" accept=".csv" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length">
+                  </div>
+                  <div class="col">
+                      <button class="btn btn-secondary btn-lg" @click="save()" :disabled="inProgress">Upload</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>    
+    </div>  
     <modal v-if="showModal" @close="reset()">
     <h3 slot="header" v-if="validationResponse && !validationResponse.success">
       Batch Ingest Errors
@@ -35,7 +42,7 @@
     <h3  slot="header" v-else>Batch Submitted Successfully!</h3>
     <div slot="body">
       <div v-if="validationResponse && !validationResponse.success && validationResponse.validationErrors.length>0" class="batch-errors">
-        <p>There was an error validation your batch.</p>
+        <p>There was an error validating your batch.</p>
         <ul>
           <li v-for="(error, index) in validationResponse.validationErrors" v-bind:key="index">{{error}}</li>
         </ul>
@@ -46,29 +53,27 @@
           <li v-for="(error, index) in validationResponse.processingErrors" v-bind:key="index">{{error}}</li>
         </ul>
       </div>
-      <!-- <div v-else-if="validationResponse && !validationResponse.success" class="batch-errors">
+      <div v-else-if="validationResponse && !validationResponse.success" class="batch-errors">
         <p>There was an error processing your batch.</p>
-      </div> -->
+      </div> 
       <div v-else>
         Your batch has been successfully submitted and all files are ready to be submitted to a workflow.
       </div>
-
-
     </div>
   </modal>
+  </div>  
   </div>
-</template>
-
+</template>  
 <script>
-import AmpHeader from '@/components/Header.vue'
-import Logout from '@/components/Logout.vue'
-import Modal from '@/components/shared/Modal.vue'
+import Sidebar from '@/components/navigationComponents/Sidebar.vue';
+import Logout from '@/components/sharedComponents/Logout.vue'
+import Modal from '@/components/sharedComponents/Modal.vue'
 import { upload } from '@/service/batch-ingest-service';
 
 export default {
   name: 'Workflow',
   components:{
-    AmpHeader,
+    Sidebar,
     Logout,
     Modal
   },
@@ -149,79 +154,17 @@ export default {
   mounted(){
     console.log("reached batchingest.vue");
   }
-
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h2, h3{
-  margin-top: 0;
-}
-.errors{
-  color:red;
-}
-.batch-errors{
-  overflow-y: scroll;
-}
-.batch-content{
-  padding-top:100px;
-  display: flex;
-  flex-direction: column;
-}
-.batch-body{
-  display: flex;
-  flex-direction: column;
-  width: 700px;
-  align-self: center
-}
-.batch-submit{
-  display:flex;
-  justify-content: flex-start;
-  margin: 40px 0 0;
-}
-.unit-name{
-  flex-direction: column;
-  justify-content: center;
-}
-.unit-name input{
-  width: 100% !important;
-}
-.file-select{
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-.file-select input:first-child{
-  width:60%;
-}
-.file-select input:last-child{
-  width:35%;
-}
-.inputfile{
-    display:none;
-}
 
-.primary-button{
-    margin-top: 30px;
-    float: right;
-    background-color: #E9972D;
-    color: #2C5B7F;
-    font: bolder;
-    padding: 10px 20px;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 15px;
-    font-size: 12px;
-}
-input[type="text"]{
-  background-color: white;
-  border: 1px solid lightgray;
-}
-input[type="button"]:disabled {
-  background: #c5c5c5;
-}
+<style lang="css">
+@import '/amppd-ui/src/styles/style.css';
+  .form-errors {
+    color: red;
+    margin: 0%!important;
+    font-size: 0.9rem; 
+    padding-left:3px; 
+  }
+
 </style>

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Modal from './Modal';
+import Modal from '@/components/workflowComponents/FileSelectionModal';
 import { sync } from 'vuex-pathify';
 export default {
   name: 'FileSelection',
