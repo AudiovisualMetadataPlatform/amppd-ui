@@ -71,7 +71,7 @@ import {sendApproveUserRequest, sendRejectUserRequest} from '@/service/userAccou
 		});
 		console.log("approve result is:"+self.approve_status);
 		if(this.errors.length == 0 && self.approve_status)
-        {
+    {
 			this.approve_user = true;
         }
         else
@@ -86,7 +86,7 @@ import {sendApproveUserRequest, sendRejectUserRequest} from '@/service/userAccou
       this.approve_user = false;
       await sendRejectUserRequest(this.$route.params.id )
       .then(response => {
-        self.approve_status = response.data.success;
+        self.approve_status = response.success;
       })
       .catch(e => {
         console.log(e);
