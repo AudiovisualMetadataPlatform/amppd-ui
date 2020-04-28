@@ -32,6 +32,7 @@
 <script>
 import Header from '@/components/Header.vue';
 import axios from 'axios';
+import {authenticationService} from '@/service/authentication-service.js';
 export default {
   name: 'LoginComponent',
   components: {
@@ -46,7 +47,8 @@ export default {
     },
 		email: null,
     pswd: null,
-    auth_status: false
+    auth_status: false,
+    return_url: null
     };
   },
   methods:{
@@ -62,24 +64,17 @@ export default {
       }
       if(this.errors.email_error == '' && this.errors.pswd_error == '')
       {
-        await axios.post(process.env.VUE_APP_AMP_URL+ '/login',
-          {
-            emailid: this.email,
-            password: this.pswd  
-          })
-        .then(response => {
-          self.auth_status = response.data.success;
-        })
-        .catch(e => {
-          console.log(e);
-        });
-        console.log("auth status is:"+self.auth_status);
-        if(self.auth_status)
-        {
-          this.$router.push("/welcome");
+        var currentUser = await authenticationService.login(this.email, this.pswd);
+        console.log(currentUser);
+        if(currentUser && currentUser.token){
+          if(this.$route.query.returnUrl){
+            this.$router.push(this.$route.query.returnUrl);
+          }
+          else{
+            this.$router.push("/welcome");
+          }
         }
-        else
-        {
+        else {
           this.errors.other_errors.push('Email and password do not match');
         }
       }

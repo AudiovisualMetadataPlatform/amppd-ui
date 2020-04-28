@@ -10,11 +10,11 @@ import ResetPassword from "./components/ResetPassword.vue";
 import ApproveUser from "./components/ApproveUser.vue";
 import BatchIngest from "./components/batch/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
-// import Jobs from "./components/Jobs.vue";
+import {authenticationService} from './service/authentication-service.js';
 
 Vue.use(Router);
 
-export default new Router({
+var router = new Router({
   routes: [
     {
       path: "/",
@@ -60,17 +60,27 @@ export default new Router({
       path: "/batch/ingest", 
       name: 'batch-ingest', 
       component: BatchIngest, 
+      meta: { authorize: [] } 
     } ,  
     {
       path: "/hmgm/transcript-editor", 
       name: 'transcript-editor', 
       component: TranscriptEditor, 
     }
-
-    // {
-    //   path: "/jobs",
-    //   name: "jobs",
-    //   component: Jobs
-    // }      
   ]
 });
+export default router;
+router.beforeEach((to, from, next) => {
+  // redirect to login page if not logged in and trying to access a restricted page
+  const { authorize } = to.meta;
+  const currentUser = authenticationService.currentUserValue;
+
+  if (authorize) {
+      if (!currentUser) {
+          // not logged in so redirect to login page with the return url
+          return next({ path: '/', query: { returnUrl: to.path } });
+      }
+  }
+
+  next();
+})

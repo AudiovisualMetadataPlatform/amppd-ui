@@ -1,0 +1,49 @@
+import {authenticationService} from '@/service/authentication-service';
+import handleResponse from '../helpers/handle-response.js';
+import axios from 'axios';
+
+export const requestOptions = {
+    get() {
+        return {
+            ...headers()
+        };
+    },
+    post(body) {
+        return {
+            method: 'POST',
+            ...headers(),
+            body: JSON.stringify(body)
+        };
+    },
+    patch(body) {
+        return {
+            method: 'PATCH',
+            ...headers(),
+            body: JSON.stringify(body)
+        };
+    },
+    put(body) {
+        return {
+            method: 'PUT',
+            ...headers(),
+            body: JSON.stringify(body)
+        };
+    },
+    delete() {
+        return {
+            method: 'DELETE',
+            ...headers()
+        };
+    }
+}
+
+function headers() {
+    const currentUser = authenticationService.currentUserValue || {};
+    const authHeader = currentUser && currentUser.token ? { 'Authorization': 'Bearer ' + currentUser.token } : {}
+    return {
+        headers: {
+            ...authHeader,
+            'Content-Type': 'application/json'
+        }
+    };
+}

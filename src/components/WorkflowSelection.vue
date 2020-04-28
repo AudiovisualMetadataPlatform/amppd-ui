@@ -12,6 +12,8 @@
 <script>
 import { sync } from 'vuex-pathify'
 import axios from 'axios';
+import {requestOptions} from '@/helpers/request-options'
+import {authenticationService} from '@/service/authentication-service';
 export default {
   name: 'WorkflowSelection',
   props: {
@@ -26,16 +28,30 @@ export default {
       parameters: sync('parameters')
   },
   methods:{
-    getWorkflows() {
+    async getWorkflows() {
       let self = this;
-      axios.get(process.env.VUE_APP_AMP_URL + '/workflows')// eslint-disable-line
-        .then(response => {
-          self.workflows = response.data;
+
+        axios.get(process.env.VUE_APP_AMP_URL + '/workflows', 
+          { headers: {
+              "Authorization" : "Bearer " + authenticationService.currentUserValue.token,
+              "Content-Type" : "application/json"
+              } }).then(response => {
+           self.workflows = response.data;
         })
-        .catch(e => {
-          console.log(e);
-          // TODO:  Think about global error handling
-        });
+        // .catch(e => {
+        //   console.log("Errrrr");
+        //   console.log(e);
+        //   // TODO:  Think about global error handling
+        //  });
+      // axios.get(process.env.VUE_APP_AMP_URL + '/workflows')// eslint-disable-line
+      //   .then(response => {
+      //     self.workflows = response.data;
+      //   })
+      //   .catch(e => {
+      //     console.log("Errrrr");
+      //     console.log(e);
+      //     // TODO:  Think about global error handling
+      //   });
     },
     async selection(event) {
       let self = this;

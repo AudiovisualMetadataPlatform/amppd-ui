@@ -92,6 +92,7 @@ const actions = {
               return tempParams;
           })
           .catch(e => {
+              console.log("ERRRRRRRR");
             console.log(e);
             commit("SET_LOADING", false);
             // TODO:  Think about global error handling

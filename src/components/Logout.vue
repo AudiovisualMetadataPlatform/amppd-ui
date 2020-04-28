@@ -5,10 +5,12 @@
 </template>
 
 <script>
+import {authenticationService} from '@/service/authentication-service.js';
 export default {
   name: 'logout',
   methods:{
     signout() {  
+      authenticationService.logout();
       this.$router.push("/");
     }
   },
