@@ -36,7 +36,7 @@
 </template>  
 
 <script>
-import Header from '@/components/sharedComponents/Header.vue';
+import Header from '@/components/shared/Header.vue';
 import {sendForgotPswdEmailRequest} from '@/service/userAccountService';
 export default {
   name: 'ForgotPassword',

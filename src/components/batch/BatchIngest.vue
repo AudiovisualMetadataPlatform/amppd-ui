@@ -65,9 +65,9 @@
   </div>
 </template>  
 <script>
-import Sidebar from '@/components/navigationComponents/Sidebar.vue';
-import Logout from '@/components/sharedComponents/Logout.vue'
-import Modal from '@/components/sharedComponents/Modal.vue'
+import Sidebar from '@/components/navigation/Sidebar.vue';
+import Logout from '@/components/shared/Logout.vue'
+import Modal from '@/components/shared/Modal.vue'
 import { upload } from '@/service/batch-ingest-service';
 
 export default {

@@ -1,15 +1,14 @@
 import Vue from "vue";
 import Router from "vue-router";
 
-import Login from "./components/userAccountComponents/Login.vue";
-import Register from "./components/userAccountComponents/Register.vue";
-import Workflow from "./components/workflowComponents/Workflow.vue";
-import ForgotPassword from "./components/userAccountComponents/ForgotPassword.vue";
-import ResetPassword from "./components/userAccountComponents/ResetPassword.vue";
-import ApproveUser from "./components/userAccountComponents/ApproveUser.vue";
-import BatchIngest from "./components/batchComponents/BatchIngest.vue";
-import TranscriptEditor from "./components/hmgmComponents/TranscriptEditor.vue";
-
+import Login from "./components/userAccount/Login.vue";
+import Register from "./components/userAccount/Register.vue";
+import Workflow from "./components/workflow/Workflow.vue";
+import ForgotPassword from "./components/userAccount/ForgotPassword.vue";
+import ResetPassword from "./components/userAccount/ResetPassword.vue";
+import ApproveUser from "./components/userAccount/ApproveUser.vue";
+import BatchIngest from "./components/batch/BatchIngest.vue";
+import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
 import NerEditor from "./components/hmgm/NerEditor.vue";
 
 // import Jobs from "./components/Jobs.vue";
