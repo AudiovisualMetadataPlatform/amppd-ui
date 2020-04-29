@@ -51,7 +51,7 @@ function sendForgotPswdEmailRequest(emailid) {
 }
 
 function sendApproveUserRequest(userid) {
-    const url = `${BASE_URL}/approve-user`;
+    const url = `${BASE_URL}/user/account/approve`;
 	return axios.post(url,
         {
          userId: userid
@@ -59,5 +59,14 @@ function sendApproveUserRequest(userid) {
         .then(x => x.data)
 }
 
-export { sendLoginRequest, sendRegisterRequest, sendResetRequest, sendfetchEmailRequest, sendForgotPswdEmailRequest, sendApproveUserRequest }
+function sendRejectUserRequest(userid) {
+    const url = `${BASE_URL}/user/account/reject`;
+	return axios.post(url,
+        {
+         userId: userid
+        })
+        .then(x => x.data)
+}
+
+export { sendLoginRequest, sendRegisterRequest, sendResetRequest, sendfetchEmailRequest, sendForgotPswdEmailRequest, sendApproveUserRequest, sendRejectUserRequest }
 
