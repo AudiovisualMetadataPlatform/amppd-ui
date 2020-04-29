@@ -11,7 +11,7 @@
 
 <script>
 import { sync } from 'vuex-pathify'
-import axios from 'axios';
+import axios from '@/service/axios';
 import {requestOptions} from '@/helpers/request-options'
 import {authenticationService} from '@/service/authentication-service';
 export default {
@@ -30,12 +30,8 @@ export default {
   methods:{
     async getWorkflows() {
       let self = this;
-
-        axios.get(process.env.VUE_APP_AMP_URL + '/workflows', 
-          { headers: {
-              "Authorization" : "Bearer " + authenticationService.currentUserValue.token,
-              "Content-Type" : "application/json"
-              } }).then(response => {
+ 
+        axios.get(process.env.VUE_APP_AMP_URL + '/workflows').then(response => {
            self.workflows = response.data;
         })
         // .catch(e => {
