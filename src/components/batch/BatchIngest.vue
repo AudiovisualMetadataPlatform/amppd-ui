@@ -42,19 +42,19 @@
     <h3  slot="header" v-else>Batch Submitted Successfully!</h3>
     <div slot="body">
       <div v-if="validationResponse && !validationResponse.success && validationResponse.validationErrors.length>0" class="batch-errors">
-        <p>There was an error validating your batch.</p>
+        <p>There is an error validating your batch.</p>
         <ul>
           <li v-for="(error, index) in validationResponse.validationErrors" v-bind:key="index">{{error}}</li>
         </ul>
       </div>
       <div v-else-if="validationResponse && !validationResponse.success " class="batch-errors">
-        <p>There was an error processing your batch.</p>
+        <p>There is an error processing your batch.</p>
         <ul>
           <li v-for="(error, index) in validationResponse.processingErrors" v-bind:key="index">{{error}}</li>
         </ul>
       </div>
       <div v-else-if="validationResponse && !validationResponse.success" class="batch-errors">
-        <p>There was an error processing your batch.</p>
+        <p>There is an error processing your batch.</p>
       </div> 
       <div v-else>
         Your batch has been successfully submitted and all files are ready to be submitted to a workflow.
