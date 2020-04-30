@@ -1,16 +1,18 @@
 import Vue from "vue";
 import Router from "vue-router";
-/* import Home from './views/Home.vue' */
-import Login from "./components/Login.vue";
-import Register from "./components/Register.vue";
-import Welcome from "./components/Welcome.vue";
-import Workflow from "./components/Workflow.vue";
-import ForgotPassword from "./components/ForgotPassword.vue";
-import ResetPassword from "./components/ResetPassword.vue";
-import ApproveUser from "./components/ApproveUser.vue";
+
+import Login from "./components/account/Login.vue";
+import Register from "./components/account/Register.vue";
+import Workflow from "./components/workflow/Workflow.vue";
+import ForgotPassword from "./components/account/ForgotPassword.vue";
+import ResetPassword from "./components/account/ResetPassword.vue";
+import ApproveUser from "./components/account/ApproveUser.vue";
 import BatchIngest from "./components/batch/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
+import NerEditor from "./components/hmgm/NerEditor.vue";
 import {authenticationService} from './service/authentication-service.js';
+
+// import Jobs from "./components/Jobs.vue";
 
 Vue.use(Router);
 
@@ -19,54 +21,68 @@ var router = new Router({
     {
       path: "/",
       name: "home",
-      component: Login
+      component: BatchIngest,
+      meta: { authorize: [] } 
     },
     {
-      path: "/register",
-      name: "register",
-      component: Register
-    },
-    {
-      path: "/welcome",
-      name: "welcome",
-      component: Welcome
-    },
-    {
-      path: "/workflow",
-      name: "workflow",
-      component: Workflow
-    },
-    {
-      path: "/forgot-password",
+      path: "/account/forgot-password",
       name: "forgot-password",
       component: ForgotPassword
     },  
     {
-      path: "/reset-password/:token", 
+      path: "/account/reset-password/:token", 
       name: 'reset-password', 
       component: ResetPassword, 
     }, 
     {
-      path: "/approve-user/:id", 
+      path: "/account/approve-user/:id", 
       name: 'approve-user', 
-      component: ApproveUser, 
+      component: ApproveUser,
+      meta: { authorize: [] }  
     },
     {
-      path: "/activate-account/:id", 
+      path: "/account/activate-account/:id", 
       name: 'activate-account', 
       component: Login, 
-    } ,  
+    },  
+    {
+      path: "/account/register",
+      name: "register",
+      component: Register
+    },
+    {
+      path: "/account/login",
+      name: "login",
+      component: Login
+    },
+    {
+      path: "/welcome",
+      name: 'batch-ingest', 
+      component: BatchIngest,
+      meta: { authorize: [] } 
+    },
+    {
+      path: "/workflow/submit",
+      name: "workflow",
+      component: Workflow,
+      meta: { authorize: [] } 
+    },
     {
       path: "/batch/ingest", 
       name: 'batch-ingest', 
       component: BatchIngest, 
       meta: { authorize: [] } 
-    } ,  
+    },  
     {
       path: "/hmgm/transcript-editor", 
       name: 'transcript-editor', 
       component: TranscriptEditor, 
-    }
+    } ,
+    {
+      path: "/hmgm/ner-editor", 
+      name: 'ner-editor', 
+      component: NerEditor, 
+    }  
   ]
 });
 export default router;
@@ -78,7 +94,7 @@ router.beforeEach((to, from, next) => {
   if (authorize) {
       if (!currentUser) {
           // not logged in so redirect to login page with the return url
-          return next({ path: '/', query: { returnUrl: to.path } });
+          return next({ path: '/account/login', query: { returnUrl: to.path } });
       }
   }
 

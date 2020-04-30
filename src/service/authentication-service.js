@@ -1,4 +1,3 @@
-import {requestOptions} from '../helpers/request-options.js';
 import handleResponse from '../helpers/handle-response.js';
 import axios from 'axios'
 

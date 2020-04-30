@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import AmpHeader from '@/components/Header.vue'
-import Logout from '@/components/Logout.vue'
+import AmpHeader from '@/components/shared/Header.vue'
+import Logout from '@/components/shared/Logout.vue'
 import BBCTranscriptEditor from "@bbc/react-transcript-editor";
 import Modal from '@/components/shared/Modal.vue'
 import { getTranscript, saveTranscript, completeTranscript } from '@/service/hmgm-service'; 

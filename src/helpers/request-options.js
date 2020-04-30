@@ -1,6 +1,4 @@
 import {authenticationService} from '@/service/authentication-service';
-import handleResponse from '../helpers/handle-response.js';
-import axios from 'axios';
 
 export const requestOptions = {
     get() {
@@ -8,11 +6,10 @@ export const requestOptions = {
             ...headers()
         };
     },
-    post(body) {
+    post() {
         return {
             method: 'POST',
-            ...headers(),
-            body: JSON.stringify(body)
+            ...headers()
         };
     },
     patch(body) {
@@ -39,7 +36,7 @@ export const requestOptions = {
 
 function headers() {
     const currentUser = authenticationService.currentUserValue || {};
-    const authHeader = currentUser && currentUser.token ? { 'Authorization': 'Bearer ' + currentUser.token } : {}
+    const authHeader = currentUser && currentUser.token ? { 'Authorization': 'Bearer ' + currentUser.token  } : {}
     return {
         headers: {
             ...authHeader,

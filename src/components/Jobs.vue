@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue'
+import Header from '@/components/shared/Header.vue'
 import { sync } from 'vuex-pathify'
 
 export default {
