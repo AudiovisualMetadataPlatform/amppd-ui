@@ -1,11 +1,10 @@
-import * as axios from 'axios';
+import BaseService from './base-service';
 
-const BASE_URL = process.env.VUE_APP_AMP_URL;
-
+const baseService = new BaseService();
 function getTranscript(datasetPath, reset) {
 
-    const url = `${BASE_URL}/hmgm/transcript-editor?datasetPath=${datasetPath}&reset=${reset}`;
-    return axios.get(url)
+    const url = `/hmgm/transcript-editor?datasetPath=${datasetPath}&reset=${reset}`;
+    return baseService.get_auth(url)
         // get data
         .then(x => x.data)
 }
@@ -15,25 +14,24 @@ function saveTranscript(json, filePath) {
     
     formData.append('data', json);
     formData.append('filePath', filePath);
-    const url = `${BASE_URL}/hmgm/transcript-editor/save`;
-    return axios.post(url, {json, filePath})
+    const url = `/hmgm/transcript-editor/save`;
+    return baseService.post_auth(url, {json, filePath})
         // get data
         .then(x => x.data)
 }
 
 function completeTranscript(filePath) {
-    const url = `${BASE_URL}/hmgm/transcript-editor/complete`;
-    return axios.post(url, {filePath:filePath})
+    const url = `/hmgm/transcript-editor/complete`;
+    return baseService.post_auth(url, {filePath:filePath})
         // get data
         .then(x => x.data)
 }
 
 function completeNer(resourcePath) {
-    // const url = `${BASE_URL}/hmgm/ner-editor/complete`;
-    const url = `${BASE_URL}/hmgm/ner-editor/complete?resourcePath=${resourcePath}`;
+    const url = `/hmgm/ner-editor/complete?resourcePath=${resourcePath}`;
     console.log("axios completeNer: url = " + url);
     console.log("axios completeNer: resourcePath = " + resourcePath);
-    return axios.post(url, {resourcePath:resourcePath})
+    return baseService.post_auth(url, {resourcePath:resourcePath})
     // return axios.post(url, {resourcePath:resourcePath})
         // get data
         .then(x => x.data)
@@ -41,10 +39,10 @@ function completeNer(resourcePath) {
 
 function resetNer(resourcePath) {
     // const url = `${BASE_URL}/hmgm/ner-editor/reset`;
-    const url = `${BASE_URL}/hmgm/ner-editor/reset?resourcePath=${resourcePath}`;
+    const url = `/hmgm/ner-editor/reset?resourcePath=${resourcePath}`;
     console.log("axios resetNer: url = " + url);
     console.log("axios resetNer: resourcePath = " + resourcePath);
-    return axios.post(url)
+    return baseService.post_auth(url)
     // return axios.post(url, {resourcePath:resourcePath})
         // get data
         .then(x => x.data)

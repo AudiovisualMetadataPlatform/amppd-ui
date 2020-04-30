@@ -1,12 +1,11 @@
-import * as axios from 'axios';
 import handleResponse from '../helpers/handle-response.js';
+import BaseService from './base-service.js';
 
-const BASE_URL = process.env.VUE_APP_AMP_URL;
 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
+const baseService = new BaseService();
 function sendRegisterRequest(username, pswd, email) {
-    const url = `${BASE_URL}/register`;
-	return axios.post(url,
+  const url = `/register`;
+	return baseService.post_auth(url,
         {
           username: username,
           password: pswd,
@@ -16,8 +15,8 @@ function sendRegisterRequest(username, pswd, email) {
 }
 
 function sendResetRequest(token, pswd, email) {
-    const url = `${BASE_URL}/reset-password`;
-	return axios.post(url,
+  const url = `/reset-password`;
+	return baseService.post_auth(url,
         {
           emailid: email,
           password: pswd,
@@ -27,8 +26,8 @@ function sendResetRequest(token, pswd, email) {
 }
 
 function sendfetchEmailRequest(token) {
-    const url = `${BASE_URL}/reset-password-getEmail`;
-	return axios.post(url,
+  const url = `/reset-password-getEmail`;
+	return baseService.post_auth(url,
         {
           token: token
         })
@@ -36,8 +35,8 @@ function sendfetchEmailRequest(token) {
 }
 
 function sendForgotPswdEmailRequest(emailid) {
-    const url = `${BASE_URL}/forgot-password`;
-	return axios.post(url,
+  const url = `/forgot-password`;
+	return baseService.post_auth(url,
         {
           emailid: emailid
         })
@@ -45,8 +44,8 @@ function sendForgotPswdEmailRequest(emailid) {
 }
 
 function sendApproveUserRequest(userid) {
-    const url = `${BASE_URL}/user/account/approve`;
-	return axios.post(url,
+  const url = `/user/account/approve`;
+	return baseService.post_auth(url,
         {
          userId: userid
         })
@@ -54,8 +53,8 @@ function sendApproveUserRequest(userid) {
 }
 
 function sendRejectUserRequest(userid) {
-    const url = `${BASE_URL}/user/account/reject`;
-	return axios.post(url,
+  const url = `/user/account/reject`;
+	return baseService.post_auth(url,
         {
          userId: userid
         })
@@ -63,7 +62,7 @@ function sendRejectUserRequest(userid) {
 }
 
 function login(username, password) {
-  return axios.post(`${process.env.VUE_APP_AMP_URL}/authenticate`, { username, password })
+  return baseService.post_auth(`/authenticate`, { username, password })
       .then(handleResponse)
       .then(user => {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
