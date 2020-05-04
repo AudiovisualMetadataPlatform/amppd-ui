@@ -31,7 +31,7 @@ export default {
     async getWorkflows() {
       let self = this;
  
-        this.workflowService.getWorkflows().then(response => {
+      this.workflowService.getWorkflows().then(response => {
            self.workflows = response.data;
         });
     },

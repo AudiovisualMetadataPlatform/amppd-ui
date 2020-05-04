@@ -48,7 +48,7 @@
 
 <script>
 import Header from '@/components/shared/Header.vue';
-import {sendRegisterRequest} from '@/service/account-service';
+import {accountService} from '@/service/account-service';
   export default {
     name: 'RegisterComponent',
     components: {
@@ -113,7 +113,7 @@ import {sendRegisterRequest} from '@/service/account-service';
       }
       if (this.errors.other_errors.length == 0 && !this.errorExist) 
       {
-        await sendRegisterRequest(this.fname+this.lname, this.pswd, this.email)
+        await accountService.sendRegisterRequest(this.fname+this.lname, this.pswd, this.email)
         .then(response => {
           self.register_status = response.success;
           self.errors.other_errors = response.errors;

@@ -1,4 +1,4 @@
-import {authenticationService} from '@/service/authentication-service';
+import {accountService} from '@/service/account-service';
 
 export const requestOptions = {
     get() {
@@ -35,7 +35,7 @@ export const requestOptions = {
 }
 
 function headers() {
-    const currentUser = authenticationService.currentUserValue || {};
+    const currentUser = accountService.currentUserValue || {};
     const authHeader = currentUser && currentUser.token ? { 'Authorization': 'Bearer ' + currentUser.token  } : {}
     return {
         headers: {

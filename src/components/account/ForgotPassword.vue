@@ -37,7 +37,7 @@
 
 <script>
 import Header from '@/components/shared/Header.vue';
-import {sendForgotPswdEmailRequest} from '@/service/account-service';
+import {accountService} from '@/service/account-service';
 export default {
   name: 'ForgotPassword',
   components: {
@@ -79,7 +79,7 @@ export default {
       
       if(this.errors.email_error == '')
       {
-        await sendForgotPswdEmailRequest(this.email)
+        await accountService.sendForgotPswdEmailRequest(this.email)
         .then(response => {
           self.auth_status = response.success;
           self.errors.other_errors = response.errors;

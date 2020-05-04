@@ -10,7 +10,7 @@ import ApproveUser from "./components/account/ApproveUser.vue";
 import BatchIngest from "./components/batch/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
 import NerEditor from "./components/hmgm/NerEditor.vue";
-import {authenticationService} from './service/authentication-service.js';
+import {accountService} from './service/account-service.js';
 
 // import Jobs from "./components/Jobs.vue";
 
@@ -86,16 +86,23 @@ var router = new Router({
   ]
 });
 export default router;
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const { authorize } = to.meta;
-  const currentUser = authenticationService.currentUserValue;
+  const currentUser = accountService.currentUserValue;
 
   if (authorize) {
-      if (!currentUser) {
-          // not logged in so redirect to login page with the return url
-          return next({ path: '/account/login', query: { returnUrl: to.path } });
+    if (!currentUser) {
+        console.log("not current user");
+        // not logged in so redirect to login page with the return url
+        return next({ path: '/account/login', query: { returnUrl: to.path } });
+    }
+    else {
+      var success = await accountService.validate();
+      if(!success){
+        return next({ path: '/account/login', query: { returnUrl: to.path } });
       }
+    }
   }
 
   next();

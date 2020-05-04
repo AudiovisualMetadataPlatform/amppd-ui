@@ -71,8 +71,10 @@ export default {
       {
         var currentUser = await accountService.login(this.email, this.pswd);
         console.log(currentUser);
+        console.log("AUTH:");
         if(currentUser && currentUser.token){
           if(this.$route.query.returnUrl){
+            console.log("going to " + this.$route.query.returnUrl);
             this.$router.push(this.$route.query.returnUrl);
           }
           else{
@@ -98,6 +100,7 @@ export default {
     }
   },
   mounted() {
+    accountService.logout();
   }
 };
 </script>

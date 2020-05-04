@@ -41,7 +41,7 @@
 
 <script>
 import Header from '@/components/shared/Header.vue';
-import {sendApproveUserRequest, sendRejectUserRequest} from '@/service/account-service';
+import {accountService} from '@/service/account-service';
   export default {
     name: 'ApproveUser',
     components: {
@@ -62,7 +62,7 @@ import {sendApproveUserRequest, sendRejectUserRequest} from '@/service/account-s
     this.errors=[];
     this.approve_user = false;
     this.reject_user=false;
-    await sendApproveUserRequest(this.$route.params.id )
+    await accountService.sendApproveUserRequest(this.$route.params.id )
     .then(response => {
       self.approve_status = response.success;
       })
@@ -84,7 +84,7 @@ import {sendApproveUserRequest, sendRejectUserRequest} from '@/service/account-s
       this.errors=[];
       this.reject_user=false;
       this.approve_user = false;
-      await sendRejectUserRequest(this.$route.params.id )
+      await accountService.sendRejectUserRequest(this.$route.params.id )
       .then(response => {
         self.approve_status = response.success;
       })

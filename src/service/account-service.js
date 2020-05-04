@@ -1,4 +1,3 @@
-import handleResponse from '../helpers/handle-response.js';
 import BaseService from './base-service.js';
 
 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -62,32 +61,49 @@ function sendRejectUserRequest(userid) {
 }
 
 function login(username, password) {
-  return baseService.post_auth(`/authenticate`, { username, password })
-      .then(handleResponse)
+  console.log("login");
+  return baseService.post(`/authenticate`, { username, password })
       .then(user => {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem('currentUser', JSON.stringify(user.data));
           this.currentUser = user.data;
           console.log(currentUser);
           return this.currentUser;
+      })
+      .catch(error => {
+        console.log("Error");
+        console.log(error);
       });
 }
-
+async function validate() {
+  var success = await baseService.post_auth(`/validate`)
+      .then(user => {
+          return true;
+      })
+      .catch(error => {
+        console.log("IN ERROR");
+        return false;
+      });
+  console.log("Success: " + success);
+  return success;
+}
 function logout() {
   // remove user from local storage to log user out
   localStorage.removeItem('currentUser');
   this.currentUser = null;
 }
 
-export const accountService = { sendRegisterRequest, 
+export const accountService = { 
+  sendRegisterRequest, 
   sendResetRequest, 
   sendfetchEmailRequest, 
   sendForgotPswdEmailRequest, 
   sendApproveUserRequest, 
   sendRejectUserRequest, 
+  validate,
   login, 
   logout,
   currentUser: currentUser,
-  get currentUserValue () { return currentUser }  
+  get currentUserValue () { return JSON.parse(localStorage.getItem('currentUser')) }  
 }
 

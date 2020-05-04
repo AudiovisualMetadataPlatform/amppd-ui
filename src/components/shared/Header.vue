@@ -46,9 +46,6 @@ export default {
     }
   }, */
   methods:{
-    signout() {  
-      this.$router.push("/");
-    }
   },
   mounted() {
   }

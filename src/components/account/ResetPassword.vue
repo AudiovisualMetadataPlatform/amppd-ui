@@ -43,7 +43,7 @@
 
 <script>
 import Header from '@/components/shared/Header.vue';
-import {sendResetRequest, sendfetchEmailRequest} from '@/service/account-service';
+import {accountService} from '@/service/account-service';
 export default {
   name: 'ResetPasswordForm',
   components: {
@@ -97,7 +97,7 @@ export default {
       
       if (this.errors.other_errors.length == 0 && !this.errors.errorExist)
       {   console.log("entered axios if");
-        await sendResetRequest(this.reset_token, this.pswd, this.emailid)
+        await accountService.sendResetRequest(this.reset_token, this.pswd, this.emailid)
         .then(response => {
           self.reset_status = response.success;
           self.errors.other_errors = response.errors;
@@ -119,7 +119,7 @@ export default {
     },
     fetch_emailID() {
       let self = this;
-      sendfetchEmailRequest(this.$route.params.token)
+      accountService.sendfetchEmailRequest(this.$route.params.token)
       .then(response => {
         self.fetch_status = response.success;
         self.errors.other_errors = response.errors;
