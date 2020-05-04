@@ -26,7 +26,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary marg-bot-4" v-on:click="checkForm()">Sign In</button>
-        <p class="form-text text-muted">Don't have an account? <a href="/#/register" v-on:click="registerClicked()">Sign up</a>.</p>
+        <p class="form-text text-muted">Don't have an account? <a v-on:click="registerClicked()">Sign up</a>.</p>
         </form>
         </div>
         </div>  
