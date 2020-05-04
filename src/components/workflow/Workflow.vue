@@ -40,7 +40,7 @@ import WorkflowSelection from '@/components/workflow/WorkflowSelection.vue'
 import WorkflowFiles from '@/components/workflow/WorkflowFiles.vue'
 import Jobs from '@/components/Jobs.vue'
 import { sync } from 'vuex-pathify'
-import axios from 'axios'
+import WorkflowService from '../../service/workflow-service';
 
 export default {
   name: 'Workflow',
@@ -54,7 +54,8 @@ export default {
   data(){
     return {
       workflowSubmitted: false,
-      bundle: null
+      bundle: null,
+      workflowService: new WorkflowService()
     }
   },
   computed:{
@@ -68,6 +69,7 @@ export default {
   methods:{
 
     async createBundle(){
+      let self = this;
       // create a new bundle with default name/description
       var bundle = {
         name: "Bundle #{this.files[0].id} ~ #{this.files[this.files.size-1].id}", 
@@ -75,7 +77,7 @@ export default {
         // name: "Bundle " + this.files[0].id + " ~ " + this.files[this.files.size-1].id, 
         // description: "Bundle with " + this.files.size + " primaryfiles"
       }      
-      await axios.post(process.env.VUE_APP_AMP_URL + '/bundles', bundle)
+      await self.workflowService.createBundle(bundle)
         .then(response => {
           this.bundle = response.data;
         })
@@ -92,7 +94,7 @@ export default {
       // console.log("Adding primaryfiles " + primaryfileIds + " to bundle " + this.bundle.id);
       console.log("bundleId = " + this.bundle.id);
       console.log("primaryfileIds = " + primaryfileIds);
-      await axios.post(process.env.VUE_APP_AMP_URL + '/bundles/' + this.bundle.id + '/addPrimaryfiles?primaryfileIds=' + primaryfileIds)
+      await self.workflowService.addPrimaryFiles(this.bundle.id, primaryfileIds)
        .then(response => {
           this.bundle = JSON.parse(response.data);
         })
@@ -103,10 +105,11 @@ export default {
       },
 
       async submitWorkflow(){
+        let self = this;
         console.log("Submitting workflow " + this.selectedWorkflow + " on bundle " + this.bundle.id);
         // console.log("workflowId = " + this.selectedWorkflow);
         // console.log("bundleId = " + this.bundle.id);
-        await axios.post(process.env.VUE_APP_AMP_URL + '/jobs/bundle?workflowId=' + this.selectedWorkflow + '&bundleId=' + this.bundle.id)
+        await self.workflowService.submitWorkflow(this.selectedWorkflow, this.bundle.id)
         .then(response => {
             this.jobs = response.data;
             // this.$router.push("/jobs");

@@ -46,12 +46,8 @@ export default {
     }
   }, */
   methods:{
-    signout() {  
-      this.$router.push("/");
-    }
   },
   mounted() {
-    //console.log("IT WORKS");
   }
 };
 </script>

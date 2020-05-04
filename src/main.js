@@ -4,6 +4,7 @@ import router from './router'
 import store from './store/workflow-submission-store'
 import { VuePlugin } from 'vuera'
 
+
 Vue.use(VuePlugin)
 
 new Vue({

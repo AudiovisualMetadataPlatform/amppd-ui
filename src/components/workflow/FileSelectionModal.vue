@@ -28,14 +28,15 @@
 
 <script>
 import { sync } from 'vuex-pathify'
-import axios from 'axios';
+import WorkflowService from '../../service/workflow-service';
 export default {
     name: 'filepicker',
     data() {
       return {
         searchWord:'',
         searchedFiles:[],
-        selectedFiles:[]
+        selectedFiles:[],
+        workflowService: new WorkflowService()
         };
     },
     computed:{
@@ -49,12 +50,11 @@ export default {
       search() {
         let self = this;
         console.log("the search word is:", this.searchWord);
-        axios.get(process.env.VUE_APP_AMP_URL + '/primaryfiles/search/findByKeyword?keyword='+this.searchWord)
-        .then(response => {
-          self.searchedFiles = response.data._embedded.primaryfiles;})
+        self.searchedFiles = self.workflowService.searchFiles(this.searchWord).then(response => {
+          self.searchedFiles = response.data._embedded.primaryfiles;
+        })
         .catch(e => {
           console.log(e);});
-        console.log("The file names fetched are:",self.searchedFiles);
       },
       addFiles() {
         let self = this;

@@ -11,14 +11,16 @@
 
 <script>
 import { sync } from 'vuex-pathify'
-import axios from 'axios';
+import {requestOptions} from '@/helpers/request-options'
+import WorkflowService from '../../service/workflow-service';
 export default {
   name: 'WorkflowSelection',
   props: {
   },
   data() {
     return {
-      workflows:[]
+      workflows:[],
+      workflowService: new WorkflowService()
     }
   },
   computed:{
@@ -26,22 +28,18 @@ export default {
       parameters: sync('parameters')
   },
   methods:{
-    getWorkflows() {
+    async getWorkflows() {
       let self = this;
-      axios.get(process.env.VUE_APP_AMP_URL + '/workflows')// eslint-disable-line
-        .then(response => {
-          self.workflows = response.data;
-        })
-        .catch(e => {
-          console.log(e);
-          // TODO:  Think about global error handling
+ 
+      this.workflowService.getWorkflows().then(response => {
+           self.workflows = response.data;
         });
     },
     async selection(event) {
       let self = this;
       self.selectedWorkflow = event.target.value;
-      self.parameters = await self.$store.dispatch('getWorkflowDetails', self.selectedWorkflow);
-
+      self.parameters = await this.workflowService.getWorkflowDetails(self.selectedWorkflow);
+      console.log(self.parameters);
     }
   },
   mounted() {

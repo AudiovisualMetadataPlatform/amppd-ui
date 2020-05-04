@@ -41,14 +41,11 @@ export default {
       },
     closeModal() {
         this.isModalVisible = false;
-        console.log("the files added are:",self.files);
       },
     deleteFile(id){
       let self = this;
-      console.log("deleting file " + id);
       for( var i = 0; i < self.files.length; i++){ 
         if (self.files[i].id === id) {
-          console.log("deleting");
           self.files.splice(i, 1); 
         }
       }

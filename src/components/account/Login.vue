@@ -37,7 +37,7 @@
 
 <script>
 import Header from '@/components/shared/Header.vue';
-import { sendLoginRequest } from '@/service/userAccountService';
+import { accountService } from '@/service/account-service';
 export default {
   name: 'LoginComponent',
   components: {
@@ -69,29 +69,28 @@ export default {
       }
       if(this.errors.email_error == '' && this.errors.pswd_error == '')
       {
-        await sendLoginRequest(this.email, this.pswd)
-        .then(x => {
-          self.auth_status = x.success;
-        })
-        .catch(e => {
-          console.log(e);
-        });
-        console.log("auth status is:"+self.auth_status);
-        if(self.auth_status)
-        {
-          this.$router.push("/welcome");
+        var currentUser = await accountService.login(this.email, this.pswd);
+        console.log(currentUser);
+        console.log("AUTH:");
+        if(currentUser && currentUser.token){
+          if(this.$route.query.returnUrl){
+            console.log("going to " + this.$route.query.returnUrl);
+            this.$router.push(this.$route.query.returnUrl);
+          }
+          else{
+            this.$router.push("/");
+          }
         }
-        else
-        {
+        else {
           this.errors.other_errors.push('Email and password do not match');
         }
       }
     },
     registerClicked() {
-      this.$router.push('/register')
+      this.$router.push('/account/register')
     },
     forgotPassword() {
-      this.$router.push('/forgot-password')
+      this.$router.push('/account/forgot-password')
     },
     onClick(data) {
       if(data == 'email')
@@ -101,7 +100,7 @@ export default {
     }
   },
   mounted() {
-    console.log("IT WORKS");
+    accountService.logout();
   }
 };
 </script>
