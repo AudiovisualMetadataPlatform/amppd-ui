@@ -17,9 +17,6 @@ export default class BaseService{
             error => this.errorHandler(error)
           )
     }
-    successHandler(response){
-        return response;
-    }
     errorHandler(error) {
         if ([401, 403].indexOf(error.status) !== -1) {
             // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
@@ -30,7 +27,6 @@ export default class BaseService{
         return Promise.reject(error);
     }
     get_auth(url){
-        
         return this.axiosInstance.get(this.API_URL+ url, requestOptions.get());
     }
     
