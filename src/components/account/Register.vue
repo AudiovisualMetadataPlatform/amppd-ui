@@ -65,7 +65,7 @@ import {accountService} from '@/service/account-service';
         errorExist: false
       },
       fname: null,
-      lname: null,
+      lname: '',
       pswd: null,
       email: null,
       confirm_pswd: null,

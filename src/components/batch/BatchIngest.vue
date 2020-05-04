@@ -10,7 +10,10 @@
             <div class="card">
               <div class="card-body">
                 <div class="row">
-                  <h1 class="col-lg-12">Batch Ingest</h1>
+                  <h1 class="col-lg-12">
+                    Batch Ingest
+                    <button class="btn btn-outline-primary btn-lg marg-bot-3 float-right">Batch manifest template</button>
+                  </h1>
                   <p class="text-muted col-lg-12">
                     Add items to Unit: {{unitName}}
                   </p>
@@ -18,7 +21,7 @@
                     To add items as a batch, please use the <a href="#">AMP Batch Item template</a>. Once items have been prepared using the template, click upload below.
                   </div>
                   <div class="col-lg-3">
-                  <button class="btn btn-outline-primary btn-lg marg-bot-3">Batch manifest template</button>
+                  
                   </div>
                 </div>
                 <div class="form-row">
