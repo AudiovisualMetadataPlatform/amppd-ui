@@ -65,7 +65,7 @@ import {sendRegisterRequest} from '@/service/userAccountService';
         errorExist: false
       },
       fname: null,
-      lname: null,
+      lname: '',
       pswd: null,
       email: null,
       confirm_pswd: null,

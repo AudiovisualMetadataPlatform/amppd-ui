@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Header/>
+		<!-- <Header/> -->
 		<div class="jobs">
 			<h3>The following primaryfiles had AMPPD jobs successfully created and scheduled to run workflow {{selectedWorkflow}}:</h3>
 			<div class="jobs-list">
@@ -31,13 +31,13 @@
 </template>
 
 <script>
-import Header from '@/components/shared/Header.vue'
+//import Header from '@/components/shared/Header.vue'
 import { sync } from 'vuex-pathify'
 
 export default {
   name: 'Jobs',
   components:{
-    Header
+    //Header
   },
   data(){
     return {		
