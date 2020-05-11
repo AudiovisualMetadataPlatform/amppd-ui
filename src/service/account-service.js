@@ -51,6 +51,15 @@ function sendApproveUserRequest(userid) {
         .then(x => x.data)
 }
 
+function sendActivateUserRequest(userToken) {
+  const url = `/user/account/activate`;
+	return baseService.post_auth(url,
+        {
+         token: userToken
+        })
+        .then(x => x.data)
+}
+
 function sendRejectUserRequest(userid) {
   const url = `/user/account/reject`;
 	return baseService.post_auth(url,
@@ -99,6 +108,7 @@ export const accountService = {
   sendfetchEmailRequest, 
   sendForgotPswdEmailRequest, 
   sendApproveUserRequest, 
+  sendActivateUserRequest,
   sendRejectUserRequest, 
   validate,
   login, 
