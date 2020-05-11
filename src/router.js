@@ -4,6 +4,7 @@ import Router from "vue-router";
 import Login from "./components/account/Login.vue";
 import Register from "./components/account/Register.vue";
 import Workflow from "./components/workflow/Workflow.vue";
+import WorkflowDashboard from "./components/workflow/Dashboard.vue";
 import ForgotPassword from "./components/account/ForgotPassword.vue";
 import ResetPassword from "./components/account/ResetPassword.vue";
 import ApproveUser from "./components/account/ApproveUser.vue";
@@ -65,6 +66,12 @@ var router = new Router({
       path: "/workflow/submit",
       name: "workflow",
       component: Workflow,
+      meta: { authorize: [] } 
+    },
+    {
+      path: "/workflow",
+      name: "workflow-dashboard",
+      component: WorkflowDashboard,
       meta: { authorize: [] } 
     },
     {

@@ -3,9 +3,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store/workflow-submission-store'
 import { VuePlugin } from 'vuera'
+import { VuejsDatatableFactory } from 'vuejs-datatable';
 
 
 Vue.use(VuePlugin)
+Vue.use( VuejsDatatableFactory );
 
 new Vue({
   router,
