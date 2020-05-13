@@ -51,54 +51,47 @@ import {accountService} from '@/service/account-service';
 		return {
 			errors: [],
 			id: null,
-			approve_status: false,
-      approve_user: false,
+			approve_user: false,
       reject_user: false
     }
   },
   methods:{
 	async approveUser() {
     event.preventDefault();
+    let self = this;
     this.errors=[];
-    this.approve_user = false;
-    this.reject_user=false;
+    self.approve_user = false;
+    self.reject_user=false;
     await accountService.sendApproveUserRequest(this.$route.params.id )
     .then(response => {
-      self.approve_status = response.success;
+      self.approve_user = response.success;
       })
     .catch(e => {
       console.log(e);
 		});
-		console.log("approve result is:"+self.approve_status);
-		if(this.errors.length == 0 && self.approve_status)
+		console.log("approve result is:"+self.approve_user);
+		if(this.errors.length != 0)
     {
-			this.approve_user = true;
-        }
-        else
-        {
-          this.errors.push('User was not approved');
-        }
+      this.errors.push('User was not approved');
+    }
     },
     async rejectUser() {
       event.preventDefault();
+      let self = this;
       this.errors=[];
-      this.reject_user=false;
-      this.approve_user = false;
+      self.approve_user = false;
+      self.reject_user=false;
       await accountService.sendRejectUserRequest(this.$route.params.id )
       .then(response => {
-        self.approve_status = response.success;
+        self.reject_user = response.success;
       })
       .catch(e => {
         console.log(e);
       });
-      console.log("reject result is:"+self.approve_status);
-      if(this.errors.length == 0 && self.approve_status)
+      console.log("reject result is:"+self.reject_user);
+      if(this.errors.length != 0)
       {
-        this.reject_user = true;
-      }
-      else
-      {
-        this.errors.push('User was not approved');
+        this.errors.push('User was not rejected successfully');
       }
     }
   },
