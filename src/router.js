@@ -36,13 +36,13 @@ var router = new Router({
       component: ResetPassword, 
     }, 
     {
-      path: "/account/approve-user/:id", 
+      path: "/account/approve/:id", 
       name: 'approve-user', 
       component: ApproveUser,
       meta: { authorize: [] }  
     },
     {
-      path: "/account/activate-account/:id", 
+      path: "/account/activate/:token", 
       name: 'activate-account', 
       component: Login, 
     },  

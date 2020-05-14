@@ -53,10 +53,34 @@ export default {
     formData: new FormData(),
 		email: null,
     pswd: null,
-    auth_status: false
+    auth_status: false,
+    activate_status: false,
+    id:null,
+    token: null
     };
   },
+  created() {
+    if (this.$route.params.token)
+    {
+      console.log("The token is:"+this.$route.params.token);
+      this.token = this.$route.params.token;
+      this.activateNewUser();
+      console.log("activation result is:"+this.activate_status);
+    }
+  },
   methods:{
+    activateNewUser() {
+      let self = this;
+      accountService.sendActivateUserRequest(this.token)
+      .then(response => {
+          self.activate_status = response.success;
+          self.errors.other_errors = response.errors;
+        })
+        .catch(e => {
+          console.log(e);
+      });
+
+    },
     async checkForm() {
       event.preventDefault();
       let self = this;
@@ -70,7 +94,7 @@ export default {
       if(this.errors.email_error == '' && this.errors.pswd_error == '')
       {
         var currentUser = await accountService.login(this.email, this.pswd);
-        console.log(currentUser);
+        console.log("current user:"+currentUser);
         console.log("AUTH:");
         if(currentUser && currentUser.token){
           if(this.$route.query.returnUrl){
