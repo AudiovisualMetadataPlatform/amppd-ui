@@ -98,6 +98,7 @@ export default {
   },
   methods:{
     async sortQuery(sortRule) {
+        // TODO: Some sort of filtering algorithm should go here to reduce the result set
         this.workflowDashboard.searchQuery.sortRule = sortRule;
         this.workflowDashboard.searchQuery.pageNum = 1;
         var sortOrder = sortRule.orderByDescending ? 'desc' : 'asc';
