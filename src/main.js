@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store/workflow-submission-store'
+import store from './store/amp-store'
 import { VuePlugin } from 'vuera'
 import { VuejsDatatableFactory } from 'vuejs-datatable';
 import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
@@ -37,5 +37,4 @@ new Vue({
 
 process.title = "amppd-ui";
 
-console.log(process); // eslint-disable-line
 
