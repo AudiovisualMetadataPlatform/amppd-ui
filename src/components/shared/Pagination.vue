@@ -1,16 +1,16 @@
 <template>
 	<div class="pagination-wrapper" v-if="numPages > 1">
-			<div><label>{{totalText}}</label></div>
-			<ul class="pagination">
+			<div class="dataTables_info"><label>{{totalText}}</label></div>
+			<ul class="pagination dataTables_paginate paging_simple_numbers">
 				<li
 					@click="paginate(currentPage - 1)"
-					:class="['page-arrow', {'hide-page': currentPage <= 1}]"
+					:class="['page-arrow',  {'hide-page': currentPage <= 1}]"
 				>
 					<a href="javascript:void(0);">Previous</a>
 				</li>
 				<li
 					v-for="p in pages"
-					v-bind:class="{'active': p == currentPage}"
+					v-bind:class="['paginate_button current', {'active': p == currentPage}]"
 					@click="paginate(p)" :key="p"
 				>
 					<a href="javascript:void(0);">{{p}}</a>
@@ -35,7 +35,8 @@ export default {
 		},
 		resultsPerPage: {
 			type: Number,
-			default: 25
+            default: 10,
+            coerce: str => Number.parseInt(str)
 		},
         maxPages: {
             type: Number,
@@ -66,7 +67,7 @@ export default {
 	methods: {
 		updateResult(result) {
 			// Get pagingation data
-			let numPages = Math.ceil(this.totalResults / this.resultsPerPage);
+            let numPages = Math.ceil(this.totalResults / this.resultsPerPage);
 			let start = 1, end = numPages;
 			let pages = [];
             let max = this.maxPages;
@@ -93,7 +94,7 @@ export default {
             this.showGoToEnd = end < numPages;
 		},
 		paginate(pageNum, suppressEvent = false) {
-            if(pageNum === this.currentPage) return;
+            //if(pageNum === this.currentPage) return;
 			if(pageNum < 1 || pageNum > this.numPages) return;
 			this.currentPage = pageNum;
             if(!suppressEvent) {
@@ -113,7 +114,7 @@ export default {
 		},
 		
 		resultsPerPage() {
-            this.paginate(1, true);
+            this.paginate(1, false);
 		},
 		totalResults() {
 			this.updateResult();
@@ -134,6 +135,7 @@ export default {
     margin-top: 0;
     display: flex;
     justify-self: end;
+    align-items: center;
 }
 .pagination > li > a {
 	width: 40px;

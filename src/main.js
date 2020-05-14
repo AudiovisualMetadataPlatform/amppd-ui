@@ -4,10 +4,30 @@ import router from './router'
 import store from './store/workflow-submission-store'
 import { VuePlugin } from 'vuera'
 import { VuejsDatatableFactory } from 'vuejs-datatable';
+import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
 
 
 Vue.use(VuePlugin)
 Vue.use( VuejsDatatableFactory );
+
+
+Vue.use(VueFilterDateFormat, {
+  dayOfWeekNames: [
+    'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+    'Friday', 'Saturday'
+  ],
+  dayOfWeekNamesShort: [
+    'Su', 'Mo', 'Tu', 'We', 'Tr', 'Fr', 'Sa'
+  ],
+  monthNames: [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ],
+  monthNamesShort: [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ]
+});
 
 new Vue({
   router,

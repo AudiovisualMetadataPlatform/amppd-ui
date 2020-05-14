@@ -1,12 +1,10 @@
 <template>
 	<th
-		:class="['st-header', {'st-sorted': isSorted}]"
+		:class="[{'sorting':!isSorted, 'sorting_desc': isSorted && sortRule.orderByDescending, 'sorting_asc': isSorted && !sortRule.orderByDescending}]"
 		@click="sort()"
 	>
-		<slot><span>{{label||propertyName}}</span></slot>
-		<span class="st-arrow invisible" v-if="!isSorted">&#x25B2;</span>
-		<span class="st-arrow" v-if="isSorted && !sortRule.orderByDescending">&#x25B2;</span>
-		<span class="st-arrow" v-if="isSorted && sortRule.orderByDescending">&#x25BC;</span>
+        
+		<slot>{{label||propertyName}}</slot>
 	</th>
 </template>
 
@@ -45,21 +43,5 @@ export default {
 </script>
 
 <style>
-.st-header {
-	cursor: pointer;
-	user-select: none;
-}
-.st-header:hover {
-    background-color: rgba(0,0,0,0.15);
-}
-.st-header.st-sorted {
-    background-color: rgba(0,0,0,0.1)
-}
-.st-header.invisible {
-    visibility: hidden;
-}
-.st-arrow {
-	color: #888;
-	font-size: 80%;
-}
+
 </style>

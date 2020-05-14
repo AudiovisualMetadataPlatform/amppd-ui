@@ -1,5 +1,6 @@
 <template>
-  <div class="workflows">
+
+  <div class="collections">
   <div class="container col-12">
     <div class="row expand-h">
       <Sidebar/>
@@ -13,8 +14,8 @@
           <div class="pad-all-3">
             <div class="card">
               <div class="card-body">
-                <h1 class="card-title">Workflow Submissions</h1>
-                <button class="btn-sm btn btn-primary marg-bot-4">Start a new workflow</button>
+                <h1 class="card-title">AMP Dashboard</h1>
+                <button class="btn-sm btn btn-primary marg-bot-4" v-on:click="startWorkflow">Start a new workflow</button>
                 
                 <div>
                 </div>
@@ -194,8 +195,7 @@
                     </div>
                     <!-- -->
                   </div>
-                  <div class="row">
-                    &nbsp;
+                  <div class="row spacer">
                   </div>
                 </div>
                 <DashboardTable/>
@@ -234,10 +234,9 @@ export default {
   props: {
   },
   methods:{
-
-    async createBundle(){
-      
-    },
+    startWorkflow(){
+      this.$router.push('/workflow/submit');
+    }
 
   },
   mounted(){
@@ -248,5 +247,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .spacer{
+    height: 24px;
+  }
 </style>

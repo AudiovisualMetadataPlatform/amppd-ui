@@ -1,38 +1,56 @@
 <template>
-<div>
-  
+<div class="dataTables_wrapper no-footer">
+  <loader :show="workflowDashboard.loading"/>
+  <div class="dataTables_length">
+    <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
+      <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> 
+      entries
+    </label>
+  </div>
+  <div id="myTable_filter" class="dataTables_filter"><label>Search:<input type="search" class="" placeholder="" aria-controls="myTable"></label></div>
       <div class="table-responsive">
-        <table class="table">
+        <table ide="myTable" class="table dataTable no-footer">
           <thead>
-            <tr >
+            <tr>
               <sortable-header v-for="column in columns" :key="column.field"
                       :property-name="column.field"
-                       :sort-rule="searchQuery.sortRule"
+                       :sort-rule="workflowDashboard.searchQuery.sortRule"
                        @sort="sortQuery"
                        :label="column.label" />
             </tr>
           </thead>
-          <tbody>
+          <tbody v-if="visibleRows && visibleRows.length>0">
             <tr v-for="rec in visibleRows"
               :key="rec.id">
-              <td>{{ rec.date }}</td>
+              <td>{{ new Date(rec.date) | dateFormat('YYYY-MM-DD') }}</td>
               <td>{{ rec.submitter }}</td>
               <td>{{ rec.workflowName }}</td>
               <td>{{ rec.sourceItem }}</td>
-              <td>{{ rec.sourceFileName }}</td>
+              <td>{{ rec.sourceFilename }}</td>
               <td>{{ rec.workflowStep }}</td>
               <td>{{ rec.outputFile }}</td>
-              <td>{{ rec.status }}</td>
+              <td> 
+                <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
+                <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width ">In Progress</button>
+                <button v-else-if="rec.status==='ERROR'" type="button" class="btn-sm btn btn-danger eq-width ">Error</button>
+                <button v-else-if="rec.status==='SCHEDULED'" type="button" class="btn-sm btn btn-light eq-width ">Scheduled</button>
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <tr>
+              <td v-if="workflowDashboard.loading" colspan="8" class="no-results"><i class="fas fa-cog fa-spin"></i> Loading</td>
+              <td v-else colspan="8" class="no-results">No results</td>
             </tr>
           </tbody>
         </table>
-      </div>
-          <pagination v-if="this.searchQuery"
-                :pageNum="searchQuery.pageNum"
-                :resultsPerPage="searchQuery.resultsPerPage"
-                :totalResults="searchResult.totalResults"
+          <pagination v-if="this.workflowDashboard.searchQuery"
+                :pageNum="workflowDashboard.searchQuery.pageNum"
+                :resultsPerPage="Number.parseInt(workflowDashboard.searchQuery.resultsPerPage)"
+                :totalResults="workflowDashboard.searchResult.totalResults"
                 :maxPages="1"
                 @paginate="paginate" />
+      </div>
 </div>
 </template>
 
@@ -42,25 +60,16 @@ import { sync } from 'vuex-pathify';
 import WorkflowService from '../../service/workflow-service';
 import SortableHeader from '../shared/SortableHeader';
 import Pagination from '../shared/Pagination';
+import Loader from '@/components/shared/Loader.vue';
 export default {
   name: 'WorkflowDashboardTable',
   components:{
     SortableHeader,
-    Pagination
+    Pagination,
+    Loader
   },
   data(){
     return {
-      searchQuery: {
-        sortRule: {
-          columnName: 'Created',
-          orderByDescending: true
-        },
-        pageNum: 1,
-        resultsPerPage: 5
-      },
-      searchResult: {
-        totalResults: 0
-      },
       columns:[
         {label: 'Date', field: 'date'},
         {label: 'Submitter', field: 'submitter'},
@@ -71,173 +80,28 @@ export default {
         {label: 'Output File', field: 'outputFile'},
         {label: 'Status', field: 'status'},
       ],
-      rows:[
-      {
-        date: new Date(new Date().getTime() + Math.random() * 100000000),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow ' + Math.random(),
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(new Date().getTime() + Math.random() * 100000000),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow ' + Math.random(),
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(new Date().getTime() + Math.random()),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow ' + Math.random(),
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(new Date().getTime() + Math.random() * 100000000),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow ' + Math.random(),
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow ' + Math.random(),
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow',
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow ' + Math.random(),
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(new Date().getTime() + Math.random()),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow ' + Math.random(),
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow',
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(new Date().getTime() + Math.random()),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow ' + Math.random(),
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow',
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(new Date().getTime() + Math.random()),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow ' + Math.random(),
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow',
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow',
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(new Date().getTime() + Math.random()),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow',
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      },{
-        date: new Date(),
-        submitter: 'Dan',
-        workflowName: 'Test Workflow',
-        sourceItem: 'West Side Story',
-        sourceFilename: 'valjd.mp4',
-        workflowStep: 'step 1',
-        outputFile: 'out.1.txt',
-        status: 'Completed'
-      }
-      ],
       workflowService: new WorkflowService()
     }
   },
   computed:{
+    workflowDashboard: sync("workflowDashboard"),
     visibleRows(){
-      var from = ((this.searchQuery.pageNum - 1) * this.searchQuery.resultsPerPage);
-      var to = this.searchQuery.pageNum * this.searchQuery.resultsPerPage;
-      console.log(this.searchQuery.pageNum);
-      console.log(from + " " + to);
-      return this.rows.slice(from, to);
+      var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
+      var to = this.workflowDashboard.searchQuery.pageNum * this.workflowDashboard.searchQuery.resultsPerPage;
+      if(!this.workflowDashboard.rows || this.workflowDashboard.rows.length<=0) {
+        return this.workflowDashboard.rows;
+      }
+      return this.workflowDashboard.rows.slice(from, to);
     }
   },
   props: {
   },
   methods:{
     async sortQuery(sortRule) {
-        this.searchQuery.sortRule = sortRule;
-        this.searchQuery.pageNum = 1;
+        this.workflowDashboard.searchQuery.sortRule = sortRule;
+        this.workflowDashboard.searchQuery.pageNum = 1;
         var sortOrder = sortRule.orderByDescending ? 'desc' : 'asc';
-        this.rows.sort(this.compareValues(sortRule.columnName, sortOrder))
+        this.workflowDashboard.rows.sort(this.compareValues(sortRule.columnName, sortOrder))
       },
 
     compareValues(key, order = 'asc') {
@@ -264,14 +128,16 @@ export default {
       };
     },
     paginate(page_number) {
-      this.searchQuery.pageNum = page_number;
+      this.workflowDashboard.searchQuery.pageNum = page_number;
     },
     refreshData(){
-      this.searchResult.totalResults = this.rows.length;
-      console.log(this.searchResult.totalResults);
+      this.workflowDashboard.searchResult.totalResults = this.workflowDashboard.rows.length;
     }
   },
-  mounted(){
+  async mounted(){
+    this.workflowDashboard.loading = true;
+    this.workflowDashboard.rows = await this.workflowService.getDashboardResults();
+    this.workflowDashboard.loading = false;
     this.refreshData();
   }
 
@@ -279,19 +145,22 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
   @import '/amppd-ui/src/styles/style.css';
-  .center-row{
+  .no-results{
     text-align: center;
     font-weight: 700;
-    background-color: #c5c5c5c5;
-  }
-  
+    color: #c5c5c5c5;
+  } 
+  table{font-size: .8em;}
 .font-light-gray-1 {
   color: #dee2e6; 
 }
 .font-purple-1{
   color: #6f42c1;
 }
-
+th {
+  padding: 10px 18px;
+  border-bottom: 1px solid #111 !important;
+}
 </style>

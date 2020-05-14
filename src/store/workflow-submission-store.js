@@ -20,7 +20,22 @@ const state = {
     selectedWorkflow: null, // Selected workflow
     // bundle: null, // bundle created for primaryfiles upon submission
     jobs: [], // jobs successfully created
-    loading: false // For future use...can spawn loading indicator
+    workflowDashboard:{
+        loading:false,
+        searchQuery: {
+            sortRule: {
+              columnName: 'Date',
+              orderByDescending: true
+            },
+            pageNum: 1,
+            resultsPerPage: 10,
+            filters:[]
+          },
+          searchResult: {
+            totalResults: 0
+          },
+          rows:[]
+    }
 };
 
 /*======================================================
