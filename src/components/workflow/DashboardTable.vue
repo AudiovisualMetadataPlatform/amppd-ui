@@ -34,6 +34,7 @@
                 <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width ">In Progress</button>
                 <button v-else-if="rec.status==='ERROR'" type="button" class="btn-sm btn btn-danger eq-width ">Error</button>
                 <button v-else-if="rec.status==='SCHEDULED'" type="button" class="btn-sm btn btn-light eq-width ">Scheduled</button>
+                <button v-else-if="rec.status==='PAUSED'" type="button" class="btn-sm btn btn-light eq-width ">Paused</button>
               </td>
             </tr>
           </tbody>
