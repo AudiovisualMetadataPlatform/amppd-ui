@@ -7,7 +7,6 @@ import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
 
 
 Vue.use(VuePlugin)
-Vue.use( VuejsDatatableFactory );
 
 
 Vue.use(VueFilterDateFormat, {
