@@ -84,16 +84,16 @@ import {accountService} from '@/service/account-service';
         this.errors.fname_error='(First Name required)';
         this.errors.errorExist=true;
       }
-      else if(this.fname.length < 3){
-        this.errors.fname_error='(Name must be atleast 3 characters)';
+      else if(this.fname.length < 2){
+        this.errors.fname_error='(Name must be atleast 2 characters)';
         this.errors.errorExist=true;
       }
       if (!this.lname) {
         this.errors.lname_error='(Last Name required)';
         this.errors.errorExist=true;
       }
-      else if(this.lname.length < 3){
-        this.errors.lname_error='(Last name must be atleast 3 characters)';
+      else if(this.lname.length < 2){
+        this.errors.lname_error='(Last name must be atleast 2 characters)';
         this.errors.errorExist=true;
       }
       if (!this.email) {
