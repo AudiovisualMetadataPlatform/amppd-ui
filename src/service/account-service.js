@@ -2,19 +2,21 @@ import BaseService from './base-service.js';
 
 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 const baseService = new BaseService();
-function sendRegisterRequest(username, pswd, email) {
-  const url = `/register`;
+function sendRegisterRequest(username, firstName, lastName, pswd, email) {
+  const url = `/account/register`;
 	return baseService.post_auth(url,
         {
           username: username,
           password: pswd,
-          email: email  
+          email: email,
+          firstName,
+          lastName  
         })
         .then(x => x.data)
 }
 
 function sendResetRequest(token, pswd, email) {
-  const url = `/reset-password`;
+  const url = `/account/reset-password`;
 	return baseService.post_auth(url,
         {
           emailid: email,
@@ -25,7 +27,7 @@ function sendResetRequest(token, pswd, email) {
 }
 
 function sendfetchEmailRequest(token) {
-  const url = `/reset-password-getEmail`;
+  const url = `/account/reset-password-getEmail`;
 	return baseService.post_auth(url,
         {
           token: token
@@ -34,7 +36,7 @@ function sendfetchEmailRequest(token) {
 }
 
 function sendForgotPswdEmailRequest(emailid) {
-  const url = `/forgot-password`;
+  const url = `/account/forgot-password`;
 	return baseService.post_auth(url,
         {
           emailid: emailid
@@ -43,7 +45,7 @@ function sendForgotPswdEmailRequest(emailid) {
 }
 
 function sendApproveUserRequest(userid) {
-  const url = `/user/account/approve`;
+  const url = `/account/approve`;
 	return baseService.post_auth(url,
         {
          userId: userid
@@ -52,7 +54,7 @@ function sendApproveUserRequest(userid) {
 }
 
 function sendActivateUserRequest(userToken) {
-  const url = `/user/account/activate`;
+  const url = `/account/activate`;
 	return baseService.post_auth(url,
         {
          token: userToken
@@ -61,7 +63,7 @@ function sendActivateUserRequest(userToken) {
 }
 
 function sendRejectUserRequest(userid) {
-  const url = `/user/account/reject`;
+  const url = `/account/reject`;
 	return baseService.post_auth(url,
         {
          userId: userid
@@ -71,7 +73,7 @@ function sendRejectUserRequest(userid) {
 
 function login(username, password) {
   console.log("login");
-  return baseService.post(`/authenticate`, { username, password })
+  return baseService.post(`/account/authenticate`, { username, password })
       .then(user => {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem('currentUser', JSON.stringify(user.data));
@@ -85,7 +87,7 @@ function login(username, password) {
       });
 }
 async function validate() {
-  var success = await baseService.post_auth(`/validate`)
+  var success = await baseService.post_auth(`/account/validate`)
       .then(user => {
           return true;
       })
