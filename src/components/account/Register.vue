@@ -19,6 +19,7 @@
       </div>
       <div class="form-group">
       <label for="lname">Last Name</label>
+      <label class="form-errors" v-if="errors.lname_error.length">{{errors.lname_error}}</label>
       <input type="txt" class="form-control" id="lname" v-model="lname" placeholder="Last Name">
       </div>
       <div class="form-group">
@@ -58,6 +59,7 @@ import {accountService} from '@/service/account-service';
       return {
       errors: {
         fname_error:'',
+        lname_error:'',
         cpswd_error:'',
         email_error:'',
         pswd_error:'',
@@ -65,7 +67,7 @@ import {accountService} from '@/service/account-service';
         errorExist: false
       },
       fname: null,
-      lname: '',
+      lname: null,
       pswd: null,
       email: null,
       confirm_pswd: null,
@@ -82,11 +84,18 @@ import {accountService} from '@/service/account-service';
         this.errors.fname_error='(First Name required)';
         this.errors.errorExist=true;
       }
-      else if(this.fname.length < 3){
-        this.errors.fname_error='(Name must be atleast 3 characters)';
+      else if(this.fname.length < 2){
+        this.errors.fname_error='(Name must be atleast 2 characters)';
         this.errors.errorExist=true;
       }
-
+      if (!this.lname) {
+        this.errors.lname_error='(Last Name required)';
+        this.errors.errorExist=true;
+      }
+      else if(this.lname.length < 2){
+        this.errors.lname_error='(Last name must be atleast 2 characters)';
+        this.errors.errorExist=true;
+      }
       if (!this.email) {
         this.errors.email_error='(Email required)';
         this.errors.errorExist=true;
@@ -113,7 +122,7 @@ import {accountService} from '@/service/account-service';
       }
       if (this.errors.other_errors.length == 0 && !this.errorExist) 
       {
-        await accountService.sendRegisterRequest(this.fname+this.lname, this.pswd, this.email)
+        await accountService.sendRegisterRequest(this.email, this.fname, this.lname, this.pswd, this.email)
         .then(response => {
           self.register_status = response.success;
           self.errors.other_errors = response.errors;
@@ -139,6 +148,8 @@ import {accountService} from '@/service/account-service';
     onClick(data) {
       if(data == 'fname')
         this.errors.fname_error = '';
+      else if(data == 'lname')
+        this.errors.lname_error = '';
       else if(data == 'email')
         this.errors.email_error = '';
       else if(data == 'pswd')
