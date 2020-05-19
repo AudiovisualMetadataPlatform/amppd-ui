@@ -108,7 +108,7 @@ export default {
         console.log("reset result is:"+self.reset_status);
         if(this.errors.other_errors.length == 0 && self.reset_status)
         {
-          this.$router.push("/welcome");
+          this.$router.push("/");
         }
         if(self.reset_status == 0)
         {
