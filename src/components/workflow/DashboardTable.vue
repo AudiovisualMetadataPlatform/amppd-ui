@@ -92,10 +92,18 @@ export default {
       if(!this.workflowDashboard.rows || this.workflowDashboard.rows.length<=0) {
         return this.workflowDashboard.rows;
       }
+      console.log("the data is:"+this.workflowDashboard.rows[0]);
       return this.workflowDashboard.rows.slice(from, to);
     }
   },
   props: {
+  },
+  filters: {
+  submitter: function (value) {
+    if (!value) return ''
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1)
+  }
   },
   methods:{
     async sortQuery(sortRule) {

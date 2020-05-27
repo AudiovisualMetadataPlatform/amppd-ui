@@ -18,11 +18,11 @@
                 <button class="btn-sm btn btn-primary marg-bot-4" v-on:click="startWorkflow">Start a new workflow</button>
 
 
-                <div class="container-fluid " v-if="workflowDashboard.searchQuery.filters.length">
+                <div class="container-fluid " v-if="workflowDashboard.searchQuery.filterBySubmitters.length">
                   <div class="row selected-filters-row">
                     <div class="col-sm-2 label-bold">CURRENTLY FILTERED BY</div>
                     
-                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(submitter,index) in workflowDashboard.searchQuery.filters" v-bind:submitter="submitter" v-bind:index="index" v-bind:key="submitter.id"> 
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(submitter,index) in workflowDashboard.searchQuery.filterBySubmitters" v-bind:submitter="submitter" v-bind:index="index" v-bind:key="submitter.id"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeFilter(index)">
                         <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
@@ -212,12 +212,13 @@ export default {
       workflowSubmitted: false,
       bundle: null,
       workflowService: new WorkflowService(),
-      visible : true
+      visible : true,
       //selectedSubmitters:[]
     }
   },
   computed:{
-    workflowDashboard: sync("workflowDashboard")
+    workflowDashboard: sync("workflowDashboard"),
+    //selectedSubmitters : workflowDashboard.searchQuery.filterBySubmitters
   },
   props: {
   },
@@ -226,9 +227,12 @@ export default {
       this.$router.push('/workflow/submit');
     },
     removeFilter(index){
-      var removed = this.workflowDashboard.searchQuery.filters.splice(index,1);
-      console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filters +" and removed element is:"+removed);
+      var removed = this.workflowDashboard.searchQuery.filterBySubmitters.splice(index,1);
+      console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySubmitters +" and removed element is:"+removed);
 	}
+  },
+  watch: {
+    workflowDashboard: function() { console.log("apply the updated filter to the results:"+this.workflowDashboard.searchQuery.filterBySubmitters) }
   },
   mounted(){
   }

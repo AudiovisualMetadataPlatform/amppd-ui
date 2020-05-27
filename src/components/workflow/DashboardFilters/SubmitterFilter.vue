@@ -92,7 +92,7 @@ export default {
 		}
 		else
 			this.selectedSubmitters.push(this.searchValue);
-		this.workflowDashboard.searchQuery.filters = this.selectedSubmitters;
+		this.workflowDashboard.searchQuery.filterBySubmitters = this.selectedSubmitters;
 		console.log("selected submitters are:"+self.filters);
 	},
 	removeSubmitter(index){
