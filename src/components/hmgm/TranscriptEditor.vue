@@ -72,12 +72,12 @@ export default {
   methods:{
     // Set data for editor
     setData(content, temporaryFile){
-      if(temporaryFile===true){  
+      if(temporaryFile===true || !this.transcriptType){  
         this.sttType = "draftjs";
         this.transcriptDataValue = JSON.parse(content);
       }
       else {
-        if(!this.transcriptType || this.transcriptType==1){
+        if(this.transcriptType==1){
           this.sttType = "amazontranscribe";
           this.transcriptDataValue = JSON.parse(content);
         }
