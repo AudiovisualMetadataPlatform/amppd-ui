@@ -260,7 +260,7 @@ export default {
     border-radius: 5px;
     border-color: #ced4da;
     padding-bottom: 0;
-    margin-right: 10px;
+    margin-right: 10px;  
   }
 
   .label-bold{
