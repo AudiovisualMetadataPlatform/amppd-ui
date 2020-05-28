@@ -229,11 +229,8 @@ export default {
     removeFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySubmitters.splice(index,1);
       console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySubmitters +" and removed element is:"+removed);
-	}
-  },
-  watch: {
-    workflowDashboard: function() { console.log("apply the updated filter to the results:"+this.workflowDashboard.searchQuery.filterBySubmitters) }
-  },
+  }},
+  
   mounted(){
   }
 

@@ -8,7 +8,7 @@
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Submitter Name</label>
 					<div class="input-group mb-3">
-						<vue-bootstrap-typeahead :data="submitterList" v-model="searchValue" @hit="addSubmitter($event)"
+						<vue-bootstrap-typeahead :data="getSubmitters" v-model="searchValue" @hit="addSubmitter($event)"
 						id="colFormLabelSearch" type="text" class="form-control bootstrap-typeahead" placeholder="Search Submitter Name"/>
 						<div class="input-group-append">
 							<button class="btn btn-outline" id="btn-search" type="submit"> <svg class="svg-search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
@@ -34,7 +34,7 @@
 					</div>
 				</div>
 			</div>
-			<button class="btn btn-info" type="button">
+			<button class="btn btn-info" type="button" @click="closeFilter()">
             Done
             </button>
 		</div>
@@ -57,33 +57,28 @@ export default {
 		workflowService: new WorkflowService(),
 		visible : false,
 		searchValue: '',
-		submitterList:["ampadm", "Maria", "Ying", "Dan", "David"],
+		submitterList:[],
 		filterSuccess:false,
 		selectedSubmitters : []
     }
   },
   computed:{
-	workflowDashboard: sync("workflowDashboard")
+	workflowDashboard: sync("workflowDashboard"),
+	getSubmitters(){
+		var submitters=[];
+		var i=0;
+		for(i=0;i<this.workflowDashboard.rows.length;i++){
+			submitters.push(this.workflowDashboard.rows[i].submitter);
+		}
+		submitters = submitters.filter((item, i, ar) => ar.indexOf(item) === i);
+		console.log("unique submitters"+submitters);
+		return submitters;
+	},
   },
   props: {
   },
   methods:{
-    async getSubmitters(){
-		//event.preventDefault();
-	/*	await self.workflowService.filterSubmitter(this.searchValue)
-        .then(response => {
-			this.filterSuccess = response.success;
-			this.submitterList = response.submitters;
-			this.errors = response.errors;
-        })
-        .catch(e => {
-          console.log(e);
-		});  */
-		this.submitterList=["ampadm", "Maria", "Ying", "Dan"];
-		console.log("filter result is:"+this.filterSuccess);
-		//console.log("selected submitters is:"+this.searchValue);
-		//TODO: display this list in the dropdown
-	},
+    
 	addSubmitter($event){
 		//console.log("selected submitters is:"+this.searchValue+"  "+$event);
 		if(this.selectedSubmitters.length >0 ){
@@ -93,17 +88,23 @@ export default {
 		else
 			this.selectedSubmitters.push(this.searchValue);
 		this.workflowDashboard.searchQuery.filterBySubmitters = this.selectedSubmitters;
-		console.log("selected submitters are:"+self.filters);
+		console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySubmitters);
 	},
 	removeSubmitter(index){
 		console.log("removing index:"+index);
 		//this.selectedSubmitters.pop(this.selectedSubmitters[index]);
 		var removed = this.selectedSubmitters.splice(index,1);
 		console.log("selected submitters are:"+this.selectedSubmitters +" and removed element is:"+removed);
+	},
+	closeFilter(){
+		this.searchValue="";
+		this.visible=false;
 	}
   },
   watch: {
-    searchValue: function(submitter) { this.getSubmitters(submitter) }
+	searchValue: function(submitter) { this.getSubmitters },
+	selectedSubmitters: function() {
+		this.selectedSubmitters.length>0 ? this.workflowDashboard.filtersEnabled.submitterFilter = true : this.workflowDashboard.filtersEnabled.submitterFilter = false}
   },
   mounted(){
   }

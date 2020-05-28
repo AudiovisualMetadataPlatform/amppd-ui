@@ -22,6 +22,7 @@ const state = {
     jobs: [], // jobs successfully created
     workflowDashboard:{
         loading:false,
+        filtersEnabled : {submitterFilter :false},
         searchQuery: {
             sortRule: {
               columnName: 'Date',
