@@ -8,7 +8,8 @@
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Submitter Name</label>
 					<div class="input-group mb-3">
-						<vue-bootstrap-typeahead :data="getSubmitters" v-model="searchValue" @hit="addSubmitter($event)"
+						<vue-bootstrap-typeahead :data="getSubmitters" v-model="searchValue" @hit="addSubmitter($event)" minMatchingChars=1
+						@keydown.down="down" @keydown.up="up" @keydown.enter="hit" @keydown.esc="reset"
 						id="colFormLabelSearch" type="text" class="form-control bootstrap-typeahead" placeholder="Search Submitter Name"/>
 						<div class="input-group-append">
 							<button class="btn btn-outline" id="btn-search" type="submit"> <svg class="svg-search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
@@ -97,14 +98,19 @@ export default {
 		console.log("selected submitters are:"+this.selectedSubmitters +" and removed element is:"+removed);
 	},
 	closeFilter(){
-		this.searchValue="";
+		this.searchValue='';
 		this.visible=false;
 	}
   },
+  
   watch: {
 	searchValue: function(submitter) { this.getSubmitters },
 	selectedSubmitters: function() {
-		this.selectedSubmitters.length>0 ? this.workflowDashboard.filtersEnabled.submitterFilter = true : this.workflowDashboard.filtersEnabled.submitterFilter = false}
+		this.selectedSubmitters.length>0 ? this.workflowDashboard.filtersEnabled.submitterFilter = true : this.workflowDashboard.filtersEnabled.submitterFilter = false},
+	//visible: function(){this.searchValue=""}
+  },
+  created(){
+	this.searchValue='';
   },
   mounted(){
   }

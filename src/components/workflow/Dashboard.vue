@@ -246,6 +246,7 @@ export default {
   .selected-filters-row{
     margin-left: -30px;
     margin-bottom: 8px;
+    flex-wrap: wrap;
   }
 
   h1{
@@ -260,14 +261,18 @@ export default {
     border-radius: 5px;
     border-color: #ced4da;
     padding-bottom: 0;
-    margin-right: 10px;  
+    margin-right: 10px; 
+    flex-wrap: wrap; 
+    min-width: max-content;
   }
 
   .label-bold{
     font-weight: bold;
+    flex-wrap: wrap; 
   }
 
   .no-padding-col{
     margin-bottom: 0px;
+    flex-wrap: wrap;
   }
 </style>
