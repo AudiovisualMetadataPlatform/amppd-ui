@@ -8,8 +8,7 @@
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Submitter Name</label>
 					<div class="input-group mb-3">
-						<vue-bootstrap-typeahead :data="getSubmitters" v-model="searchValue" @hit="addSubmitter($event)" minMatchingChars=1
-						@keydown.down="down" @keydown.up="up" @keydown.enter="hit" @keydown.esc="reset"
+						<vue-bootstrap-typeahead :data="getSubmitters" v-model="searchValue" @hit="addSubmitter($event)" :minMatchingChars="1"
 						id="colFormLabelSearch" type="text" class="form-control bootstrap-typeahead" placeholder="Search Submitter Name"/>
 						<div class="input-group-append">
 							<button class="btn btn-outline" id="btn-search" type="submit"> <svg class="svg-search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">

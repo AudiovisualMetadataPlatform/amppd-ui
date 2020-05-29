@@ -200,6 +200,7 @@ import Sidebar from '@/components/navigation/Sidebar.vue';
 import DashboardTable from '@/components/workflow/DashboardTable.vue';
 import SubmitterFilter from '@/components/workflow/DashboardFilters/SubmitterFilter';
 
+
 export default {
   name: 'Workflow',
   components:{
