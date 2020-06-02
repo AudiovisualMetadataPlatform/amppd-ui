@@ -81,23 +81,42 @@ export default {
         {label: 'Output File', field: 'outputFile'},
         {label: 'Status', field: 'status'},
       ],
-      workflowService: new WorkflowService()
+      workflowService: new WorkflowService(),
+      submitterFilterEnabled : false
     }
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
     visibleRows(){
+      let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
       var to = this.workflowDashboard.searchQuery.pageNum * this.workflowDashboard.searchQuery.resultsPerPage;
       if(!this.workflowDashboard.rows || this.workflowDashboard.rows.length<=0) {
         return this.workflowDashboard.rows;
       }
+      console.log("the data is:"+this.workflowDashboard.rows[0].submitter);
+      var tempRows = this.workflowDashboard.rows;
+      if(self.workflowDashboard.filtersEnabled.submitterFilter){
+        tempRows=this.getFilteredSubmitters(tempRows);
+        return tempRows.slice(from, to);  
+      }
+      //TODO: Apply rest of the filters on tempRows here
       return this.workflowDashboard.rows.slice(from, to);
     }
+
   },
   props: {
   },
+  
   methods:{
+    getFilteredSubmitters(inputRows) {
+      let self=this;
+      var res = inputRows.filter(function(row) {
+        return self.workflowDashboard.searchQuery.filterBySubmitters.includes(row.submitter);
+        });
+        console.log("filtered rows:"+res);
+        return res;
+    },
     async sortQuery(sortRule) {
         // TODO: Some sort of filtering algorithm should go here to reduce the result set
         this.workflowDashboard.searchQuery.sortRule = sortRule;
