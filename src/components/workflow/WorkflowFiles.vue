@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="file-selection">
+    <div class="file-selection " >
       <div class="sub-header-container">
         <span class="section-title">Primary files to include in batch WF submission</span>
         <i id="addFile" class="fa fa-plus" v-on:click="showModal"></i>
-        <Modal v-show="isModalVisible" @close="closeModal"/>
+        <!-- <Modal v-show="isModalVisible" @close="closeModal"/> -->
       </div>
       <div class="file-container">
         <div v-for="(file, index) in files" v-bind:key="index" class="file" href="javascript:void(0)">
@@ -17,12 +17,12 @@
 </template>
 
 <script>
-import Modal from '@/components/workflow/FileSelectionModal';
+//import Modal from '@/components/workflow/FileSelectionModal2';
 import { sync } from 'vuex-pathify';
 export default {
   name: 'FileSelection',
   components: {
-    Modal
+    //Modal
   },
   props: {
   },
@@ -33,11 +33,13 @@ export default {
     }
   },
   computed: {
-      files: sync('files')
+      files: sync('files'),
+      isWorkflowModalVisible:sync('isWorkflowModalVisible')
   },
   methods:{
     showModal() {
         this.isModalVisible = true;
+        this.isWorkflowModalVisible=true;
       },
     closeModal() {
         this.isModalVisible = false;
@@ -54,46 +56,10 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .file-selection{
-    min-height:200px;
-    padding:0 30px;
-  }
-  .sub-header-container{
-    padding-bottom:20px;
-    display:flex;
-    flex-basis: row;
-  }
-  .section-title{
-    margin-right: 20px;
-    font-size: 14px;
-  }
-  #addFile{
-    font-weight: 700;
-  }
-  i:hover{
-    background-color:#133C4E;
-    color:white;
-  }
-  i{
-    
-    padding:2px;
-    font-size:12px;
-  }
-  .file-name{
-    width:250px;
-  }
-  .file{
-    color: #000000;
-    text-align: left;
-    font-size:13px;
-    padding: 5px 5px 5px 5px;
-    background-color:#eff0f1;
-    width:300px;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid #000000;
+<style lang="css">
+@import '/amppd-ui/src/styles/style.css';
 
-  }
+
+
+
 </style>

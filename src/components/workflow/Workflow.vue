@@ -2,12 +2,13 @@
 <div>
     <Header/>
     <Logout/>
-    <div class="workflow-content" v-if="!workflowSubmitted">
+    <div class="workflow-content" :class="{ 'modal-open' : isWorkflowModalVisible === true }" v-if="!workflowSubmitted">
       <h1>Workflow Submission</h1>
       <div class="workflow-body">
         <div class="left-pane">
           <WorkflowSelection/>
           <WorkflowFiles/>
+          <Modal  class="my-modal" v-show="isWorkflowModalVisible"/>
         </div>
         <div class="right-pane">
           <div>
@@ -34,6 +35,7 @@
 </template>
 
 <script>
+import Modal from '@/components/workflow/FileSelectionModal';
 import Header from '@/components/shared/Header.vue'
 import Logout from '@/components/shared/Logout.vue'
 import WorkflowSelection from '@/components/workflow/WorkflowSelection.vue'
@@ -49,7 +51,8 @@ export default {
     Logout,
     WorkflowSelection,
     WorkflowFiles,
-    Jobs
+    Jobs,
+    Modal
   },
   data(){
     return {
@@ -62,7 +65,8 @@ export default {
       parameters: sync('parameters'),
       selectedWorkflow: sync('selectedWorkflow'),
       files: sync('files'),
-      jobs: sync('jobs')
+      jobs: sync('jobs'),
+      isWorkflowModalVisible:sync('isWorkflowModalVisible')
   },
   props: {
   },
@@ -136,6 +140,17 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.modal-open {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.my-modal {
+  backdrop-filter: brightness(60%);
+}
+
+
 h2{
   margin-top: 0;
 }
