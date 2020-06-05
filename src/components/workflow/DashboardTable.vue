@@ -28,7 +28,7 @@
               <td>{{ rec.sourceItem }}</td>
               <td>{{ rec.sourceFilename }}</td>
               <td>{{ rec.workflowStep }}</td>
-              <td>{{ rec.outputFile }}</td>
+              <td><a v-bind:href="rec.outputUrl">{{ rec.outputFile }}</a></td>
               <td> 
                 <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
                 <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width ">In Progress</button>
