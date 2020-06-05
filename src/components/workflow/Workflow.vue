@@ -103,7 +103,7 @@ export default {
       self.searchedFiles = response.data._embedded.primaryfiles;
       })
       .catch(e => {
-      console.log(e);});
+      console.log(e);});  
     },
     addFiles() {
       let self = this;
