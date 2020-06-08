@@ -38,7 +38,7 @@
         </main>
       </div>    
     </div>  
-    <modal v-if="showModal" @close="reset()">
+    <modal class="my-modal" v-if="showModal" @close="reset()">
     <h3 slot="header" v-if="validationResponse && !validationResponse.success">
       Batch Ingest Errors
     </h3>
@@ -169,5 +169,15 @@ export default {
     font-size: 0.9rem; 
     padding-left:3px; 
   }
+
+  .modal-open {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.my-modal {
+  backdrop-filter: brightness(60%);
+}
+
 
 </style>

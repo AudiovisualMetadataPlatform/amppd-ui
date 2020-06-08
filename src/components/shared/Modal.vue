@@ -1,4 +1,29 @@
-<template>  
+<template> 
+  <div class="modal modal-open fade bd-example-modal-lg show" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="padding-right: 17px; display: block;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header my-modal-header">
+          <slot name="header">
+          
+          </slot>
+        </div>
+        <div class="modal-body my-modal-body">
+          <slot name="body">
+          
+          </slot>
+        </div>
+        <div class="modal-footer">
+          <slot name="footer">
+            <button type="button"  class="btn btn-info" @click="close()">Close</button>
+          </slot>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<!-- <template>  
 	<div class="modal-backdrop">
 		<div class="modal">
     <div class="modal-header">
@@ -19,8 +44,8 @@
     </div>
   </div>
 </template>
-
-
+-->
+ 
 <script scoped>
 export default {
     name: 'modal',
@@ -39,65 +64,25 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="css">
+@import '/amppd-ui/src/styles/style.css';
 
-  .modal-backdrop {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .modal {
-    background: #FFFFFF;
-    box-shadow: 2px 2px 20px 1px;
-    overflow-x: auto;     
-    border-radius: 25px;
-    border: 1px solid;
-    padding: 20px 20px;
-    width: 500px;
-    
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-  
-  }
-  .modal-body {
-    position: relative;
-    padding: 20px 10px;
-  }
+.my-modal-body{
+  height: 500px;
+  overflow-y: scroll;
+}
 
-    /* Full-width inputs */
-  input[type=text] {
-    padding: 10px 10px;
-    margin: 10px;
-    border: 0px solid #ccc;
-    width: 75%
-  }
-  .modal-footer{
-    display:flex;
-    justify-content: flex-end;
-  }
-  button {
-    background-color: #2C5B7F;
-    color: #E9972D;
-    font:bolder;
-    padding: 10px 20px;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 15px;
-  }
-  .left-align-row {
-    text-align: left;
-    padding: 0px 10px;
-    margin: 10px;
-  }
+.my-modal-header{
+  padding: 0.3rem 0.7rem;
+}
+.input-text{
+  height: calc(2.25rem + 1px);
+	padding: 0.7rem 0.5rem;
+  width: 90%;
+}
+
+.search-button{
+  width:10%;
+  height: calc(2.25rem + 1px);
+}
 </style>
