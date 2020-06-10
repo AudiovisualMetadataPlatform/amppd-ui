@@ -19,7 +19,7 @@ export default class WorkflowService extends BaseService{
         return super.post_auth('/jobs/bundle?workflowId=' + selectedWorkflow + '&bundleId=' + bundleId);
     }
     async getDashboardResults(){
-        var data = await super.get_auth('/workflow/dashboard').
+        var data = await super.get_auth('/dashboard').
         then(result=>{
             return result.data;
         });
