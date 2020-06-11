@@ -7,7 +7,7 @@
       entries
     </label>
   </div>
-  <div id="myTable_filter" class="dataTables_filter"><label>Search:<input type="search" class="" placeholder="" aria-controls="myTable"></label></div>
+ <search-filter />
       <div class="table-responsive">
         <table ide="myTable" class="table dataTable no-footer">
           <thead>
@@ -61,13 +61,15 @@ import { sync } from 'vuex-pathify';
 import WorkflowService from '../../service/workflow-service';
 import SortableHeader from '../shared/SortableHeader';
 import Pagination from '../shared/Pagination';
+import SearchFilter from './DashboardFilters/SearchFilter';
 import Loader from '@/components/shared/Loader.vue';
 export default {
   name: 'WorkflowDashboardTable',
   components:{
     SortableHeader,
     Pagination,
-    Loader
+    Loader,
+    SearchFilter
   },
   data(){
     return {
@@ -94,14 +96,17 @@ export default {
       if(!this.workflowDashboard.rows || this.workflowDashboard.rows.length<=0) {
         return this.workflowDashboard.rows;
       }
-      console.log("the data is:"+this.workflowDashboard.rows[0].submitter);
+
       var tempRows = this.workflowDashboard.rows;
       if(self.workflowDashboard.filtersEnabled.submitterFilter){
         tempRows=this.getFilteredSubmitters(tempRows);
-        return tempRows.slice(from, to);  
       }
-      //TODO: Apply rest of the filters on tempRows here
-      return this.workflowDashboard.rows.slice(from, to);
+      if(self.workflowDashboard.searchQuery.filterBySearchTerm.length>0){
+        tempRows=this.getFilteredSearchTerm(tempRows);
+      }
+      self.workflowDashboard.searchResult.totalResults = tempRows.length;
+
+      return tempRows.slice(from, to);
     }
 
   },
@@ -114,7 +119,25 @@ export default {
       var res = inputRows.filter(function(row) {
         return self.workflowDashboard.searchQuery.filterBySubmitters.includes(row.submitter);
         });
-        console.log("filtered rows:"+res);
+        return res;
+    },
+    getFilteredSearchTerm(inputRows) {
+      let self=this;
+      var res = inputRows.filter(
+        function(row) {
+            var foundValue = false;
+            self.workflowDashboard.searchQuery.filterBySearchTerm.forEach(
+              function(searchTerm){
+                console.log(row.sourceFilename + ":" + row.sourceItem + "=" + searchTerm);
+                if(row.sourceFilename.trim()==searchTerm.trim()) {
+                  foundValue=true;
+                }
+                if(row.sourceItem.trim()==searchTerm.trim()){
+                  foundValue = true;
+                }
+            });
+            return foundValue;
+        });
         return res;
     },
     async sortQuery(sortRule) {
@@ -152,7 +175,7 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = page_number;
     },
     refreshData(){
-      this.workflowDashboard.searchResult.totalResults = this.workflowDashboard.rows.length;
+      this.workflowDashboard.searchResult.totalResults = this.workflowDashboard.results.length;
     }
   },
   async mounted(){

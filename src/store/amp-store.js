@@ -31,7 +31,8 @@ const state = {
             },
             pageNum: 1,
             resultsPerPage: 10,
-            filterBySubmitters:[]
+            filterBySubmitters:[],
+            filterBySearchTerm: []
           },
           searchResult: {
             totalResults: 0
