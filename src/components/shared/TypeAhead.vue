@@ -26,7 +26,6 @@
 
 <script>
 import { sync } from 'vuex-pathify';
-//import WorkflowService from '../../../service/workflow-service';
 export default {
     name: 'Typeahead',
     props: {
@@ -75,7 +74,7 @@ export default {
                 }
             }
             else
-                console.log("not calling filter results") 
+                console.log("not calling filter results as items.length is:"+self.items.length); 
             console.log("query:"+self.query+" items[0]:"+self.items[0]);
             console.log("submitter results have been set to:"+self.results);  
         },
@@ -86,45 +85,44 @@ export default {
                 });
         },
         fetchItems() {
-            this.items = this.source;
+            let self = this;
+            self.items = self.source;
+            console.log("self.source is:"+self.source);
         },
         reset() {
             this.query = ''
         },
         setResult(result) {
-            this.query = result;
-            this.isOpen = false;
-            this.typeAheadResult.push(this.query);
+            let self = this;
+            self.query = result;
+            self.isOpen = false;
+            self.typeAheadResult = result;
+            console.log("typeAheadResult modfd in set:"+self.typeAheadResult);
         },
         onArrowDown(evt) {
             if (this.arrowCounter < this.results.length) {
                 this.arrowCounter = this.arrowCounter + 1;
             }
         },
-        onArrowUp() {
+        onArrowUp(evt) {
             if (this.arrowCounter > 0) {
                 this.arrowCounter = this.arrowCounter -1;
             }
         },
-        onEnter() {
-            this.query = this.results[this.arrowCounter];
-            this.isOpen = false;
-            this.arrowCounter = -1;
-            this.typeAheadResult.push(this.query);
-        },
-        handleClickOutside(evt) {
-            if (!this.$el.contains(evt.target)) {
-            this.isOpen = false;
-            this.arrowCounter = -1;
-            }
+        onEnter(evt) {
+            let self = this;
+            self.query = self.results[self.arrowCounter];
+            self.isOpen = false;
+            self.arrowCounter = -1;
+            self.typeAheadResult = self.query;
+            console.log("typeAheadResult modfd by enter:"+self.typeAheadResult);
         }
+    },
+    watch: {
+        typeAheadResult : function() {this.typeAheadResult.length == 0 ? this.query = this.typeAheadResult:true}
     },
     mounted() {
         this.fetchItems();
-        document.addEventListener('click', this.handleClickOutside);
-    },
-    destroyed() {
-        document.removeEventListener('click', this.handleClickOutside)
     }
 };
 </script>
@@ -145,8 +143,7 @@ ul{
     border: 1px solid transparent;
     /*padding: .75rem 2rem;*/
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-	color: #fff;
-    background-color: white;
+	background-color: white;
     border-color: #808080;
   }
 
@@ -156,10 +153,7 @@ ul{
     padding: 4px 2px;
     cursor: pointer;
   }
- .submitter{
-	margin:0.2rem;
-    height: 500px;
-  }
+
   .autocomplete-result.is-active,
   .autocomplete-result:hover {
     background-color: #4AAE9B;

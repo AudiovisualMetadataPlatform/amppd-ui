@@ -38,7 +38,7 @@ const state = {
           },
           rows:[]
     },
-    typeAheadResult:[]
+    typeAheadResult:''
 };
 
 /*======================================================

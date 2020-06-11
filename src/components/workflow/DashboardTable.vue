@@ -82,12 +82,12 @@ export default {
         {label: 'Status', field: 'status'},
       ],
       workflowService: new WorkflowService(),
-      submitterFilterEnabled : false
+      //submitterFilterEnabled : false
     }
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
-    typeAheadResult: sync("typeAheadResult"),
+    //typeAheadResult: sync("typeAheadResult"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
@@ -113,7 +113,7 @@ export default {
     getFilteredSubmitters(inputRows) {
       let self=this;
       var res = inputRows.filter(function(row) {
-        return self.typeAheadResult.includes(row.submitter);
+        return self.workflowDashboard.searchQuery.filterBySubmitters.includes(row.submitter);
         });
         console.log("filtered rows:"+res);
         return res;
