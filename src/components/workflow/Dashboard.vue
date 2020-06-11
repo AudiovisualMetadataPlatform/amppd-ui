@@ -196,7 +196,7 @@
 <script>
 import { sync } from 'vuex-pathify'
 import WorkflowService from '../../service/workflow-service';
-import Sidebar from '@/components/navigation/Sidebar.vue';
+import Sidebar from '@/components/navigation/Sidebar.vue'; 
 import DashboardTable from '@/components/workflow/DashboardTable.vue';
 import SubmitterFilter from '@/components/workflow/DashboardFilters/SubmitterFilter';
 
@@ -219,7 +219,6 @@ export default {
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
-    //selectedSubmitters : workflowDashboard.searchQuery.filterBySubmitters
   },
   props: {
   },
@@ -231,9 +230,6 @@ export default {
       var removed = this.workflowDashboard.searchQuery.filterBySubmitters.splice(index,1);
       console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySubmitters +" and removed element is:"+removed);
   }},
-  
-  mounted(){
-  }
 
 }
 </script>
@@ -261,7 +257,9 @@ export default {
     color: black;
     border-radius: 5px;
     border-color: #ced4da;
-    padding-bottom: 0;
+    padding-bottom: 0px;
+    padding-right: 20px;
+    margin-bottom: 5px;
     margin-right: 10px; 
     flex-wrap: wrap; 
     min-width: max-content;

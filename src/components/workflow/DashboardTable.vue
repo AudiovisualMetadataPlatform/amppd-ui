@@ -84,11 +84,12 @@ export default {
         {label: 'Status', field: 'status'},
       ],
       workflowService: new WorkflowService(),
-      submitterFilterEnabled : false
+      //submitterFilterEnabled : false
     }
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
+    //typeAheadResult: sync("typeAheadResult"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
