@@ -87,6 +87,7 @@ export default {
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
+    typeAheadResult: sync("typeAheadResult"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
@@ -112,7 +113,7 @@ export default {
     getFilteredSubmitters(inputRows) {
       let self=this;
       var res = inputRows.filter(function(row) {
-        return self.workflowDashboard.searchQuery.filterBySubmitters.includes(row.submitter);
+        return self.typeAheadResult.includes(row.submitter);
         });
         console.log("filtered rows:"+res);
         return res;

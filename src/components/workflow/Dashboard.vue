@@ -219,6 +219,7 @@ export default {
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
+    typeAheadResult: sync("typeAheadResult"),
     //selectedSubmitters : workflowDashboard.searchQuery.filterBySubmitters
   },
   props: {
@@ -228,8 +229,8 @@ export default {
       this.$router.push('/workflow/submit');
     },
     removeFilter(index){
-      var removed = this.workflowDashboard.searchQuery.filterBySubmitters.splice(index,1);
-      console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySubmitters +" and removed element is:"+removed);
+      var removed = this.typeAheadResult.splice(index,1);
+      console.log("selected submitters are:"+this.typeAheadResult +" and removed element is:"+removed);
   }},
   
   mounted(){

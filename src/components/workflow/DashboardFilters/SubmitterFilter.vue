@@ -4,12 +4,12 @@
 		Submitter
 		</button>
 		<div class="dropdown-menu compact-form" :class="{ 'show' : visible === true }" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
-			<form class="">
+			<form class="main-dropdown">
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Submitter Name</label>
 					<div class="input-group mb-3">
-						<vue-bootstrap-typeahead :data="getSubmitters" v-model="searchValue" @hit="addSubmitter($event)" :minMatchingChars="1"
-						id="colFormLabelSearch" type="text" class="form-control bootstrap-typeahead" placeholder="Search Submitter Name"/>
+						<typeahead @hit="addSubmitter($event)" :source="getSubmitters" filter-key="submitter" :start-at="1"
+						id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search Submitter Name"/>
 						<div class="input-group-append">
 							<button class="btn btn-outline" id="btn-search" type="submit"> <svg class="svg-search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
 							<title>search</title>
@@ -44,13 +44,14 @@
 <script>
 import { sync } from 'vuex-pathify'
 import WorkflowService from '../../../service/workflow-service';
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
+//import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 import _ from 'underscore';
+import Typeahead from '../../shared/TypeAhead.vue';
 
 export default {
   name: 'Workflow',
   components:{
-	VueBootstrapTypeahead
+	Typeahead
   },
   data(){
     return {
@@ -64,6 +65,7 @@ export default {
   },
   computed:{
 	workflowDashboard: sync("workflowDashboard"),
+	typeAheadResult: sync("typeAheadResult"),
 	getSubmitters(){
 		var submitters=[];
 		var i=0;
@@ -75,10 +77,8 @@ export default {
 		return submitters;
 	},
   },
-  props: {
-  },
+  
   methods:{
-    
 	addSubmitter($event){
 		//console.log("selected submitters is:"+this.searchValue+"  "+$event);
 		if(this.selectedSubmitters.length >0 ){
@@ -87,13 +87,15 @@ export default {
 		}
 		else
 			this.selectedSubmitters.push(this.searchValue);
-		this.workflowDashboard.searchQuery.filterBySubmitters = this.selectedSubmitters;
-		console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySubmitters);
+		//this.workflowDashboard.searchQuery.filterBySubmitters = this.selectedSubmitters;
+		this.typeAheadResult = this.selectedSubmitters;
+		console.log("selected submitters are:"+this.typeAheadResult);
 	},
 	removeSubmitter(index){
 		console.log("removing index:"+index);
 		//this.selectedSubmitters.pop(this.selectedSubmitters[index]);
 		var removed = this.selectedSubmitters.splice(index,1);
+		this.typeAheadResult = this.selectedSubmitters;
 		console.log("selected submitters are:"+this.selectedSubmitters +" and removed element is:"+removed);
 	},
 	closeFilter(){
@@ -103,11 +105,12 @@ export default {
   },
   
   watch: {
-	searchValue: function(submitter) { this.getSubmitters },
+	typeAheadResult: function() { this.selectedSubmitters = this.typeAheadResult}
+	/*searchValue: function(submitter) { this.getSubmitters },
 	selectedSubmitters: function() {
 		this.selectedSubmitters.length>0 ? this.workflowDashboard.filtersEnabled.submitterFilter = true : this.workflowDashboard.filtersEnabled.submitterFilter = false},
-	//visible: function(){this.searchValue=""}
-  },
+	//visible: function(){this.searchValue=""}*/
+  }, 
   created(){
 	this.searchValue='';
   },
@@ -119,14 +122,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .spacer{
-    height: 24px;
-  }
   .submitter{
 	margin:0.2rem;
   }
   .bootstrap-typeahead{
 	height: calc(2.25rem + 1px);
 	padding: 0rem 0rem;
+  }
+
+  .main-dropdown{
+	height: 150px;
   }
 </style>

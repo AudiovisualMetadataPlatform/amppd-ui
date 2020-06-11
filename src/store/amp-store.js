@@ -37,7 +37,8 @@ const state = {
             totalResults: 0
           },
           rows:[]
-    }
+    },
+    typeAheadResult:[]
 };
 
 /*======================================================
