@@ -23,7 +23,7 @@ var router = new Router({
       path: "/",
       name: "home",
       component: BatchIngest,
-      meta: { authorize: [] } 
+      // meta: { authorize: [] } 
     },
     {
       path: "/account/forgot-password",
@@ -60,25 +60,25 @@ var router = new Router({
       path: "/welcome",
       name: 'batch-ingest', 
       component: BatchIngest,
-      meta: { authorize: [] } 
+      // meta: { authorize: [] } 
     },
     {
       path: "/workflow/submit",
       name: "workflow",
       component: Workflow,
-      meta: { authorize: [] } 
+      // meta: { authorize: [] } 
     },
     {
       path: "/workflow",
       name: "workflow-dashboard",
       component: WorkflowDashboard,
-      meta: { authorize: [] } 
+      // meta: { authorize: [] } 
     },
     {
       path: "/batch/ingest", 
       name: 'batch-ingest', 
       component: BatchIngest, 
-      meta: { authorize: [] } 
+      // meta: { authorize: [] } 
     },  
     {
       path: "/hmgm/transcript-editor", 

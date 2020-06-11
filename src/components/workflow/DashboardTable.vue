@@ -28,7 +28,8 @@
               <td>{{ rec.sourceItem }}</td>
               <td>{{ rec.sourceFilename }}</td>
               <td>{{ rec.workflowStep }}</td>
-              <td>{{ rec.outputFile }}</td>
+              <td v-if="rec.outputPath == null">{{ rec.outputFile }}</td>
+              <td v-else-if="rec.outputPath != null"><a v-bind:href="getOutputUrl(rec)">{{ rec.outputFile }}</a></td>
               <td> 
                 <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
                 <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width ">In Progress</button>
@@ -62,6 +63,7 @@ import WorkflowService from '../../service/workflow-service';
 import SortableHeader from '../shared/SortableHeader';
 import Pagination from '../shared/Pagination';
 import Loader from '@/components/shared/Loader.vue';
+
 export default {
   name: 'WorkflowDashboardTable',
   components:{
@@ -153,7 +155,12 @@ export default {
     },
     refreshData(){
       this.workflowDashboard.searchResult.totalResults = this.workflowDashboard.rows.length;
-    }
+    },
+    getOutputUrl(rec) {
+      const BASE_URL = process.env.VUE_APP_AMP_URL;
+      const url = `${BASE_URL}/dashboard/${rec.id}/output`;
+      return url; 
+    },
   },
   async mounted(){
     this.workflowDashboard.loading = true;
