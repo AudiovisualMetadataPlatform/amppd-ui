@@ -63,6 +63,7 @@ export default {
     methods: {
         onChange() {
             let self = this;
+            self.fetchItems();
             if(self.items.length > 0){
                 console.log("calling filter results")
                 self.results = self.filterResults();
@@ -100,14 +101,18 @@ export default {
             console.log("typeAheadResult modfd in set:"+self.typeAheadResult);
         },
         onArrowDown(evt) {
-            if (this.arrowCounter < this.results.length) {
+            if (this.arrowCounter < this.results.length-1) {
                 this.arrowCounter = this.arrowCounter + 1;
             }
+            else
+                this.arrowCounter = 0;
         },
         onArrowUp(evt) {
             if (this.arrowCounter > 0) {
                 this.arrowCounter = this.arrowCounter -1;
             }
+            else
+                this.arrowCounter = this.results.length-1;
         },
         onEnter(evt) {
             let self = this;

@@ -258,6 +258,7 @@ export default {
     border-radius: 5px;
     border-color: #ced4da;
     padding-bottom: 0px;
+    padding-right: 20px;
     margin-bottom: 5px;
     margin-right: 10px; 
     flex-wrap: wrap; 
