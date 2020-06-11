@@ -196,7 +196,7 @@
 <script>
 import { sync } from 'vuex-pathify'
 import WorkflowService from '../../service/workflow-service';
-import Sidebar from '@/components/navigation/Sidebar.vue';
+import Sidebar from '@/components/navigation/Sidebar.vue'; 
 import DashboardTable from '@/components/workflow/DashboardTable.vue';
 import SubmitterFilter from '@/components/workflow/DashboardFilters/SubmitterFilter';
 
