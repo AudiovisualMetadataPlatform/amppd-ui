@@ -57,7 +57,6 @@ export default {
         }
 	},	
     computed: {
-        typeAheadResult: sync("typeAheadResult")
     },
 
     methods: {
@@ -97,8 +96,8 @@ export default {
             let self = this;
             self.query = result;
             self.isOpen = false;
-            self.typeAheadResult = result;
-            console.log("typeAheadResult modfd in set:"+self.typeAheadResult);
+            self.$emit('selection',result)
+            self.query = '';
         },
         onArrowDown(evt) {
             if (this.arrowCounter < this.results.length-1) {
@@ -119,12 +118,13 @@ export default {
             self.query = self.results[self.arrowCounter];
             self.isOpen = false;
             self.arrowCounter = -1;
-            self.typeAheadResult = self.query;
-            console.log("typeAheadResult modfd by enter:"+self.typeAheadResult);
+
+            self.$emit('selection',self.query)
+            self.query = '';
+
         }
     },
     watch: {
-        typeAheadResult : function() {this.typeAheadResult.length == 0 ? this.query = this.typeAheadResult:true}
     },
     mounted() {
         this.fetchItems();
@@ -163,5 +163,8 @@ ul{
   .autocomplete-result:hover {
     background-color: #4AAE9B;
     color: white;
+  }
+  .dataTables_wrapper .dataTables_filter input{
+    margin-left: none !important;
   }
 </style>

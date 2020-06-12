@@ -7,7 +7,7 @@
       entries
     </label>
   </div>
-  <div id="myTable_filter" class="dataTables_filter"><label>Search:<input type="search" class="" placeholder="" aria-controls="myTable"></label></div>
+ <search-filter />
       <div class="table-responsive">
         <table ide="myTable" class="table dataTable no-footer">
           <thead>
@@ -59,9 +59,10 @@
 <script>
 
 import { sync } from 'vuex-pathify';
-import WorkflowService from '../../service/workflow-service';
+import DashboardService from '../../service/dashboard-service';
 import SortableHeader from '../shared/SortableHeader';
 import Pagination from '../shared/Pagination';
+import SearchFilter from './DashboardFilters/SearchFilter';
 import Loader from '@/components/shared/Loader.vue';
 
 export default {
@@ -69,7 +70,8 @@ export default {
   components:{
     SortableHeader,
     Pagination,
-    Loader
+    Loader,
+    SearchFilter
   },
   data(){
     return {
@@ -83,28 +85,23 @@ export default {
         {label: 'Output File', field: 'outputFile'},
         {label: 'Status', field: 'status'},
       ],
-      workflowService: new WorkflowService(),
+      dashboardService: new DashboardService(),
       //submitterFilterEnabled : false
     }
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
+    filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
+    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     //typeAheadResult: sync("typeAheadResult"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
       var to = this.workflowDashboard.searchQuery.pageNum * this.workflowDashboard.searchQuery.resultsPerPage;
-      if(!this.workflowDashboard.rows || this.workflowDashboard.rows.length<=0) {
-        return this.workflowDashboard.rows;
+      if(!this.workflowDashboard.searchResult.rows || this.workflowDashboard.searchResult.rows.length<=0) {
+        return this.workflowDashboard.searchResult.rows;
       }
-      console.log("the data is:"+this.workflowDashboard.rows[0].submitter);
-      var tempRows = this.workflowDashboard.rows;
-      if(self.workflowDashboard.filtersEnabled.submitterFilter){
-        tempRows=this.getFilteredSubmitters(tempRows);
-        return tempRows.slice(from, to);  
-      }
-      //TODO: Apply rest of the filters on tempRows here
-      return this.workflowDashboard.rows.slice(from, to);
+      return this.workflowDashboard.searchResult.rows;
     }
 
   },
@@ -112,20 +109,11 @@ export default {
   },
   
   methods:{
-    getFilteredSubmitters(inputRows) {
-      let self=this;
-      var res = inputRows.filter(function(row) {
-        return self.workflowDashboard.searchQuery.filterBySubmitters.includes(row.submitter);
-        });
-        console.log("filtered rows:"+res);
-        return res;
-    },
     async sortQuery(sortRule) {
-        // TODO: Some sort of filtering algorithm should go here to reduce the result set
         this.workflowDashboard.searchQuery.sortRule = sortRule;
         this.workflowDashboard.searchQuery.pageNum = 1;
-        var sortOrder = sortRule.orderByDescending ? 'desc' : 'asc';
-        this.workflowDashboard.rows.sort(this.compareValues(sortRule.columnName, sortOrder))
+        
+        this.refreshData();
       },
 
     compareValues(key, order = 'asc') {
@@ -153,22 +141,33 @@ export default {
     },
     paginate(page_number) {
       this.workflowDashboard.searchQuery.pageNum = page_number;
+      this.refreshData();
     },
-    refreshData(){
-      this.workflowDashboard.searchResult.totalResults = this.workflowDashboard.rows.length;
+    async refreshData(){
+      this.workflowDashboard.loading = true;
+      this.workflowDashboard.searchResult = await this.dashboardService.getDashboardResults(this.workflowDashboard.searchQuery);
+      this.workflowDashboard.loading = false;
     },
     getOutputUrl(rec) {
       const BASE_URL = process.env.VUE_APP_AMP_URL;
       const url = `${BASE_URL}/dashboard/${rec.id}/output`;
       return url; 
-    },
+    }
   },
   async mounted(){
-    this.workflowDashboard.loading = true;
-    this.workflowDashboard.rows = await this.workflowService.getDashboardResults();
-    this.workflowDashboard.loading = false;
     this.refreshData();
+  },
+  watch:{
+    filterBySearchTerm: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterBySubmitters: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    }
   }
+
 
 }
 </script>

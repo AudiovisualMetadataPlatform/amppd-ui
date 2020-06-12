@@ -9,6 +9,7 @@
 					<label for="colFormLabelSearch" class=" bold">Submitter Name</label>
 					<div class="input-group mb-3">
 						<typeahead :source="getSubmitters" filter-key="submitter" :start-at="1"
+						@selection="addSubmitter"
 						id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search Submitter Name"/>
 						<div class="input-group-append">
 							<button class="btn btn-outline" id="btn-search" type="submit"> <svg class="svg-search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
@@ -43,7 +44,6 @@
 
 <script>
 import { sync } from 'vuex-pathify'
-import WorkflowService from '../../../service/workflow-service';
 import _ from 'underscore';
 import Typeahead from '../../shared/TypeAhead.vue';
 
@@ -54,7 +54,6 @@ export default {
   },
   data(){
     return {
-		workflowService: new WorkflowService(),
 		visible : false,
 		submitterList:[],
 		filterSuccess:false,
@@ -63,33 +62,25 @@ export default {
   },
   computed:{
 	workflowDashboard: sync("workflowDashboard"),
-	typeAheadResult: sync("typeAheadResult"),
+    submitters: sync("workflowDashboard.searchResult.filters.submitters"),
 	getSubmitters(){
-		//This function gets the unique set of submitters from all the dashboard rows
-		var submitters=[];
-		var i=0;
-		for(i=0;i<this.workflowDashboard.rows.length;i++){
-			submitters.push(this.workflowDashboard.rows[i].submitter);
-		}
-		submitters = submitters.filter((item, i, ar) => ar.indexOf(item) === i);
-		console.log("unique submitters"+submitters);
-		return submitters;
-	},
+        if(!this.submitters) return [];
+		return this.submitters;
+	}
   },
   
   methods:{
-	addSubmitter(){
+	addSubmitter(submitter){
 		//This function is the only place where submitters get added
 		if(this.selectedSubmitters.length >0 ){
-			if(this.selectedSubmitters.indexOf(this.typeAheadResult) == -1)
-				this.selectedSubmitters.push(this.typeAheadResult);
+			if(this.selectedSubmitters.indexOf(submitter) == -1)
+				this.selectedSubmitters.push(submitter);
 			else
 				console.log("submitter already exists"+this.selectedSubmitters);
 		}
 		else
-			this.selectedSubmitters.push(this.typeAheadResult);
+			this.selectedSubmitters.push(submitter);
 		this.workflowDashboard.searchQuery.filterBySubmitters = this.selectedSubmitters;
-		console.log("selected submitters are:"+this.typeAheadResult);
 	},
 	removeSubmitter(index){
 		//This function is the only place where submitters are removed
@@ -99,13 +90,11 @@ export default {
 		console.log("selected submitters are:"+this.selectedSubmitters +" and removed element is:"+removed);
 	},
 	closeFilter(){
-		this.typeAheadResult='';
 		this.visible=false;
 	}
   },
   
   watch: {
-	typeAheadResult: function() { this.typeAheadResult.length>0 ? this.addSubmitter(): true},
 	selectedSubmitters: function() {
 		this.selectedSubmitters.length>0 ? this.workflowDashboard.filtersEnabled.submitterFilter = true : this.workflowDashboard.filtersEnabled.submitterFilter = false}
   }, 

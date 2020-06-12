@@ -18,13 +18,13 @@
                 <button class="btn-sm btn btn-primary marg-bot-4" v-on:click="startWorkflow">Start a new workflow</button>
 
 
-                <div class="container-fluid " v-if="workflowDashboard.searchQuery.filterBySubmitters.length">
+                <div class="container-fluid " v-if="workflowDashboard.searchQuery.filterBySubmitters.length || workflowDashboard.searchQuery.filterBySearchTerm.length">
                   <div class="row selected-filters-row">
                     <div class="col-sm-2 label-bold">CURRENTLY FILTERED BY</div>
                     
                     <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(submitter,index) in workflowDashboard.searchQuery.filterBySubmitters" v-bind:submitter="submitter" v-bind:index="index" v-bind:key="submitter.id"> 
                       <div class="row">
-                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeFilter(index)">
+                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeSubmitterFilter(index)">
                         <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
@@ -32,7 +32,18 @@
                           <label class="row no-padding-col">{{submitter}}</label>
                         </div>
                       </div>
-                    </button>               
+                    </button>       
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(searchTerm,index) in workflowDashboard.searchQuery.filterBySearchTerm" v-bind:searchTerm="searchTerm" v-bind:index="index" v-bind:key="index"> 
+                      <div class="row">
+                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeSearchFilter(index)">
+                        <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
+                        </svg>
+                        <div class="col-sm-1">
+                          <label class="row label-bold no-padding-col">Search Term </label>
+                          <label class="row no-padding-col">{{searchTerm}}</label>
+                        </div>
+                      </div>
+                    </button>            
                   </div>
                 </div>
                 
@@ -165,18 +176,6 @@
                       </div>
                     </div>
                     <!-- -->
-                    <!-- -->
-                    <div class="dropdown">
-                      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Search
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </div>
-                    <!-- -->
                   </div>
                   <div class="row spacer">
                   </div>
@@ -195,10 +194,9 @@
 
 <script>
 import { sync } from 'vuex-pathify'
-import WorkflowService from '../../service/workflow-service';
 import Sidebar from '@/components/navigation/Sidebar.vue'; 
-import DashboardTable from '@/components/workflow/DashboardTable.vue';
-import SubmitterFilter from '@/components/workflow/DashboardFilters/SubmitterFilter';
+import DashboardTable from '@/components/dashboard/DashboardTable.vue';
+import SubmitterFilter from '@/components/dashboard/DashboardFilters/SubmitterFilter';
 
 
 export default {
@@ -212,7 +210,6 @@ export default {
     return {
       workflowSubmitted: false,
       bundle: null,
-      workflowService: new WorkflowService(),
       visible : true,
       //selectedSubmitters:[]
     }
@@ -226,9 +223,13 @@ export default {
     startWorkflow(){
       this.$router.push('/workflow/submit');
     },
-    removeFilter(index){
+    removeSubmitterFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySubmitters.splice(index,1);
       console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySubmitters +" and removed element is:"+removed);
+  },
+    removeSearchFilter(index){
+      var removed = this.workflowDashboard.searchQuery.filterBySearchTerm.splice(index,1);
+      console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySearchTerm +" and removed element is:"+removed);
   }},
 
 }
