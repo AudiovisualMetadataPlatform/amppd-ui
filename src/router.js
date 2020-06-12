@@ -4,7 +4,7 @@ import Router from "vue-router";
 import Login from "./components/account/Login.vue";
 import Register from "./components/account/Register.vue";
 import Workflow from "./components/workflow/Workflow.vue";
-import WorkflowDashboard from "./components/workflow/Dashboard.vue";
+import WorkflowDashboard from "./components/dashboard/Dashboard.vue";
 import ForgotPassword from "./components/account/ForgotPassword.vue";
 import ResetPassword from "./components/account/ResetPassword.vue";
 import ApproveUser from "./components/account/ApproveUser.vue";
@@ -23,7 +23,7 @@ var router = new Router({
       path: "/",
       name: "home",
       component: BatchIngest,
-      meta: { authorize: [] } 
+      // meta: { authorize: [] } 
     },
     {
       path: "/account/forgot-password",
@@ -60,25 +60,25 @@ var router = new Router({
       path: "/welcome",
       name: 'batch-ingest', 
       component: BatchIngest,
-      meta: { authorize: [] } 
+      // meta: { authorize: [] } 
     },
     {
       path: "/workflow/submit",
       name: "workflow",
       component: Workflow,
-      meta: { authorize: [] } 
+      // meta: { authorize: [] } 
     },
     {
-      path: "/workflow",
-      name: "workflow-dashboard",
+      path: "/dashboard",
+      name: "dashboard",
       component: WorkflowDashboard,
-      meta: { authorize: [] } 
+      // meta: { authorize: [] } 
     },
     {
       path: "/batch/ingest", 
       name: 'batch-ingest', 
       component: BatchIngest, 
-      meta: { authorize: [] } 
+      // meta: { authorize: [] } 
     },  
     {
       path: "/hmgm/transcript-editor", 
