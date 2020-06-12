@@ -89,24 +89,16 @@ export default {
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
+    filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
+    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
       var to = this.workflowDashboard.searchQuery.pageNum * this.workflowDashboard.searchQuery.resultsPerPage;
-      if(!this.workflowDashboard.rows || this.workflowDashboard.rows.length<=0) {
-        return this.workflowDashboard.rows;
+      if(!this.workflowDashboard.searchResult.rows || this.workflowDashboard.searchResult.rows.length<=0) {
+        return this.workflowDashboard.searchResult.rows;
       }
-
-      var tempRows = this.workflowDashboard.rows;
-      if(self.workflowDashboard.filtersEnabled.submitterFilter){
-        tempRows=this.getFilteredSubmitters(tempRows);
-      }
-      if(self.workflowDashboard.searchQuery.filterBySearchTerm.length>0){
-        tempRows=this.getFilteredSearchTerm(tempRows);
-      }
-      self.workflowDashboard.searchResult.totalResults = tempRows.length;
-
-      return tempRows.slice(from, to);
+      return this.workflowDashboard.searchResult.rows;
     }
 
   },
@@ -114,38 +106,11 @@ export default {
   },
   
   methods:{
-    getFilteredSubmitters(inputRows) {
-      let self=this;
-      var res = inputRows.filter(function(row) {
-        return self.workflowDashboard.searchQuery.filterBySubmitters.includes(row.submitter);
-        });
-        return res;
-    },
-    getFilteredSearchTerm(inputRows) {
-      let self=this;
-      var res = inputRows.filter(
-        function(row) {
-            var foundValue = false;
-            self.workflowDashboard.searchQuery.filterBySearchTerm.forEach(
-              function(searchTerm){
-                console.log(row.sourceFilename + ":" + row.sourceItem + "=" + searchTerm);
-                if(row.sourceFilename.trim()==searchTerm.trim()) {
-                  foundValue=true;
-                }
-                if(row.sourceItem.trim()==searchTerm.trim()){
-                  foundValue = true;
-                }
-            });
-            return foundValue;
-        });
-        return res;
-    },
     async sortQuery(sortRule) {
-        // TODO: Some sort of filtering algorithm should go here to reduce the result set
         this.workflowDashboard.searchQuery.sortRule = sortRule;
         this.workflowDashboard.searchQuery.pageNum = 1;
-        var sortOrder = sortRule.orderByDescending ? 'desc' : 'asc';
-        this.workflowDashboard.rows.sort(this.compareValues(sortRule.columnName, sortOrder))
+        
+        this.refreshData();
       },
 
     compareValues(key, order = 'asc') {
@@ -173,17 +138,29 @@ export default {
     },
     paginate(page_number) {
       this.workflowDashboard.searchQuery.pageNum = page_number;
+      this.refreshData();
     },
-    refreshData(){
-      this.workflowDashboard.searchResult.totalResults = this.workflowDashboard.results.length;
+    async refreshData(){
+      console.log("calling the back end");
+      this.workflowDashboard.loading = true;
+      this.workflowDashboard.searchResult = await this.workflowService.getDashboardResults(this.workflowDashboard.searchQuery);
+      this.workflowDashboard.loading = false;
     }
   },
   async mounted(){
-    this.workflowDashboard.loading = true;
-    this.workflowDashboard.rows = await this.workflowService.getDashboardResults();
-    this.workflowDashboard.loading = false;
     this.refreshData();
+  },
+  watch:{
+    filterBySearchTerm: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterBySubmitters: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    }
   }
+
 
 }
 </script>

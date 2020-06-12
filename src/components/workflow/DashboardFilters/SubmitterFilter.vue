@@ -64,15 +64,10 @@ export default {
   },
   computed:{
 	workflowDashboard: sync("workflowDashboard"),
+    submitters: sync("workflowDashboard.searchResult.filters.submitters"),
 	getSubmitters(){
-		var submitters=[];
-		var i=0;
-		for(i=0;i<this.workflowDashboard.rows.length;i++){
-			submitters.push(this.workflowDashboard.rows[i].submitter);
-		}
-		submitters = submitters.filter((item, i, ar) => ar.indexOf(item) === i);
-		console.log("unique submitters"+submitters);
-		return submitters;
+        if(!this.submitters) return [];
+        return this.submitters;
 	},
   },
   props: {

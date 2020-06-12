@@ -26,7 +26,7 @@ const state = {
         filtersEnabled : {submitterFilter :false},
         searchQuery: {
             sortRule: {
-              columnName: 'Date',
+              columnName: 'date',
               orderByDescending: true
             },
             pageNum: 1,
@@ -35,7 +35,12 @@ const state = {
             filterBySearchTerm: []
           },
           searchResult: {
-            totalResults: 0
+            rows: [],
+            totalResults: 0,
+            filters:{
+              searchTerms:[],
+              submitters:[]
+            }
           },
           rows:[]
     }

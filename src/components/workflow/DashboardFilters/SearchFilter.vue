@@ -25,27 +25,20 @@ export default {
         searchValue: '',
         submitterList:[],
         filterSuccess:false,
-        searchTerms : []
+        searchTerms:[]
     }
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
+    searchTermList: sync("workflowDashboard.searchResult.filters.searchTerms"),
     getItems(){
-        var items=[];
-        var i=0;
-        for(i=0;i<this.workflowDashboard.rows.length;i++){
-            items.push(this.workflowDashboard.rows[i].sourceItem);
-            items.push(this.workflowDashboard.rows[i].sourceFilename);
-        }
-        items = items.filter((item, i, ar) => ar.indexOf(item) === i);
-        console.log("unique submitters"+items);
-        return items;
+        if(!this.searchTermList) return [];
+        return this.searchTermList;
     },
   },
   props: {
   },
   methods:{
-    
     addSearchTerm($event){
         //console.log("selected submitters is:"+this.searchValue+"  "+$event);
         if(this.searchTerms.length >0 ){
@@ -87,7 +80,7 @@ export default {
   }
   #myTable_filter{
       display:flex;
-      margin-bottom:10pxx;
+      margin-bottom:10px;
   }
   #myTable_filter label{
       margin: auto;
