@@ -72,7 +72,7 @@ var router = new Router({
       path: "/dashboard",
       name: "dashboard",
       component: WorkflowDashboard,
-      // meta: { authorize: [] } 
+      meta: { authorize: [] } 
     },
     {
       path: "/batch/ingest", 

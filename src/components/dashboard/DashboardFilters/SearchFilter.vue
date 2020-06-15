@@ -4,6 +4,7 @@
       <label>Search:
           </label>
           <typeahead :source="getItems" filter-key="searchValue" :start-at="1" @selection="addSearchTerm"
+            filter-type="contains"
             id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder=""/>
       </div>                 
 </template>
@@ -46,13 +47,6 @@ export default {
             this.searchTerms.push(term);
         this.workflowDashboard.searchQuery.filterBySearchTerm = this.searchTerms;
     }
-  },
-  
-  watch: {
-  },
-  created(){
-  },
-  mounted(){
   }
 
 }
