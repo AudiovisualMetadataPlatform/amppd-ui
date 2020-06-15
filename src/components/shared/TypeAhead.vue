@@ -37,6 +37,11 @@ export default {
             type: String,
             required: true
         },
+        filterType: {
+            type: String,
+            default: 'starts',
+            required: false
+        },
         startAt: {
             type: Number,
             default: 1  
@@ -80,9 +85,16 @@ export default {
         },
         filterResults() {
             let self = this;
-            return self.items.filter((item) => {
-                return item.toLowerCase().startsWith(self.query.toLowerCase());
-                });
+            if(self.filterType=="starts"){
+                return self.items.filter((item) => {
+                    return item.toLowerCase().startsWith(self.query.toLowerCase());
+                    });
+            }
+            else if(self.filterType=="contains") {
+                return self.items.filter((item) => {
+                    return item.toLowerCase().includes(self.query.toLowerCase());
+                    });
+            }
         },
         fetchItems() {
             let self = this;

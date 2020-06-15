@@ -6,6 +6,7 @@ export default class WorkflowService extends BaseService{
         then(result=>{
             return result.data;
         });
+        console.log(data);
         return data;
     }
 }
