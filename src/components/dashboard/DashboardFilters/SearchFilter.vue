@@ -76,6 +76,9 @@ export default {
       margin: auto;
   }
   .dataTables_wrapper .dataTables_filter input{
-    margin-left: none !important;
+    margin-left: 0 !important;
+  }
+  .dataTables_wrapper .dataTables_filter label{
+    margin-right: 5px !important;
   }
 </style>

@@ -162,6 +162,7 @@ ul{
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 	background-color: white;
     border-color: #808080;
+    position:relative;
   }
 
   .autocomplete-result {
