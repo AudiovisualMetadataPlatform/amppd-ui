@@ -178,6 +178,6 @@ ul{
     color: white;
   }
   .dataTables_wrapper .dataTables_filter input{
-    margin-left: none !important;
+    margin-left: 0 !important;
   }
 </style>
