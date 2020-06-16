@@ -78,7 +78,7 @@ export default {
   .dataTables_wrapper .dataTables_filter input{
     margin-left: 0 !important;
   }
-  colFormLabelSearch{
+  #colFormLabelSearch{
     width:250px;
   }
   .dataTables_wrapper .dataTables_filter label{
