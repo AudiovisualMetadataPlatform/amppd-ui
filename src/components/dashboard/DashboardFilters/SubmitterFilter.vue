@@ -48,7 +48,7 @@ import _ from 'underscore';
 import Typeahead from '../../shared/TypeAhead.vue';
 
 export default {
-  name: 'Workflow',
+  name: 'SubmitterFilter',
   components:{
 	Typeahead
   },
