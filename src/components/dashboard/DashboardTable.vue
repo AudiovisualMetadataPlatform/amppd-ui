@@ -66,7 +66,7 @@ import SearchFilter from './DashboardFilters/SearchFilter';
 import Loader from '@/components/shared/Loader.vue';
 
 export default {
-  name: 'WorkflowDashboardTable',
+  name: 'DashboardTable',
   components:{
     SortableHeader,
     Pagination,
@@ -86,14 +86,17 @@ export default {
         {label: 'Status', field: 'status'},
       ],
       dashboardService: new DashboardService(),
-      //submitterFilterEnabled : false
     }
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
     filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
     filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
-    //typeAheadResult: sync("typeAheadResult"),
+    filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
+    filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
+    filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
+    filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
+    filterByStatues: sync("workflowDashboard.searchQuery.filterByStatues"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
@@ -140,7 +143,27 @@ export default {
     filterBySubmitters: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
-    }
+    },
+    filterByWorkflows: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByItems: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByFiles: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterBySteps: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByStatuses: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
   }
 
 
