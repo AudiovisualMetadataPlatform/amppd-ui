@@ -10,7 +10,7 @@
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Workflow Name</label>
 					<div class="input-group mb-3">
-						<typeahead :source="getWorkflows" filter-key="workflow" :start-at="1" @selection="addWorkflow"
+						<typeahead :source="getWorkflows" filter-key="workflow" filter-type="contains" :start-at="1" @selection="addWorkflow"
 							id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search Workflow Name"/>
 						<div class="input-group-append">
 							<button class="btn btn-outline" id="btn-search" type="submit"> 
