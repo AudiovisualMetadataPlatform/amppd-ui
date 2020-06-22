@@ -48,7 +48,11 @@ export default {
         },
         placeholder: {
             type: String,
-            default: ''
+            default: 'Search Here'
+        },
+        submitterStatus: {
+            type: Boolean,
+            default: false
         }
 	},   
 	data() {
@@ -62,6 +66,7 @@ export default {
         }
 	},	
     computed: {
+        typeAheadResult: sync("typeAheadResult")
     },
 
     methods: {
@@ -114,6 +119,7 @@ export default {
         onArrowDown(evt) {
             if (this.arrowCounter < this.results.length-1) {
                 this.arrowCounter = this.arrowCounter + 1;
+                this.select(this.arrowCounter + 1);
             }
             else
                 this.arrowCounter = 0;
@@ -121,6 +127,7 @@ export default {
         onArrowUp(evt) {
             if (this.arrowCounter > 0) {
                 this.arrowCounter = this.arrowCounter -1;
+                this.select(this.arrowCounter - 1);
             }
             else
                 this.arrowCounter = this.results.length-1;
@@ -137,6 +144,15 @@ export default {
         }
     },
     watch: {
+        /* typeAheadResult : function() {
+            console.log("typeaheadResult length is:"+this.typeAheadResult.length)
+            this.typeAheadResult.length == 0 ? this.reset() :true} */
+
+        submitterStatus : function() {
+            if(this.submitterStatus){
+                this.query = '';
+            }
+        }
     },
     mounted() {
         this.fetchItems();

@@ -8,7 +8,7 @@
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Submitter Name</label>
 					<div class="input-group mb-3">
-						<typeahead :source="getSubmitters" filter-key="submitter" :start-at="1"
+						<typeahead :source="getSubmitters" filter-key="submitter" :start-at="1" :submitterStatus=calcSubmitterStatus()
 						@selection="addSubmitter"
 						id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search Submitter Name"/>
 						<div class="input-group-append">
@@ -57,12 +57,14 @@ export default {
 		visible : false,
 		submitterList:[],
 		filterSuccess:false,
-		selectedSubmitters : []
+		selectedSubmitters : [],
+		closed : false
     }
   },
   computed:{
 	workflowDashboard: sync("workflowDashboard"),
-    submitters: sync("workflowDashboard.searchResult.filters.submitters"),
+	submitters: sync("workflowDashboard.searchResult.filters.submitters"),
+	typeAheadResult: sync("typeAheadResult"),
 	getSubmitters(){
         if(!this.submitters) return [];
 		return this.submitters;
@@ -70,6 +72,13 @@ export default {
   },
   
   methods:{
+	calcSubmitterStatus() {
+		if(this.closed) 
+		{ 
+			return true;
+		} 
+		return false 
+	},
 	addSubmitter(submitter){
 		//This function is the only place where submitters get added
 		if(this.selectedSubmitters.length >0 ){
@@ -91,12 +100,15 @@ export default {
 	},
 	closeFilter(){
 		this.visible=false;
+		console.log("Done was clicked")
+		this.closed = true;
+		
 	}
   },
   
   watch: {
 	selectedSubmitters: function() {
-		this.selectedSubmitters.length>0 ? this.workflowDashboard.filtersEnabled.submitterFilter = true : this.workflowDashboard.filtersEnabled.submitterFilter = false}
+		this.selectedSubmitters.length>0 ? this.workflowDashboard.filtersEnabled.submitterFilter = true : this.workflowDashboard.filtersEnabled.submitterFilter = false},
   }, 
   
 }
