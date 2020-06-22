@@ -2,6 +2,7 @@
 node_modules
 /public/symlink
 /dist
+/mdb
 
 # local env files
 .env.local

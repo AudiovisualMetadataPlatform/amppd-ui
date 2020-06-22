@@ -338,8 +338,8 @@ export default {
       console.log("selected steps are:"+this.workflowDashboard.searchQuery.filterBySteps +" and removed element is:"+removed);
     },
     removeStatusFilter(index){
-      var removed = this.workflowDashboard.searchQuery.filterByStatuss.splice(index,1);
-      console.log("selected statuses are:"+this.workflowDashboard.searchQuery.filterByStatuss +" and removed element is:"+removed);
+      var removed = this.workflowDashboard.searchQuery.filterByStatuses.splice(index,1);
+      console.log("selected statuses are:"+this.workflowDashboard.searchQuery.filterByStatuses +" and removed element is:"+removed);
     },
     removeSearchFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySearchTerm.splice(index,1);
