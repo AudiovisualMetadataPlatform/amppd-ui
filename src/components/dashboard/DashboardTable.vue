@@ -96,7 +96,7 @@ export default {
     filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
     filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
     filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
-    filterByStatues: sync("workflowDashboard.searchQuery.filterByStatues"),
+    filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);

@@ -39,7 +39,7 @@ var router = new Router({
       path: "/account/approve/:id", 
       name: 'approve-user', 
       component: ApproveUser,
-      meta: { authorize: [] }  
+      // meta: { authorize: [] }  
     },
     {
       path: "/account/activate/:token", 
@@ -72,7 +72,7 @@ var router = new Router({
       path: "/dashboard",
       name: "dashboard",
       component: WorkflowDashboard,
-      meta: { authorize: [] } 
+      // meta: { authorize: [] } 
     },
     {
       path: "/batch/ingest", 
