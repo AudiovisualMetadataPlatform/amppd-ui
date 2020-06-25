@@ -61,32 +61,7 @@
                 
                 <div class="container-fluid">
                   <div class="row filter-btns">
-                    <div class="dropdown">
-                      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Date range
-                      </button>
-                      <div class="dropdown-menu compact-form" aria-labelledby="dropdownMenuButton">
-                        <form class="">
-                          <div class="form-group row">
-                            <label for="colFormLabelFrom" class="col-sm-4 col-form-label col-form-label-sm text-right">From</label>
-                            <div class="col-sm-8">
-                              <input type="date" class="form-control form-control-sm" id="colFormLabelFrom">
-                            </div>
-                          </div>
-                          <div class="form-group row">
-                            <label for="colFormLabelFrom2" class="col-sm-4 col-form-label col-form-label-sm text-right">To</label>
-                            <div class="col-sm-8">
-                              <input type="date" class="form-control form-control-sm" id="colFormLabelFrom2">
-                            </div>
-                          </div>
-                          <div class="form-group row">
-                            <div class="col-sm-12">
-                              <button class="btn btn-info float-right">Filter</button>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
+                    <DateFilter/>
                     <SubmitterFilter/>
                     <div class="dropdown">
                       <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -209,6 +184,7 @@ import { sync } from 'vuex-pathify'
 import Sidebar from '@/components/navigation/Sidebar.vue'; 
 import DashboardTable from '@/components/dashboard/DashboardTable.vue';
 import SubmitterFilter from '@/components/dashboard/DashboardFilters/SubmitterFilter';
+import DateFilter from '@/components/dashboard/DashboardFilters/DateFilter';
 
 
 export default {
@@ -216,7 +192,8 @@ export default {
   components:{
     Sidebar,
     DashboardTable,
-    SubmitterFilter
+    SubmitterFilter,
+    DateFilter
   },
   data(){
     return {
@@ -249,7 +226,8 @@ export default {
     removeSearchFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySearchTerm.splice(index,1);
       console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySearchTerm +" and removed element is:"+removed);
-  }},
+  },
+  },
 
 }
 </script>

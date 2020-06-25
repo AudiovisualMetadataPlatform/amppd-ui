@@ -44,7 +44,6 @@
 
 <script>
 import { sync } from 'vuex-pathify'
-import _ from 'underscore';
 import Typeahead from '../../shared/TypeAhead.vue';
 
 export default {

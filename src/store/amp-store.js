@@ -23,7 +23,7 @@ const state = {
     jobs: [], // jobs successfully created
     workflowDashboard:{
         loading:false,
-        filtersEnabled : {submitterFilter :false},
+        filtersEnabled : {submitterFilter :false, dateFilter : false},
         searchQuery: {
             sortRule: {
               columnName: 'date',
@@ -32,14 +32,16 @@ const state = {
             pageNum: 1,
             resultsPerPage: 10,
             filterBySubmitters:[],
-            filterBySearchTerm: []
+            filterBySearchTerm: [],
+            filterByDates:[]
           },
           searchResult: {
             rows: [],
             totalResults: 0,
             filters:{
               searchTerms:[],
-              submitters:[]
+              submitters:[],
+              
             }
           },
           rows:[]
