@@ -8,7 +8,7 @@
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Submitter Name</label>
 					<div class="input-group mb-3">
-						<typeahead :source="getSubmitters" filter-key="submitter" :start-at="1" :submitterStatus=calcSubmitterStatus()
+						<typeahead :source="getSubmitters" filter-key="submitter" :start-at="1" ref="Typeahead"
 						@selection="addSubmitter"
 						id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search Submitter Name"/>
 						<div class="input-group-append">
@@ -58,7 +58,6 @@ export default {
 		submitterList:[],
 		filterSuccess:false,
 		selectedSubmitters : [],
-		closed : false
     }
   },
   computed:{
@@ -72,13 +71,6 @@ export default {
   },
   
   methods:{
-	calcSubmitterStatus() {
-		if(this.closed) 
-		{ 
-			return true;
-		} 
-		return false 
-	},
 	addSubmitter(submitter){
 		//This function is the only place where submitters get added
 		if(this.selectedSubmitters.length >0 ){
@@ -101,7 +93,7 @@ export default {
 	closeFilter(){
 		this.visible=false;
 		console.log("Done was clicked")
-		this.closed = true;
+		this.$refs.Typeahead.reset();
 		
 	}
   },
@@ -122,6 +114,7 @@ export default {
   .bootstrap-typeahead{
 	height: calc(2.25rem + 1px);
 	padding: 0rem 0rem;
+	border: 0ch;
   }
 
   .main-dropdown{

@@ -4,7 +4,7 @@
             v-model="query"
             type="text" 
             :placeholder="placeholder"
-            class="form-control bootstrap-typeahead"
+            class="form-control"
             @input="onChange"
             @keydown.down="onArrowDown"
             @keydown.up="onArrowUp"
@@ -12,7 +12,9 @@
         >
         <ul v-show="isOpen" class="autocomplete-results" id="autocomplete-results">
             <li class="autocomplete-result"
+            
                 v-for="(result, i) in results"
+                :ref="'typeahead'+i"
                 :key="i"
                 @click="setResult(result)"
                 :class="{ 'is-active': i === arrowCounter }">
@@ -48,12 +50,9 @@ export default {
         },
         placeholder: {
             type: String,
-            default: 'Search Here'
+            default: ''
         },
-        submitterStatus: {
-            type: Boolean,
-            default: false
-        }
+
 	},   
 	data() {
         return {
@@ -65,13 +64,11 @@ export default {
             isOpen: false
         }
 	},	
-    computed: {
-        typeAheadResult: sync("typeAheadResult")
-    },
 
     methods: {
         onChange() {
             let self = this;
+            this.arrowCounter = 0;
             self.fetchItems();
             if(self.items.length > 0){
                 console.log("calling filter results")
@@ -107,7 +104,10 @@ export default {
             console.log("self.source is:"+self.source);
         },
         reset() {
-            this.query = ''
+            console.log("inside reset");
+            this.query = '';
+            this.isOpen = false;
+
         },
         setResult(result) {
             let self = this;
@@ -116,21 +116,29 @@ export default {
             self.$emit('selection',result)
             self.query = '';
         },
+        scroll(arrowCounter) {
+            var thisElement = this.$refs['typeahead'+arrowCounter];
+            console.log(thisElement);
+            thisElement[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); 
+            //this.$refs.chat.scrollIntoView(); 
+            
+        },
         onArrowDown(evt) {
             if (this.arrowCounter < this.results.length-1) {
                 this.arrowCounter = this.arrowCounter + 1;
-                this.select(this.arrowCounter + 1);
             }
             else
                 this.arrowCounter = 0;
+            this.$nextTick(() => this.scroll(this.arrowCounter))
         },
         onArrowUp(evt) {
             if (this.arrowCounter > 0) {
                 this.arrowCounter = this.arrowCounter -1;
-                this.select(this.arrowCounter - 1);
             }
             else
                 this.arrowCounter = this.results.length-1;
+            //this.scroll(this.arrowCounter);
+            this.$nextTick(() => this.scroll(this.arrowCounter))
         },
         onEnter(evt) {
             let self = this;
@@ -143,17 +151,6 @@ export default {
 
         }
     },
-    watch: {
-        /* typeAheadResult : function() {
-            console.log("typeaheadResult length is:"+this.typeAheadResult.length)
-            this.typeAheadResult.length == 0 ? this.reset() :true} */
-
-        submitterStatus : function() {
-            if(this.submitterStatus){
-                this.query = '';
-            }
-        }
-    },
     mounted() {
         this.fetchItems();
     }
@@ -164,12 +161,12 @@ export default {
 ul{
     padding-left:0;
     z-index: 20;
+    
 }
 .autocomplete-results {
     padding: 0;
     margin: 0;
     border: 1px solid #eeeeee;
-    height: 100px;
     overflow-y: scroll;
     border-radius: .25rem;
     /* display: flex; */
@@ -179,6 +176,7 @@ ul{
 	background-color: white;
     border-color: #808080;
     position:relative;
+    max-height: 200px;
   }
 
   .autocomplete-result {
