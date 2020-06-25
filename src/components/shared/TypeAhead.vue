@@ -12,7 +12,9 @@
         >
         <ul v-show="isOpen" class="autocomplete-results" id="autocomplete-results">
             <li class="autocomplete-result"
+            
                 v-for="(result, i) in results"
+                :ref="'typeahead'+i"
                 :key="i"
                 @click="setResult(result)"
                 :class="{ 'is-active': i === arrowCounter }">
@@ -65,8 +67,11 @@ export default {
     },
 
     methods: {
+
+
         onChange() {
             let self = this;
+            this.arrowCounter = 0;
             self.fetchItems();
             if(self.items.length > 0){
                 console.log("calling filter results")
@@ -111,12 +116,20 @@ export default {
             self.$emit('selection',result)
             self.query = '';
         },
+        scroll(arrowCounter) {
+            var thisElement = this.$refs['typeahead'+arrowCounter];
+            console.log(thisElement);
+            thisElement[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); 
+            //this.$refs.chat.scrollIntoView(); 
+            
+        },
         onArrowDown(evt) {
             if (this.arrowCounter < this.results.length-1) {
                 this.arrowCounter = this.arrowCounter + 1;
             }
             else
                 this.arrowCounter = 0;
+            this.$nextTick(() => this.scroll(this.arrowCounter))
         },
         onArrowUp(evt) {
             if (this.arrowCounter > 0) {
@@ -124,6 +137,8 @@ export default {
             }
             else
                 this.arrowCounter = this.results.length-1;
+            //this.scroll(this.arrowCounter);
+            this.$nextTick(() => this.scroll(this.arrowCounter))
         },
         onEnter(evt) {
             let self = this;
@@ -148,12 +163,12 @@ export default {
 ul{
     padding-left:0;
     z-index: 20;
+    
 }
 .autocomplete-results {
     padding: 0;
     margin: 0;
     border: 1px solid #eeeeee;
-    height: 100px;
     overflow-y: scroll;
     border-radius: .25rem;
     /* display: flex; */
@@ -163,6 +178,7 @@ ul{
 	background-color: white;
     border-color: #808080;
     position:relative;
+    max-height: 200px;
   }
 
   .autocomplete-result {
