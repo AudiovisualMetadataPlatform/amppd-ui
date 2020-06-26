@@ -49,11 +49,21 @@ export default {
 	filterByDate(){
 		let self = this;
 		//preliminary validation of date
-		this.workflowDashboard.searchQuery.filterByDates[0] = self.fromDate;
-		this.workflowDashboard.searchQuery.filterByDates[1] = self.fromDate;
-		this.visible=false;
+		self.workflowDashboard.searchQuery.filterByDates = []
+		self.workflowDashboard.searchQuery.filterByDates.push(self.fromDate);
+		self.workflowDashboard.searchQuery.filterByDates.push(self.toDate);
+		console.log(self.workflowDashboard.searchQuery.filterByDates)
+		//self.workflowDashboard.searchQuery.filterByDates.push(1);
+		self.visible=false;
 	}
-  }
+  },
+  /* watch:{
+	filterByDates: function(){
+      console.log("inside watcher for filterByDates");
+      //this.workflowDashboard.searchQuery.pageNum = 1;
+      //this.refreshData();
+    }
+  } */
 }
 </script>
 <style scoped>

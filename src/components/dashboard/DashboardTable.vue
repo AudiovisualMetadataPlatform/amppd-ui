@@ -93,6 +93,7 @@ export default {
     workflowDashboard: sync("workflowDashboard"),
     filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
     filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
+    filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
     //typeAheadResult: sync("typeAheadResult"),
     visibleRows(){
       let self=this;
@@ -119,6 +120,7 @@ export default {
       this.refreshData();
     },
     async refreshData(){
+      //console.log("refreshing data");
       this.workflowDashboard.loading = true;
       this.workflowDashboard.searchResult = await this.dashboardService.getDashboardResults(this.workflowDashboard.searchQuery);
       this.workflowDashboard.loading = false;
@@ -138,6 +140,12 @@ export default {
       this.refreshData();
     },
     filterBySubmitters: function(){
+      console.log("inside watcher for filterByDates");
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByDates: function(){
+      console.log("inside watcher for filterByDates");
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     }
