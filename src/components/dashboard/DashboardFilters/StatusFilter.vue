@@ -91,7 +91,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style src="vue-multiselect/dist/vue-multiselect.min.css">
+<style scoped>
   .status{
 	margin:0.2rem;
   }
