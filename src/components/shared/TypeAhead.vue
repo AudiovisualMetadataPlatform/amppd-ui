@@ -4,7 +4,7 @@
             v-model="query"
             type="text" 
             :placeholder="placeholder"
-            class="form-control bootstrap-typeahead"
+            class="form-control"
             @input="onChange"
             @keydown.down="onArrowDown"
             @keydown.up="onArrowUp"
@@ -12,7 +12,9 @@
         >
         <ul v-show="isOpen" class="autocomplete-results" id="autocomplete-results">
             <li class="autocomplete-result"
+            
                 v-for="(result, i) in results"
+                :ref="'typeahead'+i"
                 :key="i"
                 @click="setResult(result)"
                 :class="{ 'is-active': i === arrowCounter }">
@@ -49,7 +51,8 @@ export default {
         placeholder: {
             type: String,
             default: ''
-        }
+        },
+
 	},   
 	data() {
         return {
@@ -61,12 +64,11 @@ export default {
             isOpen: false
         }
 	},	
-    computed: {
-    },
 
     methods: {
         onChange() {
             let self = this;
+            this.arrowCounter = 0;
             self.fetchItems();
             if(self.items.length > 0){
                 console.log("calling filter results")
@@ -102,7 +104,10 @@ export default {
             console.log("self.source is:"+self.source);
         },
         reset() {
-            this.query = ''
+            console.log("inside reset");
+            this.query = '';
+            this.isOpen = false;
+
         },
         setResult(result) {
             let self = this;
@@ -111,12 +116,17 @@ export default {
             self.$emit('selection',result)
             self.query = '';
         },
+        scroll() {
+            var thisElement = this.$refs['typeahead'+this.arrowCounter];
+            thisElement[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); 
+        },
         onArrowDown(evt) {
             if (this.arrowCounter < this.results.length-1) {
                 this.arrowCounter = this.arrowCounter + 1;
             }
             else
                 this.arrowCounter = 0;
+            this.$nextTick(() => this.scroll())
         },
         onArrowUp(evt) {
             if (this.arrowCounter > 0) {
@@ -124,6 +134,8 @@ export default {
             }
             else
                 this.arrowCounter = this.results.length-1;
+            //this.scroll(this.arrowCounter);
+            this.$nextTick(() => this.scroll())
         },
         onEnter(evt) {
             let self = this;
@@ -136,8 +148,6 @@ export default {
 
         }
     },
-    watch: {
-    },
     mounted() {
         this.fetchItems();
     }
@@ -148,12 +158,12 @@ export default {
 ul{
     padding-left:0;
     z-index: 20;
+    
 }
 .autocomplete-results {
     padding: 0;
     margin: 0;
     border: 1px solid #eeeeee;
-    height: 100px;
     overflow-y: scroll;
     border-radius: .25rem;
     /* display: flex; */
@@ -163,6 +173,7 @@ ul{
 	background-color: white;
     border-color: #808080;
     position:relative;
+    max-height: 200px;
   }
 
   .autocomplete-result {
