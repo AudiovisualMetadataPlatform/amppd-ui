@@ -29,7 +29,7 @@
               <td>{{ rec.sourceFilename }}</td>
               <td>{{ rec.workflowStep }}</td>
               <td v-if="rec.outputPath == null">{{ rec.outputFile }}</td>
-              <td v-else-if="rec.outputPath != null"><a v-bind:href="getOutputUrl(rec)">{{ rec.outputFile }}</a></td>
+              <td v-else-if="rec.outputPath != null"><a v-bind:href="getOutputUrl(rec)" target="_blank">{{ rec.outputFile }}</a></td>
               <td> 
                 <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
                 <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width ">In Progress</button>
@@ -66,7 +66,7 @@ import SearchFilter from './DashboardFilters/SearchFilter';
 import Loader from '@/components/shared/Loader.vue';
 
 export default {
-  name: 'WorkflowDashboardTable',
+  name: 'DashboardTable',
   components:{
     SortableHeader,
     Pagination,
@@ -86,14 +86,17 @@ export default {
         {label: 'Status', field: 'status'},
       ],
       dashboardService: new DashboardService(),
-      //submitterFilterEnabled : false
     }
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
     filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
     filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
-    //typeAheadResult: sync("typeAheadResult"),
+    filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
+    filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
+    filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
+    filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
+    filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
@@ -140,7 +143,27 @@ export default {
     filterBySubmitters: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
-    }
+    },
+    filterByWorkflows: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByItems: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByFiles: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterBySteps: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByStatuses: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
   }
 
 

@@ -25,11 +25,66 @@
                     <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(submitter,index) in workflowDashboard.searchQuery.filterBySubmitters" v-bind:submitter="submitter" v-bind:index="index" v-bind:key="submitter.id"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeSubmitterFilter(index)">
-                        <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
+                          <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
                           <label class="row label-bold no-padding-col">Submitter </label>
                           <label class="row no-padding-col">{{submitter}}</label>
+                        </div>
+                      </div>
+                    </button>       
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(workflow,index) in workflowDashboard.searchQuery.filterByWorkflows" v-bind:workflow="workflow" v-bind:index="index" v-bind:key="workflow.id"> 
+                      <div class="row">
+                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeWorkflowFilter(index)">
+                          <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
+                        </svg>
+                        <div class="col-sm-1">
+                          <label class="row label-bold no-padding-col">Workflow </label>
+                          <label class="row no-padding-col">{{workflow}}</label>
+                        </div>
+                      </div>
+                    </button>       
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(item,index) in workflowDashboard.searchQuery.filterByItems" v-bind:item="item" v-bind:index="index" v-bind:key="item.id"> 
+                      <div class="row">
+                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeItemFilter(index)">
+                          <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
+                        </svg>
+                        <div class="col-sm-1">
+                          <label class="row label-bold no-padding-col">Item </label>
+                          <label class="row no-padding-col">{{item}}</label>
+                        </div>
+                      </div>
+                    </button>       
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(file,index) in workflowDashboard.searchQuery.filterByFiles" v-bind:file="file" v-bind:index="index" v-bind:key="file.id"> 
+                      <div class="row">
+                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeFileFilter(index)">
+                          <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
+                        </svg>
+                        <div class="col-sm-1">
+                          <label class="row label-bold no-padding-col">File </label>
+                          <label class="row no-padding-col">{{file}}</label>
+                        </div>
+                      </div>
+                    </button>       
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(step,index) in workflowDashboard.searchQuery.filterBySteps" v-bind:step="step" v-bind:index="index" v-bind:key="step.id"> 
+                      <div class="row">
+                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeStepFilter(index)">
+                          <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
+                        </svg>
+                        <div class="col-sm-1">
+                          <label class="row label-bold no-padding-col">Step </label>
+                          <label class="row no-padding-col">{{step}}</label>
+                        </div>
+                      </div>
+                    </button>       
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(status,index) in workflowDashboard.searchQuery.filterByStatuses" v-bind:status="status" v-bind:index="index" v-bind:key="status.id"> 
+                      <div class="row">
+                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeStatusFilter(index)">
+                          <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
+                        </svg>
+                        <div class="col-sm-1">
+                          <label class="row label-bold no-padding-col">Status </label>
+                          <label class="row no-padding-col">{{status}}</label>
                         </div>
                       </div>
                     </button>       
@@ -44,7 +99,6 @@
                         </div>
                       </div>
                     </button>     
-
 
                     <button class="btn btn-outline col-sm-2 selected-filter-button" v-if="filterCount>1"> 
                       <div class="row">
@@ -88,106 +142,11 @@
                       </div>
                     </div>
                     <SubmitterFilter/>
-                    <div class="dropdown">
-                      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Workflow name
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                        <!-- -->
-                        <form class="compact-form">
-                          <div class="container-fluid ">
-                            <div class="form-check p-1">
-                              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                              <label class="form-check-label" for="defaultCheck1">
-                                Automated transcription
-                              </label>
-                            </div>
-                            <div class="form-check p-1">
-                              <input class="form-check-input" type="checkbox" value="" id="defaultCheck3">
-                              <label class="form-check-label" for="defaultCheck3">
-                                Transcript review
-                              </label>
-                            </div>
-                            <div class="form-check p-1">
-                              <input class="form-check-input" type="checkbox" value="" id="defaultCheck4">
-                              <label class="form-check-label" for="defaultCheck4">
-                                Named entity recognition
-                              </label>
-                            </div>
-                            <div class="form-check p-1">
-                              <input class="form-check-input" type="checkbox" value="" id="defaultCheck5">
-                              <label class="form-check-label" for="defaultCheck5">
-                                Segmentation
-                              </label>
-                            </div>
-                            <div class="form-check p-1">
-                              <input class="form-check-input" type="checkbox" value="" id="defaultCheck6">
-                              <label class="form-check-label" for="defaultCheck6">
-                                Natural language processing
-                              </label>
-                            </div>
-                            <div class="row">
-                              <div class="container">
-                                <div class="col-md-2"></div>
-                                <div class="col-md-2 offset-md-8">
-                                  <button class="btn btn-secondary ">Done</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                        <!-- //-->
-                      </div>
-                    </div>
-                    <!-- -->
-                    <!-- -->
-                    <div class="dropdown">
-                      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Source Item
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </div>
-                    <!-- -->
-                    <!-- -->
-                    <div class="dropdown">
-                      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Source file
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </div>
-                    <!-- -->
-                    <!-- -->
-                    <div class="dropdown">
-                      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Workflow step
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton5">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </div>
-                    <!-- -->
-                    <!-- -->
-                    <div class="dropdown">
-                      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Status
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </div>
-                    <!-- -->
+                    <WorkflowFilter/>
+                    <ItemFilter/>
+                    <FileFilter/>
+                    <StepFilter/>
+                    <StatusFilter/>
                   </div>
                   <div class="row spacer">
                   </div>
@@ -209,27 +168,42 @@ import { sync } from 'vuex-pathify'
 import Sidebar from '@/components/navigation/Sidebar.vue'; 
 import DashboardTable from '@/components/dashboard/DashboardTable.vue';
 import SubmitterFilter from '@/components/dashboard/DashboardFilters/SubmitterFilter';
+import WorkflowFilter from '@/components/dashboard/DashboardFilters/WorkflowFilter';
+import ItemFilter from '@/components/dashboard/DashboardFilters/ItemFilter';
+import FileFilter from '@/components/dashboard/DashboardFilters/FileFilter';
+import StepFilter from '@/components/dashboard/DashboardFilters/StepFilter';
+import StatusFilter from '@/components/dashboard/DashboardFilters/StatusFilter';
 
 
 export default {
-  name: 'Workflow',
+  name: 'Dashboard',
   components:{
     Sidebar,
     DashboardTable,
-    SubmitterFilter
+    SubmitterFilter,
+    WorkflowFilter,
+    ItemFilter,
+    FileFilter,
+    StepFilter,
+    StatusFilter,
   },
   data(){
     return {
       workflowSubmitted: false,
       bundle: null,
       visible : true,
-      //selectedSubmitters:[]
     }
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
     filterCount:function(){
-      return this.workflowDashboard.searchQuery.filterBySubmitters.length + this.workflowDashboard.searchQuery.filterBySearchTerm.length;
+      return this.workflowDashboard.searchQuery.filterBySubmitters.length 
+        + this.workflowDashboard.searchQuery.filterByWorkflows.length 
+        + this.workflowDashboard.searchQuery.filterByItems.length 
+        + this.workflowDashboard.searchQuery.filterByFiles.length 
+        + this.workflowDashboard.searchQuery.filterBySteps.length 
+        + this.workflowDashboard.searchQuery.filterByStatuses.length 
+        + this.workflowDashboard.searchQuery.filterBySearchTerm.length;
     }
   },
   props: {
@@ -237,6 +211,11 @@ export default {
   methods:{
     clearAll(){
       this.workflowDashboard.searchQuery.filterBySubmitters=[];
+      this.workflowDashboard.searchQuery.filterByWorkflows=[];
+      this.workflowDashboard.searchQuery.filterByItems=[];
+      this.workflowDashboard.searchQuery.filterByFiles=[];
+      this.workflowDashboard.searchQuery.filterBySteps=[];
+      this.workflowDashboard.searchQuery.filterByStatuses=[];
       this.workflowDashboard.searchQuery.filterBySearchTerm=[];
     },
     startWorkflow(){
@@ -245,12 +224,32 @@ export default {
     removeSubmitterFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySubmitters.splice(index,1);
       console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySubmitters +" and removed element is:"+removed);
-  },
+    },
+    removeWorkflowFilter(index){
+      var removed = this.workflowDashboard.searchQuery.filterByWorkflows.splice(index,1);
+      console.log("selected workflows are:"+this.workflowDashboard.searchQuery.filterByWorkflows +" and removed element is:"+removed);
+    },
+    removeItemFilter(index){
+      var removed = this.workflowDashboard.searchQuery.filterByItems.splice(index,1);
+      console.log("selected items are:"+this.workflowDashboard.searchQuery.filterByItems +" and removed element is:"+removed);
+    },
+    removeFileFilter(index){
+      var removed = this.workflowDashboard.searchQuery.filterByFiles.splice(index,1);
+      console.log("selected files are:"+this.workflowDashboard.searchQuery.filterByFiles +" and removed element is:"+removed);
+    },
+    removeStepFilter(index){
+      var removed = this.workflowDashboard.searchQuery.filterBySteps.splice(index,1);
+      console.log("selected steps are:"+this.workflowDashboard.searchQuery.filterBySteps +" and removed element is:"+removed);
+    },
+    removeStatusFilter(index){
+      var removed = this.workflowDashboard.searchQuery.filterByStatuses.splice(index,1);
+      console.log("selected statuses are:"+this.workflowDashboard.searchQuery.filterByStatuses +" and removed element is:"+removed);
+    },
     removeSearchFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySearchTerm.splice(index,1);
-      console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySearchTerm +" and removed element is:"+removed);
-  }},
-
+      console.log("selected search terms are:"+this.workflowDashboard.searchQuery.filterBySearchTerm +" and removed element is:"+removed);
+    },
+  },
 }
 </script>
 
