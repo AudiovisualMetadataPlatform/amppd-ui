@@ -41,7 +41,7 @@ const state = {
             filters:{
               searchTerms:[],
               submitters:[],
-              
+              dates:[]
             }
           },
           rows:[]
