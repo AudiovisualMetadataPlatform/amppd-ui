@@ -10,7 +10,7 @@
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Status</label>
 					<div class="input-group mb-3">
-						<typeahead :source="getStatuses" filter-key="status" :start-at="1" @selection="addStatus"
+						<typeahead :source="getStatuses" filter-key="status" filter-type="contains" :start-at="1" @selection="addStatus"
 							id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search Status"/>
 						<div class="input-group-append">
 							<button class="btn btn-outline" id="btn-search" type="submit"> 

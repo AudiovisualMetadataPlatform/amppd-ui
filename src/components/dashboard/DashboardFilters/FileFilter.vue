@@ -10,7 +10,7 @@
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Source File</label>
 					<div class="input-group mb-3">
-						<typeahead :source="getFiles" filter-key="file" :start-at="1" @selection="addFile"
+						<typeahead :source="getFiles" filter-key="file" filter-type="contains" :start-at="1" @selection="addFile"
 							id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search Source File"/>
 						<div class="input-group-append">
 							<button class="btn btn-outline" id="btn-search" type="submit"> 

@@ -10,7 +10,7 @@
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Source Item</label>
 					<div class="input-group mb-3">
-						<typeahead :source="getItems" filter-key="item" :start-at="1" @selection="addItem"
+						<typeahead :source="getItems" filter-key="item" filter-type="contains" :start-at="1" @selection="addItem"
 							id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search Source Item"/>
 						<div class="input-group-append">
 							<button class="btn btn-outline" id="btn-search" type="submit"> 

@@ -8,7 +8,7 @@
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Submitter Name</label>
 					<div class="input-group mb-3">
-						<typeahead :source="getSubmitters" filter-key="submitter" :start-at="1" ref="Typeahead"
+						<typeahead :source="getSubmitters" filter-key="submitter" filter-type="contains" :start-at="1" ref="Typeahead" 
 						@selection="addSubmitter"
 						id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search Submitter Name"/>
 						<div class="input-group-append">
