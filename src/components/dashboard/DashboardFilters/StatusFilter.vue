@@ -6,11 +6,16 @@
 		</button>
 		<div class="dropdown-menu compact-form" :class="{ 'show' : visible === true }" aria-labelledby="dropdownMenuButton" 
 			x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
-			<multiselect
+      <b-form-checkbox-group
+        v-model="selectedStatuses"
+        :options="getStatuses"
+        stacked
+      ></b-form-checkbox-group>
+			<!-- <multiselect
 				v-model="selectedStatuses"
 				:multiple="true"
 				:options="getStatuses">
-			</multiselect>
+			</multiselect> -->
 			<button class="btn btn-info" type="button" @click="closeFilter()">
         Done
       </button>
@@ -21,12 +26,16 @@
 <script>
 import { sync } from 'vuex-pathify'
 import _ from 'underscore';
-import Multiselect from 'vue-multiselect';
+import { BFormCheckboxGroup } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+// import Multiselect from 'vue-multiselect';
 
 export default {
   name: 'StatusFilter',
   components:{
-		Multiselect,
+		BFormCheckboxGroup,
+		// Multiselect,
   },
   data(){
     return {
