@@ -44,14 +44,14 @@
                         </div>
                       </div>
                     </button>     
-                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(searchTerm,index) in workflowDashboard.searchQuery.filterBySearchTerm" v-bind:searchTerm="searchTerm" v-bind:index="index" v-bind:key="index"> 
+                    <button class="btn btn-outline col-sm-2 selected-filter-button"> 
                       <div class="row">
-                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeSearchFilter(index)">
+                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeDateFilter()">
                         <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Search Term </label>
-                          <label class="row no-padding-col">{{searchTerm}}</label>
+                          <label class="row label-bold no-padding-col">Date Range </label>
+                          <label class="row no-padding-col">{{workflowDashboard.searchQuery.filterByDates[0]}} - {{workflowDashboard.searchQuery.filterByDates[1]}}</label>
                         </div>
                       </div>
                     </button>     
@@ -216,7 +216,7 @@ export default {
   computed:{
     workflowDashboard: sync("workflowDashboard"),
     filterCount:function(){
-      return this.workflowDashboard.searchQuery.filterBySubmitters.length + this.workflowDashboard.searchQuery.filterBySearchTerm.length;
+      return this.workflowDashboard.searchQuery.filterBySubmitters.length + this.workflowDashboard.searchQuery.filterBySearchTerm.length+this.workflowDashboard.searchQuery.filterByDates.length;
     }
   },
   props: {
@@ -225,6 +225,7 @@ export default {
     clearAll(){
       this.workflowDashboard.searchQuery.filterBySubmitters=[];
       this.workflowDashboard.searchQuery.filterBySearchTerm=[];
+      this.workflowDashboard.searchQuery.filterByDates = [];
     },
     startWorkflow(){
       this.$router.push('/workflow/submit');
@@ -232,11 +233,14 @@ export default {
     removeSubmitterFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySubmitters.splice(index,1);
       console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySubmitters +" and removed element is:"+removed);
-  },
+    },
     removeSearchFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySearchTerm.splice(index,1);
-      console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySearchTerm +" and removed element is:"+removed);
-  },
+    },
+    removeDateFilter() {
+      this.workflowDashboard.searchQuery.filterByDates = []
+      console.log("current date filter is:"+this.workflowDashboard.searchQuery.filterByDates);
+    }
   },
 
 }
