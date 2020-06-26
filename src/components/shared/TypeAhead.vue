@@ -116,12 +116,9 @@ export default {
             self.$emit('selection',result)
             self.query = '';
         },
-        scroll(arrowCounter) {
-            var thisElement = this.$refs['typeahead'+arrowCounter];
-            console.log(thisElement);
+        scroll() {
+            var thisElement = this.$refs['typeahead'+this.arrowCounter];
             thisElement[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); 
-            //this.$refs.chat.scrollIntoView(); 
-            
         },
         onArrowDown(evt) {
             if (this.arrowCounter < this.results.length-1) {
@@ -129,7 +126,7 @@ export default {
             }
             else
                 this.arrowCounter = 0;
-            this.$nextTick(() => this.scroll(this.arrowCounter))
+            this.$nextTick(() => this.scroll())
         },
         onArrowUp(evt) {
             if (this.arrowCounter > 0) {
@@ -138,7 +135,7 @@ export default {
             else
                 this.arrowCounter = this.results.length-1;
             //this.scroll(this.arrowCounter);
-            this.$nextTick(() => this.scroll(this.arrowCounter))
+            this.$nextTick(() => this.scroll())
         },
         onEnter(evt) {
             let self = this;

@@ -63,7 +63,6 @@ export default {
   computed:{
 	workflowDashboard: sync("workflowDashboard"),
 	submitters: sync("workflowDashboard.searchResult.filters.submitters"),
-	typeAheadResult: sync("typeAheadResult"),
 	getSubmitters(){
         if(!this.submitters) return [];
 		return this.submitters;
