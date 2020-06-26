@@ -10,7 +10,7 @@
         v-model="selectedStatuses"
         :options="getStatuses"
         stacked
-      ></b-form-checkbox-group>
+      />
 			<!-- <multiselect
 				v-model="selectedStatuses"
 				:multiple="true"
