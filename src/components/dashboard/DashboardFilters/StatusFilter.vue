@@ -27,8 +27,6 @@
 import { sync } from 'vuex-pathify'
 import _ from 'underscore';
 import { BFormCheckboxGroup } from 'bootstrap-vue';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
 // import Multiselect from 'vue-multiselect';
 
 export default {

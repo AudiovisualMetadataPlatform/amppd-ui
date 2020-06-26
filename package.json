@@ -19,7 +19,6 @@
     "eslint-config-standard": "^14.1.0",
     "eslint-loader": "^3.0.2",
     "eslint-plugin-react": "^7.20.0",
-    "mdbvue": "6.7.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "sass-loader": "^8.0.2",
@@ -48,7 +47,6 @@
     "node-sass": "^4.14.1",
     "prettier": "^1.18.2",
     "sass-loader": "8.0.2",
-    "vue-cli-plugin-mdb": "~2.1.0",
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {
