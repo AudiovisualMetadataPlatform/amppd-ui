@@ -52,7 +52,8 @@ export default {
 		self.workflowDashboard.searchQuery.filterByDates = []
 		self.workflowDashboard.searchQuery.filterByDates.push(self.fromDate);
 		self.workflowDashboard.searchQuery.filterByDates.push(self.toDate);
-		console.log(self.workflowDashboard.searchQuery.filterByDates)
+		console.log("fromdate:",self.workflowDashboard.searchQuery.filterByDates[0]);
+		console.log("todate:",self.workflowDashboard.searchQuery.filterByDates[1]);
 		//self.workflowDashboard.searchQuery.filterByDates.push(1);
 		self.visible=false;
 	}
