@@ -7,7 +7,7 @@
 		<div class="dropdown-menu compact-form" :class="{ 'show' : visible === true }" aria-labelledby="dropdownMenuButton" 
 			x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
       <b-form-checkbox-group
-        v-model="selectedStatuses"
+        v-model="workflowDashboard.searchQuery.filterByStatuses"
         :options="getStatuses"
         stacked
       />
@@ -46,6 +46,7 @@ export default {
   computed:{
 		workflowDashboard: sync("workflowDashboard"),
 		statuses: sync("workflowDashboard.searchResult.filters.statuses"),
+		// filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
 		getStatuses(){
 			if(!this.statuses) return [];
 			return this.statuses;
