@@ -151,7 +151,7 @@ export default {
 
         }
     },
-    watch: {
+    watch: {   
     },
     mounted() {
         this.fetchItems();
