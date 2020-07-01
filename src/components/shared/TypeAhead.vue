@@ -4,7 +4,7 @@
             v-model="query"
             type="text" 
             :placeholder="placeholder"
-            class="form-control bootstrap-typeahead"
+            class="form-control"
             @input="onChange"
             @keydown.down="onArrowDown"
             @keydown.up="onArrowUp"
@@ -51,7 +51,8 @@ export default {
         placeholder: {
             type: String,
             default: ''
-        }
+        },
+
 	},   
 	data() {
         return {
@@ -63,8 +64,6 @@ export default {
             isOpen: false
         }
 	},	
-    computed: {
-    },
 
     methods: {
 
@@ -107,7 +106,10 @@ export default {
             console.log("self.source is:"+self.source);
         },
         reset() {
-            this.query = ''
+            console.log("inside reset");
+            this.query = '';
+            this.isOpen = false;
+
         },
         setResult(result) {
             let self = this;
@@ -116,12 +118,9 @@ export default {
             self.$emit('selection',result)
             self.query = '';
         },
-        scroll(arrowCounter) {
-            var thisElement = this.$refs['typeahead'+arrowCounter];
-            console.log(thisElement);
+        scroll() {
+            var thisElement = this.$refs['typeahead'+this.arrowCounter];
             thisElement[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); 
-            //this.$refs.chat.scrollIntoView(); 
-            
         },
         onArrowDown(evt) {
             if (this.arrowCounter < this.results.length-1) {
@@ -129,7 +128,7 @@ export default {
             }
             else
                 this.arrowCounter = 0;
-            this.$nextTick(() => this.scroll(this.arrowCounter))
+            this.$nextTick(() => this.scroll())
         },
         onArrowUp(evt) {
             if (this.arrowCounter > 0) {
@@ -137,8 +136,7 @@ export default {
             }
             else
                 this.arrowCounter = this.results.length-1;
-            //this.scroll(this.arrowCounter);
-            this.$nextTick(() => this.scroll(this.arrowCounter))
+            this.$nextTick(() => this.scroll())
         },
         onEnter(evt) {
             let self = this;
@@ -150,8 +148,6 @@ export default {
             self.query = '';
 
         }
-    },
-    watch: {   
     },
     mounted() {
         this.fetchItems();

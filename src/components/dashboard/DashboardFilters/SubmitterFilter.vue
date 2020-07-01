@@ -8,7 +8,7 @@
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Submitter Name</label>
 					<div class="input-group mb-3">
-						<typeahead :source="getSubmitters" filter-key="submitter" :start-at="1"
+						<typeahead :source="getSubmitters" filter-key="submitter" filter-type="contains" :start-at="1" ref="Typeahead" 
 						@selection="addSubmitter"
 						id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search Submitter Name"/>
 						<div class="input-group-append">
@@ -47,7 +47,7 @@ import { sync } from 'vuex-pathify'
 import Typeahead from '../../shared/TypeAhead.vue';
 
 export default {
-  name: 'Workflow',
+  name: 'SubmitterFilter',
   components:{
 	Typeahead
   },
@@ -56,12 +56,12 @@ export default {
 		visible : false,
 		submitterList:[],
 		filterSuccess:false,
-		selectedSubmitters : []
+		selectedSubmitters : [],
     }
   },
   computed:{
 	workflowDashboard: sync("workflowDashboard"),
-    submitters: sync("workflowDashboard.searchResult.filters.submitters"),
+	submitters: sync("workflowDashboard.searchResult.filters.submitters"),
 	getSubmitters(){
         if(!this.submitters) return [];
 		return this.submitters;
@@ -90,12 +90,15 @@ export default {
 	},
 	closeFilter(){
 		this.visible=false;
+		console.log("Done was clicked")
+		this.$refs.Typeahead.reset();
+		
 	}
   },
   
   watch: {
 	selectedSubmitters: function() {
-		this.selectedSubmitters.length>0 ? this.workflowDashboard.filtersEnabled.submitterFilter = true : this.workflowDashboard.filtersEnabled.submitterFilter = false}
+		this.selectedSubmitters.length>0 ? this.workflowDashboard.filtersEnabled.submitterFilter = true : this.workflowDashboard.filtersEnabled.submitterFilter = false},
   }, 
   
 }
@@ -109,6 +112,7 @@ export default {
   .bootstrap-typeahead{
 	height: calc(2.25rem + 1px);
 	padding: 0rem 0rem;
+	border: 0ch;
   }
 
   .main-dropdown{
