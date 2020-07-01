@@ -33,14 +33,12 @@ export default {
 	data(){
     return {
 	visible : false,
-	fromDate : '',
-	toDate : ''
+	fromDate : new Date(),
+	toDate : new Date()
     }
   },
   computed:{
 	workflowDashboard: sync("workflowDashboard"),
-    //dates: sync("workflowDashboard.searchResult.filters.submitters"),
-
   },
   methods:{
 	closeFilter(){
@@ -48,23 +46,13 @@ export default {
 	},
 	filterByDate(){
 		let self = this;
-		//preliminary validation of date
+		//TODO : preliminary validation of date
 		self.workflowDashboard.searchQuery.filterByDates = []
-		self.workflowDashboard.searchQuery.filterByDates.push(self.fromDate);
-		self.workflowDashboard.searchQuery.filterByDates.push(self.toDate);
-		console.log("fromdate:",self.workflowDashboard.searchQuery.filterByDates[0]);
-		console.log("todate:",self.workflowDashboard.searchQuery.filterByDates[1]);
-		//self.workflowDashboard.searchQuery.filterByDates.push(1);
+		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.fromDate.replace("-", '/')));
+		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.toDate.replace("-", '/')));
 		self.visible=false;
 	}
   },
-  /* watch:{
-	filterByDates: function(){
-      console.log("inside watcher for filterByDates");
-      //this.workflowDashboard.searchQuery.pageNum = 1;
-      //this.refreshData();
-    }
-  } */
 }
 </script>
 <style scoped>

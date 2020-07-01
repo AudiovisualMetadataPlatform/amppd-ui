@@ -51,7 +51,8 @@
                         </svg>
                         <div class="col-sm-1">
                           <label class="row label-bold no-padding-col">Date Range </label>
-                          <label class="row no-padding-col">{{workflowDashboard.searchQuery.filterByDates[0]}} - {{workflowDashboard.searchQuery.filterByDates[1]}}</label>
+                          <label class="row no-padding-col">{{workflowDashboard.searchQuery.filterByDates[0].getMonth()+1}}/{{workflowDashboard.searchQuery.filterByDates[0].getDate()}}/{{workflowDashboard.searchQuery.filterByDates[0].getFullYear()}}
+                             - {{workflowDashboard.searchQuery.filterByDates[1].getMonth()+1}}/{{workflowDashboard.searchQuery.filterByDates[1].getDate()}}/{{workflowDashboard.searchQuery.filterByDates[1].getFullYear()}}</label>
                         </div>
                       </div>
                     </button>     
@@ -216,7 +217,10 @@ export default {
   computed:{
     workflowDashboard: sync("workflowDashboard"),
     filterCount:function(){
-      return this.workflowDashboard.searchQuery.filterBySubmitters.length + this.workflowDashboard.searchQuery.filterBySearchTerm.length+this.workflowDashboard.searchQuery.filterByDates.length;
+      var dateFilter = 0;
+      if(this.workflowDashboard.searchQuery.filterByDates.length > 0)
+        dateFilter = 1;
+      return this.workflowDashboard.searchQuery.filterBySubmitters.length + this.workflowDashboard.searchQuery.filterBySearchTerm.length+dateFilter;
     }
   },
   props: {
