@@ -92,6 +92,7 @@ export default {
     workflowDashboard: sync("workflowDashboard"),
     filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
     filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
+    filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
     filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
     filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
     filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
@@ -122,6 +123,7 @@ export default {
       this.refreshData();
     },
     async refreshData(){
+      //console.log("refreshing data");
       this.workflowDashboard.loading = true;
       this.workflowDashboard.searchResult = await this.dashboardService.getDashboardResults(this.workflowDashboard.searchQuery);
       this.workflowDashboard.loading = false;
@@ -144,6 +146,13 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
+
+    filterByDates: function(){
+      console.log("inside watcher for filterByDates",this.filterByDates[0]," ",this.filterByDates[1]);
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+
     filterByWorkflows: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
@@ -164,6 +173,7 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
+
   }
 
 
