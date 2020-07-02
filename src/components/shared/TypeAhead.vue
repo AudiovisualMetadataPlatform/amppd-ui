@@ -66,6 +66,8 @@ export default {
 	},	
 
     methods: {
+
+
         onChange() {
             let self = this;
             this.arrowCounter = 0;
@@ -134,7 +136,6 @@ export default {
             }
             else
                 this.arrowCounter = this.results.length-1;
-            //this.scroll(this.arrowCounter);
             this.$nextTick(() => this.scroll())
         },
         onEnter(evt) {
