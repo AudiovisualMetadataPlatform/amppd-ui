@@ -6,10 +6,6 @@
       <div>
         <div class="header-row">
           <h1>Transcript Editor</h1>
-          <div class="action-buttons">
-            <input type="button" class="primary-button" v-on:click="complete" value="Complete"/>
-            <input type="button" class="secondary-button" v-on:click="reset" value="Reset"/>
-          </div>
         </div>
         <BBCTranscriptEditor :key="key"
           v-if="transcriptDataValue && sttType"
@@ -23,12 +19,48 @@
           :ref="player"
         >
         </BBCTranscriptEditor>
+        
+        <div class="action-buttons">
+          <input type="button" class="primary-button" v-on:click="showCompleteModal = true" value="Complete"/>
+          <input type="button" class="secondary-button" v-on:click="showResetModal = true" value="Reset"/>
+          <input type="button" class="secondary-button" v-on:click="showSaveModal = true" value="Save and Close"/>
+        </div>
       </div>
     </div>
-    <modal v-if="showModal" @close="modalDismiss">
+  <modal v-if="showModal" @close="modalDismiss">
     <h3  slot="header">{{modalHeader}}</h3>
     <div slot="body">
        {{modalBody}}
+    </div>
+  </modal>
+  <modal v-if="showSaveModal" @close="saveModalCancel">
+    <h3  slot="header">Are you sure?</h3>
+    <div slot="body">
+       Are you sure you want to save and close?
+    </div>
+    <div slot="footer">
+          <input type="button" class="secondary-button" v-on:click="saveModalCancel" value="Cancel"/>
+          <input type="button" class="primary-button" v-on:click="saveModal" value="Yes"/>
+    </div>
+  </modal>
+  <modal v-if="showResetModal" @close="resetModalCancel">
+    <h3  slot="header">Are you sure?</h3>
+    <div slot="body">
+       Are you sure you want to reset the transcript to the original text?
+    </div>
+    <div slot="footer">
+          <input type="button" class="secondary-button" v-on:click="resetModalCancel" value="Cancel"/>
+          <input type="button" class="primary-button" v-on:click="resetModalYes" value="Yes"/>
+    </div>
+  </modal>
+  <modal v-if="showCompleteModal" @close="completeModalCancel">
+    <h3  slot="header">Are you sure?</h3>
+    <div slot="body">
+       Are you sure you want to complete the transcript?
+    </div>
+    <div slot="footer">
+          <input type="button" class="secondary-button" v-on:click="completeModalCancel" value="Cancel"/>
+          <input type="button" class="primary-button" v-on:click="completeModalYes" value="Yes"/>
     </div>
   </modal>
   </div>
@@ -62,6 +94,9 @@ export default {
       modalHeader:"",
       modalBody:"",
       showModal: false,
+      showSaveModal: false,
+      showResetModal: false,
+      showCompleteModal: false,
       modalDismiss: null,
       transcriptType: 1
     }
@@ -165,6 +200,27 @@ export default {
       this.setData(response.content, response.temporaryFile);
       this.forceRender();
     },
+    async saveModal(){
+      this.showSaveModal = false;
+      this.$router.push({ path: '/' });
+    },
+    async saveModalCancel(){
+      this.showSaveModal = false;
+    },
+    async resetModalYes(){
+      this.reset();
+      this.showResetModal = false;
+    },
+    async resetModalCancel(){
+      this.showResetModal = false;
+    },
+    async completeModalYes(){
+      this.complete();
+      this.showCompleteModal = false;
+    },
+    async completeModalCancel(){
+      this.showCompleteModal = false;
+    },
     // Save temporary changes
     async saveTemporary(request){
       saveTranscript(JSON.stringify(request.data), this.fileName);
@@ -192,7 +248,7 @@ h2, h3{
   margin-top: 0;
 }
 .transcript-content{
-  padding-top:100px;
+  padding-top:50px;
   display: flex;
   flex-direction: column;
 }
@@ -200,8 +256,10 @@ h2, h3{
   display:flex;
   justify-content: space-between;
 }
+.action-buttons{
+  margin-top:40px;
+}
 .primary-button{
-    margin-top: 30px;
     float: right;
     background-color: #E9972D;
     color: #2C5B7F;
@@ -217,7 +275,6 @@ h2, h3{
     font-size: 12px;
 }
 .secondary-button{
-    margin-top: 30px;
     float: right;
     background-color: #ffffff;
     color: #2C5B7F;
