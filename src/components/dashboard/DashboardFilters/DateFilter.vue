@@ -14,7 +14,7 @@
 		<div class="form-group row">
 		<label for="colFormLabelFrom2" class="col-sm-4 col-form-label col-form-label-sm text-right">To</label>
 		<div class="col-sm-8">
-			<input type="date" class="form-control form-control-sm" id="colFormLabelFrom2" v-model="toDate">
+			<input type="date" :max="getMaxDate()" :min="fromDate" class="form-control form-control-sm" id="colFormLabelFrom2" v-model="toDate">
 		</div>
 		</div>
 		<div class="form-group row">
@@ -54,17 +54,6 @@ export default {
 	},
 	getMaxDate(){
 		console.log("inside getMaxDate()");
-		/* var dt = new Date();
-		var month = dt.getMonth() + 1;
-    	var day = dt.getDate();
-    	var year = dt.getFullYear();
-		if(month < 10)
-			month = '0' + month.toString();
-		if(day < 10)
-			day = '0' + day.toString();
-		//var maxDate = year + '-' + month + '-' + day; 
-		var maxDate = moment(new Date()).format('YYYY-MM-DD');
-		console.log("todays date is:"+maxDate); */
 		let today = new Date(),
     	day = today.getDate(),
     	month = today.getMonth()+1, //January is 0
