@@ -8,13 +8,13 @@
 		<div class="form-group row">
 		<label for="colFormLabelFrom" class="col-sm-4 col-form-label col-form-label-sm text-right">From</label>
 		<div class="col-sm-8">
-			<input type="date" class="form-control form-control-sm" id="colFormLabelFrom" v-model="fromDate">
+			<input type="date" :max="getMaxDate()" class="form-control form-control-sm" id="colFormLabelFrom" v-model="fromDate">
 		</div>
 		</div>
 		<div class="form-group row">
 		<label for="colFormLabelFrom2" class="col-sm-4 col-form-label col-form-label-sm text-right">To</label>
 		<div class="col-sm-8">
-			<input type="date" class="form-control form-control-sm" id="colFormLabelFrom2" v-model="toDate">
+			<input type="date" :max="getMaxDate()" :min="fromDate" class="form-control form-control-sm" id="colFormLabelFrom2" v-model="toDate">
 		</div>
 		</div>
 		<div class="form-group row">
@@ -51,6 +51,22 @@ export default {
 		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.fromDate.replace("-", '/')));
 		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.toDate.replace("-", '/')));
 		self.visible=false;
+	},
+	getMaxDate(){
+		console.log("inside getMaxDate()");
+		let today = new Date(),
+    	day = today.getDate(),
+    	month = today.getMonth()+1, //January is 0
+    	year = today.getFullYear();
+        if(day<10){
+                day='0'+day
+            } 
+        if(month<10){
+            month='0'+month
+        }
+		today = year+'-'+month+'-'+day;
+		console.log("todays date :"+today);
+		return today;
 	}
   },
 }
