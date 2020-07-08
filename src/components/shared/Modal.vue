@@ -1,4 +1,4 @@
-<template> 
+<template > 
   <div class="modal modal-open fade bd-example-modal-lg show" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="padding-right: 17px; display: block;">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
@@ -68,7 +68,8 @@ export default {
 @import '/amppd-ui/src/styles/style.css';
 
 .my-modal-body{
-  height: 500px;
+  height: fit-content;
+  max-height: 500px;
   overflow-y: scroll;
 }
 
