@@ -103,9 +103,4 @@ input {
 	
 }
 
-.vdp-datepicker * {
-    box-sizing: unset;
-    
-}
-
 </style>
