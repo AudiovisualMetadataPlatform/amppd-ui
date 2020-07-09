@@ -7,14 +7,16 @@
 	<form class="">
 		<div class="form-group row">
 		<label for="colFormLabelFrom" class="col-sm-4 col-form-label col-form-label-sm text-right">From</label>
-		<div class="col-sm-8">
-			<input type="date" :max="getMaxDate()" class="form-control form-control-sm" id="colFormLabelFrom" v-model="fromDate">
+		<div >
+			<!-- <input type="date" :max="getMaxDate()" class="form-control form-control-sm" id="colFormLabelFrom" v-model="fromDate"> -->
+			<datepicker v-model="fromDate" class="form-control form-control-sm col-sm-8 my-datepicker" format="MM/dd/yyyy" state="fromstate" :disabledDates="fromstate.disabledDates"></datepicker>
 		</div>
 		</div>
 		<div class="form-group row">
 		<label for="colFormLabelFrom2" class="col-sm-4 col-form-label col-form-label-sm text-right">To</label>
-		<div class="col-sm-8">
-			<input type="date" :max="getMaxDate()" :min="fromDate" class="form-control form-control-sm" id="colFormLabelFrom2" v-model="toDate">
+		<div>
+			<!--<input type="date" :max="getMaxDate()" :min="fromDate" class="form-control form-control-sm" id="colFormLabelFrom2" v-model="toDate"> -->
+			<datepicker v-model="toDate"  class="form-control form-control-sm col-sm-8 my-datepicker" format="MM/dd/yyyy" ></datepicker>
 		</div>
 		</div>
 		<div class="form-group row">
@@ -28,17 +30,30 @@
 </template>
 <script>
 import { sync } from 'vuex-pathify'
+import Datepicker from 'vuejs-datepicker';
 export default {
 	name: 'DateFilter',
+	components:{
+	Datepicker
+	},
 	data(){
     return {
 	visible : false,
-	fromDate : new Date(),
-	toDate : new Date()
-    }
-  },
+	fromDate :  new Date(),
+	toDate : new Date(),
+	fromstate : {
+		disabledDates: {
+			from: new Date(),
+			}},
+  }},
   computed:{
 	workflowDashboard: sync("workflowDashboard"),
+	toState : {
+		disabledDates: {
+			from: new Date(),
+			to: new Date()
+			}
+		} 
   },
   methods:{
 	closeFilter(){
@@ -47,17 +62,19 @@ export default {
 	filterByDate(){
 		let self = this;
 		//TODO : preliminary validation of date
+		console.log("the from date is:"+self.fromDate);
+		console.log("the to date is:"+self.toDate);
 		self.workflowDashboard.searchQuery.filterByDates = []
-		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.fromDate.replace("-", '/')));
-		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.toDate.replace("-", '/')));
+		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.fromDate));
+		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.toDate));
 		self.visible=false;
 	},
 	getMaxDate(){
 		console.log("inside getMaxDate()");
 		let today = new Date(),
-    	day = today.getDate(),
-    	month = today.getMonth()+1, //January is 0
-    	year = today.getFullYear();
+    day = today.getDate(),
+    month = today.getMonth()+1, //January is 0
+    year = today.getFullYear();
         if(day<10){
                 day='0'+day
             } 
@@ -71,6 +88,20 @@ export default {
   },
 }
 </script>
-<style scoped>
+<style>
+input {
+	width: -webkit-fill-available;
+	border-radius: 4px;
+}
+
+.my-datepicker{
+	border: none;
+	
+}
+
+.vdp-datepicker * {
+    box-sizing: unset;
+    
+}
 
 </style>
