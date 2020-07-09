@@ -8,14 +8,12 @@
 		<div class="form-group row">
 		<label for="colFormLabelFrom" class="col-sm-4 col-form-label col-form-label-sm text-right">From</label>
 		<div >
-			<!-- <input type="date" :max="getMaxDate()" class="form-control form-control-sm" id="colFormLabelFrom" v-model="fromDate"> -->
 			<datepicker v-model="fromDate" class="form-control form-control-sm col-sm-8 my-datepicker" format="MM/dd/yyyy" v-on:input="setDisabledDate()"></datepicker>
 		</div>
 		</div>
 		<div class="form-group row">
 		<label for="colFormLabelFrom2" class="col-sm-4 col-form-label col-form-label-sm text-right">To</label>
 		<div>
-			<!--<input type="date" :max="getMaxDate()" :min="fromDate" class="form-control form-control-sm" id="colFormLabelFrom2" v-model="toDate"> -->
 			<datepicker v-model="toDate"  class="form-control form-control-sm col-sm-8 my-datepicker" format="MM/dd/yyyy"  :disabled-dates="state.disabledDates"></datepicker>
 		</div>
 		</div>
@@ -41,10 +39,6 @@ export default {
 	visible : false,
 	fromDate :  new Date(),
 	toDate : new Date(),
-	/* fromstate : {
-		disabledDates: {
-			from: new Date(),
-			}}, */
 	state : {
 		disabledDates: {
 			to: new Date()
@@ -52,8 +46,7 @@ export default {
 		} 
   }},
   computed:{
-	workflowDashboard: sync("workflowDashboard"),
-	
+	workflowDashboard: sync("workflowDashboard")
   },
   methods:{
 	setDisabledDate(){
@@ -65,9 +58,6 @@ export default {
 	},
 	filterByDate(){
 		let self = this;
-		//TODO : preliminary validation of date
-		console.log("the from date is:"+self.fromDate);
-		console.log("the to date is:"+self.toDate);
 		self.workflowDashboard.searchQuery.filterByDates = []
 		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.fromDate));
 		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.toDate));
@@ -76,9 +66,8 @@ export default {
 	getMaxDate(){
 		console.log("inside getMaxDate()");
 		let today = new Date(),
-    day = today.getDate(),
-    month = today.getMonth()+1, //January is 0
-    year = today.getFullYear();
+		day = today.getDate(), month = today.getMonth()+1, //January is 0
+		year = today.getFullYear();
         if(day<10){
                 day='0'+day
             } 
@@ -97,10 +86,8 @@ input {
 	width: -webkit-fill-available;
 	border-radius: 4px;
 }
-
 .my-datepicker{
 	border: none;
-	
 }
 
 </style>
