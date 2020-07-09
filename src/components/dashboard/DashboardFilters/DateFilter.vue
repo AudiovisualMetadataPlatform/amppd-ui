@@ -9,14 +9,14 @@
 		<label for="colFormLabelFrom" class="col-sm-4 col-form-label col-form-label-sm text-right">From</label>
 		<div >
 			<!-- <input type="date" :max="getMaxDate()" class="form-control form-control-sm" id="colFormLabelFrom" v-model="fromDate"> -->
-			<datepicker v-model="fromDate" class="form-control form-control-sm col-sm-8 my-datepicker" format="MM/dd/yyyy" state="fromstate" :disabledDates="fromstate.disabledDates"></datepicker>
+			<datepicker v-model="fromDate" class="form-control form-control-sm col-sm-8 my-datepicker" format="MM/dd/yyyy" v-on:input="setDisabledDate()"></datepicker>
 		</div>
 		</div>
 		<div class="form-group row">
 		<label for="colFormLabelFrom2" class="col-sm-4 col-form-label col-form-label-sm text-right">To</label>
 		<div>
 			<!--<input type="date" :max="getMaxDate()" :min="fromDate" class="form-control form-control-sm" id="colFormLabelFrom2" v-model="toDate"> -->
-			<datepicker v-model="toDate"  class="form-control form-control-sm col-sm-8 my-datepicker" format="MM/dd/yyyy" ></datepicker>
+			<datepicker v-model="toDate"  class="form-control form-control-sm col-sm-8 my-datepicker" format="MM/dd/yyyy"  :disabled-dates="state.disabledDates"></datepicker>
 		</div>
 		</div>
 		<div class="form-group row">
@@ -41,21 +41,25 @@ export default {
 	visible : false,
 	fromDate :  new Date(),
 	toDate : new Date(),
-	fromstate : {
+	/* fromstate : {
 		disabledDates: {
 			from: new Date(),
-			}},
-  }},
-  computed:{
-	workflowDashboard: sync("workflowDashboard"),
-	toState : {
+			}}, */
+	state : {
 		disabledDates: {
-			from: new Date(),
 			to: new Date()
 			}
 		} 
+  }},
+  computed:{
+	workflowDashboard: sync("workflowDashboard"),
+	
   },
   methods:{
+	setDisabledDate(){
+		let self = this;
+		self.state.disabledDates.to = new Date(self.fromDate);
+	},
 	closeFilter(){
 		this.visible=false;
 	},
