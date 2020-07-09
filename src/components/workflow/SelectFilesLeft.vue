@@ -25,22 +25,11 @@
          <div class="container-fluid">
             <div class="row">
                <div class="col-12">
-                  <!--div class="col-8">
-                     <label for="exampleFormControlInput100" class="sr-only">Search</label>
-                     <input type="email" class="form-control" id="exampleFormControlInput100" placeholder="filter">
-                       </div>
-                       <div class="col-3">
-                     <button class="btn">
-                     <svg class="icon-filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 472.6 472.6"><polygon points="472.6 12.9 0 12.9 180.1 202.6 180.1 459.7 292.6 401.5 292.5 202.6 "/></svg>
-                     
-                       Apply filter
-                     </button>
-                     </div -->
                   <div class="input-group mb-3">
                      <label for="exampleFormControlInput100" class="sr-only">Search</label>
-                     <input type="email" class="form-control" id="exampleFormControlInput100" placeholder="filter">
+                     <input type="text" class="form-control" id="exampleFormControlInput100" placeholder="filter" v-model="searchWord">
                      <div class="input-group-append">
-                        <button class="btn">
+                        <button class="btn" v-on:click="searchFiles()">
                            <svg class="icon-filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 472.6 472.6">
                               <polygon points="472.6 12.9 0 12.9 180.1 202.6 180.1 459.7 292.6 401.5 292.5 202.6 "></polygon>
                            </svg>
@@ -52,19 +41,7 @@
             </div>
          </div>
       </div>
-      <!--div class="row">
-         <div class="col">
-           <input type="text" class="form-control" placeholder="First name">
-         </div>
-         <div class="col">
-           <button class="btn">
-           <svg class="icon-filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 472.6 472.6"><polygon points="472.6 12.9 0 12.9 180.1 202.6 180.1 459.7 292.6 401.5 292.5 202.6 "/></svg>
-         
-             Apply filter
-           </button>
-         </div>
-         </div -->
-      <div>
+     <div>
       </div>
    </form>
    <div>
@@ -270,3 +247,28 @@
    </div>
 </div>
 </template>
+<script>
+import { sync } from 'vuex-pathify';
+import WorkflowService from '../../service/workflow-service';
+export default {
+	name: 'selectFilesLeft',
+    data(){
+		return {
+		searchAudio : false,
+		searchVideo : false,
+		searchWord : ''
+		}
+	},
+	methods:{
+       searchFiles() {
+         let self = this;
+         console.log("the search word is:", this.searchWord);
+         self.searchedFiles = self.workflowService.searchFiles(this.searchWord).then(response => {
+         self.searchedFiles = response.data._embedded.primaryfiles;
+         })
+         .catch(e => {
+         console.log(e);});  
+	}
+	}
+}
+</script>
