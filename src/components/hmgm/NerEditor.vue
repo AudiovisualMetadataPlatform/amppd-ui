@@ -5,7 +5,7 @@
     <div class="ner-content">
       <div>
         <div class="header-row">
-          <h1>NER Editor</h1>
+          <h2>NER Editor</h2>
           <div class="action-buttons">
             <input type="button" class="primary-button" v-on:click="complete" value="Complete"/>
             <input type="button" class="secondary-button" v-on:click="reset" value="Reset"/>
@@ -156,7 +156,7 @@ h2, h3{
   margin-top: 0;
 }
 .ner-content{
-  padding-top:10px;
+  padding-top:0px;
   display: flex;
   flex-direction: column;
 }
@@ -165,12 +165,11 @@ h2, h3{
   justify-content: space-between;
 }
 .primary-button{
-    margin-top: 30px;
     float: right;
     background-color: #E9972D;
     color: #2C5B7F;
     font: bolder;
-    padding: 10px 20px;
+    padding: 5px 20px;
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;
@@ -181,12 +180,11 @@ h2, h3{
     font-size: 12px;
 }
 .secondary-button{
-    margin-top: 30px;
     float: right;
     background-color: #ffffff;
     color: #2C5B7F;
     font: bolder;
-    padding: 10px 20px;
+    padding: 5px 20px;
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;
