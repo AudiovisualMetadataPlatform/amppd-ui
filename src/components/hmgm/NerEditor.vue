@@ -164,6 +164,9 @@ h2, h3{
   display:flex;
   justify-content: space-between;
 }
+.action-buttons{
+  display: flex;
+}
 .primary-button{
     float: right;
     background-color: #E9972D;
