@@ -27,13 +27,13 @@
         </div>
       </div>
     </div>
-  <modal v-if="showModal" @close="modalDismiss">
+  <modal v-if="showModal" @close="modalDismiss" class="my-modal">
     <h3  slot="header">{{modalHeader}}</h3>
     <div slot="body">
        {{modalBody}}
     </div>
   </modal>
-  <modal v-if="showSaveModal" @close="saveModalCancel">
+  <modal v-if="showSaveModal" @close="saveModalCancel" class="my-modal">
     <h3  slot="header">Are you sure?</h3>
     <div slot="body">
        Are you sure you want to save and close?
@@ -43,7 +43,7 @@
           <input type="button" class="primary-button" v-on:click="saveModal" value="Yes"/>
     </div>
   </modal>
-  <modal v-if="showResetModal" @close="resetModalCancel">
+  <modal v-if="showResetModal" @close="resetModalCancel" class="my-modal">
     <h3  slot="header">Are you sure?</h3>
     <div slot="body">
        Are you sure you want to reset the transcript to the original text?
@@ -53,7 +53,7 @@
           <input type="button" class="primary-button" v-on:click="resetModalYes" value="Yes"/>
     </div>
   </modal>
-  <modal v-if="showCompleteModal" @close="completeModalCancel">
+  <modal v-if="showCompleteModal" @close="completeModalCancel" class="my-modal">
     <h3  slot="header">Are you sure?</h3>
     <div slot="body">
        Are you sure you want to complete the transcript?
@@ -244,6 +244,9 @@ export default {
 </script>
 
 <style scoped>
+.my-modal {
+  backdrop-filter: brightness(60%);
+}
 h2, h3{
   margin-top: 0;
 }

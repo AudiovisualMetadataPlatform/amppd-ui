@@ -7,14 +7,14 @@
 	<form class="">
 		<div class="form-group row">
 		<label for="colFormLabelFrom" class="col-sm-4 col-form-label col-form-label-sm text-right">From</label>
-		<div class="col-sm-8">
-			<input type="date" class="form-control form-control-sm" id="colFormLabelFrom" v-model="fromDate">
+		<div >
+			<datepicker v-model="fromDate" class="form-control form-control-sm col-sm-8 my-datepicker" format="MM/dd/yyyy" v-on:input="setDisabledDate()"></datepicker>
 		</div>
 		</div>
 		<div class="form-group row">
 		<label for="colFormLabelFrom2" class="col-sm-4 col-form-label col-form-label-sm text-right">To</label>
-		<div class="col-sm-8">
-			<input type="date" class="form-control form-control-sm" id="colFormLabelFrom2" v-model="toDate">
+		<div>
+			<datepicker v-model="toDate"  class="form-control form-control-sm col-sm-8 my-datepicker" format="MM/dd/yyyy"  :disabled-dates="state.disabledDates"></datepicker>
 		</div>
 		</div>
 		<div class="form-group row">
@@ -28,33 +28,66 @@
 </template>
 <script>
 import { sync } from 'vuex-pathify'
+import Datepicker from 'vuejs-datepicker';
 export default {
 	name: 'DateFilter',
+	components:{
+	Datepicker
+	},
 	data(){
     return {
 	visible : false,
-	fromDate : new Date(),
-	toDate : new Date()
-    }
-  },
+	fromDate :  new Date(),
+	toDate : new Date(),
+	state : {
+		disabledDates: {
+			to: new Date()
+			}
+		} 
+  }},
   computed:{
-	workflowDashboard: sync("workflowDashboard"),
+	workflowDashboard: sync("workflowDashboard")
   },
   methods:{
+	setDisabledDate(){
+		let self = this;
+		self.state.disabledDates.to = new Date(self.fromDate);
+	},
 	closeFilter(){
 		this.visible=false;
 	},
 	filterByDate(){
 		let self = this;
-		//TODO : preliminary validation of date
 		self.workflowDashboard.searchQuery.filterByDates = []
-		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.fromDate.replace("-", '/')));
-		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.toDate.replace("-", '/')));
+		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.fromDate));
+		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.toDate));
 		self.visible=false;
+	},
+	getMaxDate(){
+		console.log("inside getMaxDate()");
+		let today = new Date(),
+		day = today.getDate(), month = today.getMonth()+1, //January is 0
+		year = today.getFullYear();
+        if(day<10){
+                day='0'+day
+            } 
+        if(month<10){
+            month='0'+month
+        }
+		today = year+'-'+month+'-'+day;
+		console.log("todays date :"+today);
+		return today;
 	}
   },
 }
 </script>
-<style scoped>
+<style>
+input {
+	width: -webkit-fill-available;
+	border-radius: 4px;
+}
+.my-datepicker{
+	border: none;
+}
 
 </style>
