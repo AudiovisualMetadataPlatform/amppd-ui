@@ -258,6 +258,8 @@ h2, h3{
 }
 .action-buttons{
   margin-top:40px;
+  display:flex;
+  justify-content: flex-end;
 }
 .primary-button{
     float: right;
@@ -288,5 +290,8 @@ h2, h3{
     cursor: pointer;
     border-radius: 15px;
     font-size: 12px;
+}
+.modal-body .my-modal-body {
+  height:auto !important;
 }
 </style>
