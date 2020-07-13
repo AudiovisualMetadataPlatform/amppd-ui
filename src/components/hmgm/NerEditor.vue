@@ -154,6 +154,7 @@ export default {
 <style scoped>
 h2, h3{
   margin-top: 0;
+  max-height: 50px;
 }
 .ner-content{
   padding-top:0px;
@@ -163,6 +164,10 @@ h2, h3{
 .header-row{
   display:flex;
   justify-content: space-between;
+  max-height: 50px;
+}
+.action-buttons{
+  display: flex;
 }
 .action-buttons{
   display: flex;
