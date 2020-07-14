@@ -259,9 +259,9 @@ h2, h3{
 .header-row{
   display:flex;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 .action-buttons{
-  margin-top:40px;
   display:flex;
   justify-content: flex-end;
 }
