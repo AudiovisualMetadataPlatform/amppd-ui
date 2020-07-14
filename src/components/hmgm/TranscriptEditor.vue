@@ -6,6 +6,11 @@
       <div>
         <div class="header-row">
           <h1>Transcript Editor</h1>
+          <div class="action-buttons">
+            <input type="button" class="primary-button" v-on:click="showCompleteModal = true" value="Complete"/>
+            <input type="button" class="secondary-button" v-on:click="showResetModal = true" value="Reset"/>
+            <input type="button" class="secondary-button" v-on:click="showSaveModal = true" value="Save and Close"/>
+          </div>
         </div>
         <BBCTranscriptEditor :key="key"
           v-if="transcriptDataValue && sttType"
@@ -20,11 +25,6 @@
         >
         </BBCTranscriptEditor>
         
-        <div class="action-buttons">
-          <input type="button" class="primary-button" v-on:click="showCompleteModal = true" value="Complete"/>
-          <input type="button" class="secondary-button" v-on:click="showResetModal = true" value="Reset"/>
-          <input type="button" class="secondary-button" v-on:click="showSaveModal = true" value="Save and Close"/>
-        </div>
       </div>
     </div>
   <modal v-if="showModal" @close="modalDismiss" class="my-modal">
@@ -252,6 +252,7 @@ h2, h3{
 }
 .transcript-content{
   padding-top:50px;
+  margin-left:45px;
   display: flex;
   flex-direction: column;
 }
