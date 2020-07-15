@@ -26,7 +26,6 @@
               <td>{{ rec.submitter }}</td>
               <td>{{ rec.workflowName }}</td>
               <td>{{ rec.sourceItem }}</td>
-              <!-- <td>{{ rec.sourceFilename }}</td> -->
               <td><a v-bind:href="getSourceUrl(rec)" target="_blank">{{ rec.sourceFilename }}</a></td>
               <td>{{ rec.workflowStep }}</td>
               <td v-if="rec.outputPath == null">{{ rec.outputFile }}</td>
