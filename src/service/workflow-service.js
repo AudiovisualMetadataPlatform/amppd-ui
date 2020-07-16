@@ -1,14 +1,17 @@
 
-import BaseService from './base-service'
+import BaseService from './base-service.js';
+const baseService = new BaseService();
 export default class WorkflowService extends BaseService{
     getWorkflows(){
         return super.get_auth('/workflows');
     }
-    searchFiles(searchWord){
-        return super.get_auth('/primaryfiles/search/findByKeyword?keyword='+searchWord)
-        .catch(e => {
-          console.log(e);});
+    async searchFiles(searchWord){
+        return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + searchWord).then(response => response.data);
     }
+
+
+
+
     createBundle(bundle){
         return super.post_auth('/bundles', bundle);
     }
