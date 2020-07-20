@@ -1,5 +1,6 @@
 <template>
    <div class="container col-12">
+    <loader :show="workflowSubmission.loading"/>
    <div class="row expand-h">
    <Sidebar/>
    <div class="col-10 bg-light-gray-1">
@@ -28,13 +29,15 @@
    import SelectWorkflowRight from '@/components/workflow/SelectWorkflowRight.vue';
    import { sync } from 'vuex-pathify'
    import WorkflowService from '../../service/workflow-service';
+   import Loader from '@/components/shared/Loader.vue';
    
    export default {
      name: 'Workflow',
      components:{
        SelectFilesLeft,
        SelectWorkflowRight,
-       Sidebar
+       Sidebar,
+       Loader
      },
      data(){
        return {
@@ -49,6 +52,7 @@
      computed:{
          parameters: sync('parameters'),
          selectedWorkflow: sync('selectedWorkflow'),
+         workflowSubmission: sync('workflowSubmission'),
          files: sync('files'),
          jobs: sync('jobs'),
          isWorkflowModalVisible: sync('isWorkflowModalVisible')
@@ -143,7 +147,8 @@
    }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="css">
+
    .no-flex-header {
    display: contents;  
    }
