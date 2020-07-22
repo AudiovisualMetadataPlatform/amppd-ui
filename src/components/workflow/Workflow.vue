@@ -1,4 +1,5 @@
 <template>
+  <div class="workflows">
    <div class="container col-12">
    <div class="row expand-h">
    <Sidebar/>
@@ -21,6 +22,7 @@
    </div>
    </div>
    </div>
+  </div>
 </template>
 <script>
    import Sidebar from '@/components/navigation/Sidebar.vue';
@@ -56,15 +58,6 @@
      props: {
      },
      methods:{
-       search() {
-         let self = this;
-         console.log("the search word is:", this.searchWord);
-         self.searchedFiles = self.workflowService.searchFiles(this.searchWord).then(response => {
-         self.searchedFiles = response.data._embedded.primaryfiles;
-         })
-         .catch(e => {
-         console.log(e);});  
-       },
        addFiles() {
          let self = this;
          self.files = this.selectedFiles;
@@ -142,98 +135,7 @@
    
    }
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
-   .no-flex-header {
-   display: contents;  
-   }
-   .modal-open {
-   overflow-x: hidden;
-   overflow-y: auto;
-   }
-   .my-modal {
-   backdrop-filter: brightness(60%);
-   }
-   .input-text{
-   height: calc(2.25rem + 1px);
-   padding: 0.7rem 0.5rem;
-   width: 90%;
-   }
-   .search-button{
-   width:10%;
-   height: calc(2.25rem + 1px);
-   }
-   h2{
-   margin-top: 0;
-   }
-   h1 {
-   text-align: center;
-   }
-   .workflow-content{
-   padding-top:100px;
-   }
-   .workflow-body{
-   padding:25px 10px 10px 10px;
-   height: 100%;
-   display: flex;
-   align-items: stretch;
-   justify-content: space-evenly;
-   flex: 50%;
-   flex-wrap: wrap;
-   }
-   h1{
-   text-align: center;
-   }
-   .workflow-parameter-nodes{
-   display:flex;
-   flex-direction: column;
-   justify-content: flex-start;
-   font-size:13px;
-   }
-   .left-pane{
-   min-width:450px;
-   }
-   .right-pane{
-   min-width:450px;
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
-   }
-   .right-pane h2{
-   text-align: left;
-   }
-   .workflow-submit{
-   display:flex;
-   justify-content: flex-end;
-   margin: 40px 20px 0;
-   align-items: flex-end;
-   }
-   .button-row{
-   display:flex;
-   justify-content: center;
-   }
-   .primary-button{
-   padding:5px;
-   min-width:100px;
-   }
-   .node-name{
-   text-align: left;
-   font-weight: 700;
-   }
-   .parameter-name{
-   text-align: left;
-   }
-   .parameters{
-   display:flex;
-   padding-left: 30px;
-   justify-content: space-between;
-   width:400px;
-   padding-top:10px;
-   }
-   .parameters input{
-   flex-basis: 60%;
-   }
-   .node{
-   padding: 20px 0;
-   }
+@import '/amppd-ui/src/styles/style.css';
 </style>
