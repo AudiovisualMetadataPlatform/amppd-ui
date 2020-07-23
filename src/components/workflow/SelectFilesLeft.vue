@@ -16,8 +16,13 @@
                      <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
                      <label class="form-check-label" for="inlineCheckbox2">Video</label>
                   </div>
+                  <div class="form-check form-check-inline">
+                     <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                     <label class="form-check-label" for="inlineCheckbox3">Other</label>
+                  </div>
+
                </div>
-               <button id="select-saved" type="button" class="btn btn-primary float-right" data-toggle="modal" data-target=".select-from-saved-modal">Select from saved bundles</button>
+               <button id="select-saved" type="button" class="btn btn-primary float-right select-bundles" data-toggle="modal" data-target=".select-from-saved-modal">Select from saved bundles</button>
             </div>
          </div>
       </div>
@@ -27,13 +32,11 @@
                <div class="col-12">
                   <div class="input-group mb-3">
                      <label for="exampleFormControlInput100" class="sr-only">Search</label>
-                     <input type="text" class="form-control" id="exampleFormControlInput100" placeholder="filter" v-model="searchWord">
+                     <input type="text" class="form-control" id="exampleFormControlInput100" placeholder="Search" v-model="searchWord">
                      <div class="input-group-append">
                         <button class="btn" v-on:click="searchFiles()">
-                           <svg class="icon-filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 472.6 472.6">
-                              <polygon points="472.6 12.9 0 12.9 180.1 202.6 180.1 459.7 292.6 401.5 292.5 202.6 "></polygon>
-                           </svg>
-                           Apply filter
+                           <svg data-v-6b33b2c4="" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" class="svg-search"><title data-v-6b33b2c4="">search</title><path data-v-6b33b2c4="" d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"></path></svg>
+                           Search
                         </button>
                      </div>
                   </div>
@@ -48,7 +51,7 @@
       <h3>Search Results</h3>
       <div id="accordion">
 
-         <div class="card" v-for="(item, index) in searchedFiles.rows" v-bind:key="index" >
+         <div class="card" v-for="(item, index) in searchedItems.rows" v-bind:key="index" >
             <div class="card-header" id="headingTwo">
                <h5 class="mb-0">
                   <button class="btn btn-link" :class="{ 'collapsed' : !(visible === index) }" :key="item.id" v-on:click="itemClicked(index)" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="visible[index] ? 'true' : 'false'"  aria-controls="collapseTwo">
@@ -59,7 +62,7 @@
                      {{item.itemName}}
                   </button>
                   <!-- -->
-                  <button class="btn btn-link float-right">
+                  <button class="btn btn-link float-right" v-on:click="addAllFiles(index)">
                      <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
                         <path class="circle-stroke" d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
                            M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"></path>
@@ -75,14 +78,14 @@
                <div class="card-body">
                   <!-- -->
                   <ul class="list-unstyled file-list" >
-                     <li v-for="(filename, file_index) in item.primaryFileNames" v-bind:key="file_index">
-                        <button class="btn btn-light btn-sm" disabled="">
+                     <li v-for="(filename, key, file_index) in item.primaryFiles" v-bind:key="file_index">
+                        <button class="btn btn-light btn-sm" :disabled="files.includes(key)">
                            <svg class="icon-play  " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                               <path class="icon-play" d="M25.7 8.8c2.7 0 5.3 0 7.8 0.1C35.9 8.9 37.8 9 39 9.1l1.8 0.1c0 0 0.2 0 0.4 0s0.4 0 0.6 0.1c0.1 0 0.3 0.1 0.6 0.1 0.3 0 0.5 0.1 0.7 0.2 0.2 0.1 0.4 0.2 0.7 0.3 0.3 0.1 0.5 0.3 0.7 0.5 0.2 0.2 0.5 0.4 0.7 0.6 0.1 0.1 0.2 0.2 0.4 0.4 0.2 0.2 0.4 0.7 0.7 1.4 0.3 0.7 0.5 1.5 0.6 2.4 0.1 1 0.2 2.1 0.3 3.3 0.1 1.2 0.1 2.1 0.1 2.7v1 3.3c0 2.3-0.1 4.6-0.4 7 -0.1 0.9-0.3 1.7-0.6 2.4s-0.5 1.2-0.8 1.5L45 36.7c-0.2 0.2-0.5 0.5-0.7 0.6 -0.2 0.2-0.5 0.3-0.7 0.5s-0.5 0.2-0.7 0.3c-0.2 0.1-0.4 0.1-0.7 0.2 -0.3 0-0.5 0.1-0.6 0.1 -0.1 0-0.3 0-0.6 0.1 -0.2 0-0.4 0-0.4 0 -4 0.3-9 0.5-15 0.5 -3.3 0-6.2-0.1-8.6-0.2 -2.4-0.1-4-0.1-4.8-0.2L11 38.6l-0.9-0.1c-0.6-0.1-1-0.2-1.3-0.2 -0.3-0.1-0.7-0.2-1.2-0.5s-1-0.6-1.4-1c-0.1-0.1-0.2-0.2-0.4-0.4 -0.2-0.2-0.4-0.7-0.7-1.4s-0.5-1.5-0.6-2.4c-0.1-1-0.2-2.1-0.3-3.3 -0.1-1.2-0.1-2.1-0.1-2.7v-1 -3.3c0-2.3 0.1-4.6 0.4-7 0.1-0.9 0.3-1.7 0.6-2.4s0.5-1.2 0.8-1.5L6.3 11c0.2-0.2 0.5-0.5 0.7-0.6 0.2-0.2 0.5-0.3 0.7-0.5C8 9.8 8.2 9.7 8.4 9.6s0.4-0.1 0.7-0.2c0.3 0 0.5-0.1 0.6-0.1 0.1 0 0.3 0 0.6-0.1s0.4 0 0.4 0C14.6 8.9 19.6 8.8 25.7 8.8zM21.2 29.4l11.6-6 -11.6-6.1V29.4z"></path>
                            </svg>
                            {{filename}}
                         </button>
-                        <button class="btn btn-link  add-remove float-right" v-on:click="addFiles(index,file_index)">
+                        <button class="btn btn-link  add-remove float-right" v-on:click="addFiles(key)" v-bind:disabled=files.includes(key)>
                            <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
                               <path class="circle-stroke" d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
                                  M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"></path>
@@ -113,10 +116,11 @@ export default {
       searchVideo : false,
       visible : -1,
 		searchWord : '',
-		searchedFiles:[],
+		searchedItems:[],
       selectedFiles:[],
       workflowService: new WorkflowService(),
-      disabled: []
+      //disabled: [],
+      
 		}
    },
   computed:{
@@ -134,31 +138,48 @@ export default {
 		async searchFiles() {
 			let self = this;
 			console.log("the search word is:"+ self.searchWord);
-         self.searchedFiles = await self.workflowService.searchFiles(this.searchWord);
+         self.searchedItems = await self.workflowService.searchFiles(this.searchWord);
          /*.then(response => {
-				self.searchedFiles = response.data._embedded.primaryfiles;})
+				self.searchedItems = response.data._embedded.primaryfiles;})
 				.catch(e => {
                console.log(e);});*/
          
-         for(var i=0; i<self.searchedFiles.length;i++){
-            self.visible.push(false);
-         }
-         /* for(var i=0; i<self.searchedFiles.length;i++){
-            for(var j=0; j<      ;j++)
-               self.disabled.push(false);
-         } */
-         
-			console.log("the files are:"+self.searchedFiles.length);
+         /*for(var i=0; i<self.searchedItems.rows.length;i++){
+            var temp = []
+            for(var j=0;j<self.searchedItems.rows[i].primaryFileNames.length; j++){
+               temp[j] = false;
+            }
+            self.disabled.push(temp);
+         }*/
+			console.log("the files are:"+self.searchedItems.length);
 		},
-		addFiles(index, file_index) {
+		addFiles(key) {
+         //event.preventDefault();
+			//event.target.disabled = true;
          let self = this;
-         
-         self.files.push(self.searchedFiles.rows[index].primaryFileNames[file_index]);
-			console.log("The file names selected are:",self.files);
+         //self.disabled[index][file_index] = !self.disabled[index][file_index];
+         //console.log("the disability for, i:"+index+" j:"+file_index+" is : "+self.disabled[index][file_index]);
+         if(!self.files.includes(key)){
+            self.files.push(key);
+         } 
+         console.log("The file names selected are:",self.files);
+         //return self.disabled[index][file_index];
 		},
+      addAllFiles(index){
+         let self = this;
+         for(var key in self.searchedItems.rows[index].primaryFiles){
+            self.addFiles(key);
+         }
+      },
+      filterContent(){
+         let self = this;
+      }
 	}
 }
 </script>
 <style scoped>
 @import '/amppd-ui/src/styles/style.css';
+.select-bundles{
+   margin: 5px;
+}
 </style>
