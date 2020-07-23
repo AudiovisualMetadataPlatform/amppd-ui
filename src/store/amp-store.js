@@ -21,9 +21,12 @@ const state = {
     isWorkflowModalVisible: false,
     // bundle: null, // bundle created for primaryfiles upon submission
     jobs: [], // jobs successfully created
+    workflowSubmission:{
+      loading:false,
+      selectedFiles: []
+    },
     workflowDashboard:{
         loading:false,
-
         filtersEnabled : {submitterFilter :false, dateFilter : false},
         searchQuery: {
             sortRule: {
