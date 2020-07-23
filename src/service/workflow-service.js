@@ -21,6 +21,12 @@ export default class WorkflowService extends BaseService{
     submitWorkflow(selectedWorkflow, bundleId){
         return super.post_auth('/jobs/bundle?workflowId=' + selectedWorkflow + '&bundleId=' + bundleId);
     }
+    cleanParameterName(name){
+        if(!name) return "";
+        var tempName = name.replace(/(_)/g, ' ');
+        tempName = tempName.replace(/(^\w)|(\s+\w)/g, match => match.toUpperCase());
+        return tempName;
+    }
     async getWorkflowDetails(id){
         var tempParams = [];
         return await super.get_auth('/workflows/' + id).then(response=>
@@ -41,7 +47,7 @@ export default class WorkflowService extends BaseService{
                 // Create a new node object
                 var newNode = {
                     nodeId: nodeKey,
-                    nodeName: thisNode.toolId,
+                    nodeName: this.cleanParameterName(thisNode.toolId),
                     annotation: thisNode.annotation,
                     params:[]
                 };
@@ -60,7 +66,7 @@ export default class WorkflowService extends BaseService{
 
                     // Add the parameter
                     newNode.params.push({
-                        name: toolInputKey,
+                        name: this.cleanParameterName(toolInputKey),
                         value: thisInput,
                         type: 'text'
                     });
