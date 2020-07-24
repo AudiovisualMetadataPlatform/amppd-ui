@@ -6,7 +6,7 @@ export default class WorkflowService extends BaseService{
         return super.get_auth('/workflows');
     }
     async searchFiles(searchWord, media_type){
-        return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + searchWord +'&mediaType=' + media_type).then(response => response.data);
+        return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + searchWord +'&mediaType=' + media_type).then(response => response.data);  
     }
 
 
