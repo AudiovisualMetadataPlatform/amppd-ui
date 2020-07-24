@@ -9,15 +9,15 @@
                <div id="limiter">
                   <strong>Limit results to </strong>
                   <div class="form-check form-check-inline">
-                     <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                     <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" v-model="searchAudio">
                      <label class="form-check-label" for="inlineCheckbox1">Audio</label>
                   </div>
                   <div class="form-check form-check-inline">
-                     <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                     <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" v-model="searchVideo">
                      <label class="form-check-label" for="inlineCheckbox2">Video</label>
                   </div>
                   <div class="form-check form-check-inline">
-                     <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                     <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3" v-model="searchOther">
                      <label class="form-check-label" for="inlineCheckbox3">Other</label>
                   </div>
 
@@ -49,7 +49,7 @@
    </form>
    <div>
       <h3>Search Results</h3>
-      <div id="accordion">
+      <div id="accordion" v-if="searchResults">
 
          <div class="card" v-for="(item, index) in searchedItems.rows" v-bind:key="index" >
             <div class="card-header" id="headingTwo">
@@ -62,7 +62,7 @@
                      {{item.itemName}}
                   </button>
                   <!-- -->
-                  <button class="btn btn-link float-right" v-on:click="addAllFiles(index)">
+                  <button class="btn btn-link float-right" v-on:click="addAllFiles(index)" v-bind:disabled=hasValues(index)>
                      <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
                         <path class="circle-stroke" d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
                            M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"></path>
@@ -114,10 +114,12 @@ export default {
 		return {
 		searchAudio : false,
       searchVideo : false,
+      searchOther : false,
       visible : -1,
 		searchWord : '',
 		searchedItems:[],
       workflowService: new WorkflowService(),
+      searchResults : false
       }
    },
   computed:{
@@ -134,26 +136,34 @@ export default {
             this.visible = index;
       },
 		async searchFiles() {
-			let self = this;
-			console.log("the search word is:"+ self.searchWord);
-         self.searchedItems = await self.workflowService.searchFiles(this.searchWord);
-         /*.then(response => {
-				self.searchedItems = response.data._embedded.primaryfiles;})
-				.catch(e => {
-               console.log(e);});*/
-			console.log("the files are:"+self.searchedItems.length);
+         let self = this;
+         self.searchedItems=[];
+         console.log("the search word is:"+ self.searchWord);
+         var media_type = '';
+         if(self.searchAudio) media_type+='1';
+         else media_type+='0';
+         if(self.searchVideo) media_type+='1';
+         else media_type+='0';
+         if(self.searchOther) media_type+='1';
+         else media_type+='0';
+         self.searchedItems = await self.workflowService.searchFiles(this.searchWord, media_type);
+         if(self.searchedItems.rows!=null)
+         {    self.searchResults = true;
+            console.log("inside if");
+         }
+         else
+         {
+            self.searchResults = false;
+            console.log("inside else");
+         }
+			console.log("the files are:"+self.searchedItems.length+" media_type is:"+media_type+" "+self.searchResults);
 		},
 		addFiles(index, key) {
-         //event.preventDefault();
-			//event.target.disabled = true;
          let self = this;
-         //self.disabled[index][file_index] = !self.disabled[index][file_index];
-         //console.log("the disability for, i:"+index+" j:"+file_index+" is : "+self.disabled[index][file_index]);
          if(!self.hasValue(key)){
             self.selectedFiles.push({id:key,name:self.searchedItems.rows[index].primaryFiles[key]});
          } 
          console.log("The file name selected is:",self.selectedFiles);
-         //return self.disabled[index][file_index];
 		},
       addAllFiles(index){
          let self = this;
@@ -169,10 +179,41 @@ export default {
             return true;
          return false;
       },
-      filterContent(){
+      hasValues(index){
          let self = this;
+         var result = true;
+         for(var key in self.searchedItems.rows[index].primaryFiles){
+            if(!self.hasValue(key))
+            {
+               result = false;
+               break;
+            }
+         }
+         return result;
+       },
+      //TODO: this function needs to be finished by assigning values to a temp variable
+      filterContent(index){
+         let self = this;
+         if(this.searchAudio){
+            for(var key in self.searchedItems.rows[index].primaryFiles){
+               if(self.searchedItems.rows[index].primaryFiles[key].ext != 'mp3'){
+                  self.searchedItems.rows[index].primaryFiles.delete[key];
+               }
+         }
       }
-	}
+   }
+   },
+   watch:{
+      searchAudio: function(){
+         this.searchFiles();
+      },
+      searchVideo: function(){
+         this.searchFiles();
+      },
+      searchOther: function(){
+         this.searchFiles();
+      }
+   }
 }
 </script>
 <style scoped>
