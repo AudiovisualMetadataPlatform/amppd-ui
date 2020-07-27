@@ -133,7 +133,7 @@ export default {
          .then(response => {
             console.log("return from bundle");
             console.log(response);
-            bundle = JSON.parse(response.data);
+            bundle = response.data;
          })
          .catch(e => {
             console.log(e);
