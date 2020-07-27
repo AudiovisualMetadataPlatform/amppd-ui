@@ -9,13 +9,14 @@
             <option v-for="(workflow, index) in workflows"  v-bind:key="index" v-bind:value="workflow.id">{{workflow.name}}</option>
          </select>
       </div>
+      <h4>Workflow Node Parameters</h4>
       <div class="scroll-div">
          <ul class="list-unstyled">
-            <li v-for="(param, index) in parameters" v-bind:key="index" v-bind:value="parameters.nodeId">
-               <h5>Node {{param.nodeId}}: {{param.nodeName}}</h5>
-               <p v-for="(p, paramIndex) in param.params" v-bind:key="paramIndex" v-bind:value="p.name">
+            <li v-for="(param, index) in parameters" v-bind:key="index" v-bind:value="parameters.nodeId" class="node-li">
+               <h5 class="node-name">Node {{param.nodeId}}: {{param.nodeName}}</h5>
+               <div v-for="(p, paramIndex) in param.params" v-bind:key="paramIndex" v-bind:value="p.name">
                   {{p.name}}: {{p.value}}
-               </p>
+               </div>
             </li>
          </ul>
       </div>
@@ -138,6 +139,7 @@ export default {
          .catch(e => {
             console.log(e);
             self.modalText = "Error adding primary files to bundle. Please contact a system administrator."
+            self.modalText = "Error submitting workflow:  Could not add primary files toy"
             self.showModal = true;
          });
       return bundle;
@@ -160,7 +162,7 @@ export default {
          })
          .catch(e => {
             console.log(e);
-            self.modalText = "Error creating bundle. Please contact a system administrator."
+            self.modalText = "Error submitting workflow:  Could not create bundle."
             self.showModal = true;
             throw new Error("Could not create bundle");
          }); 
@@ -184,13 +186,13 @@ export default {
                this.jobs = response.data;
                self.workflowSubmission.loading = false;
                self.modalHeader = "Success!";
-               self.modalText = "Your files have been successfully submitted to workflow " + self.selectedWorkflow;
+               self.modalText = "Your files have been submitted successfuly";
                self.showModal = true;
                })
                .catch(e => {
                   console.log(e);
                   self.workflowSubmission.loading = false;
-                  self.modalText = "Error submitting workflow. Please contact a system administrator."
+                  self.modalText = "Error submitting workflow:  Could finish submission."
                   self.showModal = true;
                });
                
@@ -214,4 +216,14 @@ export default {
 </script>
 <style lang="css">
 @import '/amppd-ui/src/styles/style.css';
+.node-li{
+   margin-bottom: 16px;
+}
+.node-name{
+   font-weight:700;
+}
+.btn-primary:disabled {
+   background-color: rgba(187, 187, 187, 0.856) !important;
+   border-color: rgba(187, 187, 187, 0.856) !important;
+}
 </style>
