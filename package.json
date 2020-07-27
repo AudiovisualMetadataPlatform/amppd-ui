@@ -18,7 +18,7 @@
     "core-js": "^3.3.2",
     "eslint-config-standard": "^14.1.0",
     "eslint-loader": "^3.0.2",
-    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react": "^7.20.3",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "sass-loader": "^8.0.2",
@@ -30,7 +30,7 @@
     "vuejs-datatable": "^2.0.0-alpha.7",
     "vuejs-datepicker": "^1.6.2",
     "vuera": "^0.2.7",
-    "vuex": "^3.4.0",
+    "vuex": "^3.5.1",
     "vuex-pathify": "^1.4.1"
   },
   "devDependencies": {

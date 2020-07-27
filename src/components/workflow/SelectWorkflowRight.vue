@@ -150,21 +150,32 @@ export default {
          name: "Bundle #" + startId + " ~ #" + endId, 
          description: "Bundle with #" + size + " primaryfiles"
       };
+<<<<<<< HEAD
       var createdBundle = await self.workflowService.createBundle(bundle)
          .then(response => {
             var createdBundle = response.data;
             self.addPrimaryFilesToBundle(createdBundle);
             return createdBundle;
+=======
+      await self.workflowService.createBundle(bundle)
+         .then(response => {
+            var createdBundle = response.data;
+            self.addPrimaryFilesToBundle(createdBundle);
+>>>>>>> master
          })
          .catch(e => {
             console.log(e);
             self.modalText = "Error creating bundle. Please contact a system administrator."
             self.showModal = true;
             throw new Error("Could not create bundle");
+<<<<<<< HEAD
          }); 
       console.log("Bundle created");
       console.log(createdBundle);
       return createdBundle;     
+=======
+         });      
+>>>>>>> master
     },
     async createBundle(name, description){
          console.log("Creating a bundle!!!")
@@ -176,8 +187,13 @@ export default {
       console.log("Submitting workflow");
       let self = this;
       self.workflowSubmission.loading = true;
+<<<<<<< HEAD
       self.createTemporaryBundle().then(bundleResponse=>{
          self.workflowService.submitWorkflow(this.selectedWorkflow, bundleResponse.id)
+=======
+      self.createTemporaryBundle().then(response=>{
+         self.workflowService.submitWorkflow(this.selectedWorkflow, response.id)
+>>>>>>> master
             .then(response => {
                this.jobs = response.data;
                self.modalHeader = "Success!";

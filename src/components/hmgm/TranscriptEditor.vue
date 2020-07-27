@@ -6,6 +6,11 @@
       <div>
         <div class="header-row">
           <h1>Transcript Editor</h1>
+          <div class="action-buttons">
+            <input type="button" class="primary-button" v-on:click="showCompleteModal = true" value="Complete"/>
+            <input type="button" class="secondary-button" v-on:click="showResetModal = true" value="Reset"/>
+            <input type="button" class="secondary-button" v-on:click="showSaveModal = true" value="Save and Close"/>
+          </div>
         </div>
         <BBCTranscriptEditor :key="key"
           v-if="transcriptDataValue && sttType"
@@ -20,23 +25,18 @@
         >
         </BBCTranscriptEditor>
         
-        <div class="action-buttons">
-          <input type="button" class="primary-button" v-on:click="showCompleteModal = true" value="Complete"/>
-          <input type="button" class="secondary-button" v-on:click="showResetModal = true" value="Reset"/>
-          <input type="button" class="secondary-button" v-on:click="showSaveModal = true" value="Save and Close"/>
-        </div>
       </div>
     </div>
   <modal v-if="showModal" @close="modalDismiss" class="my-modal">
-    <h3  slot="header">{{modalHeader}}</h3>
+    <h5  slot="header">{{modalHeader}}</h5>
     <div slot="body">
        {{modalBody}}
     </div>
   </modal>
   <modal v-if="showSaveModal" @close="saveModalCancel" class="my-modal">
-    <h3  slot="header">Are you sure?</h3>
+    <h5  slot="header">Save and close?</h5>
     <div slot="body">
-       Are you sure you want to save and close?
+       Are you sure you want to save the transcript and exit this page?
     </div>
     <div slot="footer">
           <input type="button" class="secondary-button" v-on:click="saveModalCancel" value="Cancel"/>
@@ -44,7 +44,7 @@
     </div>
   </modal>
   <modal v-if="showResetModal" @close="resetModalCancel" class="my-modal">
-    <h3  slot="header">Are you sure?</h3>
+    <h5  slot="header">Reset the transcript?</h5>
     <div slot="body">
        Are you sure you want to reset the transcript to the original text?
     </div>
@@ -54,9 +54,9 @@
     </div>
   </modal>
   <modal v-if="showCompleteModal" @close="completeModalCancel" class="my-modal">
-    <h3  slot="header">Are you sure?</h3>
+    <h5  slot="header">Complete?</h5>
     <div slot="body">
-       Are you sure you want to complete the transcript?
+       Are you sure you want to complete the transcript and exit the page?
     </div>
     <div slot="footer">
           <input type="button" class="secondary-button" v-on:click="completeModalCancel" value="Cancel"/>
@@ -252,15 +252,18 @@ h2, h3{
 }
 .transcript-content{
   padding-top:50px;
+  margin-left:45px;
   display: flex;
   flex-direction: column;
 }
 .header-row{
   display:flex;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 .action-buttons{
-  margin-top:40px;
+  display:flex;
+  justify-content: flex-end;
 }
 .primary-button{
     float: right;
@@ -276,6 +279,7 @@ h2, h3{
     cursor: pointer;
     border-radius: 15px;
     font-size: 12px;
+    width:150px;
 }
 .secondary-button{
     float: right;
@@ -291,5 +295,10 @@ h2, h3{
     cursor: pointer;
     border-radius: 15px;
     font-size: 12px;
+    width:150px;
+}
+.modal-body .my-modal-body {
+  height:auto !important;
+  overflow:auto;
 }
 </style>
