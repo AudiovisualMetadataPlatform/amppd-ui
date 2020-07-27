@@ -150,17 +150,21 @@ export default {
          name: "Bundle #" + startId + " ~ #" + endId, 
          description: "Bundle with #" + size + " primaryfiles"
       };
-      await self.workflowService.createBundle(bundle)
+      var createdBundle = await self.workflowService.createBundle(bundle)
          .then(response => {
             var createdBundle = response.data;
             self.addPrimaryFilesToBundle(createdBundle);
+            return createdBundle;
          })
          .catch(e => {
             console.log(e);
             self.modalText = "Error creating bundle. Please contact a system administrator."
             self.showModal = true;
             throw new Error("Could not create bundle");
-         });      
+         }); 
+      console.log("Bundle created");
+      console.log(createdBundle);
+      return createdBundle;     
     },
     async createBundle(name, description){
          console.log("Creating a bundle!!!")
@@ -172,8 +176,8 @@ export default {
       console.log("Submitting workflow");
       let self = this;
       self.workflowSubmission.loading = true;
-      self.createTemporaryBundle().then(response=>{
-         self.workflowService.submitWorkflow(this.selectedWorkflow, response.id)
+      self.createTemporaryBundle().then(bundleResponse=>{
+         self.workflowService.submitWorkflow(this.selectedWorkflow, bundleResponse.id)
             .then(response => {
                this.jobs = response.data;
                self.modalHeader = "Success!";
@@ -202,7 +206,6 @@ export default {
     let self = this;
     self.getWorkflows();
     if(!self.selectedFiles) self.selectedFiles = [];
-    self.selectedFiles.push({id:1, name: "test_file.mp4"});
   }
 }
 </script>
