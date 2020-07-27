@@ -47,9 +47,9 @@
      <div>
       </div>
    </form>
-   <div>
+   <div v-if="searchResults">
       <h3>Search Results</h3>
-      <div id="accordion" v-if="searchResults">
+      <div id="accordion" >
 
          <div class="card" v-for="(item, index) in searchedItems.rows" v-bind:key="index" >
             <div class="card-header" id="headingTwo">
