@@ -131,6 +131,8 @@ export default {
 
       await self.workflowService.addPrimaryFiles(bundle.id, primaryfileIds)
          .then(response => {
+            console.log("return from bundle");
+            console.log(response);
             bundle = JSON.parse(response.data);
          })
          .catch(e => {
