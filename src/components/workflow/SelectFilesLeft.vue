@@ -138,6 +138,7 @@ export default {
 		async searchFiles() {
          let self = this;
          self.searchedItems=[];
+         self.visible = -1;
          console.log("the search word is:"+ self.searchWord);
          var media_type = '';
          if(self.searchAudio) media_type+='1';
