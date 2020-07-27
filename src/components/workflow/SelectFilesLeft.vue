@@ -147,18 +147,20 @@ export default {
          else media_type+='0';
          if(self.searchOther) media_type+='1';
          else media_type+='0';
-         self.searchedItems = await self.workflowService.searchFiles(this.searchWord, media_type);
-         if(self.searchedItems.rows!=null)
-         {    self.searchResults = true;
-            console.log("inside if");
+         if(self.searchWord.length >0){
+            self.searchedItems = await self.workflowService.searchFiles(this.searchWord, media_type);
+            if(self.searchedItems.rows!=null)
+            {    self.searchResults = true;
+               console.log("inside if");
+            }
+            else
+            {
+               self.searchResults = false;
+               console.log("inside else");
+            }
+            console.log("the files are:"+self.searchedItems.length+" media_type is:"+media_type+" "+self.searchResults);
          }
-         else
-         {
-            self.searchResults = false;
-            console.log("inside else");
-         }
-			console.log("the files are:"+self.searchedItems.length+" media_type is:"+media_type+" "+self.searchResults);
-		},
+      },
 		addFiles(index, key) {
          let self = this;
          if(!self.hasValue(key)){
