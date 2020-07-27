@@ -185,15 +185,16 @@ export default {
                self.modalHeader = "Success!";
                self.modalText = "Your files have been successfully submitted to workflow " + self.selectedWorkflow;
                self.showModal = true;
+               self.workflowSubmission.loading = false;
                })
                .catch(e => {
                   console.log(e);
                   self.modalText = "Error submitting workflow. Please contact a system administrator."
                   self.showModal = true;
+                  self.workflowSubmission.loading = false;
                });
                
       });      
-      self.workflowSubmission.loading = false;
    },
     removeFile(id){
       let self = this;
