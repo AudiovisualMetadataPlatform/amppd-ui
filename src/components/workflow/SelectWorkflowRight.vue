@@ -202,7 +202,6 @@ export default {
     let self = this;
     self.getWorkflows();
     if(!self.selectedFiles) self.selectedFiles = [];
-    self.selectedFiles.push({id:1, name: "test_file.mp4"});
   }
 }
 </script>
