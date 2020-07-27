@@ -182,16 +182,16 @@ export default {
          self.workflowService.submitWorkflow(this.selectedWorkflow, bundleResponse.id)
             .then(response => {
                this.jobs = response.data;
+               self.workflowSubmission.loading = false;
                self.modalHeader = "Success!";
                self.modalText = "Your files have been successfully submitted to workflow " + self.selectedWorkflow;
                self.showModal = true;
-               self.workflowSubmission.loading = false;
                })
                .catch(e => {
                   console.log(e);
+                  self.workflowSubmission.loading = false;
                   self.modalText = "Error submitting workflow. Please contact a system administrator."
                   self.showModal = true;
-                  self.workflowSubmission.loading = false;
                });
                
       });      
