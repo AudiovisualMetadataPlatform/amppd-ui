@@ -178,7 +178,7 @@ export default {
       console.log("Submitting workflow");
       let self = this;
       self.workflowSubmission.loading = true;
-      self.createTemporaryBundle().then(bundleResponse=>{
+      await self.createTemporaryBundle().then(bundleResponse=>{
          self.workflowService.submitWorkflow(this.selectedWorkflow, bundleResponse.id)
             .then(response => {
                this.jobs = response.data;
