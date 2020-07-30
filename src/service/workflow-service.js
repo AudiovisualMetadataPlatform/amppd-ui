@@ -27,6 +27,9 @@ export default class WorkflowService extends BaseService{
         tempName = tempName.replace(/(^\w)|(\s+\w)/g, match => match.toUpperCase());
         return tempName;
     }
+    isAudioFile(mediaType){
+       return mediaType ? mediaType.startsWith('audio') : false;
+    } 
     async getWorkflowDetails(id){
         var tempParams = [];
         return await super.get_auth('/workflows/' + id).then(response=>
