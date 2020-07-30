@@ -18,7 +18,7 @@ const state = {
     workflowSubmission:{
       loading:false,
       selectedFiles: [],
-      selectedWorkflow: '',
+      selectedWorkflow: null,
       selectedWorkflowParameters: []
     },
     workflowDashboard:{
