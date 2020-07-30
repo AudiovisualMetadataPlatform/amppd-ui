@@ -1,9 +1,9 @@
 <template>
 	<div class="dropdown" >
-		<button class="btn btn-info dropdown-toggle" :class="{ 'show' : visible === true }" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="visible ? 'true' : 'false'" v-on:click="visible = !visible">
+		<button class="btn btn-info dropdown-toggle" :class="{ 'show' : workflowDashboard.filtersEnabled.submitterFilter === true }" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="workflowDashboard.filtersEnabled.submitterFilter ? 'true' : 'false'" v-on:click="setFilterFlags()">
 		Submitter
 		</button>
-		<div class="dropdown-menu compact-form" :class="{ 'show' : visible === true }" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
+		<div v-click-outside="closeFilter" class="dropdown-menu compact-form" :class="{ 'show' : workflowDashboard.filtersEnabled.submitterFilter === true }" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
 			<form class="main-dropdown">
 				<div class="container-fluid">
 					<label for="colFormLabelSearch" class=" bold">Submitter Name</label>
@@ -45,6 +45,7 @@
 <script>
 import { sync } from 'vuex-pathify'
 import Typeahead from '../../shared/TypeAhead.vue';
+import ClickOutside from 'vue-click-outside'
 
 export default {
   name: 'SubmitterFilter',
@@ -53,7 +54,6 @@ export default {
   },
   data(){
     return {
-		visible : false,
 		submitterList:[],
 		filterSuccess:false,
 		selectedSubmitters : [],
@@ -69,6 +69,20 @@ export default {
   },
   
   methods:{
+	setFilterFlags(){
+		this.workflowDashboard.filtersEnabled.submitterFilter = !this.workflowDashboard.filtersEnabled.submitterFilter;
+		if(this.workflowDashboard.filtersEnabled.submitterFilter)
+		{
+			this.workflowDashboard.filtersEnabled.dateFilter=false;
+            this.workflowDashboard.filtersEnabled.fileFilter =false;
+            this.workflowDashboard.filtersEnabled.itemFilter=false;
+            this.workflowDashboard.filtersEnabled.searchFilter=false;
+            this.workflowDashboard.filtersEnabled.statusFilter=false;
+            this.workflowDashboard.filtersEnabled.stepFilter=false;
+            this.workflowDashboard.filtersEnabled.workflowFilter=false;
+
+		}
+	},
 	addSubmitter(submitter){
 		//This function is the only place where submitters get added
 		if(this.selectedSubmitters.length >0 ){
@@ -89,13 +103,17 @@ export default {
 		console.log("selected submitters are:"+this.selectedSubmitters +" and removed element is:"+removed);
 	},
 	closeFilter(){
-		this.visible=false;
-		console.log("Done was clicked")
+		this.workflowDashboard.filtersEnabled.submitterFilter=false;
 		this.$refs.Typeahead.reset();
-		
 	}
   },
-  
+  directives: {
+    ClickOutside
+  },
+  mounted () {
+    // prevent click outside event with popupItem.
+    this.popupItem = this.$el
+  },
   watch: {
 	selectedSubmitters: function() {
 		this.selectedSubmitters.length>0 ? this.workflowDashboard.filtersEnabled.submitterFilter = true : this.workflowDashboard.filtersEnabled.submitterFilter = false},

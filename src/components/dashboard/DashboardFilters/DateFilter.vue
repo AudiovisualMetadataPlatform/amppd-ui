@@ -1,9 +1,9 @@
 <template>
 	<div class="dropdown">
-	<button class="btn btn-info dropdown-toggle" :class="{ 'show' : visible === true }" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="visible ? 'true' : 'false'" v-on:click="visible = !visible">
+	<button class="btn btn-info dropdown-toggle" :class="{ 'show' : this.workflowDashboard.filtersEnabled.dateFilter === true }" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="this.workflowDashboard.filtersEnabled.dateFilter ? 'true' : 'false'" v-on:click="setFilterFlags">
 	Date range
 	</button>
-	<div class="dropdown-menu compact-form" :class="{ 'show' : visible === true }" aria-labelledby="dropdownMenuButton">
+	<div v-click-outside="closeFilter" class="dropdown-menu compact-form" :class="{ 'show' : this.workflowDashboard.filtersEnabled.dateFilter === true }" aria-labelledby="dropdownMenuButton">
 	<form class="">
 		<div class="form-group row">
 		<label for="colFormLabelFrom" class="col-sm-4 col-form-label col-form-label-sm text-right">From</label>
@@ -29,6 +29,7 @@
 <script>
 import { sync } from 'vuex-pathify'
 import Datepicker from 'vuejs-datepicker';
+import ClickOutside from 'vue-click-outside'
 export default {
 	name: 'DateFilter',
 	components:{
@@ -36,7 +37,6 @@ export default {
 	},
 	data(){
     return {
-	visible : false,
 	fromDate :  new Date(),
 	toDate : new Date(),
 	state : {
@@ -49,19 +49,33 @@ export default {
 	workflowDashboard: sync("workflowDashboard")
   },
   methods:{
+		setFilterFlags(){
+		this.workflowDashboard.filtersEnabled.dateFilter = !this.workflowDashboard.filtersEnabled.dateFilter;
+		if(this.workflowDashboard.filtersEnabled.dateFilter)
+		{
+            this.workflowDashboard.filtersEnabled.fileFilter=false;
+            this.workflowDashboard.filtersEnabled.submitterFilter =false;
+            this.workflowDashboard.filtersEnabled.itemFilter=false;
+            this.workflowDashboard.filtersEnabled.searchFilter=false;
+            this.workflowDashboard.filtersEnabled.statusFilter=false;
+            this.workflowDashboard.filtersEnabled.stepFilter=false;
+            this.workflowDashboard.filtersEnabled.workflowFilter=false;
+		}
+		//this.visible = !this.visible;
+	},
 	setDisabledDate(){
 		let self = this;
 		self.state.disabledDates.to = new Date(self.fromDate);
 	},
 	closeFilter(){
-		this.visible=false;
+		this.workflowDashboard.filtersEnabled.dateFilter=false;
 	},
 	filterByDate(){
 		let self = this;
 		self.workflowDashboard.searchQuery.filterByDates = []
 		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.fromDate));
 		self.workflowDashboard.searchQuery.filterByDates.push(new Date(self.toDate));
-		self.visible=false;
+		self.workflowDashboard.filtersEnabled.dateFilter=false;
 	},
 	getMaxDate(){
 		console.log("inside getMaxDate()");
@@ -78,6 +92,13 @@ export default {
 		console.log("todays date :"+today);
 		return today;
 	}
+  },
+  directives: {
+    ClickOutside
+  },
+  mounted () {
+    // prevent click outside event with popupItem.
+    this.popupItem = this.$el
   },
 }
 </script>

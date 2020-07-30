@@ -1,10 +1,10 @@
 <template>
     <div class="dropdown" >
-        <button class="btn btn-info dropdown-toggle" :class="{ 'show' : visible === true }" type="button" id="dropdownMenuButton1" 
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="visible ? 'true' : 'false'" v-on:click="visible = !visible">
+        <button class="btn btn-info dropdown-toggle" :class="{ 'show' : workflowDashboard.filtersEnabled.stepFilter === true }" type="button" id="dropdownMenuButton1" 
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="workflowDashboard.filtersEnabled.stepFilter ? 'true' : 'false'" v-on:click="setFilterFlags">
             Workflow Step
         </button>
-        <div class="dropdown-menu compact-form" :class="{ 'show' : visible === true }" aria-labelledby="dropdownMenuButton" 
+        <div v-click-outside="closeFilter" class="dropdown-menu compact-form" :class="{ 'show' : workflowDashboard.filtersEnabled.stepFilter === true }" aria-labelledby="dropdownMenuButton" 
             x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
             <form class="main-dropdown">
                 <div class="container-fluid">
@@ -47,6 +47,7 @@
 import { sync } from 'vuex-pathify'
 import _ from 'underscore';
 import Typeahead from '../../shared/TypeAhead.vue';
+import ClickOutside from 'vue-click-outside'
 
 export default {
   name: 'StepFilter',
@@ -55,7 +56,6 @@ export default {
   },
   data(){
     return {
-        visible: false,
         stepList: [],
         filterSuccess: false,
         selectedSteps: []
@@ -71,6 +71,19 @@ export default {
   },
   
   methods:{
+    setFilterFlags(){
+		this.workflowDashboard.filtersEnabled.stepFilter = !this.workflowDashboard.filtersEnabled.stepFilter;
+		if(this.workflowDashboard.filtersEnabled.stepFilter)
+		{
+            this.workflowDashboard.filtersEnabled.dateFilter=false;
+            this.workflowDashboard.filtersEnabled.submitterFilter =false;
+            this.workflowDashboard.filtersEnabled.fileFilter=false;
+            this.workflowDashboard.filtersEnabled.searchFilter=false;
+            this.workflowDashboard.filtersEnabled.statusFilter=false;
+            this.workflowDashboard.filtersEnabled.itemFilter=false;
+            this.workflowDashboard.filtersEnabled.workflowFilter=false;
+		}
+	},
     addStep(step) {
         if (this.selectedSteps.length >0) {
             if (this.selectedSteps.indexOf(step) == -1) {
@@ -92,10 +105,16 @@ export default {
         console.log("selected steps are: " + this.selectedSteps + ", and removed element is: " + removed);
     },
     closeFilter(){
-        this.visible = false;
+        this.workflowDashboard.filtersEnabled.stepFilter = false;
     }
   },
-  
+  directives: {
+    ClickOutside
+  },
+  mounted () {
+    // prevent click outside event with popupItem.
+    this.popupItem = this.$el
+  },
   watch: {
     selectedSteps: function() {
         this.selectedSteps.length>0 ? this.workflowDashboard.filtersEnabled.stepFilter = true : this.workflowDashboard.filtersEnabled.stepFilter = false
