@@ -157,15 +157,13 @@ export default {
          if(self.searchWord.length >0){
             self.searchedItems = await self.workflowService.searchFiles(this.searchWord, media_type);
             if(self.searchedItems.rows!=null)
-            {    self.searchResults = true;
-               console.log("inside if");
+            {    
+               self.searchResults = true;
             }
             else
             {
                self.searchResults = false;
-               console.log("inside else");
             }
-            console.log("the files are:"+self.searchedItems.length+" media_type is:"+media_type+" "+self.searchResults);
          }
       },
 		addFiles(index, file_index) {
@@ -199,7 +197,6 @@ export default {
                break;
             }
          }
-         console.log("result is:"+result);
          return result;
        },
 

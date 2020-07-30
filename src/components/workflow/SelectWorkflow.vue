@@ -120,8 +120,6 @@ export default {
 
       await self.workflowService.addPrimaryFiles(bundle.id, primaryfileIds)
          .then(response => {
-            console.log("return from bundle");
-            console.log(response);
             bundle = response.data;
          })
          .catch(e => {
@@ -154,8 +152,6 @@ export default {
             self.showModal = true;
             throw new Error("Could not create bundle");
          }); 
-      console.log("Bundle created");
-      console.log(createdBundle);
       return createdBundle;     
     },
     async createBundle(name, description){
