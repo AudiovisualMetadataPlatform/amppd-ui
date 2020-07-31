@@ -15,15 +15,11 @@ Vue.use(Vuex);
 =======================================================*/
 
 const state = {
-    parameters: [], // Workflow step parameters
-    files: [], // List of files
-    selectedWorkflow: null, // Selected workflow
-    isWorkflowModalVisible: false,
-    // bundle: null, // bundle created for primaryfiles upon submission
-    jobs: [], // jobs successfully created
     workflowSubmission:{
       loading:false,
-      selectedFiles: []
+      selectedFiles: [],
+      selectedWorkflow: null,
+      selectedWorkflowParameters: []
     },
     workflowDashboard:{
         loading:false,
