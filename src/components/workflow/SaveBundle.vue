@@ -21,17 +21,38 @@
       </div>
    </modal>
 
-   <modal v-if="showModal" id="inform" @close="showModal = false" class="my-modal">
-      <h3 slot="header">{{modalHeader}}</h3>
+   <modal v-if="showConfirmUpdate" id="confirmUpdate" @close="showConfirmUpdate = false" class="my-modal">
+      <h3 slot="header">Confirm</h3>
       <div slot="body">
-        {{modalText}}
+        A bundle owned by you with name {{bundle.name}} and description {{bundle.description}} already exists, do you want to overwrite it?
       </div>
       <div slot="footer">
-        <input v-if="!isConfirm()" type="button" class="secondary-button" v-on:click="showModal = false" value="Ok"/>
-        <input v-if="isConfirm()" type="button" class="secondary-button" v-on:click="showModal = false" value="No"/>
-        <input v-if="isConfirm()" type="button" class="primary-button" v-on:click="updateConfirmed" value="Yes"/>
+        <input type="button" class="btn btn-outline-primary btn-md" v-on:click="showConfirmUpdate = false" value="No"/>
+        <input type="button" class="btn btn-primary btn-md" v-on:click="updateConfirmed" value="Yes"/>
       </div>
    </modal>   
+
+   <modal v-if="showResponse" id="response" @close="showResponse = false" class="my-modal">
+      <h3 slot="header">{{responseHeader}}</h3>
+      <div slot="body">
+        {{responseText}}
+      </div>
+      <div slot="footer">
+        <input type="button" class="secondary-button" v-on:click="showResponse = false" value="Ok"/>
+      </div>
+   </modal>   
+
+   <!-- <modal v-if="showResponse" id="inform" @close="showResponse = false" class="my-modal">
+      <h3 slot="header">{{responseHeader}}</h3>
+      <div slot="body">
+        {{responseText}}
+      </div>
+      <div slot="footer">
+        <input v-if="!isConfirm()" type="button" class="secondary-button" v-on:click="showResponse = false" value="Ok"/>
+        <input v-if="isConfirm()" type="button" class="secondary-button" v-on:click="showResponse = false" value="No"/>
+        <input v-if="isConfirm()" type="button" class="primary-button" v-on:click="updateConfirmed" value="Yes"/>
+      </div>
+   </modal>    -->
 </div>
 </template>
 
@@ -48,9 +69,10 @@ export default {
   data() {
     return {
       workflowService: new WorkflowService(),
-      modalHeader: "",
-      modalText: "",
-	  showModal: false,
+	  showConfirmUpdate: false,
+	  showResponse: false,
+      responseHeader: "",
+      responseText: "",
 	  bundle: null,
       bundleName: "",
 	  bundleDescription: "",
@@ -66,7 +88,7 @@ export default {
     workflowSubmission: sync('workflowSubmission'),
 	selectedFiles: sync('workflowSubmission.selectedFiles'),
 	showSaveBundle: sync('workflowSubmission.showSaveBundle'),
-	// isConfirm: this.modalHeader === "Confirm",
+	// isConfirm: this.responseHeader === "Confirm",
   },
 
   methods:{
@@ -80,16 +102,20 @@ export default {
 			console.log("Returned bundle: " + this.bundle.id);
         }).catch(e => {
 			console.log(e);
-			this.modalHeader = "Error";
-            this.modalText = "Error checking bundle existance: a system error has occured, please try again later."
-			this.showModal = true;
+			this.responseHeader = "Error";
+            this.responseText = "Error checking bundle existance before saving bundle: a system error has occured, please try again later."
+			this.showResponse = true;
+			this.workflowSubmission.showSaveBundle = false;
+			return;
 		}); 			
 
-		if (this.bundle && this.bundle.id) { // if yes, confirm if user wants to overwrite it
+		// if yes, confirm if user wants to overwrite it
+		if (this.bundle && this.bundle.id) { 
 			console.log("Found an existing bundle, will update it: " + this.bundle.id);
-			this.confirmUpdate();
+			this.showConfirmUpdate = true;
 		}
-		else { // otherwise, create a new bundle		
+		// otherwise, create a new one
+		else { 	
 			console.log("No existing bundle found, will create a new one");
 			this.createBundle();
 			this.workflowSubmission.showSaveBundle = false;
@@ -104,35 +130,35 @@ export default {
 		return true;
 	},
 
-	confirmUpdate() {
-		this.modelHeader = "Confirm";
-		this.modelText = `A bundle owned by you with name "${this.bundle.name}" and description "${this.bundle.description}" already exists, do you want to overwrite it?`;
-		this.showModal = true;
-		console.log("modalHeader: " + this.modelHeader);
-		console.log("modelText: " + this.modelText);
-	},
+	// confirmUpdate() {
+	// 	this.modelHeader = "Confirm";
+	// 	this.modelText = `A bundle owned by you with name "${this.bundle.name}" and description "${this.bundle.description}" already exists, do you want to overwrite it?`;
+	// 	this.showResponse = true;
+	// 	console.log("responseHeader: " + this.modelHeader);
+	// 	console.log("modelText: " + this.modelText);
+	// },
 
-	updateConfirmed() {
-		this.showModal = false;
-		this.updateBundle();
+	async updateConfirmed() {
+		this.showConfirmUpdate = false;
 		this.workflowSubmission.showSaveBundle = false;
+		this.updateBundle();
 	},
 
 	async updateBundle() {
 		let primaryfileIds = this.workflowService.getSelectedPrimaryfileIds(this.selectedFiles);
 		console.log("Updating bundle with selected primaryfile IDs: " + primaryfileIds)
-		await this.workflowService.updateBundle(this.bundle.Id, this.bundleDescription, primaryfileIds).then(response => {
+		await this.workflowService.updateBundle(this.bundle.id, this.bundleDescription, primaryfileIds).then(response => {
             let updatedBundle = response.data;
 			console.log("Updated bundle: " + updatedBundle.id);
-			this.modalHeader = "Success";
-            this.modalText = `Bundle with ID ${updatedBundle.id} has been updated`;
-            this.showModal = true;
+			this.responseHeader = "Success";
+            this.responseText = `The bundle with ID ${updatedBundle.id} has been updated`;
+            this.showResponse = true;
 			return updatedBundle;		
         }).catch(e => {
 			console.log(e);
-			this.modalHeader = "Error";
-            this.modalText = "Error creating new bundle: a system error has occured, please try again later."
-			this.showModal = true;
+			this.responseHeader = "Error";
+            this.responseText = "Error updating bundle: a system error has occured, please try again later."
+			this.showResponse = true;
 			return null;
 		}); 
 	},
@@ -143,25 +169,25 @@ export default {
 		await this.workflowService.createBundle(this.bundleName, this.bundleDescription, primaryfileIds).then(response => {
             let createdBundle = response.data;
 			console.log("Created bundle: " + createdBundle.id);
-			this.modalHeader = "Success";
-            this.modalText = `A new bundle with ID ${createdBundle.id} has been created`;
-            this.showModal = true;
+			this.responseHeader = "Success";
+            this.responseText = `A new bundle with ID ${createdBundle.id} has been created`;
+            this.showResponse = true;
 			return createdBundle;
         }).catch(e => {
 			console.log(e);
-			this.modalHeader = "Error";
-            this.modalText = "Error creating new bundle: a system error has occured, please try again later."
-			this.showModal = true;
+			this.responseHeader = "Error";
+            this.responseText = "Error creating bundle: a system error has occured, please try again later."
+			this.showResponse = true;
 			return null;
-		 }); 
+		}); 
 	},
 
-	isConfirm() {
-		let is = ("Confirm" == "Confirm");
-		console.log("isConfirm: " + is);
-		console.log("modalHeader: " + this.modelHeader);
-		return is;
-	},
+	// isConfirm() {
+	// 	let is = ("Confirm" == "Confirm");
+	// 	console.log("isConfirm: " + is);
+	// 	console.log("responseHeader: " + this.modelHeader);
+	// 	return is;
+	// },
 
 	clearError() {
         this.inputError = '';
