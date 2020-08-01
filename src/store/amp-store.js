@@ -17,6 +17,8 @@ Vue.use(Vuex);
 const state = {
     workflowSubmission:{
       loading:false,
+      showSaveBundle:false,
+      showSelectBundle:false,
       selectedFiles: [],
       selectedWorkflow: null,
       selectedWorkflowParameters: []

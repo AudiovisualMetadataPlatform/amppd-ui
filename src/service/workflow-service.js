@@ -9,10 +9,34 @@ export default class WorkflowService extends BaseService{
         return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + searchWord +'&mediaType=' + media_type).then(response => response.data);  
     }
 
+    // concatenate IDs of selected primaryfiles into a query string
+    getSelectedPrimaryfileIds(selectedFiles){
+        if (selectedFiles === null || selectedFiles.length === 0)
+            return "";
+        var primaryfileIds = selectedFiles[0].id; 
+        for (var i=1; i < selectedFiles.length; i++) {
+            primaryfileIds += "," + selectedFiles[i].id;
+        }
+        return primaryfileIds;
+    }
 
+    async findBundle(name) {
+        return await super.get_auth(`/bundles/search/findByNameCreatedByCurrentUser?name=${name}`)
+         .then(response => { 
+            console.log("findBundle: " + response.data.id); 
+            return response.data
+         });
+    }
 
+    updateBundle(bundleId, description, primaryfileIds){
+        return super.post_auth(`/bundles/${bundleId}/update?description=${description}&primaryfileIds=${primaryfileIds}`);
+    }
 
-    createBundle(bundle){
+    createBundle(name, description, primaryfileIds){
+        return super.post_auth(`/bundles/create?name=${name}&description=${description}&primaryfileIds=${primaryfileIds}`);
+    }
+
+    createNewBundle(bundle){
         return super.post_auth('/bundles', bundle);
     }
     addPrimaryFiles(bundleId, primaryfileIds){

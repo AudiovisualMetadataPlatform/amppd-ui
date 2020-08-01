@@ -28,7 +28,7 @@
             <div>
                <div class="eq-btns btn-columns">
                   <button v-on:click="submitWorkflow" :disabled="submissionEnabled === false" type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target=".save-modal">Submit to workflow</button>
-                  <button type="button" class="btn btn-outline-primary btn-md" data-toggle="modal" data-target=".bd-example-modal-lg">Save selection as bundle</button>
+                  <button v-on:click="workflowSubmission.showSaveBundle = true" :disabled="saveBundleEnabled === false" type="button" class="btn btn-outline-primary btn-md" data-toggle="modal" data-target=".bd-example-modal-lg">Save selection as bundle</button>
                </div>
                <ul class="list-unstyled file-list">
                   <li v-for="(file, index) in selectedFiles" v-bind:key="index" v-bind:value="file.id">
@@ -65,13 +65,17 @@
             <input type="button" class="secondary-button" v-on:click="showModal = false" value="Ok"/>
       </div>
    </modal>
+   <SaveBundle/>
 </div>
 </template>
+
 <script>
 import { sync } from 'vuex-pathify'
 import {requestOptions} from '@/helpers/request-options'
 import Modal from '@/components/shared/Modal.vue'
+import SaveBundle from '@/components/workflow/SaveBundle.vue'
 import WorkflowService from '../../service/workflow-service';
+
 export default {
   name: 'WorkflowSelection',
   props: {
@@ -86,7 +90,8 @@ export default {
     }
   },
   components:{
-     Modal
+     Modal,
+     SaveBundle,
   },
   computed:{
       workflowSubmission: sync('workflowSubmission'),
@@ -95,7 +100,13 @@ export default {
          let self = this;
          if(self.selectedFiles.length==0 || !self.workflowSubmission.selectedWorkflow) return false;
          return true;
-      }
+      },
+      saveBundleEnabled(){
+         let self = this;
+         console.log(`self.selectedFiles.length: ${self.selectedFiles.length}`);
+         if(self.selectedFiles.length==0) return false;
+         return true;
+      },
   },
   methods:{
     async getWorkflows() {
@@ -130,6 +141,11 @@ export default {
          });
       return bundle;
     },
+
+    // TODO 
+    // we don't need to create anoynymous bundle upon workflow submission, 
+    // since such bundles aren't accessible to users; and creating one each time will overcrowd DB table over time
+    // instead we can add endpoint on backend to submit list of primaryfiles and use that endpoint
     async createTemporaryBundle(){
       let self = this;
       // create a new bundle with default name/description
@@ -137,10 +153,12 @@ export default {
       var size = self.selectedFiles.length;
       var endId = self.selectedFiles[size-1].id;
       var bundle = {
-         name: "Bundle #" + startId + " ~ #" + endId, 
+         // use empty string for anonymous bundle to distinguish from user named bundle         
+         name: "", 
+         // name: "Bundle #" + startId + " ~ #" + endId, 
          description: "Bundle with #" + size + " primaryfiles"
       };
-      var createdBundle = await self.workflowService.createBundle(bundle)
+      var createdBundle = await self.workflowService.createNewBundle(bundle)
          .then(response => {
             var createdBundle = response.data;
             self.addPrimaryFilesToBundle(createdBundle);
@@ -207,6 +225,10 @@ export default {
    font-weight:700;
 }
 .btn-primary:disabled {
+   background-color: rgba(187, 187, 187, 0.856) !important;
+   border-color: rgba(187, 187, 187, 0.856) !important;
+}
+.btn-secondary:disabled {
    background-color: rgba(187, 187, 187, 0.856) !important;
    border-color: rgba(187, 187, 187, 0.856) !important;
 }
