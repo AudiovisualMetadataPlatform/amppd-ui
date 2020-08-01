@@ -20,12 +20,12 @@ export default class WorkflowService extends BaseService{
         return primaryfileIds;
     }
 
-    async findBundle(name) {
-        return await super.get_auth(`/bundles/search/findByNameCreatedByCurrentUser?name=${name}`)
-         .then(response => { 
-            console.log("findBundle: " + response.data.id); 
-            return response.data
-         });
+    findBundle(name) {
+        return super.get_auth(`/bundles/search/findByNameCreatedByCurrentUser?name=${name}`);
+        //  .then(response => { 
+        //     console.log("findBundle: " + response.data.id); 
+        //     return response.data
+        //  });
     }
 
     updateBundle(bundleId, description, primaryfileIds){

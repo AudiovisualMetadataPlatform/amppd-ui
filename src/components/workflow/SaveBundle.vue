@@ -51,7 +51,7 @@ export default {
       modalHeader: "",
       modalText: "",
 	  showModal: false,
-	  bundleId: -1,
+	  bundle: null,
       bundleName: "",
 	  bundleDescription: "",
 	  inputError: "",
@@ -75,16 +75,22 @@ export default {
     	if (!this.validateBundleInputs()) return;
 
 		// check if a bundle of the same named owned by the current user already exists 
-		let bundle = this.workflowService.findBundle(this.bundleName);
-		console.log("Bundle returned:" + bundle.id);				
+		await this.workflowService.findBundle(this.bundleName).then(response => {
+            this.bundle = response.data;
+			console.log("Returned bundle: " + this.bundle.id);
+        }).catch(e => {
+			console.log(e);
+			this.modalHeader = "Error";
+            this.modalText = "Error checking bundle existance: a system error has occured, please try again later."
+			this.showModal = true;
+		}); 			
 
-		if (bundle && bundle.Id) { // if yes, confirm if user wants to overwrite it
-			console.log("Found an existing bundle:" + bundle.id);
-			this.bundleId = bundle.id;
+		if (this.bundle && this.bundle.id) { // if yes, confirm if user wants to overwrite it
+			console.log("Found an existing bundle, will update it: " + this.bundle.id);
 			this.confirmUpdate();
 		}
 		else { // otherwise, create a new bundle		
-			console.log("No existing bundle found:");
+			console.log("No existing bundle found, will create a new one");
 			this.createBundle();
 			this.workflowSubmission.showSaveBundle = false;
 		}
@@ -99,9 +105,9 @@ export default {
 	},
 
 	confirmUpdate() {
-		this.showModal = true;
-		this.modelHeader = "Confirm"
+		this.modelHeader = "Confirm";
 		this.modelText = `A bundle owned by you with name "${this.bundle.name}" and description "${this.bundle.description}" already exists, do you want to overwrite it?`;
+		this.showModal = true;
 		console.log("modalHeader: " + this.modelHeader);
 		console.log("modelText: " + this.modelText);
 	},
@@ -115,37 +121,33 @@ export default {
 	async updateBundle() {
 		let primaryfileIds = this.workflowService.getSelectedPrimaryfileIds(this.selectedFiles);
 		console.log("Updating bundle with selected primaryfile IDs: " + primaryfileIds)
-		await this.workflowService.updateBundle(this.bundleId, this.bundleDescription, primaryfileIds)
-         .then(response => {
+		await this.workflowService.updateBundle(this.bundle.Id, this.bundleDescription, primaryfileIds).then(response => {
             let updatedBundle = response.data;
-			console.log("Updated bundle:" + updatedBundle.id);
+			console.log("Updated bundle: " + updatedBundle.id);
 			this.modalHeader = "Success";
             this.modalText = `Bundle with ID ${updatedBundle.id} has been updated`;
             this.showModal = true;
 			return updatedBundle;		
-         })
-         .catch(e => {
+        }).catch(e => {
 			console.log(e);
 			this.modalHeader = "Error";
             this.modalText = "Error creating new bundle: a system error has occured, please try again later."
 			this.showModal = true;
 			return null;
-		 }); 
+		}); 
 	},
 
 	async createBundle() {
 		let primaryfileIds = this.workflowService.getSelectedPrimaryfileIds(this.selectedFiles);
 		console.log("Creating bundle with selected primaryfile IDs: " + primaryfileIds)
-		await this.workflowService.createBundle(this.bundleName, this.bundleDescription, primaryfileIds)
-         .then(response => {
+		await this.workflowService.createBundle(this.bundleName, this.bundleDescription, primaryfileIds).then(response => {
             let createdBundle = response.data;
-			console.log("Created bundle:" + createdBundle.id);
+			console.log("Created bundle: " + createdBundle.id);
 			this.modalHeader = "Success";
             this.modalText = `A new bundle with ID ${createdBundle.id} has been created`;
             this.showModal = true;
 			return createdBundle;
-         })
-         .catch(e => {
+        }).catch(e => {
 			console.log(e);
 			this.modalHeader = "Error";
             this.modalText = "Error creating new bundle: a system error has occured, please try again later."
@@ -155,8 +157,10 @@ export default {
 	},
 
 	isConfirm() {
-		console.log("modalHeader: " + this.modalHeader);
-		return this.modalHeader === "Confirm";
+		let is = ("Confirm" == "Confirm");
+		console.log("isConfirm: " + is);
+		console.log("modalHeader: " + this.modelHeader);
+		return is;
 	},
 
 	clearError() {
