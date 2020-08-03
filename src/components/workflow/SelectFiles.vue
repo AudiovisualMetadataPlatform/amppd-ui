@@ -24,7 +24,7 @@
                </div>
             </div>
             <div class="col-xl-6 col-md-12">
-               <button v-on:click="workflowSubmission.showSelectBundle = true" type="button" class="btn btn-primary float-right select-bundles" data-toggle="modal" data-target=".select-from-saved-modal">Select from saved bundles</button>
+               <button v-on:click="workflowSubmission.showSelectBundle = true" id="select-bundles" type="button" class="btn btn-primary float-right select-bundles" data-toggle="modal" data-target=".select-from-saved-modal">Select from saved bundles</button>
             </div>
          </div>
       </div>
@@ -110,11 +110,14 @@
          No Results
       </div>
    </div>
+   <SelectBundle/>
 </div>
 </template>
+
 <script>
 import { sync } from 'vuex-pathify';
 import WorkflowService from '../../service/workflow-service';
+import SelectBundle from '@/components/workflow/SelectBundle.vue'
 export default {
 	name: 'selectFiles',
     data(){
@@ -129,11 +132,19 @@ export default {
       searchResults : false
       }
    },
-  computed:{
+   components:{
+     SelectBundle,
+   },
+   computed:{
      workflowSubmission: sync('workflowSubmission'),
      selectedFiles: sync('workflowSubmission.selectedFiles'),
-  },
+   },
 	methods:{
+      // selectBundles() {
+      //    this.workflowSubmission.showSelectBundle = true;
+      //    console.log("showSelectBundle:" + this.workflowSubmission.showSelectBundle);
+      // },
+
       itemClicked(index){
          if(this.visible == index)
          {
@@ -214,6 +225,7 @@ export default {
    }
 }
 </script>
+
 <style scoped>
 @import '/amppd-ui/src/styles/style.css';
 .select-bundles{

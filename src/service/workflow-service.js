@@ -21,11 +21,11 @@ export default class WorkflowService extends BaseService{
     }
 
     listBundles() {
-        return super.get_auth(`/bundles/search/findAllWithNonEmptyName`);
+        return super.get_auth(`/bundles/search/findAllNamed`);
     }
 
     findBundle(name) {
-        return super.get_auth(`/bundles/search/findByNameCreatedByCurrentUser?name=${name}`);
+        return super.get_auth(`/bundles/search/findNamedByCurrentUser?name=${name}`);
         //  .then(response => { 
         //     console.log("findBundle: " + response.data.id); 
         //     return response.data

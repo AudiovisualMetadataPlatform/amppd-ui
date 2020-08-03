@@ -1,16 +1,15 @@
 <template>
 <div class="col-lg-7">
-   <modal v-if="showSelectBundle" id="selectBundle" @close="workflowSubmission.showSelectBundle = false" class="my-modal">
-      <h3 slot="header">Save file selection as a bundle</h3>
-      <div slot="body" class="input-group mb-3">
-      
+   <modal v-if="workflowSubmission.showSelectBundle" id="selectBundle" @close="workflowSubmission.showSelectBundle = false" class="my-modal">
+      <h3 slot="header">Select Primaryfiles from saved bundles</h3>
+      <div slot="body" class="input-group mb-3">      
       <div id="accordion" v-if="bundles && bundles.length>0">
          <div class="card" v-for="(bundle, index) in bundles" v-bind:key="index" >
             <div class="card-header" id="headingTwo">
                <h5 class="mb-0">
-                  <button class="btn btn-link" :class="{ 'collapsed' : !(visible === index) }" :key="bundle.id" 
+                  <button class="btn btn-link" :class="{ 'collapsed': visible !== index }" :key="bundle.id" 
 				  	v-on:click="expandBundle(index)" data-toggle="collapse" data-target="#collapseTwo" 
-					aria-expanded="visible[index] ? 'true' : 'false'" aria-controls="collapseTwo" title="bundle.description">
+					aria-expanded="visible === index" aria-controls="collapseTwo" title="bundle.description">
                      <svg aria-hidden="true" focusable="false" class="svg-inline dwn-arrow" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                         <path class="hotlink" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path>
                      </svg>
@@ -36,7 +35,7 @@
                   <ul class="list-unstyled file-list" >
                      <li v-for="(primaryfile, indexPf) in bundle.primaryfiles" v-bind:key="indexPf">
                         <button class="btn btn-light btn-sm" :disabled="true">
-                           <svg v-if="!workflowService.isAudioFile(primaryfile)" class="icon-play  " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                           <svg v-if="!workflowService.isAudioFile(primaryfile)" class="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                               <path class="icon-play" d="M25.7 8.8c2.7 0 5.3 0 7.8 0.1C35.9 8.9 37.8 9 39 9.1l1.8 0.1c0 0 0.2 0 0.4 0s0.4 0 0.6 0.1c0.1 0 0.3 0.1 0.6 0.1 0.3 0 0.5 0.1 0.7 0.2 0.2 0.1 0.4 0.2 0.7 0.3 0.3 0.1 0.5 0.3 0.7 0.5 0.2 0.2 0.5 0.4 0.7 0.6 0.1 0.1 0.2 0.2 0.4 0.4 0.2 0.2 0.4 0.7 0.7 1.4 0.3 0.7 0.5 1.5 0.6 2.4 0.1 1 0.2 2.1 0.3 3.3 0.1 1.2 0.1 2.1 0.1 2.7v1 3.3c0 2.3-0.1 4.6-0.4 7 -0.1 0.9-0.3 1.7-0.6 2.4s-0.5 1.2-0.8 1.5L45 36.7c-0.2 0.2-0.5 0.5-0.7 0.6 -0.2 0.2-0.5 0.3-0.7 0.5s-0.5 0.2-0.7 0.3c-0.2 0.1-0.4 0.1-0.7 0.2 -0.3 0-0.5 0.1-0.6 0.1 -0.1 0-0.3 0-0.6 0.1 -0.2 0-0.4 0-0.4 0 -4 0.3-9 0.5-15 0.5 -3.3 0-6.2-0.1-8.6-0.2 -2.4-0.1-4-0.1-4.8-0.2L11 38.6l-0.9-0.1c-0.6-0.1-1-0.2-1.3-0.2 -0.3-0.1-0.7-0.2-1.2-0.5s-1-0.6-1.4-1c-0.1-0.1-0.2-0.2-0.4-0.4 -0.2-0.2-0.4-0.7-0.7-1.4s-0.5-1.5-0.6-2.4c-0.1-1-0.2-2.1-0.3-3.3 -0.1-1.2-0.1-2.1-0.1-2.7v-1 -3.3c0-2.3 0.1-4.6 0.4-7 0.1-0.9 0.3-1.7 0.6-2.4s0.5-1.2 0.8-1.5L6.3 11c0.2-0.2 0.5-0.5 0.7-0.6 0.2-0.2 0.5-0.3 0.7-0.5C8 9.8 8.2 9.7 8.4 9.6s0.4-0.1 0.7-0.2c0.3 0 0.5-0.1 0.6-0.1 0.1 0 0.3 0 0.6-0.1s0.4 0 0.4 0C14.6 8.9 19.6 8.8 25.7 8.8zM21.2 29.4l11.6-6 -11.6-6.1V29.4z"></path>
                            </svg>
                            <svg v-else class="icon-play-audio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
@@ -50,7 +49,10 @@
                </div>
             </div>
          </div>
-      </div>	  
+      </div>	
+      <div v-else>  
+         No Bundles found
+      </div>	    
 	  </div>
       <div slot="footer">
          <input type="button" class="btn btn-primary btn-md" v-on:click="workflowSubmission.showSelectBundle = false" value="Done"/>
@@ -75,7 +77,7 @@ import Modal from '@/components/shared/Modal.vue';
 import WorkflowService from '../../service/workflow-service';
 
 export default {
-  name: 'SaveBundle',
+  name: 'SelectBundle',
   props: {
   },
 
@@ -86,6 +88,7 @@ export default {
       responseHeader: "",
       responseText: "",
 	  bundles: [],
+      visible : -1,
     }
   },
 
@@ -100,8 +103,8 @@ export default {
   },
 
   methods:{
-    expandBunble(index){
-    	if (this.visible == index) {
+    expandBundle(index){
+    	if (this.visible === index) {
             this.visible = -1;
         }
         else
@@ -109,25 +112,44 @@ export default {
     },
 
 	// return true if all primaryfiles in the bundle have been added to the selected files list
-	allSelected(bundle) {
+	allSelected(index) {
+		let pfs = this.bundles[index].primaryfiles;
 		return false;
 	},
 
 	// add all primaryfiles of the bundle to the selected files list
-    addAllFiles(bundle) {
-		let pfs = this.bundle.primaryfiles;
+    addAllFiles(index) {
+		let pfs = this.bundles[index].primaryfiles;
 		pfs.forEach(pf => {
-			selectedFiles.push(pf);
+			this.selectedFiles.push(pf);
 		    console.log("Add selected primaryfile:", pf.id);
 		})
     },
 
+	async listBundles() {
+		await this.workflowService.listBundles().then(response => {
+			// console.log("response data:" + response.data._embedded.bundles);
+			// this.bundles = response.data._embedded.bundles;
+			this.bundles = response.data;
+			console.log(`Found a total of ${this.bundles.length} bundles`);
+			// this.responseHeader = "Success";
+			// this.responseText = `The bundle with ID ${updatedBundle.id} has been updated`;
+			// this.showResponse = true;	
+		}).catch(e => {
+			console.log(e);
+			this.responseHeader = "Error";
+			this.responseText = "Error retrieving bundles: a system error has occured, please try again later."
+			this.showResponse = true;
+			this.workflowSubmission.showSelectBundle = false;
+		}); 
+	}
   },
 
   mounted() {
     let self = this;
 	if(!self.selectedFiles) self.selectedFiles = [];
-	this.bundles = workflowService.listBundles();
+	console.log("mounted: showSelectBundle: " + this.showSelectBundle);
+	this.listBundles();
   }
 }
 </script>
@@ -138,7 +160,7 @@ export default {
 .my-modal-body{
   width: fit-content;
   height: fit-content;
-  max-height: 600px;
+  max-height: 500px;
   overflow-x: scroll;
   overflow-y: scroll;
 }
