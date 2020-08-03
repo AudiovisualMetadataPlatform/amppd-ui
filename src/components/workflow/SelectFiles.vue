@@ -24,7 +24,7 @@
                </div>
             </div>
             <div class="col-xl-6 col-md-12">
-               <button id="select-saved" type="button" class="btn btn-primary float-right select-bundles" data-toggle="modal" data-target=".select-from-saved-modal">Select from saved bundles</button>
+               <button v-on:click="workflowSubmission.showSelectBundle = true" type="button" class="btn btn-primary float-right select-bundles" data-toggle="modal" data-target=".select-from-saved-modal">Select from saved bundles</button>
             </div>
          </div>
       </div>
@@ -82,7 +82,7 @@
                   <ul class="list-unstyled file-list" >
                      <li v-for="(filename, file_index) in item.primaryFiles" v-bind:key="file_index">
                         <button class="btn btn-light btn-sm" :disabled=hasValue(filename.id)>
-                           <svg v-if="!workflowService.isAudioFile(filename.mediaType)" class="icon-play  " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                           <svg v-if="!workflowService.isAudioFile(filename)" class="icon-play  " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                               <path class="icon-play" d="M25.7 8.8c2.7 0 5.3 0 7.8 0.1C35.9 8.9 37.8 9 39 9.1l1.8 0.1c0 0 0.2 0 0.4 0s0.4 0 0.6 0.1c0.1 0 0.3 0.1 0.6 0.1 0.3 0 0.5 0.1 0.7 0.2 0.2 0.1 0.4 0.2 0.7 0.3 0.3 0.1 0.5 0.3 0.7 0.5 0.2 0.2 0.5 0.4 0.7 0.6 0.1 0.1 0.2 0.2 0.4 0.4 0.2 0.2 0.4 0.7 0.7 1.4 0.3 0.7 0.5 1.5 0.6 2.4 0.1 1 0.2 2.1 0.3 3.3 0.1 1.2 0.1 2.1 0.1 2.7v1 3.3c0 2.3-0.1 4.6-0.4 7 -0.1 0.9-0.3 1.7-0.6 2.4s-0.5 1.2-0.8 1.5L45 36.7c-0.2 0.2-0.5 0.5-0.7 0.6 -0.2 0.2-0.5 0.3-0.7 0.5s-0.5 0.2-0.7 0.3c-0.2 0.1-0.4 0.1-0.7 0.2 -0.3 0-0.5 0.1-0.6 0.1 -0.1 0-0.3 0-0.6 0.1 -0.2 0-0.4 0-0.4 0 -4 0.3-9 0.5-15 0.5 -3.3 0-6.2-0.1-8.6-0.2 -2.4-0.1-4-0.1-4.8-0.2L11 38.6l-0.9-0.1c-0.6-0.1-1-0.2-1.3-0.2 -0.3-0.1-0.7-0.2-1.2-0.5s-1-0.6-1.4-1c-0.1-0.1-0.2-0.2-0.4-0.4 -0.2-0.2-0.4-0.7-0.7-1.4s-0.5-1.5-0.6-2.4c-0.1-1-0.2-2.1-0.3-3.3 -0.1-1.2-0.1-2.1-0.1-2.7v-1 -3.3c0-2.3 0.1-4.6 0.4-7 0.1-0.9 0.3-1.7 0.6-2.4s0.5-1.2 0.8-1.5L6.3 11c0.2-0.2 0.5-0.5 0.7-0.6 0.2-0.2 0.5-0.3 0.7-0.5C8 9.8 8.2 9.7 8.4 9.6s0.4-0.1 0.7-0.2c0.3 0 0.5-0.1 0.6-0.1 0.1 0 0.3 0 0.6-0.1s0.4 0 0.4 0C14.6 8.9 19.6 8.8 25.7 8.8zM21.2 29.4l11.6-6 -11.6-6.1V29.4z"></path>
                            </svg>
                            <svg v-else class="icon-play-audio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">

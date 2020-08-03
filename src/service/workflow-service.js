@@ -20,6 +20,10 @@ export default class WorkflowService extends BaseService{
         return primaryfileIds;
     }
 
+    listBundles() {
+        return super.get_auth(`/bundles/search/findAllWithNonEmptyName`);
+    }
+
     findBundle(name) {
         return super.get_auth(`/bundles/search/findByNameCreatedByCurrentUser?name=${name}`);
         //  .then(response => { 
@@ -51,8 +55,13 @@ export default class WorkflowService extends BaseService{
         tempName = tempName.replace(/(^\w)|(\s+\w)/g, match => match.toUpperCase());
         return tempName;
     }
-    isAudioFile(mediaType){
-       return mediaType ? mediaType.startsWith('audio') : false;
+    isAudioFile(primaryfile){
+        if (primaryfile.mediaType)
+            return primaryfile.mediaType.startsWith('audio');
+        if (primaryfile.originalFilename)
+            return primaryfile.originalFilename.endsWith('.mp3') || 
+                    primaryfile.originalFilename.endsWith('.wav') ||
+                    primaryfile.originalFilename.endsWith('.flac');        
     } 
     async getWorkflowDetails(id){
         var tempParams = [];
