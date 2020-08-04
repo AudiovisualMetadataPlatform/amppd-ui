@@ -119,7 +119,7 @@ import { sync } from 'vuex-pathify';
 import WorkflowService from '../../service/workflow-service';
 import SelectBundle from '@/components/workflow/SelectBundle.vue'
 export default {
-	name: 'selectFiles',
+	name: 'SelectFiles',
     data(){
 		return {
 		searchAudio : false,

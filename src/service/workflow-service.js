@@ -2,12 +2,18 @@
 import BaseService from './base-service.js';
 const baseService = new BaseService();
 export default class WorkflowService extends BaseService{
-    getWorkflows(){
-        return super.get_auth('/workflows');
-    }
     async searchFiles(searchWord, media_type){
         return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + searchWord +'&mediaType=' + media_type).then(response => response.data);  
     }
+
+    isAudioFile(primaryfile){
+        if (primaryfile.mediaType)
+            return primaryfile.mediaType.startsWith('audio');
+        if (primaryfile.originalFilename)
+            return primaryfile.originalFilename.endsWith('.mp3') || 
+                    primaryfile.originalFilename.endsWith('.wav') ||
+                    primaryfile.originalFilename.endsWith('.flac');        
+    } 
 
     // concatenate IDs of selected primaryfiles into a query string
     getSelectedPrimaryfileIds(selectedFiles){
@@ -40,29 +46,30 @@ export default class WorkflowService extends BaseService{
         return super.post_auth(`/bundles/create?name=${name}&description=${description}&primaryfileIds=${primaryfileIds}`);
     }
 
+    submitWorkflow(selectedWorkflow, primaryfileIds){
+        console.log('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds);
+        return super.post_auth('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds);
+    }
+
     createNewBundle(bundle){
         return super.post_auth('/bundles', bundle);
     }
     addPrimaryFiles(bundleId, primaryfileIds){
         return super.post_auth('/bundles/' + bundleId + '/addPrimaryfiles?primaryfileIds=' + primaryfileIds);
     }
-    submitWorkflow(selectedWorkflow, bundleId){
-        return super.post_auth('/jobs/bundle?workflowId=' + selectedWorkflow + '&bundleId=' + bundleId);
+    submitWorkflowWithBundle(selectedWorkflow, bundleId){
+        return super.post_auth('/jobs/submitBundle?workflowId=' + selectedWorkflow + '&bundleId=' + bundleId);
     }
+
     cleanParameterName(name){
         if(!name) return "";
         var tempName = name.replace(/(_)/g, ' ');
         tempName = tempName.replace(/(^\w)|(\s+\w)/g, match => match.toUpperCase());
         return tempName;
+    }    
+    getWorkflows(){
+        return super.get_auth('/workflows');
     }
-    isAudioFile(primaryfile){
-        if (primaryfile.mediaType)
-            return primaryfile.mediaType.startsWith('audio');
-        if (primaryfile.originalFilename)
-            return primaryfile.originalFilename.endsWith('.mp3') || 
-                    primaryfile.originalFilename.endsWith('.wav') ||
-                    primaryfile.originalFilename.endsWith('.flac');        
-    } 
     async getWorkflowDetails(id){
         var tempParams = [];
         return await super.get_auth('/workflows/' + id).then(response=>

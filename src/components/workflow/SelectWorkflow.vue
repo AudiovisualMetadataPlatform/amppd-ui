@@ -77,12 +77,13 @@ import SaveBundle from '@/components/workflow/SaveBundle.vue'
 import WorkflowService from '../../service/workflow-service';
 
 export default {
-  name: 'WorkflowSelection',
+  name: 'SelectWorkflow',
   props: {
   },
   data() {
     return {
       workflows:[],
+      jobs: {},
       workflowService: new WorkflowService(),
       modalHeader: "Error",
       modalText: "",
@@ -121,86 +122,97 @@ export default {
       self.workflowSubmission.selectedWorkflow = event.target.value;
       self.workflowSubmission.selectedWorkflowParameters = await this.workflowService.getWorkflowDetails(self.workflowSubmission.selectedWorkflow);
     },
-    async addPrimaryFilesToBundle(bundle){
-       let self = this;
-       // add currently selected primaryfiles to the bundle
-      var primaryfileIds = this.selectedFiles[0].id; 
-      for (var i=1; i<this.selectedFiles.length; i++) {
-         primaryfileIds += "," + this.selectedFiles[i].id;
-      }
 
-      await self.workflowService.addPrimaryFiles(bundle.id, primaryfileIds)
-         .then(response => {
-            bundle = response.data;
-         })
-         .catch(e => {
-            console.log(e);
-            self.modalText = "Error adding primary files to bundle. Please contact a system administrator."
-            self.modalText = "Error submitting workflow:  Could not add primary files toy"
-            self.showModal = true;
-         });
-      return bundle;
-    },
+   //  async addPrimaryFilesToBundle(bundle){
+   //     let self = this;
+   //     // add currently selected primaryfiles to the bundle
+   //    var primaryfileIds = this.selectedFiles[0].id; 
+   //    for (var i=1; i<this.selectedFiles.length; i++) {
+   //       primaryfileIds += "," + this.selectedFiles[i].id;
+   //    }
 
-    // TODO 
-    // we don't need to create anoynymous bundle upon workflow submission, 
-    // since such bundles aren't accessible to users; and creating one each time will overcrowd DB table over time
-    // instead we can add endpoint on backend to submit list of primaryfiles and use that endpoint
-    async createTemporaryBundle(){
-      let self = this;
-      // create a new bundle with default name/description
-      var startId = self.selectedFiles[0].id;
-      var size = self.selectedFiles.length;
-      var endId = self.selectedFiles[size-1].id;
-      var bundle = {
-         // use empty string for anonymous bundle to distinguish from user named bundle         
-         name: "", 
-         // name: "Bundle #" + startId + " ~ #" + endId, 
-         description: "Bundle with #" + size + " primaryfiles"
-      };
-      var createdBundle = await self.workflowService.createNewBundle(bundle)
-         .then(response => {
-            var createdBundle = response.data;
-            self.addPrimaryFilesToBundle(createdBundle);
-            return createdBundle;
-         })
-         .catch(e => {
-            console.log(e);
-            self.modalText = "Error submitting workflow:  Could not create bundle."
-            self.showModal = true;
-            throw new Error("Could not create bundle");
-         }); 
-      return createdBundle;     
-    },
-    async createBundle(name, description){
-         console.log("Creating a bundle!!!")
-    },
-    async showCreateBundleModal(name, description){
-         console.log("Showing create bundle modal!!!")
-    },
+   //    await self.workflowService.addPrimaryFiles(bundle.id, primaryfileIds)
+   //       .then(response => {
+   //          bundle = response.data;
+   //       })
+   //       .catch(e => {
+   //          console.log(e);
+   //          self.modalText = "Error adding primary files to bundle. Please contact a system administrator."
+   //          self.modalText = "Error submitting workflow:  Could not add primary files toy"
+   //          self.showModal = true;
+   //       });
+   //    return bundle;
+   //  },
+
+   //  async createTemporaryBundle(){
+   //    let self = this;
+   //    // create a new bundle with default name/description
+   //    var startId = self.selectedFiles[0].id;
+   //    var size = self.selectedFiles.length;
+   //    var endId = self.selectedFiles[size-1].id;
+   //    var bundle = {
+   //       // use empty string for anonymous bundle to distinguish from user named bundle         
+   //       name: "", 
+   //       // name: "Bundle #" + startId + " ~ #" + endId, 
+   //       description: "Bundle with #" + size + " primaryfiles"
+   //    };
+   //    var createdBundle = await self.workflowService.createNewBundle(bundle)
+   //       .then(response => {
+   //          var createdBundle = response.data;
+   //          self.addPrimaryFilesToBundle(createdBundle);
+   //          return createdBundle;
+   //       })
+   //       .catch(e => {
+   //          console.log(e);
+   //          self.modalText = "Error submitting workflow:  Could not create bundle."
+   //          self.showModal = true;
+   //          throw new Error("Could not create bundle");
+   //       }); 
+   //    return createdBundle;     
+   //  },
+
+   // we don't need to create anoynymous bundle upon workflow submission, 
+   // since such bundles aren't accessible to users; and creating one each time will overcrowd DB table over time;
+   // instead we can add endpoint on backend to submit list of primaryfiles and use that endpoint
    async submitWorkflow(){
       console.log("Submitting workflow");
       let self = this;
       self.workflowSubmission.loading = true;
-      await self.createTemporaryBundle().then(bundleResponse=>{
-         self.workflowService.submitWorkflow(this.workflowSubmission.selectedWorkflow, bundleResponse.id)
-            .then(response => {
-               this.jobs = response.data;
+      await self.workflowService.submitWorkflow(this.workflowSubmission.selectedWorkflow, self.workflowService.getSelectedPrimaryfileIds(this.selectedFiles))
+         .then(response => {
+            let jobsobj = response.data;
+            this.jobs = new Map(Object.entries(jobsobj));
+            self.workflowSubmission.loading = false;
+            self.modalHeader = "Success!";
+            self.modalText = `${this.selectedFiles.length} files have been submitted, ${this.jobs.size} jobs have been created successfuly`;
+            self.showModal = true;
+            })
+            .catch(e => {
+               console.log(e);
                self.workflowSubmission.loading = false;
-               self.modalHeader = "Success!";
-               self.modalText = "Your files have been submitted successfuly";
+               self.modalText = "Error submitting workflow:  Could not finish submission."
                self.showModal = true;
-               })
-               .catch(e => {
-                  console.log(e);
-                  self.workflowSubmission.loading = false;
-                  self.modalText = "Error submitting workflow:  Could finish submission."
-                  self.showModal = true;
-               });
-               
-      });      
+            });
+      
+      // await self.createTemporaryBundle().then(bundleResponse=>{
+      //    self.workflowService.submitWorkflowWithBundle(this.workflowSubmission.selectedWorkflow, bundleResponse.id)
+      //       .then(response => {
+      //          this.jobs = response.data;
+      //          self.workflowSubmission.loading = false;
+      //          self.modalHeader = "Success!";
+      //          self.modalText = "Your files have been submitted successfuly";
+      //          self.showModal = true;
+      //          })
+      //          .catch(e => {
+      //             console.log(e);
+      //             self.workflowSubmission.loading = false;
+      //             self.modalText = "Error submitting workflow:  Could finish submission."
+      //             self.showModal = true;
+      //          });               
+      // });      
    },
-    removeFile(id){
+
+   removeFile(id){
       let self = this;
       for( var i = 0; i < self.selectedFiles.length; i++){ 
         if (self.selectedFiles[i].id === id) {
