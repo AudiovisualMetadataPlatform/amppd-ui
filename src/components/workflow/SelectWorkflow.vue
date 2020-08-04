@@ -31,7 +31,7 @@
                   <button v-on:click="workflowSubmission.showSaveBundle = true" :disabled="saveBundleEnabled === false" type="button" class="btn btn-outline-primary btn-md" data-toggle="modal" data-target=".bd-example-modal-lg">Save selection as bundle</button>
                </div>
                <ul class="list-unstyled file-list">
-                  <li v-for="(file, index) in selectedFiles" v-bind:key="index" v-bind:value="file.id">
+                  <li v-for="(file, index) in selectedFilesArray" v-bind:key="index" v-bind:value="file.id">
                      <button class="btn">
                         <svg v-if="!workflowService.isAudioFile(file)" class="icon-play  " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                               <path class="icon-play" d="M25.7 8.8c2.7 0 5.3 0 7.8 0.1C35.9 8.9 37.8 9 39 9.1l1.8 0.1c0 0 0.2 0 0.4 0s0.4 0 0.6 0.1c0.1 0 0.3 0.1 0.6 0.1 0.3 0 0.5 0.1 0.7 0.2 0.2 0.1 0.4 0.2 0.7 0.3 0.3 0.1 0.5 0.3 0.7 0.5 0.2 0.2 0.5 0.4 0.7 0.6 0.1 0.1 0.2 0.2 0.4 0.4 0.2 0.2 0.4 0.7 0.7 1.4 0.3 0.7 0.5 1.5 0.6 2.4 0.1 1 0.2 2.1 0.3 3.3 0.1 1.2 0.1 2.1 0.1 2.7v1 3.3c0 2.3-0.1 4.6-0.4 7 -0.1 0.9-0.3 1.7-0.6 2.4s-0.5 1.2-0.8 1.5L45 36.7c-0.2 0.2-0.5 0.5-0.7 0.6 -0.2 0.2-0.5 0.3-0.7 0.5s-0.5 0.2-0.7 0.3c-0.2 0.1-0.4 0.1-0.7 0.2 -0.3 0-0.5 0.1-0.6 0.1 -0.1 0-0.3 0-0.6 0.1 -0.2 0-0.4 0-0.4 0 -4 0.3-9 0.5-15 0.5 -3.3 0-6.2-0.1-8.6-0.2 -2.4-0.1-4-0.1-4.8-0.2L11 38.6l-0.9-0.1c-0.6-0.1-1-0.2-1.3-0.2 -0.3-0.1-0.7-0.2-1.2-0.5s-1-0.6-1.4-1c-0.1-0.1-0.2-0.2-0.4-0.4 -0.2-0.2-0.4-0.7-0.7-1.4s-0.5-1.5-0.6-2.4c-0.1-1-0.2-2.1-0.3-3.3 -0.1-1.2-0.1-2.1-0.1-2.7v-1 -3.3c0-2.3 0.1-4.6 0.4-7 0.1-0.9 0.3-1.7 0.6-2.4s0.5-1.2 0.8-1.5L6.3 11c0.2-0.2 0.5-0.5 0.7-0.6 0.2-0.2 0.5-0.3 0.7-0.5C8 9.8 8.2 9.7 8.4 9.6s0.4-0.1 0.7-0.2c0.3 0 0.5-0.1 0.6-0.1 0.1 0 0.3 0 0.6-0.1s0.4 0 0.4 0C14.6 8.9 19.6 8.8 25.7 8.8zM21.2 29.4l11.6-6 -11.6-6.1V29.4z"></path>
@@ -97,6 +97,11 @@ export default {
   computed:{
       workflowSubmission: sync('workflowSubmission'),
       selectedFiles: sync('workflowSubmission.selectedFiles'),
+      selectedFilesArray() {
+         let files = Array.from(this.selectedFiles.values());
+         console.log("selecte files array: " + files);
+         return Array.from(this.selectedFiles.values());
+      },
       submissionEnabled(){
          let self = this;
          if(self.selectedFiles.length==0 || !self.workflowSubmission.selectedWorkflow) return false;
@@ -214,11 +219,13 @@ export default {
 
    removeFile(id){
       let self = this;
-      for( var i = 0; i < self.selectedFiles.length; i++){ 
-        if (self.selectedFiles[i].id === id) {
-          self.selectedFiles.splice(i, 1); 
-        }
-      }
+      self.selectedFiles.delete(id);
+      console.log("removed file " + id);
+      // for( var i = 0; i < self.selectedFiles.length; i++){ 
+      //   if (self.selectedFiles[i].id === id) {
+      //     self.selectedFiles.splice(i, 1); 
+      //   }
+      // }
     }
   },
   mounted() {

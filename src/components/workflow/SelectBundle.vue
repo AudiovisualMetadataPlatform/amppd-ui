@@ -17,7 +17,7 @@
                      {{bundle.name}} {{bundle.createdBy}}
                   </button>
                   <!-- -->
-                  <button class="btn btn-link float-right" v-on:click="addAllFiles(index)" v-bind:disabled=allSelected(index)>
+                  <button class="btn btn-link float-right" v-on:click="addAllFiles(bundle)" v-bind:disabled=allSelected(bundle)>
                      <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
                         <path class="circle-stroke" d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
                            M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"></path>
@@ -112,17 +112,24 @@ export default {
     },
 
 	// return true if all primaryfiles in the bundle have been added to the selected files list
-	allSelected(index) {
-		let pfs = this.bundles[index].primaryfiles;
-		return false;
+	allSelected(bundle) {
+		let pfs = bundle.primaryfiles;
+		let someNotSelected = pfs.some(pf => !this.selectedFiles.has(pf.id))
+		console.log("bundle " + bundle.id + " all selected: " + !someNotSelected);
+		return !someNotSelected;
 	},
 
 	// add all primaryfiles of the bundle to the selected files list
-    addAllFiles(index) {
-		let pfs = this.bundles[index].primaryfiles;
+    addAllFiles(bundle) {
+		let pfs = bundle.primaryfiles;
 		pfs.forEach(pf => {
-			this.selectedFiles.push(pf);
-		    console.log("Add selected primaryfile:", pf.id);
+			if (!this.selectedFiles.has(pf.id)) {
+				this.selectedFiles.set(pf.id, pf);
+				console.log("Add selected primaryfil :" + pf.id);
+			}
+			else {
+				console.log("Primaryfile " + pf.id + " already selected");
+			}
 		})
     },
 

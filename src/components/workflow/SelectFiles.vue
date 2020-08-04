@@ -90,7 +90,7 @@
                            </svg>
                            {{filename.name}}
                         </button>
-                        <button class="btn btn-link  add-remove float-right" v-on:click="addFiles(index,file_index)" v-bind:disabled=hasValue(item.primaryFiles[file_index].id)>
+                        <button class="btn btn-link  add-remove float-right" v-on:click="addFile(index,file_index)" v-bind:disabled=hasValue(item.primaryFiles[file_index].id)>
                            <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
                               <path class="circle-stroke" d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
                                  M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"></path>
@@ -177,26 +177,29 @@ export default {
             }
          }
       },
-		addFiles(index, file_index) {
+		addFile(index, file_index) {
          let self = this;
-         if(!self.hasValue(self.searchedItems.rows[index].primaryFiles[file_index].id)){
-            self.selectedFiles.push(self.searchedItems.rows[index].primaryFiles[file_index]);
+         let key = self.searchedItems.rows[index].primaryFiles[file_index].id;
+         if(!self.hasValue(key)){
+            self.selectedFiles.set(key, self.searchedItems.rows[index].primaryFiles[file_index]);
+            // self.selectedFiles.push(self.searchedItems.rows[index].primaryFiles[file_index]);
          } 
-         console.log("The file name selected is:",self.selectedFiles);
+         console.log("selectedFiles:",self.selectedFiles);
 		},
       addAllFiles(index){
          let self = this;
          for(var key=0; key<self.searchedItems.rows[index].primaryFiles.length;key++){
-            self.addFiles(index, key);
+            self.addFile(index, key);
          }
       },
       hasValue(key){
-         var res =  this.selectedFiles.filter(
-            function(selectedFiles){ return selectedFiles.id==key}
-         );
-         if(res.length>0)
-            return true;
-         return false;
+         return this.selectedFiles.has(key);
+         // var res =  this.selectedFiles.filter(
+         //    function(selectedFiles){ return selectedFiles.id==key}
+         // );
+         // if(res.length>0)
+         //    return true;
+         // return false;
       },
       hasValues(index){
          let self = this;

@@ -19,8 +19,8 @@ const state = {
       loading:false,
       showSelectBundle:false,
       showSaveBundle:false,
-      // selectedFiles: new Map(),
-      selectedFiles: [],
+      selectedFiles: new Map(), // use map instead of array to improve performance
+      // selectedFiles: [],
       selectedWorkflow: null,
       selectedWorkflowParameters: []
     },
