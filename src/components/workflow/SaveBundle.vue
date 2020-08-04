@@ -24,7 +24,7 @@
    <modal v-if="showConfirmUpdate" id="confirmUpdate" @close="showConfirmUpdate = false" class="my-modal">
       <h3 slot="header">Confirm</h3>
       <div slot="body">
-        A bundle owned by you with name {{bundle.name}} and description {{bundle.description}} already exists, do you want to overwrite it?
+        A bundle owned by you with name "{{bundle.name}}" and description "{{bundle.description}}" already exists, do you want to overwrite it?
       </div>
       <div slot="footer">
         <input type="button" class="btn btn-outline-primary btn-md" v-on:click="showConfirmUpdate = false" value="No"/>

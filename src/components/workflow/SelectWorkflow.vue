@@ -107,7 +107,8 @@ export default {
       // },
       submissionEnabled(){
          let self = this;
-         return (self.selectedFilesArray.length > 0 && self.workflowSubmission.selectedWorkflow);
+         console.log("selectedFilesArray.length: " + this.selectedFilesArray.length + ", selectedWorkflow: " + self.workflowSubmission.selectedWorkflow);
+         return (self.selectedFilesArray.length > 0 && self.workflowSubmission.selectedWorkflow != null);
       },
       saveBundleEnabled(){
          console.log(`selectedFilesArray.length: ${this.selectedFilesArray.length}`);

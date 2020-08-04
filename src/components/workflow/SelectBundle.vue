@@ -6,15 +6,21 @@
       <div id="accordion" v-if="bundles && bundles.length>0">
          <div class="card" v-for="(bundle, index) in bundles" v-bind:key="index" >
             <div class="card-header" id="headingTwo">
-               <h5 class="mb-0">
+               <h3 class="mb-0">
                   <button class="btn btn-link" :class="{ 'collapsed': visible !== index }" :key="bundle.id" 
-				  	v-on:click="expandBundle(index)" data-toggle="collapse" data-target="#collapseTwo" 
-					aria-expanded="visible === index" aria-controls="collapseTwo" title="bundle.description">
+				  	         v-on:click="expandBundle(index)" data-toggle="collapse" data-target="#collapseTwo" 
+					         aria-expanded="visible === index" aria-controls="collapseTwo" :title="[bundle.description]">
                      <svg aria-hidden="true" focusable="false" class="svg-inline dwn-arrow" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                         <path class="hotlink" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path>
                      </svg>
-                     <span class="sr-only">Toggle hidden content</span>
+                     <!-- <span class="sr-only">Toggle hidden content</span> -->
                      {{bundle.name}} {{bundle.createdBy}}
+                     <!-- <span> 
+                       {{bundle.name}} 
+                     </span>
+                     <span> 
+                       {{bundle.createdBy}}
+                     </span> -->
                   </button>
                   <!-- -->
                   <button class="btn btn-link float-right" v-on:click="addAllFiles(bundle)" v-bind:disabled=allSelected(bundle) :key="updateSelectedFiles">
@@ -27,7 +33,7 @@
                      Add all files
                   </button>
                   <!-- -->
-               </h5>
+               </h3>
             </div>
             <div id="collapseTwo" class="collapse" :class="{ 'show' : visible === index }" aria-labelledby="headingTwo" data-parent="#accordion">
                <div class="card-body">
