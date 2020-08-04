@@ -87,7 +87,8 @@ export default {
       workflowService: new WorkflowService(),
       modalHeader: "Error",
       modalText: "",
-      showModal: false
+      showModal: false,
+      selectedFilesArray: []
     }
   },
   components:{
@@ -97,21 +98,20 @@ export default {
   computed:{
       workflowSubmission: sync('workflowSubmission'),
       selectedFiles: sync('workflowSubmission.selectedFiles'),
-      selectedFilesArray() {
-         let files = Array.from(this.selectedFiles.values());
-         console.log("selecte files array: " + files);
-         return Array.from(this.selectedFiles.values());
-      },
+      updateSelectedFiles: sync('workflowSubmission.updateSelectedFiles'),
+      // selectedFilesArray() {
+      //    let files = Array.from(this.selectedFiles.values());
+      //    console.log("selecte files array: " + files);
+      //    this.$forceUpdate();
+      //    return files;
+      // },
       submissionEnabled(){
          let self = this;
-         if(self.selectedFiles.length==0 || !self.workflowSubmission.selectedWorkflow) return false;
-         return true;
+         return (self.selectedFilesArray.length > 0 && self.workflowSubmission.selectedWorkflow);
       },
       saveBundleEnabled(){
-         let self = this;
-         console.log(`self.selectedFiles.length: ${self.selectedFiles.length}`);
-         if(self.selectedFiles.length==0) return false;
-         return true;
+         console.log(`selectedFilesArray.length: ${this.selectedFilesArray.length}`);
+         return this.selectedFilesArray.length > 0;
       },
   },
   methods:{
@@ -189,7 +189,7 @@ export default {
             this.jobs = new Map(Object.entries(jobsobj));
             self.workflowSubmission.loading = false;
             self.modalHeader = "Success!";
-            self.modalText = `${this.selectedFiles.length} files have been submitted, ${this.jobs.size} jobs have been created successfuly`;
+            self.modalText = `${this.selectedFilesArray.length} files have been submitted, ${this.jobs.size} jobs have been created successfuly`;
             self.showModal = true;
             })
             .catch(e => {
@@ -220,21 +220,29 @@ export default {
    removeFile(id){
       let self = this;
       self.selectedFiles.delete(id);
-      console.log("removed file " + id);
+      self.workflowSubmission.updateSelectedFiles = self.workflowSubmission.updateSelectedFiles + 1;
+      console.log("Removed selected file " + id);
       // for( var i = 0; i < self.selectedFiles.length; i++){ 
       //   if (self.selectedFiles[i].id === id) {
       //     self.selectedFiles.splice(i, 1); 
       //   }
       // }
-    }
+    },
+  },
+  watch: {
+    updateSelectedFiles: function() {
+      this.selectedFilesArray = Array.from(this.workflowSubmission.selectedFiles.values());
+      console.log("Updated selectedFilesArray: " + this.selectedFilesArray);
+    },
   },
   mounted() {
     let self = this;
     self.getWorkflows();
-    if(!self.selectedFiles) self.selectedFiles = [];
+   //  if(!self.selectedFiles) self.selectedFiles = [];
   }
 }
 </script>
+
 <style lang="css">
 @import '/amppd-ui/src/styles/style.css';
 .node-li{

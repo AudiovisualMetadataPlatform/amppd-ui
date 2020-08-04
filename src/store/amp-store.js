@@ -19,7 +19,8 @@ const state = {
       loading:false,
       showSelectBundle:false,
       showSaveBundle:false,
-      selectedFiles: new Map(), // use map instead of array to improve performance
+      selectedFiles: new Map(), // use map instead of array to improve search performance
+      updateSelectedFiles: 0,   // flag to indiate changes in selectedFiles, a work-around to solve the issue that Vue does not watch Map
       // selectedFiles: [],
       selectedWorkflow: null,
       selectedWorkflowParameters: []

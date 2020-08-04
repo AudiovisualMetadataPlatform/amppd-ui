@@ -138,6 +138,7 @@ export default {
    computed:{
      workflowSubmission: sync('workflowSubmission'),
      selectedFiles: sync('workflowSubmission.selectedFiles'),
+     updateSelectedFiles: sync('workflowSubmission.updateSelectedFiles'),
    },
 	methods:{
       // selectBundles() {
@@ -183,8 +184,12 @@ export default {
          if(!self.hasValue(key)){
             self.selectedFiles.set(key, self.searchedItems.rows[index].primaryFiles[file_index]);
             // self.selectedFiles.push(self.searchedItems.rows[index].primaryFiles[file_index]);
-         } 
-         console.log("selectedFiles:",self.selectedFiles);
+            self.workflowSubmission.updateSelectedFiles = self.updateSelectedFiles + 1;
+				console.log("Added selected primaryfile " + key + " at index " + file_index + " in item at index " + index);
+			}
+			else {
+				console.log("Primaryfile " + key + " at index " + file_index + " already selected from item at index " + index);
+			}
 		},
       addAllFiles(index){
          let self = this;
@@ -213,7 +218,6 @@ export default {
          }
          return result;
        },
-
    },
    watch:{
       searchAudio: function(){

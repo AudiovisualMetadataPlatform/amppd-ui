@@ -99,6 +99,7 @@ export default {
   computed:{
     workflowSubmission: sync('workflowSubmission'),
 	selectedFiles: sync('workflowSubmission.selectedFiles'),
+    updateSelectedFiles: sync('workflowSubmission.updateSelectedFiles'),
 	showSelectBundle: sync('workflowSubmission.showSelectBundle'),
   },
 
@@ -125,10 +126,11 @@ export default {
 		pfs.forEach(pf => {
 			if (!this.selectedFiles.has(pf.id)) {
 				this.selectedFiles.set(pf.id, pf);
-				console.log("Add selected primaryfil :" + pf.id);
+	            this.workflowSubmission.updateSelectedFiles = this.updateSelectedFiles + 1;
+				console.log("Added selected primaryfile " + pf.id + " from bundle " + bundle.id);
 			}
 			else {
-				console.log("Primaryfile " + pf.id + " already selected");
+				console.log("Primaryfile " + pf.id + " already selected from bundle " + bundle.id);
 			}
 		})
     },
@@ -153,8 +155,8 @@ export default {
   },
 
   mounted() {
-    let self = this;
-	if(!self.selectedFiles) self.selectedFiles = [];
+    // let self = this;
+	// if(!self.selectedFiles) self.selectedFiles = [];
 	console.log("mounted: showSelectBundle: " + this.showSelectBundle);
 	this.listBundles();
   }

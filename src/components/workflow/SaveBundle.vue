@@ -196,8 +196,8 @@ export default {
   },
 
   mounted() {
-    let self = this;
-    if(!self.selectedFiles) self.selectedFiles = [];
+    // let self = this;
+    // if(!self.selectedFiles) self.selectedFiles = [];
   }
 }
 </script>
