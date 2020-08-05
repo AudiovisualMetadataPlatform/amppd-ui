@@ -15,9 +15,9 @@
 		</div>
 	  </form>
       </div>
-      <div slot="footer">
-         <input type="button" class="btn btn-outline-primary btn-md" v-on:click="workflowSubmission.showSaveBundle = false" value="Cancel"/>
-         <input type="button" class="btn btn-primary btn-md" v-on:click="saveBundle" value="Save Selection"/>
+      <div slot="footer" class="action-buttons">
+         <input type="button" class="secondary-button" v-on:click="workflowSubmission.showSaveBundle = false" value="Cancel"/>
+         <input type="button" class="primary-button" v-on:click="saveBundle" value="Save Selection"/>
       </div>
    </modal>
 
@@ -26,9 +26,9 @@
       <div slot="body">
         A bundle owned by you with name "{{bundle.name}}" and description "{{bundle.description}}" already exists, do you want to overwrite it?
       </div>
-      <div slot="footer">
-        <input type="button" class="btn btn-outline-primary btn-md" v-on:click="showConfirmUpdate = false" value="No"/>
-        <input type="button" class="btn btn-primary btn-md" v-on:click="updateConfirmed" value="Yes"/>
+      <div slot="footer" class="action-buttons">
+        <input type="button" class="secondary-button" v-on:click="showConfirmUpdate = false" value="No"/>
+        <input type="button" class="primary-button" v-on:click="updateConfirmed" value="Yes"/>
       </div>
    </modal>   
 
@@ -205,11 +205,51 @@ export default {
 <style lang="css">
 @import '/amppd-ui/src/styles/style.css';
 
-  .form-errors {
-    color: red;
-    margin: 0%!important;
-    font-size: 0.9rem; 
-    padding-left:3px; 
-  }
+.primary-button{
+    float: right;
+    background-color: #E9972D;
+    color: #2C5B7F;
+    font: bolder;
+    padding: 10px 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+    font-size: 12px;
+    width:150px;
+}
+
+.secondary-button{
+    float: right;
+    background-color: #ffffff;
+    color: #2C5B7F;
+    font: bolder;
+    padding: 10px 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #E9972D;
+    cursor: pointer;
+    border-radius: 15px;
+    font-size: 12px;
+    width:150px;
+}
+
+.action-buttons{
+  display:flex;
+  justify-content: flex-end;
+  margin: 20px;
+}
+
+.form-errors {
+  color: red;
+  margin: 0%!important;
+  font-size: 0.9rem; 
+  padding-left:3px; 
+}
   
 </style> 

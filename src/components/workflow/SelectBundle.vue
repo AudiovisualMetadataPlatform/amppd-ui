@@ -3,26 +3,22 @@
    <modal v-if="workflowSubmission.showSelectBundle" id="selectBundle" @close="workflowSubmission.showSelectBundle = false" class="my-modal">
       <h3 slot="header">Select Primaryfiles from saved bundles</h3>
       <div slot="body" class="input-group mb-3">      
-      <div id="accordion" v-if="bundles && bundles.length>0">
+      <div id="accordion" v-if="bundles && bundles.length>0" class="bundles">
          <div class="card" v-for="(bundle, index) in bundles" v-bind:key="index" >
             <div class="card-header" id="headingTwo">
                <h3 class="mb-0">
-                  <button class="btn btn-link" :class="{ 'collapsed': visible !== index }" :key="bundle.id" 
-				  	         v-on:click="expandBundle(index)" data-toggle="collapse" data-target="#collapseTwo" 
-					         aria-expanded="visible === index" aria-controls="collapseTwo" :title="[bundle.description]">
+                <div class="btn btn-link bundle" :class="{ 'collapsed': visible !== index }" :key="bundle.id" 
+				  	      v-on:click="expandBundle(index)" data-toggle="collapse" data-target="#collapseTwo" 
+					      aria-expanded="visible === index" aria-controls="collapseTwo" :title="[bundle.description]">
+                  <span class="bundle-content">
                      <svg aria-hidden="true" focusable="false" class="svg-inline dwn-arrow" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                         <path class="hotlink" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path>
                      </svg>
-                     <!-- <span class="sr-only">Toggle hidden content</span> -->
-                     {{bundle.name}} {{bundle.createdBy}}
-                     <!-- <span> 
-                       {{bundle.name}} 
-                     </span>
-                     <span> 
-                       {{bundle.createdBy}}
-                     </span> -->
-                  </button>
-                  <!-- -->
+                     {{bundle.name}}
+                  </span>
+                  <span class="bundle-content">
+                     {{bundle.createdBy}}
+                  </span>
                   <button class="btn btn-link float-right" v-on:click="addAllFiles(bundle)" v-bind:disabled=allSelected(bundle) :key="updateSelectedFiles">
                      <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
                         <path class="circle-stroke" d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
@@ -32,7 +28,7 @@
                      </svg>
                      Add all files
                   </button>
-                  <!-- -->
+                </div>
                </h3>
             </div>
             <div id="collapseTwo" class="collapse" :class="{ 'show' : visible === index }" aria-labelledby="headingTwo" data-parent="#accordion">
@@ -172,13 +168,22 @@ export default {
 <style lang="css">
 @import '/amppd-ui/src/styles/style.css';
 
-.my-modal-body{
-  width: fit-content;
-  height: fit-content;
-  max-height: 500px;
-  overflow-x: scroll;
-  overflow-y: scroll;
+.bundles{
+  width: 100%;
 }
 
-  
+.bundle{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;   
+}
+
+.bundle-content{
+  margin: auto 0
+}
+
+.my-modal-body{
+  width: 100%;
+  height: fit-content;
+}
 </style> 

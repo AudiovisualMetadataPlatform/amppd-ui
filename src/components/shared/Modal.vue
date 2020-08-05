@@ -12,7 +12,7 @@
           
           </slot>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer my-modal-footer">
           <slot name="footer">
             <button type="button"  class="btn btn-info" @click="close()">Close</button>
           </slot>
@@ -67,15 +67,22 @@ export default {
 <style lang="css">
 @import '/amppd-ui/src/styles/style.css';
 
-.my-modal-body{
-  height: fit-content;
-  max-height: 500px;
-  overflow-y: scroll;
-}
-
 .my-modal-header{
   padding: 0.3rem 0.7rem;
 }
+
+.my-modal-body{
+  height: fit-content;
+  width: fit-content;
+  max-height: 500px;
+  max-width: 800px;
+  overflow-y: auto;
+  overflow-y: auto;
+}
+
+.my-modal-footer{
+}
+
 .input-text{
   height: calc(2.25rem + 1px);
 	padding: 0.7rem 0.5rem;
