@@ -7,11 +7,11 @@
 		<div class="form-group">
           <label for="name">Bundle Name</label>
 		  <label class="form-errors" v-if="inputError.length">{{inputError}}</label>
-          <input type="text" id="name" class="form-control" placeholder="Enter bundle name" v-model="bundleName" v-on:focus="clearError">
+          <input type="text" id="name" class="form-control" size="50" placeholder="Enter bundle name" v-model="bundleName" v-on:focus="clearError">
 		</div>
 		<div class="form-group">
           <label for="description">Bundle Description</label>
-          <input type="text" id="description" class="form-control" placeholder="Enter bundle description" v-model="bundleDescription">
+          <input type="text" id="description" class="form-control" size="50" placeholder="Enter bundle description" v-model="bundleDescription">
 		</div>
 	  </form>
       </div>
