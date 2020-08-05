@@ -41,18 +41,6 @@
         <input type="button" class="secondary-button" v-on:click="showResponse = false" value="Ok"/>
       </div>
    </modal>   
-
-   <!-- <modal v-if="showResponse" id="inform" @close="showResponse = false" class="my-modal">
-      <h3 slot="header">{{responseHeader}}</h3>
-      <div slot="body">
-        {{responseText}}
-      </div>
-      <div slot="footer">
-        <input v-if="!isConfirm()" type="button" class="secondary-button" v-on:click="showResponse = false" value="Ok"/>
-        <input v-if="isConfirm()" type="button" class="secondary-button" v-on:click="showResponse = false" value="No"/>
-        <input v-if="isConfirm()" type="button" class="primary-button" v-on:click="updateConfirmed" value="Yes"/>
-      </div>
-   </modal>    -->
 </div>
 </template>
 
@@ -130,14 +118,6 @@ export default {
 		return true;
 	},
 
-	// confirmUpdate() {
-	// 	this.modelHeader = "Confirm";
-	// 	this.modelText = `A bundle owned by you with name "${this.bundle.name}" and description "${this.bundle.description}" already exists, do you want to overwrite it?`;
-	// 	this.showResponse = true;
-	// 	console.log("responseHeader: " + this.modelHeader);
-	// 	console.log("modelText: " + this.modelText);
-	// },
-
 	async updateConfirmed() {
 		this.showConfirmUpdate = false;
 		this.workflowSubmission.showSaveBundle = false;
@@ -182,23 +162,11 @@ export default {
 		}); 
 	},
 
-	// isConfirm() {
-	// 	let is = ("Confirm" == "Confirm");
-	// 	console.log("isConfirm: " + is);
-	// 	console.log("responseHeader: " + this.modelHeader);
-	// 	return is;
-	// },
-
 	clearError() {
         this.inputError = '';
 	},
 	
   },
-
-  mounted() {
-    // let self = this;
-    // if(!self.selectedFiles) self.selectedFiles = [];
-  }
 }
 </script>
 

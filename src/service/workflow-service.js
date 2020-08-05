@@ -23,12 +23,6 @@ export default class WorkflowService extends BaseService{
         for (let primaryfile of selectedFiles.values()) {
             primaryfileIds = primaryfileIds === "" ? primaryfile.id : primaryfileIds + "," + primaryfile.id;
         }
-        // if (selectedFiles === null || selectedFiles.length === 0)
-        //     return "";
-        // var primaryfileIds = selectedFiles[0].id; 
-        // for (var i=1; i < selectedFiles.length; i++) {
-        //     primaryfileIds += "," + selectedFiles[i].id;
-        // }
         return primaryfileIds;
     }
 
@@ -38,10 +32,6 @@ export default class WorkflowService extends BaseService{
 
     findBundle(name) {
         return super.get_auth(`/bundles/search/findNamedByCurrentUser?name=${name}`);
-        //  .then(response => { 
-        //     console.log("findBundle: " + response.data.id); 
-        //     return response.data
-        //  });
     }
 
     updateBundle(bundleId, description, primaryfileIds){
@@ -55,16 +45,6 @@ export default class WorkflowService extends BaseService{
     submitWorkflow(selectedWorkflow, primaryfileIds){
         console.log('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds);
         return super.post_auth('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds);
-    }
-
-    createNewBundle(bundle){
-        return super.post_auth('/bundles', bundle);
-    }
-    addPrimaryFiles(bundleId, primaryfileIds){
-        return super.post_auth('/bundles/' + bundleId + '/addPrimaryfiles?primaryfileIds=' + primaryfileIds);
-    }
-    submitWorkflowWithBundle(selectedWorkflow, bundleId){
-        return super.post_auth('/jobs/submitBundle?workflowId=' + selectedWorkflow + '&bundleId=' + bundleId);
     }
 
     cleanParameterName(name){

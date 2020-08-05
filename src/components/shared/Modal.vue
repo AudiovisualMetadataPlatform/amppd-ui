@@ -21,30 +21,6 @@
     </div>
   </div>
 </template>
-
-
-<!-- <template>  
-	<div class="modal-backdrop">
-		<div class="modal">
-    <div class="modal-header">
-				<slot name="header">
-				
-        </slot>
-    </div>
-			<section class="modal-body">
-				<slot name="body">
-				
-        </slot>
-      </section>
-      <div class="modal-footer">
-        <slot name="footer">
-          <button type="button"  @click="close()">Close</button>
-        </slot>
-      </div>
-    </div>
-  </div>
-</template>
--->
  
 <script scoped>
 export default {

@@ -141,11 +141,6 @@ export default {
      updateSelectedFiles: sync('workflowSubmission.updateSelectedFiles'),
    },
 	methods:{
-      // selectBundles() {
-      //    this.workflowSubmission.showSelectBundle = true;
-      //    console.log("showSelectBundle:" + this.workflowSubmission.showSelectBundle);
-      // },
-
       itemClicked(index){
          if(this.visible == index)
          {
@@ -183,7 +178,6 @@ export default {
          let key = self.searchedItems.rows[index].primaryFiles[file_index].id;
          if(!self.hasValue(key)){
             self.selectedFiles.set(key, self.searchedItems.rows[index].primaryFiles[file_index]);
-            // self.selectedFiles.push(self.searchedItems.rows[index].primaryFiles[file_index]);
             self.workflowSubmission.updateSelectedFiles = self.updateSelectedFiles + 1;
 				console.log("Added selected primaryfile " + key + " at index " + file_index + " in item at index " + index);
 			}
@@ -199,12 +193,6 @@ export default {
       },
       hasValue(key){
          return this.selectedFiles.has(key);
-         // var res =  this.selectedFiles.filter(
-         //    function(selectedFiles){ return selectedFiles.id==key}
-         // );
-         // if(res.length>0)
-         //    return true;
-         // return false;
       },
       hasValues(index){
          let self = this;

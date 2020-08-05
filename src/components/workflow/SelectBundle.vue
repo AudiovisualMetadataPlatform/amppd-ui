@@ -139,13 +139,8 @@ export default {
 
 	async listBundles() {
 		await this.workflowService.listBundles().then(response => {
-			// console.log("response data:" + response.data._embedded.bundles);
-			// this.bundles = response.data._embedded.bundles;
 			this.bundles = response.data;
 			console.log(`Found a total of ${this.bundles.length} bundles`);
-			// this.responseHeader = "Success";
-			// this.responseText = `The bundle with ID ${updatedBundle.id} has been updated`;
-			// this.showResponse = true;	
 		}).catch(e => {
 			console.log(e);
 			this.responseHeader = "Error";
@@ -157,8 +152,6 @@ export default {
   },
 
   mounted() {
-    // let self = this;
-	// if(!self.selectedFiles) self.selectedFiles = [];
 	console.log("mounted: showSelectBundle: " + this.showSelectBundle);
 	this.listBundles();
   }

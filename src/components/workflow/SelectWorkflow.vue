@@ -99,12 +99,6 @@ export default {
       workflowSubmission: sync('workflowSubmission'),
       selectedFiles: sync('workflowSubmission.selectedFiles'),
       updateSelectedFiles: sync('workflowSubmission.updateSelectedFiles'),
-      // selectedFilesArray() {
-      //    let files = Array.from(this.selectedFiles.values());
-      //    console.log("selecte files array: " + files);
-      //    this.$forceUpdate();
-      //    return files;
-      // },
       submissionEnabled(){
          let self = this;
          console.log("selectedFilesArray.length: " + this.selectedFilesArray.length + ", selectedWorkflow: " + self.workflowSubmission.selectedWorkflow);
@@ -129,54 +123,6 @@ export default {
       self.workflowSubmission.selectedWorkflowParameters = await this.workflowService.getWorkflowDetails(self.workflowSubmission.selectedWorkflow);
     },
 
-   //  async addPrimaryFilesToBundle(bundle){
-   //     let self = this;
-   //     // add currently selected primaryfiles to the bundle
-   //    var primaryfileIds = this.selectedFiles[0].id; 
-   //    for (var i=1; i<this.selectedFiles.length; i++) {
-   //       primaryfileIds += "," + this.selectedFiles[i].id;
-   //    }
-
-   //    await self.workflowService.addPrimaryFiles(bundle.id, primaryfileIds)
-   //       .then(response => {
-   //          bundle = response.data;
-   //       })
-   //       .catch(e => {
-   //          console.log(e);
-   //          self.modalText = "Error adding primary files to bundle. Please contact a system administrator."
-   //          self.modalText = "Error submitting workflow:  Could not add primary files toy"
-   //          self.showModal = true;
-   //       });
-   //    return bundle;
-   //  },
-
-   //  async createTemporaryBundle(){
-   //    let self = this;
-   //    // create a new bundle with default name/description
-   //    var startId = self.selectedFiles[0].id;
-   //    var size = self.selectedFiles.length;
-   //    var endId = self.selectedFiles[size-1].id;
-   //    var bundle = {
-   //       // use empty string for anonymous bundle to distinguish from user named bundle         
-   //       name: "", 
-   //       // name: "Bundle #" + startId + " ~ #" + endId, 
-   //       description: "Bundle with #" + size + " primaryfiles"
-   //    };
-   //    var createdBundle = await self.workflowService.createNewBundle(bundle)
-   //       .then(response => {
-   //          var createdBundle = response.data;
-   //          self.addPrimaryFilesToBundle(createdBundle);
-   //          return createdBundle;
-   //       })
-   //       .catch(e => {
-   //          console.log(e);
-   //          self.modalText = "Error submitting workflow:  Could not create bundle."
-   //          self.showModal = true;
-   //          throw new Error("Could not create bundle");
-   //       }); 
-   //    return createdBundle;     
-   //  },
-
    // we don't need to create anoynymous bundle upon workflow submission, 
    // since such bundles aren't accessible to users; and creating one each time will overcrowd DB table over time;
    // instead we can add endpoint on backend to submit list of primaryfiles and use that endpoint
@@ -198,24 +144,7 @@ export default {
                self.workflowSubmission.loading = false;
                self.modalText = "Error submitting workflow:  Could not finish submission."
                self.showModal = true;
-            });
-      
-      // await self.createTemporaryBundle().then(bundleResponse=>{
-      //    self.workflowService.submitWorkflowWithBundle(this.workflowSubmission.selectedWorkflow, bundleResponse.id)
-      //       .then(response => {
-      //          this.jobs = response.data;
-      //          self.workflowSubmission.loading = false;
-      //          self.modalHeader = "Success!";
-      //          self.modalText = "Your files have been submitted successfuly";
-      //          self.showModal = true;
-      //          })
-      //          .catch(e => {
-      //             console.log(e);
-      //             self.workflowSubmission.loading = false;
-      //             self.modalText = "Error submitting workflow:  Could finish submission."
-      //             self.showModal = true;
-      //          });               
-      // });      
+            });    
    },
 
    removeFile(id){
@@ -223,11 +152,6 @@ export default {
       self.selectedFiles.delete(id);
       self.workflowSubmission.updateSelectedFiles = self.workflowSubmission.updateSelectedFiles + 1;
       console.log("Removed selected file " + id);
-      // for( var i = 0; i < self.selectedFiles.length; i++){ 
-      //   if (self.selectedFiles[i].id === id) {
-      //     self.selectedFiles.splice(i, 1); 
-      //   }
-      // }
     },
   },
   watch: {
@@ -239,7 +163,6 @@ export default {
   mounted() {
     let self = this;
     self.getWorkflows();
-   //  if(!self.selectedFiles) self.selectedFiles = [];
   }
 }
 </script>
