@@ -210,7 +210,6 @@ export default {
 .action-buttons{
   display:flex;
   justify-content: flex-end;
-  margin: 20px;
 }
 
 .form-errors {
