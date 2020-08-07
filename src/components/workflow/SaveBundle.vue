@@ -214,7 +214,7 @@ export default {
 
 .form-errors {
   color: red;
-  margin: 0%!important;
+  margin: 0 !important;
   font-size: 0.9rem; 
   padding-left:3px; 
 }
