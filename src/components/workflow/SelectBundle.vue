@@ -1,6 +1,6 @@
 <template>
 <div class="col-lg-7">
-   <modal v-if="workflowSubmission.showSelectBundle" id="selectBundle" @close="workflowSubmission.showSelectBundle = false" class="my-modal">
+   <modal v-if="showSelectBundle" id="selectBundle" @close="workflowSubmission.showSelectBundle = false" class="my-modal">
       <h3 slot="header">Select Primaryfiles from saved bundles</h3>
       <div slot="body" class="input-group mb-3">      
       <div id="accordion" v-if="bundles && bundles.length>0" class="bundles">
@@ -61,13 +61,13 @@
       </div>
    </modal>
 
-   <modal v-if="showResponse" id="response" @close="showResponse = false" class="my-modal">
+   <modal v-if="showBundleError" id="response" @close="workflowSubmission.showBundleError = false" class="my-modal">
       <h3 slot="header">{{responseHeader}}</h3>
       <div slot="body">
         {{responseText}}
       </div>
       <div slot="footer">
-        <input type="button" class="secondary-button" v-on:click="showResponse = false" value="Ok"/>
+        <input type="button" class="secondary-button" v-on:click="workflowSubmission.showBundleError = false" value="Ok"/>
       </div>
    </modal>   
 </div>
@@ -86,10 +86,8 @@ export default {
   data() {
     return {
       workflowService: new WorkflowService(),
-	   showResponse: false,
       responseHeader: "",
       responseText: "",
-	   bundles: [],
       visible : -1,
     }
   },
@@ -100,9 +98,11 @@ export default {
 
   computed:{
     workflowSubmission: sync('workflowSubmission'),
+	 bundles: sync('workflowSubmission.bundles'),
 	 selectedFiles: sync('workflowSubmission.selectedFiles'),
     updateSelectedFiles: sync('workflowSubmission.updateSelectedFiles'),
 	 showSelectBundle: sync('workflowSubmission.showSelectBundle'),
+	 showBundleError: sync('workflowSubmission.showBundleError'),
   },
 
   methods:{
@@ -137,23 +137,27 @@ export default {
 		})
     },
 
-	async listBundles() {
-		await this.workflowService.listBundles().then(response => {
-			this.bundles = response.data;
-			console.log(`Found a total of ${this.bundles.length} bundles`);
-		}).catch(e => {
-			console.log(e);
-			this.responseHeader = "Error";
-			this.responseText = "Error retrieving bundles: a system error has occured, please try again later."
-			this.showResponse = true;
-			this.workflowSubmission.showSelectBundle = false;
-		}); 
-	}
+   setupBundleError() {
+		this.responseHeader = "Error";
+		this.responseText = "Error retrieving bundles: a system error has occured, please try again later." 
+   },
+
+	// async listBundles() {
+	// 	await this.workflowService.listBundles().then(response => {
+	// 		this.bundles = response.data;
+	// 		console.log(`Found a total of ${this.bundles.length} bundles`);
+	// 	}).catch(e => {
+	// 		console.log(e);
+	// 		this.workflowSubmission.showSelectBundle = false;
+	// 	}); 
+	// }
   },
 
   mounted() {
-	console.log("mounted: showSelectBundle: " + this.showSelectBundle);
-	this.listBundles();
+    console.log("mounted: showSelectBundle: " + this.showSelectBundle);
+    console.log("mounted: showBundleError: " + this.showBundleError);
+    this.setupBundleError();
+	//  this.listBundles();
   }
 }
 </script>

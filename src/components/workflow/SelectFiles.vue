@@ -24,7 +24,7 @@
                </div>
             </div>
             <div class="col-xl-6 col-md-12">
-               <button v-on:click="workflowSubmission.showSelectBundle = true" id="select-bundles" type="button" class="btn btn-primary float-right select-bundles" data-toggle="modal" data-target=".select-from-saved-modal">Select from saved bundles</button>
+               <button v-on:click="displaySelectBundle" id="select-bundles" type="button" class="btn btn-primary float-right select-bundles" data-toggle="modal" data-target=".select-from-saved-modal">Select from saved bundles</button>
             </div>
          </div>
       </div>
@@ -205,7 +205,19 @@ export default {
             }
          }
          return result;
-       },
+      },
+
+      async displaySelectBundle() {
+         await this.workflowService.listBundles().then(response => {
+            this.workflowSubmission.bundles = response.data;
+            console.log(`Found a total of ${this.workflowSubmission.bundles.length} bundles`);
+            this.workflowSubmission.showSelectBundle = true;
+         }).catch(e => {
+            console.log(e);
+            this.workflowSubmission.showBundleError = true;
+         }); 
+      }
+    
    },
    watch:{
       searchAudio: function(){
