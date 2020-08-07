@@ -28,12 +28,12 @@
             <div>
                <div class="eq-btns btn-columns">
                   <button v-on:click="submitWorkflow" :disabled="submissionEnabled === false" type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target=".save-modal">Submit to workflow</button>
-                  <button type="button" class="btn btn-outline-primary btn-md" data-toggle="modal" data-target=".bd-example-modal-lg">Save selection as bundle</button>
+                  <button v-on:click="workflowSubmission.showSaveBundle = true" :disabled="saveBundleEnabled === false" type="button" class="btn btn-outline-primary btn-md" data-toggle="modal" data-target=".bd-example-modal-lg">Save selection as bundle</button>
                </div>
                <ul class="list-unstyled file-list">
-                  <li v-for="(file, index) in selectedFiles" v-bind:key="index" v-bind:value="file.id">
+                  <li v-for="(file, index) in selectedFilesArray" v-bind:key="index" v-bind:value="file.id">
                      <button class="btn">
-                        <svg v-if="!workflowService.isAudioFile(file.mediaType)" class="icon-play  " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                        <svg v-if="!workflowService.isAudioFile(file)" class="icon-play  " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                               <path class="icon-play" d="M25.7 8.8c2.7 0 5.3 0 7.8 0.1C35.9 8.9 37.8 9 39 9.1l1.8 0.1c0 0 0.2 0 0.4 0s0.4 0 0.6 0.1c0.1 0 0.3 0.1 0.6 0.1 0.3 0 0.5 0.1 0.7 0.2 0.2 0.1 0.4 0.2 0.7 0.3 0.3 0.1 0.5 0.3 0.7 0.5 0.2 0.2 0.5 0.4 0.7 0.6 0.1 0.1 0.2 0.2 0.4 0.4 0.2 0.2 0.4 0.7 0.7 1.4 0.3 0.7 0.5 1.5 0.6 2.4 0.1 1 0.2 2.1 0.3 3.3 0.1 1.2 0.1 2.1 0.1 2.7v1 3.3c0 2.3-0.1 4.6-0.4 7 -0.1 0.9-0.3 1.7-0.6 2.4s-0.5 1.2-0.8 1.5L45 36.7c-0.2 0.2-0.5 0.5-0.7 0.6 -0.2 0.2-0.5 0.3-0.7 0.5s-0.5 0.2-0.7 0.3c-0.2 0.1-0.4 0.1-0.7 0.2 -0.3 0-0.5 0.1-0.6 0.1 -0.1 0-0.3 0-0.6 0.1 -0.2 0-0.4 0-0.4 0 -4 0.3-9 0.5-15 0.5 -3.3 0-6.2-0.1-8.6-0.2 -2.4-0.1-4-0.1-4.8-0.2L11 38.6l-0.9-0.1c-0.6-0.1-1-0.2-1.3-0.2 -0.3-0.1-0.7-0.2-1.2-0.5s-1-0.6-1.4-1c-0.1-0.1-0.2-0.2-0.4-0.4 -0.2-0.2-0.4-0.7-0.7-1.4s-0.5-1.5-0.6-2.4c-0.1-1-0.2-2.1-0.3-3.3 -0.1-1.2-0.1-2.1-0.1-2.7v-1 -3.3c0-2.3 0.1-4.6 0.4-7 0.1-0.9 0.3-1.7 0.6-2.4s0.5-1.2 0.8-1.5L6.3 11c0.2-0.2 0.5-0.5 0.7-0.6 0.2-0.2 0.5-0.3 0.7-0.5C8 9.8 8.2 9.7 8.4 9.6s0.4-0.1 0.7-0.2c0.3 0 0.5-0.1 0.6-0.1 0.1 0 0.3 0 0.6-0.1s0.4 0 0.4 0C14.6 8.9 19.6 8.8 25.7 8.8zM21.2 29.4l11.6-6 -11.6-6.1V29.4z"></path>
                         </svg>
                         <svg v-else class="icon-play-audio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
@@ -65,37 +65,49 @@
             <input type="button" class="secondary-button" v-on:click="showModal = false" value="Ok"/>
       </div>
    </modal>
+   <SaveBundle/>
 </div>
 </template>
+
 <script>
 import { sync } from 'vuex-pathify'
 import {requestOptions} from '@/helpers/request-options'
 import Modal from '@/components/shared/Modal.vue'
+import SaveBundle from '@/components/workflow/SaveBundle.vue'
 import WorkflowService from '../../service/workflow-service';
+
 export default {
-  name: 'WorkflowSelection',
+  name: 'SelectWorkflow',
   props: {
   },
   data() {
     return {
       workflows:[],
+      jobs: {},
       workflowService: new WorkflowService(),
       modalHeader: "Error",
       modalText: "",
-      showModal: false
+      showModal: false,
+      selectedFilesArray: []
     }
   },
   components:{
-     Modal
+     Modal,
+     SaveBundle,
   },
   computed:{
       workflowSubmission: sync('workflowSubmission'),
       selectedFiles: sync('workflowSubmission.selectedFiles'),
+      updateSelectedFiles: sync('workflowSubmission.updateSelectedFiles'),
       submissionEnabled(){
          let self = this;
-         if(self.selectedFiles.length==0 || !self.workflowSubmission.selectedWorkflow) return false;
-         return true;
-      }
+         console.log("selectedFilesArray.length: " + this.selectedFilesArray.length + ", selectedWorkflow: " + self.workflowSubmission.selectedWorkflow);
+         return (self.selectedFilesArray.length > 0 && self.workflowSubmission.selectedWorkflow != null);
+      },
+      saveBundleEnabled(){
+         console.log(`selectedFilesArray.length: ${this.selectedFilesArray.length}`);
+         return this.selectedFilesArray.length > 0;
+      },
   },
   methods:{
     async getWorkflows() {
@@ -110,94 +122,51 @@ export default {
       self.workflowSubmission.selectedWorkflow = event.target.value;
       self.workflowSubmission.selectedWorkflowParameters = await this.workflowService.getWorkflowDetails(self.workflowSubmission.selectedWorkflow);
     },
-    async addPrimaryFilesToBundle(bundle){
-       let self = this;
-       // add currently selected primaryfiles to the bundle
-      var primaryfileIds = this.selectedFiles[0].id; 
-      for (var i=1; i<this.selectedFiles.length; i++) {
-         primaryfileIds += "," + this.selectedFiles[i].id;
-      }
 
-      await self.workflowService.addPrimaryFiles(bundle.id, primaryfileIds)
-         .then(response => {
-            bundle = response.data;
-         })
-         .catch(e => {
-            console.log(e);
-            self.modalText = "Error adding primary files to bundle. Please contact a system administrator."
-            self.modalText = "Error submitting workflow:  Could not add primary files toy"
-            self.showModal = true;
-         });
-      return bundle;
-    },
-    async createTemporaryBundle(){
-      let self = this;
-      // create a new bundle with default name/description
-      var startId = self.selectedFiles[0].id;
-      var size = self.selectedFiles.length;
-      var endId = self.selectedFiles[size-1].id;
-      var bundle = {
-         name: "Bundle #" + startId + " ~ #" + endId, 
-         description: "Bundle with #" + size + " primaryfiles"
-      };
-      var createdBundle = await self.workflowService.createBundle(bundle)
-         .then(response => {
-            var createdBundle = response.data;
-            self.addPrimaryFilesToBundle(createdBundle);
-            return createdBundle;
-         })
-         .catch(e => {
-            console.log(e);
-            self.modalText = "Error submitting workflow:  Could not create bundle."
-            self.showModal = true;
-            throw new Error("Could not create bundle");
-         }); 
-      return createdBundle;     
-    },
-    async createBundle(name, description){
-         console.log("Creating a bundle!!!")
-    },
-    async showCreateBundleModal(name, description){
-         console.log("Showing create bundle modal!!!")
-    },
+   // we don't need to create anoynymous bundle upon workflow submission, 
+   // since such bundles aren't accessible to users; and creating one each time will overcrowd DB table over time;
+   // instead we can add endpoint on backend to submit list of primaryfiles and use that endpoint
    async submitWorkflow(){
       console.log("Submitting workflow");
       let self = this;
       self.workflowSubmission.loading = true;
-      await self.createTemporaryBundle().then(bundleResponse=>{
-         self.workflowService.submitWorkflow(this.workflowSubmission.selectedWorkflow, bundleResponse.id)
-            .then(response => {
-               this.jobs = response.data;
+      await self.workflowService.submitWorkflow(this.workflowSubmission.selectedWorkflow, self.workflowService.getSelectedPrimaryfileIds(this.selectedFiles))
+         .then(response => {
+            let jobsobj = response.data;
+            this.jobs = new Map(Object.entries(jobsobj));
+            self.workflowSubmission.loading = false;
+            self.modalHeader = "Success!";
+            self.modalText = `${this.selectedFilesArray.length} files have been submitted, ${this.jobs.size} jobs have been created successfuly`;
+            self.showModal = true;
+            })
+            .catch(e => {
+               console.log(e);
                self.workflowSubmission.loading = false;
-               self.modalHeader = "Success!";
-               self.modalText = "Your files have been submitted successfuly";
+               self.modalText = "Error submitting workflow:  Could not finish submission."
                self.showModal = true;
-               })
-               .catch(e => {
-                  console.log(e);
-                  self.workflowSubmission.loading = false;
-                  self.modalText = "Error submitting workflow:  Could finish submission."
-                  self.showModal = true;
-               });
-               
-      });      
+            });    
    },
-    removeFile(id){
+
+   removeFile(id){
       let self = this;
-      for( var i = 0; i < self.selectedFiles.length; i++){ 
-        if (self.selectedFiles[i].id === id) {
-          self.selectedFiles.splice(i, 1); 
-        }
-      }
-    }
+      self.selectedFiles.delete(id);
+      self.workflowSubmission.updateSelectedFiles = self.workflowSubmission.updateSelectedFiles + 1;
+      console.log("Removed selected file " + id);
+    },
+  },
+  watch: {
+    updateSelectedFiles: function() {
+      this.selectedFilesArray = Array.from(this.workflowSubmission.selectedFiles.values());
+      console.log("Updated selectedFilesArray: " + this.selectedFilesArray);
+    },
   },
   mounted() {
     let self = this;
     self.getWorkflows();
-    if(!self.selectedFiles) self.selectedFiles = [];
   }
 }
 </script>
+
 <style lang="css">
 @import '/amppd-ui/src/styles/style.css';
 .node-li{
@@ -207,6 +176,10 @@ export default {
    font-weight:700;
 }
 .btn-primary:disabled {
+   background-color: rgba(187, 187, 187, 0.856) !important;
+   border-color: rgba(187, 187, 187, 0.856) !important;
+}
+.btn-secondary:disabled {
    background-color: rgba(187, 187, 187, 0.856) !important;
    border-color: rgba(187, 187, 187, 0.856) !important;
 }
