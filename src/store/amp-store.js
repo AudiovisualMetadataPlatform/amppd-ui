@@ -17,8 +17,10 @@ Vue.use(Vuex);
 const state = {
     workflowSubmission:{
       loading:false,
+      showBundleError:false,
       showSelectBundle:false,
       showSaveBundle:false,
+      bundles: [],
       selectedFiles: new Map(), // use map instead of array to improve search performance
       updateSelectedFiles: 0,   // flag to indiate changes in selectedFiles, a work-around to solve the issue that Vue does not watch Map
       selectedWorkflow: null,

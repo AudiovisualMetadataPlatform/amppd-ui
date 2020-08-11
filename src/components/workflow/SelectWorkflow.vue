@@ -85,7 +85,7 @@ export default {
       workflows:[],
       jobs: {},
       workflowService: new WorkflowService(),
-      modalHeader: "Error",
+      modalHeader: "",
       modalText: "",
       showModal: false,
       selectedFilesArray: []
@@ -134,17 +134,21 @@ export default {
          .then(response => {
             let jobsobj = response.data;
             this.jobs = new Map(Object.entries(jobsobj));
-            self.workflowSubmission.loading = false;
-            self.modalHeader = "Success!";
-            self.modalText = `${this.selectedFilesArray.length} files have been submitted, ${this.jobs.size} jobs have been created successfuly`;
+            let total = this.selectedFilesArray.length;
+            let success = this.jobs.size;
+            let failure = total - success;
+            self.modalHeader = failure > 0 ? "Error" : "Success";
+            self.modalText = `Total number of files submitted: ${total}; Number of jobs successfully created: ${success}; Number of jobs failed to be created: ${failure}`;
             self.showModal = true;
-            })
-            .catch(e => {
-               console.log(e);
-               self.workflowSubmission.loading = false;
-               self.modalText = "Error submitting workflow:  Could not finish submission."
-               self.showModal = true;
-            });    
+            self.workflowSubmission.loading = false;
+         })
+         .catch(e => {
+            console.log(e);
+            self.modalHeader = "Error";
+            self.modalText = "Error submitting workflow:  Could not finish submission."
+            self.showModal = true;
+            self.workflowSubmission.loading = false;
+         });  
    },
 
    removeFile(id){
