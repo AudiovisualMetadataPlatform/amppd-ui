@@ -141,23 +141,12 @@ export default {
 		this.responseHeader = "Error";
 		this.responseText = "Error retrieving bundles: a system error has occured, please try again later." 
    },
-
-	// async listBundles() {
-	// 	await this.workflowService.listBundles().then(response => {
-	// 		this.bundles = response.data;
-	// 		console.log(`Found a total of ${this.bundles.length} bundles`);
-	// 	}).catch(e => {
-	// 		console.log(e);
-	// 		this.workflowSubmission.showSelectBundle = false;
-	// 	}); 
-	// }
   },
 
   mounted() {
     console.log("mounted: showSelectBundle: " + this.showSelectBundle);
     console.log("mounted: showBundleError: " + this.showBundleError);
     this.setupBundleError();
-	//  this.listBundles();
   }
 }
 </script>
