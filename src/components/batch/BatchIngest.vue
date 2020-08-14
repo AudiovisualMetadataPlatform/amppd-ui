@@ -4,7 +4,7 @@
       <div class="row expand-h">        
       <Sidebar/>    
       <div class="col-10 bg-light-gray-1">
-        <main>
+        <main class="main-margin-min">
           <Logout/>
           <div class="pad-all-3">
             <div class="card">
@@ -163,6 +163,9 @@ export default {
 
 <style lang="css">
 @import '/amppd-ui/src/styles/style.css';
+  .main-margin-min {
+    margin: 0.5em!important;
+  }
   .form-errors {
     color: red;
     margin: 0%!important;
