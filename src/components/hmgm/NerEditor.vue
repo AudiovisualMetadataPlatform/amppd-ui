@@ -11,7 +11,7 @@
             <input type="button" class="secondary-button" v-on:click="reset" value="Reset"/>
           </div>
         </div>
-        <iframe class="" :src="iframeUrl" id="timeliner" width="1500" height="800" frameborder="1"></iframe>
+        <iframe class="" :src="iframeUrl" id="timeliner" width="1500" height="800" style="border:none;"></iframe>
         <!-- TODO 
           Below code is for importing Timeliner as a React component and it didn't work, 
           possibly need extra code in Timeliner to export Timeliner root component along with its properties.
@@ -153,7 +153,8 @@ export default {
 
 <style scoped>
 h2, h3{
-  margin-top: 0;
+  margin-left: 10px;
+  margin-top: 2px;
   max-height: 50px;
 }
 .ner-content{
