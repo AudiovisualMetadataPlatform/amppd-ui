@@ -251,6 +251,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .main-margin-min {
+    margin: 0.5em!important;
+  }
+
   .spacer{
     height: 24px;
   }
