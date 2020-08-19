@@ -34,6 +34,7 @@
                <div class="col-12">
                   <div class="input-group mb-3">
                      <label for="exampleFormControlInput100" class="sr-only">Search</label>
+                     <label class="form-errors" v-if="errors.search_error.length">{{errors.search_error}}</label>
                      <input type="text" class="form-control" id="exampleFormControlInput100" placeholder="Search" v-model="searchWord">
                      <div class="input-group-append">
                         <button class="btn" v-on:click="searchFiles()">
@@ -129,7 +130,10 @@ export default {
 		searchWord : '',
 		searchedItems:[],
       workflowService: new WorkflowService(),
-      searchResults : false
+      searchResults : false,
+      errors: {
+      search_error:'',
+    },
       }
    },
    components:{
@@ -154,6 +158,7 @@ export default {
          self.searchedItems=[];
          self.visible = -1;
          console.log("the search word is:"+ self.searchWord);
+         self.errors.search_error = '';
          var media_type = '';
          if(self.searchAudio) media_type+='1';
          else media_type+='0';
@@ -171,6 +176,9 @@ export default {
             {
                self.searchResults = false;
             }
+         }
+         else{
+            self.errors.search_error = 'Please enter a search keyword';
          }
       },
 		addFile(index, file_index) {
@@ -238,4 +246,11 @@ export default {
 .select-bundles{
    margin: 5px;
 }
+  .form-errors {
+    color: red;
+    margin: 0%!important;
+    font-size: 0.9rem; 
+    padding-left:3px; 
+    width: inherit;
+  }
 </style>
