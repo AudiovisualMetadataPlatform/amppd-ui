@@ -21,7 +21,6 @@ export default {
   },
   data(){
     return {
-        visible : false,
         searchValue: '',
         filterSuccess:false,
         searchTerms:[]

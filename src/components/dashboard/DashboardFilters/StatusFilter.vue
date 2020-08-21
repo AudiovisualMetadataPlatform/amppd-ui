@@ -1,10 +1,10 @@
 <template>
 	<div class="dropdown" >
-		<button class="btn btn-info dropdown-toggle" :class="{ 'show' : visible === true }" type="button" id="dropdownMenuButton1" 
-			data-toggle="dropdown" aria-haspopup="true" aria-expanded="visible ? 'true' : 'false'" v-on:click="visible = !visible">
+		<button class="btn btn-info dropdown-toggle" :class="{ 'show' : workflowDashboard.filtersEnabled.statusFilter === true }" type="button" id="dropdownMenuButton1" 
+			data-toggle="dropdown" aria-haspopup="true" aria-expanded="workflowDashboard.filtersEnabled.statusFilter ? 'true' : 'false'" v-on:click="setFilterFlags">
 			Status
 		</button>
-		<div class="dropdown-menu compact-form" :class="{ 'show' : visible === true }" aria-labelledby="dropdownMenuButton" 
+		<div v-click-outside="closeFilter" class="dropdown-menu compact-form" :class="{ 'show' : workflowDashboard.filtersEnabled.statusFilter === true }" aria-labelledby="dropdownMenuButton" 
 			x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
       <b-form-checkbox-group
         v-model="workflowDashboard.searchQuery.filterByStatuses"
@@ -27,6 +27,7 @@
 import { sync } from 'vuex-pathify'
 import _ from 'underscore';
 import { BFormCheckboxGroup } from 'bootstrap-vue';
+import ClickOutside from 'vue-click-outside'
 // import Multiselect from 'vue-multiselect';
 
 export default {
@@ -37,7 +38,6 @@ export default {
   },
   data(){
     return {
-			visible: false,
 			statusList: [],
 			filterSuccess: false,
 			selectedStatuses: []
@@ -54,6 +54,19 @@ export default {
   },
   
   methods:{
+	setFilterFlags(){
+		this.workflowDashboard.filtersEnabled.statusFilter = !this.workflowDashboard.filtersEnabled.statusFilter;
+		if(this.workflowDashboard.filtersEnabled.statusFilter)
+		{
+            this.workflowDashboard.filtersEnabled.dateFilter=false;
+            this.workflowDashboard.filtersEnabled.submitterFilter =false;
+            this.workflowDashboard.filtersEnabled.fileFilter=false;
+            this.workflowDashboard.filtersEnabled.searchFilter=false;
+            this.workflowDashboard.filtersEnabled.itemFilter=false;
+            this.workflowDashboard.filtersEnabled.stepFilter=false;
+            this.workflowDashboard.filtersEnabled.workflowFilter=false;
+		}
+	},
 		addStatus(status) {
 			if (this.selectedStatuses.length >0) {
 				if (this.selectedStatuses.indexOf(status) == -1) {
@@ -75,11 +88,17 @@ export default {
 			console.log("selected statuses are: " + this.selectedStatuses + ", and removed element is: " + removed);
 		},
 		closeFilter(){
-			this.visible = false;
+			this.workflowDashboard.filtersEnabled.statusFilter = false;
 			console.log("selected statuses: " + this.selectedStatuses);
 		}
   },
-  
+  directives: {
+    ClickOutside
+  },
+  mounted () {
+    // prevent click outside event with popupItem.
+    this.popupItem = this.$el
+  },
   watch: {
 		selectedStatuses: function() {
 			console.log("selected statuses: " + this.selectedStatuses);

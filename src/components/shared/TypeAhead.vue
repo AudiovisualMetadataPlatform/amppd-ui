@@ -60,7 +60,7 @@ export default {
             query: '',
             results : [],
             isLoading: false,
-            arrowCounter: 0,
+            arrowCounter: -1,
             isOpen: false
         }
 	},	
@@ -70,7 +70,7 @@ export default {
 
         onChange() {
             let self = this;
-            this.arrowCounter = 0;
+            this.arrowCounter = -1;
             self.fetchItems();
             if(self.items.length > 0){
                 console.log("calling filter results")

@@ -23,6 +23,7 @@ module.exports = {
       'no-console': 'off',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
       "no-unused-vars": "off",
-      "vue/no-unused-components": "off"
+      "vue/no-unused-components": "off",
+      "no-mixed-spaces-and-tabs": "off", 
     }
 };

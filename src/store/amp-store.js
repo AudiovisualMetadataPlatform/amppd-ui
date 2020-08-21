@@ -15,16 +15,20 @@ Vue.use(Vuex);
 =======================================================*/
 
 const state = {
-    parameters: [], // Workflow step parameters
-    files: [], // List of files
-    selectedWorkflow: null, // Selected workflow
-    isWorkflowModalVisible: false,
-    // bundle: null, // bundle created for primaryfiles upon submission
-    jobs: [], // jobs successfully created
+    workflowSubmission:{
+      loading:false,
+      showBundleError:false,
+      showSelectBundle:false,
+      showSaveBundle:false,
+      bundles: [],
+      selectedFiles: new Map(), // use map instead of array to improve search performance
+      updateSelectedFiles: 0,   // flag to indiate changes in selectedFiles, a work-around to solve the issue that Vue does not watch Map
+      selectedWorkflow: null,
+      selectedWorkflowParameters: []
+    },
     workflowDashboard:{
         loading:false,
-
-        filtersEnabled : {submitterFilter :false, dateFilter : false},
+        filtersEnabled : {submitterFilter :false, dateFilter : false, fileFilter : false, itemFilter : false, searchFilter : false, statusFilter : false, stepFilter : false, workflowFilter : false},
         searchQuery: {
             sortRule: {
               columnName: 'date',

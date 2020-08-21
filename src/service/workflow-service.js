@@ -1,22 +1,60 @@
 
-import BaseService from './base-service'
+import BaseService from './base-service.js';
+const baseService = new BaseService();
 export default class WorkflowService extends BaseService{
+    async searchFiles(searchWord, media_type){
+        return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + searchWord +'&mediaType=' + media_type).then(response => response.data);  
+    }
+
+    isAudioFile(primaryfile){
+        if (primaryfile.mediaType)
+            return primaryfile.mediaType.startsWith('audio');
+        if (primaryfile.originalFilename)
+            return primaryfile.originalFilename.endsWith('.mp3') || 
+                    primaryfile.originalFilename.endsWith('.wav') ||
+                    primaryfile.originalFilename.endsWith('.flac');        
+    } 
+
+    // concatenate IDs of selected primaryfiles into a query string
+    getSelectedPrimaryfileIds(selectedFiles){
+        if (selectedFiles === null || selectedFiles.size === 0)
+            return "";
+        var primaryfileIds = ""; 
+        for (let primaryfile of selectedFiles.values()) {
+            primaryfileIds = primaryfileIds === "" ? primaryfile.id : primaryfileIds + "," + primaryfile.id;
+        }
+        return primaryfileIds;
+    }
+
+    listBundles() {
+        return super.get_auth(`/bundles/search/findAllNamed`);
+    }
+
+    findBundle(name) {
+        return super.get_auth(`/bundles/search/findNamedByCurrentUser?name=${name}`);
+    }
+
+    updateBundle(bundleId, description, primaryfileIds){
+        return super.post_auth(`/bundles/${bundleId}/update?description=${description}&primaryfileIds=${primaryfileIds}`);
+    }
+
+    createBundle(name, description, primaryfileIds){
+        return super.post_auth(`/bundles/create?name=${name}&description=${description}&primaryfileIds=${primaryfileIds}`);
+    }
+
+    submitWorkflow(selectedWorkflow, primaryfileIds){
+        console.log('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds);
+        return super.post_auth('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds);
+    }
+
+    cleanParameterName(name){
+        if(!name) return "";
+        var tempName = name.replace(/(_)/g, ' ');
+        tempName = tempName.replace(/(^\w)|(\s+\w)/g, match => match.toUpperCase());
+        return tempName;
+    }    
     getWorkflows(){
         return super.get_auth('/workflows');
-    }
-    searchFiles(searchWord){
-        return super.get_auth('/primaryfiles/search/findByKeyword?keyword='+searchWord)
-        .catch(e => {
-          console.log(e);});
-    }
-    createBundle(bundle){
-        return super.post_auth('/bundles', bundle);
-    }
-    addPrimaryFiles(bundleId, primaryfileIds){
-        return super.post_auth('/bundles/' + bundleId + '/addPrimaryfiles?primaryfileIds=' + primaryfileIds);
-    }
-    submitWorkflow(selectedWorkflow, bundleId){
-        return super.post_auth('/jobs/bundle?workflowId=' + selectedWorkflow + '&bundleId=' + bundleId);
     }
     async getWorkflowDetails(id){
         var tempParams = [];
@@ -38,7 +76,7 @@ export default class WorkflowService extends BaseService{
                 // Create a new node object
                 var newNode = {
                     nodeId: nodeKey,
-                    nodeName: thisNode.toolId,
+                    nodeName: this.cleanParameterName(thisNode.toolId),
                     annotation: thisNode.annotation,
                     params:[]
                 };
@@ -57,7 +95,7 @@ export default class WorkflowService extends BaseService{
 
                     // Add the parameter
                     newNode.params.push({
-                        name: toolInputKey,
+                        name: this.cleanParameterName(toolInputKey),
                         value: thisInput,
                         type: 'text'
                     });

@@ -13,7 +13,6 @@ import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
 import NerEditor from "./components/hmgm/NerEditor.vue";
 import {accountService} from './service/account-service.js';
 
-// import Jobs from "./components/Jobs.vue";
 
 Vue.use(Router);
 
