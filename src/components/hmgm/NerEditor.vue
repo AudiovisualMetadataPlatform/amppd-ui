@@ -124,7 +124,7 @@ export default {
       // Prompt confirmation if content has been edited since last save
       if (!this.isContentSaved()) {
         this.confirmHeader = "Warning"
-        this.confirmBody = "The content has been editted since the last save. 'Continue' to complete with the last saved content; or 'Cancel' to go back to the editor and save the current content before completing.";
+        this.confirmBody = "There are unsaved changes. Do you want to continue without saving?"
         this.confirmAction = "Complete";
         this.showConfirm = true;
         console.log("showConfirm: " + this.showConfirm + ", confirmAction: " + this.confirmAction);
