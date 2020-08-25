@@ -7,11 +7,11 @@
         <div class="header-row">
           <h2>NER Editor</h2>
           <div class="action-buttons">
-            <input type="button" class="primary-button" v-on:click="complete" value="Complete"/>
-            <input type="button" class="secondary-button" v-on:click="reset" value="Reset"/>
+            <input type="button" class="primary-button" v-on:click="onComplete" value="Complete"/>
+            <input type="button" class="secondary-button" v-on:click="onReset" value="Reset"/>
           </div>
         </div>
-        <iframe class="" :src="iframeUrl" id="timeliner" width="1500" height="800" frameborder="1"></iframe>
+        <iframe class="" :src="iframeUrl" id="timeliner" width="1500" height="800" style="border:none;"></iframe>
         <!-- TODO 
           Below code is for importing Timeliner as a React component and it didn't work, 
           possibly need extra code in Timeliner to export Timeliner root component along with its properties.
@@ -29,12 +29,22 @@
         -->
       </div>
     </div>
-    <modal v-if="showModal" @close="modalDismiss">
-    <h3 slot="header">{{modalHeader}}</h3>
-    <div slot="body">
-       {{modalBody}}
-    </div>
-  </modal>
+    <modal v-if="showResponse" @close="modalDismiss">
+      <h3 slot="header">{{responseHeader}}</h3>
+      <div slot="body">
+        {{responseBody}}
+      </div>
+    </modal>
+    <modal v-if="showConfirm" @close="showConfirm = false">
+      <h3 slot="header">{{confirmHeader}}</h3>
+      <div slot="body">
+        {{confirmBody}}
+      </div>
+      <div slot="footer" class="action-buttons">
+        <input type="button" class="secondary-button" v-on:click="showConfirm = false" value="Cancel"/>
+        <input type="button" class="primary-button" v-on:click="onConfirm" value="Continue"/>
+      </div>
+    </modal>
   </div>
 </template>
 
@@ -59,10 +69,14 @@ export default {
       resourcePath:"",
       resource:"",
       callback:"",
-      modalHeader:"",
-      modalBody:"",
-      showModal: false,
+      responseHeader:"",
+      responseBody:"",
       modalDismiss: null,
+      showResponse: false,
+      confirmHeader:"",
+      confirmBody:"",
+      confirmAction: "",
+      showConfirm: false,
     }
   },
   computed:{
@@ -72,30 +86,60 @@ export default {
     // Prompt success message upon action success
     handleSuccess(action){
       let self = this;
-      self.modalHeader = "Success"
-      self.modalBody = "The NER edits have been successfully " + action;
-      self.showModal = true;
+      self.responseHeader = "Success"
+      self.responseBody = "The NER edits have been successfully " + action;
+      self.showResponse = true;
       self.modalDismiss = function() {
         if (action === "completed") {
           console.log("Redirect to root upon successful completion");
           self.$router.push({ path: '/' });
         }
-        self.showModal = false;
+        self.showResponse = false;
       }
     },
     // Prompt error message upon action failure
     handleError(action){
       let self = this;
-      self.modalHeader = "Error"
-      self.modalBody = "There was an error " + action + " the NER edits.";
-      self.showModal = true;
+      self.responseHeader = "Error"
+      self.responseBody = "There was an error " + action + " the NER edits.";
+      self.showResponse = true;
       self.modalDismiss = function() {
         if (action === "completing") {
           console.log("Redirect to root upon failed completion");
           self.$router.push({ path: '/' });
         }
-        self.showModal = false;
+        self.showResponse = false;
       }
+    },
+    async onConfirm() {
+      if (this.confirmAction === "Complete") {
+        this.complete();
+      }
+      else if (this.confirmAction === "Reset") {
+        this.reset();
+      }
+      this.showConfirm = false;
+    },
+    async onComplete() {
+      // Prompt confirmation if content has been edited since last save
+      if (!this.isContentSaved()) {
+        this.confirmHeader = "Warning"
+        this.confirmBody = "The content has been editted since the last save. 'Continue' to complete with the last saved content; or 'Cancel' to go back to the editor and save the current content before completing.";
+        this.confirmAction = "Complete";
+        this.showConfirm = true;
+        console.log("showConfirm: " + this.showConfirm + ", confirmAction: " + this.confirmAction);
+      }
+      else {
+        this.complete();
+      }
+    },
+    async onReset() {
+      // always prompt a warning so users don't accidentally lose their edits
+      this.confirmHeader = "Warning"
+      this.confirmBody = "All previously saved changes will be removed and the content will be reset to the original file. Are you sure you want to contine?";
+      this.confirmAction = "Reset";
+      this.showConfirm = true;
+      console.log("showConfirm: " + this.showConfirm + ", confirmAction: " + this.confirmAction);
     },
     // Complete the edits
     async complete(){
@@ -136,7 +180,16 @@ export default {
       var url = TIMELINER_BASE_URL + "#noHeader=true&noFooter=true&noSourceLink=false";
       url += "&resource=" + encodeURIComponent(resource) + "&callback=" + encodeURIComponent(callback);
       return url;
-    }
+    },
+    isContentSaved() {
+      let ifrm = document.getElementById("timeliner");
+      console.log("iFrame:" + ifrm);
+      let idoc = ifrm.contentDocument? ifrm.contentDocument: ifrm.contentWindow.document;
+      console.log("iFrame document:" + idoc);
+      let button = idoc.getElementById("saveProject");
+      console.log("saveProject button:" + button)
+      return button && button.disabled;
+    },
   },
   mounted(){
     this.resourcePath = this.$route.query.resourcePath;
@@ -153,7 +206,8 @@ export default {
 
 <style scoped>
 h2, h3{
-  margin-top: 0;
+  margin-left: 10px;
+  margin-top: 2px;
   max-height: 50px;
 }
 .ner-content{
