@@ -173,15 +173,6 @@ export default {
 
 <style lang="css">
 @import '/amppd-ui/src/styles/style.css';
-.file-list-item{
-   display: flex;
-   justify-content: space-between;
-}
-.file-name{
-   white-space: nowrap;
-   overflow: hidden;
-   text-overflow: ellipsis;
-}
 .node-li{
    margin-bottom: 16px;
 }

@@ -246,15 +246,6 @@ export default {
 .select-bundles{
    margin: 5px;
 }
-.file-list-item{
-   display: flex;
-   justify-content: space-between;
-}
-.file-name{
-   white-space: nowrap;
-   overflow: hidden;
-   text-overflow: ellipsis;
-}
   .form-errors {
     color: red;
     margin: 0%!important;

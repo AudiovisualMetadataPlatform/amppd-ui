@@ -561,3 +561,13 @@ svg.icon-user {
   visibility: visible;
   opacity: 1;
 }
+
+.file-list-item{
+  display: flex;
+  justify-content: space-between;
+}
+.file-name{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
