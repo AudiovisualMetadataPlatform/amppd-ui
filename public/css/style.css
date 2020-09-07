@@ -566,6 +566,14 @@ svg.icon-user {
   display: flex;
   justify-content: space-between;
 }
+@media screen and (max-width: 580px) {
+  .file-list-item {
+    flex-direction: column;
+  }
+  .file-list-item-add {
+    text-align: right !important;
+  }
+}
 .file-name{
   white-space: nowrap;
   overflow: hidden;
