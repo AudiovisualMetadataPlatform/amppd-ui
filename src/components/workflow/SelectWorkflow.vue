@@ -41,7 +41,7 @@
                         </svg>
                         {{file.name}}
                      </button>
-                     <button class="btn btn-link add-remove float-right" v-on:click="removeFile(file.id)">
+                     <button class="btn btn-link add-remove float-right file-list-item-add" v-on:click="removeFile(file.id)">
                         <svg class="icon-minus" version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
                            <path class="circle-stroke" d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
                               M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"></path>

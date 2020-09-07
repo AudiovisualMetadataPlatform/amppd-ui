@@ -57,7 +57,7 @@
          <div class="card" v-for="(item, index) in searchedItems.rows" v-bind:key="index" >
             <div class="card-header" id="headingTwo">
                <h5 class="mb-0">
-                  <button class="btn btn-link" :class="{ 'collapsed' : !(visible === index) }" :key="item.id" v-on:click="itemClicked(index)" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="visible[index] ? 'true' : 'false'"  aria-controls="collapseTwo">
+                  <button class="btn btn-link item-name" :class="{ 'collapsed' : !(visible === index) }" :key="item.id" v-on:click="itemClicked(index)" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="visible[index] ? 'true' : 'false'"  aria-controls="collapseTwo">
                      <svg aria-hidden="true" focusable="false" class="svg-inline dwn-arrow" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                         <path class="hotlink" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path>
                      </svg>
@@ -91,7 +91,7 @@
                            </svg>
                            {{primaryfile.name}}
                         </button>
-                        <button class="btn btn-link  add-remove float-right" v-on:click="addFile(index,file_index)" v-bind:disabled=hasValue(item.primaryFiles[file_index].id)>
+                        <button class="btn btn-link  add-remove float-right file-list-item-add" v-on:click="addFile(index,file_index)" v-bind:disabled=hasValue(item.primaryFiles[file_index].id)>
                            <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
                               <path class="circle-stroke" d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
                                  M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"></path>
@@ -252,5 +252,9 @@ export default {
     font-size: 0.9rem; 
     padding-left:3px; 
     width: inherit;
+  }
+  .item-name{
+     white-space: normal !important;
+     text-align: left !important;
   }
 </style>
