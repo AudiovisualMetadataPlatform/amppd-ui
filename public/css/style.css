@@ -566,6 +566,12 @@ svg.icon-user {
   display: flex;
   justify-content: space-between;
 }
+.file-name{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 5px !important;
+}
 @media screen and (max-width: 580px) {
   .file-list-item {
     flex-direction: column;
@@ -573,9 +579,10 @@ svg.icon-user {
   .file-list-item-add {
     text-align: right !important;
   }
-}
-.file-name{
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  .bundle{
+    flex-direction: column;
+  }
+  .file-name{
+    text-align: left;
+  }
 }
