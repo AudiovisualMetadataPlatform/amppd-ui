@@ -37,7 +37,7 @@
                      <label class="form-errors" v-if="errors.search_error.length">{{errors.search_error}}</label>
                      <input type="text" class="form-control" id="exampleFormControlInput100" placeholder="Search" v-model="searchWord">
                      <div class="input-group-append">
-                        <button class="btn" v-on:click="searchFiles()">
+                        <button class="btn" type="button" v-on:click="searchFiles()">
                            <svg data-v-6b33b2c4="" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" class="svg-search"><title data-v-6b33b2c4="">search</title><path data-v-6b33b2c4="" d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"></path></svg>
                            Search
                         </button>
