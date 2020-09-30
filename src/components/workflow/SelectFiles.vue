@@ -2,9 +2,9 @@
 <div class="col-lg-7">
    <h1>Workflow Submissions</h1>
    <h2>Select files</h2>
-   <form class="marg-t-3 filter-form">
+   <form class="marg-t-3 filter-form" v-on:submit.prevent @keyup.enter.prevent="searchFiles()">
       <div class="container-fluid">
-         <div class="row">  
+         <div class="row">
             <div class="col-xl-6 col-md-12">
                <div id="limiter">
                   <strong>Limit results to </strong>
@@ -107,7 +107,7 @@
             </div>
          </div>
       </div>
-      <div v-else>  
+      <div v-else>
          No Results
       </div>
    </div>
@@ -169,7 +169,7 @@ export default {
          if(self.searchWord.length >0){
             self.searchedItems = await self.workflowService.searchFiles(this.searchWord, media_type);
             if(self.searchedItems.rows!=null)
-            {    
+            {
                self.searchResults = true;
             }
             else
@@ -223,9 +223,9 @@ export default {
          }).catch(e => {
             console.log(e);
             this.workflowSubmission.showBundleError = true;
-         }); 
+         });
       }
-    
+
    },
    watch:{
       searchAudio: function(){
@@ -249,8 +249,8 @@ export default {
   .form-errors {
     color: red;
     margin: 0%!important;
-    font-size: 0.9rem; 
-    padding-left:3px; 
+    font-size: 0.9rem;
+    padding-left:3px;
     width: inherit;
   }
   .item-name{
