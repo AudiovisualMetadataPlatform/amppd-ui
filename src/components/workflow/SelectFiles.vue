@@ -2,7 +2,7 @@
 <div class="col-lg-7">
    <h1>Workflow Submissions</h1>
    <h2>Select files</h2>
-   <form class="marg-t-3 filter-form" v-on:submit.prevent @keyup.enter.prevent="searchFiles()">
+   <form class="marg-t-3 filter-form" v-on:submit.prevent @keyup.enter="searchFiles()">
       <div class="container-fluid">
          <div class="row">
             <div class="col-xl-6 col-md-12">
@@ -28,7 +28,7 @@
             </div>
          </div>
       </div>
-      <div class="form-group ">
+      <div class="form-group">
          <div class="container-fluid">
             <div class="row">
                <div class="col-12">
