@@ -163,7 +163,7 @@ export default {
       searchQuery: {
             sortRule: {
               columnName: 'workflowStep',
-              orderByDescending: true
+              orderByDescending: false
             },
             pageNum: 1,
             resultsPerPage: 10,
