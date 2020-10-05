@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import Login from "./components/account/Login.vue";
+import Deliverables from "./components/deliverables/Deliverables.vue";
 import Register from "./components/account/Register.vue";
 import Workflow from "./components/workflow/Workflow.vue";
 import WorkflowDashboard from "./components/dashboard/Dashboard.vue";
@@ -77,6 +78,12 @@ var router = new Router({
       path: "/batch/ingest", 
       name: 'batch-ingest', 
       component: BatchIngest, 
+      // meta: { authorize: [] } 
+    },  
+    {
+      path: "/deliverables", 
+      name: 'deliverables', 
+      component: Deliverables, 
       // meta: { authorize: [] } 
     },  
     {

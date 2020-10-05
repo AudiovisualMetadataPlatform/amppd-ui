@@ -1,5 +1,5 @@
 <template> 
-  <div calss="collections">
+  <div class="collections">
   <div class="container col-12">   
       <div class="row expand-h">        
       <Sidebar/>    
