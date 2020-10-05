@@ -60,6 +60,11 @@
                         </td>
                       </tr>
                     </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td colspan="8" class="no-results">No results</td>
+                      </tr>
+                    </tbody>
                   </table>
                   <pagination v-if="searchQuery"
                         :pageNum="searchQuery.pageNum"
@@ -153,11 +158,11 @@ export default {
         {label: 'Source Filename', field: 'sourceFilename'},
         {label: 'Workflow Step', field: 'workflowStep'},
         {label: 'Output File', field: 'outputFile'},
-        {label: 'Final', field: 'final'}
+        {label: 'Final', field: 'isFinal'}
       ],
       searchQuery: {
             sortRule: {
-              columnName: 'date',
+              columnName: 'workflowStep',
               orderByDescending: true
             },
             pageNum: 1,
@@ -243,6 +248,7 @@ export default {
         let self = this;
         self.selectedItems = [];
         self.searchedItems = [];
+        self.loading = true;
         if(self.searchWord.length >0){
           var result = await self.workflowService.searchFiles(this.searchWord, '000');
           for(var i=0; i < result.rows.length; i++){
@@ -262,6 +268,8 @@ export default {
         else {
           self.searchedItems = []
         }
+
+        self.loading = false;
     },
     setItems(){
       let self = this;
@@ -360,4 +368,8 @@ export default {
         text-align: left !important;
     }
   }
+  .no-results{
+    text-align: center;
+    font-weight: 700;
+  } 
 </style>
