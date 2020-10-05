@@ -9,4 +9,12 @@ export default class WorkflowService extends BaseService{
         console.log(data);
         return data;
     }
+    async setIsFinal(id, isFinal){
+        var data = await super.post_auth('/dashboard/isfinal/' + id + '?isFinal=' + isFinal,  null).
+        then(result=>{
+            return result.data;
+        });
+        console.log(data);
+        return data;
+    }
 }
