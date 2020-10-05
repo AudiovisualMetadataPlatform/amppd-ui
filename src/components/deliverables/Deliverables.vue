@@ -11,7 +11,7 @@
             <div class="card">
               <div class="card-body">
                 <h1 class="card-title">AMP Deliverables</h1>
-                <button class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg">Bag Final Selection</button>
+                <button v-bind:disabled="!canBagFinalSelection" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg">Bag Final Selection</button>
                   <div>
                   <h2 class="sub-title">Source Item: <span>{{sourceItem.itemName}}</span></h2>
                   <h2 class="sub-title">Source Filename: <span>{{sourceItem.primaryFileLabel}}</span></h2>
@@ -81,7 +81,7 @@
             </h3>
             <div slot="body">
               <div class="input-group mb-3">
-                <input v-model="searchWord" type="text" class="form-control" placeholder="Search">
+                <input v-model="searchWord" type="text" class="form-control" placeholder="Search" v-on:keyup="searchKeyUp">
                 <div class="input-group-append">
                   <button v-on:click="searchFiles" class="btn btn-success" type="button">Go</button>
                 </div>
@@ -148,6 +148,7 @@ export default {
       rows: [],
       totalResults: 0,
       loading: false,
+      canBagFinalSelection: false,
       columns:[
         {label: 'Date', field: 'date'},
         {label: 'Submitter', field: 'submitter'},
@@ -158,7 +159,7 @@ export default {
       ],
       searchQuery: {
             sortRule: {
-              columnName: 'workflowStep',
+              columnName: 'outputFile',
               orderByDescending: false
             },
             pageNum: 1,
@@ -240,6 +241,11 @@ export default {
         }
       }
     },
+    async searchKeyUp(e){
+      if (e.keyCode === 13) {
+        this.searchFiles();
+      }
+    },
     async searchFiles() {
         let self = this;
         self.selectedItems = [];
@@ -247,24 +253,25 @@ export default {
         self.loading = true;
         if(self.searchWord.length >0){
           var result = await self.workflowService.searchFiles(this.searchWord, '000');
-          for(var i=0; i < result.rows.length; i++){
-            var thisItem = result.rows[i];
-            for(var p=0; p < thisItem.primaryFiles.length; p++){
-              var thisPrimaryFile = thisItem.primaryFiles[p];
-              self.searchedItems.push(
-                {
-                  itemName: thisItem.itemName,
-                  primaryFileId: thisPrimaryFile.id,
-                  primaryFileLabel: thisPrimaryFile.name
-                }
-              );
-            }
-          } 
+          if(result && result.rows){
+            for(var i=0; i < result.rows.length; i++){
+              var thisItem = result.rows[i];
+              for(var p=0; p < thisItem.primaryFiles.length; p++){
+                var thisPrimaryFile = thisItem.primaryFiles[p];
+                self.searchedItems.push(
+                  {
+                    itemName: thisItem.itemName,
+                    primaryFileId: thisPrimaryFile.id,
+                    primaryFileLabel: thisPrimaryFile.name
+                  }
+                );
+              }
+            } 
+          }
         }
         else {
           self.searchedItems = []
         }
-
         self.loading = false;
     },
     setItems(){
@@ -295,7 +302,6 @@ export default {
       self.loading = false;
     },
     searchModal(){
-      console.log("Open search modal");
       this.showModal = true;
     }
   },
