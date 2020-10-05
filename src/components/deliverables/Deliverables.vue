@@ -46,8 +46,6 @@
                         <td>{{ new Date(rec.date) | dateFormat('YYYY-MM-DD') }}</td>
                         <td>{{ rec.submitter }}</td>
                         <td>{{ rec.workflowName }}</td>
-                        <td>{{ rec.sourceItem }}</td>
-                        <td><a v-bind:href="getSourceUrl(rec)" target="_blank">{{ rec.sourceFilename }}</a></td>
                         <td>{{ rec.workflowStep }}</td>
                         <td v-if="rec.outputPath == null">{{ rec.outputFile }}</td>
                         <td v-else-if="rec.outputPath != null"><a v-bind:href="getOutputUrl(rec)" target="_blank">{{ rec.outputFile }}</a></td>
@@ -154,8 +152,6 @@ export default {
         {label: 'Date', field: 'date'},
         {label: 'Submitter', field: 'submitter'},
         {label: 'Workflow Name', field: 'workflowName'},
-        {label: 'Source Item', field: 'sourceItem'},
-        {label: 'Source Filename', field: 'sourceFilename'},
         {label: 'Workflow Step', field: 'workflowStep'},
         {label: 'Output File', field: 'outputFile'},
         {label: 'Final', field: 'isFinal'}
