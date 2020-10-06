@@ -1,5 +1,5 @@
 <template> 
-  <div class="collections">
+  <div class="batch-ingest">
   <div class="container col-12">   
       <div class="row expand-h">        
       <Sidebar/>    

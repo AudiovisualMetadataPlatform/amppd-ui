@@ -1,7 +1,7 @@
 <template> 
   <div class="deliverables">
   <loader :show="loading"/>
-  <div class="container col-12">   
+  <div class="container col-12" v-bind:class="[{ modalOpen: showModal }, 'container', 'col-12']">   
       <div class="row expand-h">        
       <Sidebar/>    
       <div class="col-10 bg-light-gray-1">
@@ -81,13 +81,18 @@
             </h3>
             <div slot="body">
               <div class="input-group mb-3">
-                <input v-model="searchWord" type="text" class="form-control" placeholder="Search" v-on:keyup="searchKeyUp">
+                <input v-model="searchWord" type="text" class="form-control" placeholder="Search" 
+                v-on:keyup.enter="searchKeyUp"
+                v-on:keyup.down="onArrowDown"
+                ref="searchInput"
+                tabindex="0"
+                >
                 <div class="input-group-append">
                   <button v-on:click="searchFiles" class="btn btn-success" type="button">Go</button>
                 </div>
               </div>
               <div class="scrollDiv">
-             <table id="myTable" data-detail-view="true" class="table">
+             <table id="myTable" data-detail-view="true" class="table" ref="tbl">
                <thead>
                  <tr>
                    <th data-sortable="true" data-field="type">Source items</th>
@@ -95,7 +100,15 @@
                  </tr>
                </thead>
                <tbody>
-                 <tr v-for="(item, index) in searchedItems" v-bind:key="index" v-on:click="rowClicked(item.primaryFileId)" v-bind:class="{ highlight: rowSelected(item.primaryFileId) }">
+                 <tr v-for="(item, index) in searchedItems" 
+                      v-bind:key="index" 
+                      :ref="'row'+index"
+                      tabindex="0"
+                      v-on:keyup.down="onArrowDown"
+                      v-on:keyup.up="onArrowUp"
+                      v-on:click="rowClicked(index)" 
+                      v-bind:class="{ highlight: rowSelected(item.primaryFileId) }"
+                      >
                    <td>{{item.itemName}}</td>
                    <td>{{item.primaryFileLabel}}</td>
                  </tr>
@@ -144,6 +157,7 @@ export default {
       searchWord: "",
       searchedItems: [],
       selectedItems: [],
+      selectedIndex: -1,
       finalItems: [],
       rows: [],
       totalResults: 0,
@@ -198,6 +212,29 @@ export default {
       const url = `${BASE_URL}/primaryfiles/${rec.primaryfileId}/media`;
       return url; 
     },
+    onArrowDown(e) {
+      e.preventDefault();
+      let self = this;
+      if(self.selectedIndex < self.searchedItems.length -1){
+        self.selectedIndex++;
+        self.setPrimaryfileId(self.selectedIndex);
+        this.$nextTick(() => this.scroll())
+      }
+    },
+    onArrowUp(e) {
+      e.preventDefault();
+      let self = this;
+      if(self.selectedIndex > 0){
+        self.selectedIndex--;
+        self.setPrimaryfileId(self.selectedIndex);
+        this.$nextTick(() => this.scroll())
+      }
+    },
+    scroll() {
+        var thisElement = this.$refs['row'+this.selectedIndex];
+        thisElement[0].focus();
+        thisElement[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); 
+    },
     getOutputUrl(rec) {
       const BASE_URL = process.env.VUE_APP_AMP_URL;
       const url = `${BASE_URL}/dashboard/${rec.id}/output`;
@@ -206,16 +243,16 @@ export default {
     rowSelected(primaryFileId){
       return this.selectedItems.includes(primaryFileId);
     },
-    rowClicked(primaryFileId){
+    rowClicked(selIndex){
       let self = this;
-      self.selectedItems =[];
-      var index = self.selectedItems.indexOf(primaryFileId);
-      if (index > -1) {
-        self.selectedItems.splice(index, 1);
-      }
-      else {
-        self.selectedItems.push(primaryFileId);
-      }
+      this.selectedIndex = selIndex;
+      self.setPrimaryfileId(selIndex);
+    },
+    setPrimaryfileId(index){
+      let self = this;
+      self.selectedItems = [];
+      var primaryfile = self.searchedItems[index];
+      self.selectedItems.push(primaryfile.primaryFileId);
     },
     close(){
       this.showModal = false;
@@ -248,6 +285,7 @@ export default {
     },
     async searchFiles() {
         let self = this;
+        self.selectedIndex = -1;
         self.selectedItems = [];
         self.searchedItems = [];
         self.loading = true;
@@ -295,14 +333,16 @@ export default {
         return;
       }
       self.loading = true;
-
       var result = await this.dashboardService.getDashboardResults(self.searchQuery);
       self.rows = result.rows;
       self.totalResults = result.totalResults;
       self.loading = false;
     },
     searchModal(){
-      this.showModal = true;
+      let self = this;
+      self.showModal = true;
+      self.selectedIndex = -1;
+      self.$nextTick(() => self.$refs.searchInput.focus());
     }
   },
   mounted(){
@@ -341,6 +381,9 @@ export default {
     top: 0;
     left: 170px;
 }
+.modalOpen {
+    position: fixed;
+}
 .final-choice-top {
     z-index: 1001;
     display: -webkit-box;
@@ -351,6 +394,9 @@ export default {
     position: absolute;
     top: 0;
     left: 170px;
+}
+#myTable{
+    z-index: 20;
 }
 
   @media screen and (max-width: 700px) {
