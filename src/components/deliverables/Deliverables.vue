@@ -199,6 +199,7 @@ export default {
       await this.getResults();
     },
     async filterByFinal(){
+      this.searchQuery.pageNum = 1;
       this.searchQuery.filterByFinal = !this.searchQuery.filterByFinal;
       await this.getResults();
     },
