@@ -20,10 +20,21 @@ Vue.use(Router);
 var router = new Router({
   routes: [
     {
+      // TODO we may want to have a separate landing/welcome page with some greeting and a brief introduction to AMP 
       path: "/",
       name: "home",
       component: BatchIngest,
-      // meta: { authorize: [] } 
+      meta: { authorize: [] } 
+    },
+    {
+      path: "/account/register",
+      name: "register",
+      component: Register
+    },
+    {
+      path: "/account/login",
+      name: "login",
+      component: Login
     },
     {
       path: "/account/forgot-password",
@@ -36,55 +47,39 @@ var router = new Router({
       component: ResetPassword, 
     }, 
     {
-      path: "/account/approve/:id", 
-      name: 'approve-user', 
-      component: ApproveUser,
-      // meta: { authorize: [] }  
-    },
-    {
       path: "/account/activate/:token", 
       name: 'activate-account', 
       component: Login, 
     },  
     {
-      path: "/account/register",
-      name: "register",
-      component: Register
-    },
-    {
-      path: "/account/login",
-      name: "login",
-      component: Login
-    },
-    {
-      path: "/welcome",
-      name: 'batch-ingest', 
-      component: BatchIngest,
-      // meta: { authorize: [] } 
+      path: "/account/approve/:id", 
+      name: 'approve-user', 
+      component: ApproveUser,
+      meta: { authorize: [] }  
     },
     {
       path: "/workflow/submit",
       name: "workflow",
       component: Workflow,
-      // meta: { authorize: [] } 
+      meta: { authorize: [] } 
     },
     {
       path: "/dashboard",
       name: "dashboard",
       component: WorkflowDashboard,
-      // meta: { authorize: [] } 
+      meta: { authorize: [] } 
     },
     {
       path: "/batch/ingest", 
       name: 'batch-ingest', 
       component: BatchIngest, 
-      // meta: { authorize: [] } 
+      meta: { authorize: [] } 
     },  
     {
       path: "/deliverables", 
       name: 'deliverables', 
       component: Deliverables, 
-      // meta: { authorize: [] } 
+      meta: { authorize: [] } 
     },  
     {
       path: "/hmgm/transcript-editor", 
@@ -98,13 +93,14 @@ var router = new Router({
     }  
   ]
 });
+
 export default router;
 router.beforeEach(async(to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const { authorize } = to.meta;
   const currentUser = accountService.currentUserValue;
 
-  if (authorize) {
+  if (process.env.VUE_APP_AUTH == 'true' && authorize) {
     if (!currentUser) {
         console.log("not current user");
         // not logged in so redirect to login page with the return url
