@@ -100,19 +100,19 @@ router.beforeEach(async(to, from, next) => {
   const { authorize } = to.meta;
   const currentUser = accountService.currentUserValue;
 
-  if (process.env.VUE_APP_AUTH == 'true' && authorize) {
-    if (!currentUser) {
-        console.log("not current user");
-        // not logged in so redirect to login page with the return url
-        return next({ path: '/account/login', query: { returnUrl: to.path } });
-    }
-    else {
-      var success = await accountService.validate();
-      if(!success){
-        return next({ path: '/account/login', query: { returnUrl: to.path } });
-      }
+  if (process.env.VUE_APP_DISABLE_AUTH == 'true' || !authorize) {
+    return next();
+  }
+  else if (!currentUser) {
+    console.log("not current user");
+    // not logged in so redirect to login page with the return url
+    return next({ path: '/account/login', query: { returnUrl: to.path } });
+  }
+  else {
+    var success = await accountService.validate();
+    if (!success) {
+      return next({ path: '/account/login', query: { returnUrl: to.path } });
     }
   }
 
-  next();
 })
