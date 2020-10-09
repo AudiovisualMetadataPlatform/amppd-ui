@@ -43,7 +43,7 @@
                     <tbody v-if="rows && rows.length>0">
                       <tr v-for="rec in rows"
                         :key="rec.id">
-                        <td>{{ new Date(rec.date) | dateFormat('YYYY-MM-DD') }}</td>
+                        <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
                         <td>{{ rec.submitter }}</td>
                         <td>{{ rec.workflowName }}</td>
                         <td>{{ rec.workflowStep }}</td>
@@ -164,7 +164,7 @@ export default {
       loading: false,
       canBagFinalSelection: false,
       columns:[
-        {label: 'Date', field: 'date'},
+        {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
         {label: 'Workflow Name', field: 'workflowName'},
         {label: 'Workflow Step', field: 'workflowStep'},

@@ -22,7 +22,7 @@
           <tbody v-if="visibleRows && visibleRows.length>0">
             <tr v-for="rec in visibleRows"
               :key="rec.id">
-              <td>{{ new Date(rec.date) | dateFormat('YYYY-MM-DD') }}</td>
+              <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
               <td>{{ rec.submitter }}</td>
               <td>{{ rec.workflowName }}</td>
               <td>{{ rec.sourceItem }}</td>
@@ -76,7 +76,7 @@ export default {
   data(){
     return {
       columns:[
-        {label: 'Date', field: 'date'},
+        {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
         {label: 'Workflow Name', field: 'workflowName'},
         {label: 'Source Item', field: 'sourceItem'},
