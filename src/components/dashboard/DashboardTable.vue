@@ -9,7 +9,7 @@
   </div>
  <search-filter />
       <div class="table-responsive">
-        <table ide="myTable" class="table dataTable no-footer">
+        <table id="myTable" class="table dataTable no-footer">
           <thead>
             <tr>
               <sortable-header v-for="column in columns" :key="column.field"
@@ -123,7 +123,6 @@ export default {
       this.refreshData();
     },
     async refreshData(){
-      //console.log("refreshing data");
       this.workflowDashboard.loading = true;
       this.workflowDashboard.searchResult = await this.dashboardService.getDashboardResults(this.workflowDashboard.searchQuery);
       this.workflowDashboard.loading = false;

@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import Login from "./components/account/Login.vue";
+import Deliverables from "./components/deliverables/Deliverables.vue";
 import Register from "./components/account/Register.vue";
 import Workflow from "./components/workflow/Workflow.vue";
 import WorkflowDashboard from "./components/dashboard/Dashboard.vue";
@@ -19,10 +20,21 @@ Vue.use(Router);
 var router = new Router({
   routes: [
     {
+      // TODO we may want to have a separate landing/welcome page with some greeting and a brief introduction to AMP 
       path: "/",
       name: "home",
       component: BatchIngest,
-      // meta: { authorize: [] } 
+      meta: { authorize: [] } 
+    },
+    {
+      path: "/account/register",
+      name: "register",
+      component: Register
+    },
+    {
+      path: "/account/login",
+      name: "login",
+      component: Login
     },
     {
       path: "/account/forgot-password",
@@ -35,49 +47,39 @@ var router = new Router({
       component: ResetPassword, 
     }, 
     {
-      path: "/account/approve/:id", 
-      name: 'approve-user', 
-      component: ApproveUser,
-      // meta: { authorize: [] }  
-    },
-    {
       path: "/account/activate/:token", 
       name: 'activate-account', 
       component: Login, 
     },  
     {
-      path: "/account/register",
-      name: "register",
-      component: Register
-    },
-    {
-      path: "/account/login",
-      name: "login",
-      component: Login
-    },
-    {
-      path: "/welcome",
-      name: 'batch-ingest', 
-      component: BatchIngest,
-      // meta: { authorize: [] } 
+      path: "/account/approve/:id", 
+      name: 'approve-user', 
+      component: ApproveUser,
+      meta: { authorize: [] }  
     },
     {
       path: "/workflow/submit",
       name: "workflow",
       component: Workflow,
-      // meta: { authorize: [] } 
+      meta: { authorize: [] } 
     },
     {
       path: "/dashboard",
       name: "dashboard",
       component: WorkflowDashboard,
-      // meta: { authorize: [] } 
+      meta: { authorize: [] } 
     },
     {
       path: "/batch/ingest", 
       name: 'batch-ingest', 
       component: BatchIngest, 
-      // meta: { authorize: [] } 
+      meta: { authorize: [] } 
+    },  
+    {
+      path: "/deliverables", 
+      name: 'deliverables', 
+      component: Deliverables, 
+      meta: { authorize: [] } 
     },  
     {
       path: "/hmgm/transcript-editor", 
@@ -91,25 +93,26 @@ var router = new Router({
     }  
   ]
 });
+
 export default router;
 router.beforeEach(async(to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const { authorize } = to.meta;
   const currentUser = accountService.currentUserValue;
 
-  if (authorize) {
-    if (!currentUser) {
-        console.log("not current user");
-        // not logged in so redirect to login page with the return url
-        return next({ path: '/account/login', query: { returnUrl: to.path } });
-    }
-    else {
-      var success = await accountService.validate();
-      if(!success){
-        return next({ path: '/account/login', query: { returnUrl: to.path } });
-      }
+  if (process.env.VUE_APP_DISABLE_AUTH == 'true' || !authorize) {
+    return next();
+  }
+  else if (!currentUser) {
+    console.log("not current user");
+    // not logged in so redirect to login page with the return url
+    return next({ path: '/account/login', query: { returnUrl: to.path } });
+  }
+  else {
+    var success = await accountService.validate();
+    if (!success) {
+      return next({ path: '/account/login', query: { returnUrl: to.path } });
     }
   }
 
-  next();
 })

@@ -1,7 +1,7 @@
 <template>
-	<div class="pagination-wrapper" v-if="numPages > 1">
+	<div class="pagination-wrapper" v-if="totalResults > 0">
 			<div class="dataTables_info"><label>{{totalText}}</label></div>
-			<ul class="pagination dataTables_paginate paging_simple_numbers">
+			<ul class="pagination dataTables_paginate paging_simple_numbers"  v-if="numPages > 1">
 				<li
 					@click="paginate(currentPage - 1)"
 					:class="['page-arrow',  {'hide-page': currentPage <= 1}]"
