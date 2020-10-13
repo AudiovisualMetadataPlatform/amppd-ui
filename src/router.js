@@ -113,6 +113,8 @@ router.beforeEach(async(to, from, next) => {
     if (!success) {
       return next({ path: '/account/login', query: { returnUrl: to.path } });
     }
+    else {
+      return next();
+    }    
   }
-
 })
