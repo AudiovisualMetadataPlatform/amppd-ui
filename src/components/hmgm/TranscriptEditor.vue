@@ -24,7 +24,6 @@
           :ref="player"
         >
         </BBCTranscriptEditor>
-
       </div>
     </div>
   <modal v-if="showModal" @close="modalDismiss" class="my-modal">
@@ -101,9 +100,7 @@ export default {
       transcriptType: 1
     }
   },
-  computed:{
-
-  },
+  computed:{},
   methods:{
     // Set data for editor
     setData(content, temporaryFile){
@@ -229,7 +226,6 @@ export default {
     forceRender(){
       this.key+=1;
     }
-
   },
   mounted(){
     this.transcriptType = this.$route.query.type;
