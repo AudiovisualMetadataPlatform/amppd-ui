@@ -1,6 +1,33 @@
 import BaseService from './base-service';
 
 const baseService = new BaseService();
+
+function auth_token_required(auth_string, input_file){
+    var user_token = localStorage.getItem(input_file);
+    if(!user_token){
+        console.log("No input token defined")
+        return true;
+    }
+    console.log("User token: " + user_token);
+    return !auth_token_valid(auth_string, input_file, user_token);
+}
+
+async function auth_token_valid(auth_string, input_file, user_token){    
+    const url = `/hmgm/authorize-editor?authString=${auth_string}&userToken=${user_token}&editorInput=${input_file}`;
+    var success = await baseService.get_auth(url).then(x=>{
+        if(x.data==true){
+            localStorage.setItem(input_file, user_token);
+        }
+        return x.data;
+    }).catch(e=>{
+        console.log("Error: " + e);
+        return false;
+    });
+    console.log("Success: " + success);
+
+    return success;
+}
+
 function getTranscript(datasetPath, reset) {
 
     const url = `/hmgm/transcript-editor?datasetPath=${datasetPath}&reset=${reset}`;
@@ -48,4 +75,4 @@ function resetNer(resourcePath) {
         .then(x => x.data)
 }
 
-export { getTranscript, saveTranscript, completeTranscript, completeNer, resetNer }
+export { getTranscript, saveTranscript, completeTranscript, completeNer, resetNer, auth_token_required, auth_token_valid }
