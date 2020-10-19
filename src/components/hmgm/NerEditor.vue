@@ -11,7 +11,7 @@
             <input type="button" class="secondary-button" v-on:click="onReset" value="Reset"/>
           </div>
         </div>
-        <iframe class="" :src="iframeUrl" id="timeliner" width="1500" height="800" style="border:none;"></iframe>
+        <iframe v-if="!requireAuth" class="" :src="iframeUrl" id="timeliner" width="1500" height="800" style="border:none;"></iframe>
         <!-- TODO 
           Below code is for importing Timeliner as a React component and it didn't work, 
           possibly need extra code in Timeliner to export Timeliner root component along with its properties.
@@ -45,6 +45,7 @@
         <input type="button" class="primary-button" v-on:click="onConfirm" value="Continue"/>
       </div>
     </modal>
+  <token-validator v-if="showTokenModal" @validAuth="authValidated" :datasetUrl="resourcePath" :authString="authString"/>
   </div>
 </template>
 
@@ -53,6 +54,7 @@ import AmpHeader from '@/components/shared/Header.vue'
 import Logout from '@/components/shared/Logout.vue'
 import Modal from '@/components/shared/Modal.vue'
 import { completeNer, resetNer } from '@/service/hmgm-service'; 
+import TokenValidator from '@/components/hmgm/TokenValidator'
 // import Timeliner from '@/components/hmgm/Timeliner.js';
 
 export default {
@@ -60,11 +62,14 @@ export default {
   components:{
     AmpHeader,
     Logout,
-    Modal
+    Modal,
+    TokenValidator
     // Timeliner,
   },
   data(){
     return {
+      requireAuth: true,
+      authString:  null,
       iframeUrl:"",
       resourcePath:"",
       resource:"",
@@ -80,9 +85,19 @@ export default {
     }
   },
   computed:{
-
+    showTokenModal(){
+      if(!this.resourcePath || !this.resourcePath.length > 0) return false;
+      if(!this.authString) return false;
+      return this.requireAuth;
+    }
   },
   methods:{
+    // This method is required by the token validator to load data on success callback
+    authValidated(){
+      this.requireAuth = false;
+      this.iframeUrl = this.getIframeUrl(this.resource, this.callback);
+      console.log("iframeUrl = " + this.iframeUrl);
+    },
     // Prompt success message upon action success
     handleSuccess(action){
       let self = this;
@@ -195,11 +210,10 @@ export default {
     this.resourcePath = this.$route.query.resourcePath;
     this.resource = this.getFileUrl(this.resourcePath);
     this.callback = this.resource;
-    this.iframeUrl = this.getIframeUrl(this.resource, this.callback);
+    this.authString = this.$route.query.auth;
     console.log("resourcePath = " + this.resourcePath);
     console.log("resource = " + this.resource);
     console.log("callback = " + this.callback);
-    console.log("iframeUrl = " + this.iframeUrl);
   },
 }
 </script>

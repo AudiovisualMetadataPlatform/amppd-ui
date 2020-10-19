@@ -6,10 +6,21 @@ export const requestOptions = {
             ...headers()
         };
     },
+    getToken(editorInput) {
+        return {
+            ...tokenHeaders(editorInput)
+        };
+    },
     post() {
         return {
             method: 'POST',
             ...headers()
+        };
+    },
+    postToken(editorInput) {
+        return {
+            method: 'POST',
+            ...tokenHeaders(editorInput)
         };
     },
     patch(body) {
@@ -43,4 +54,18 @@ function headers() {
             'Content-Type': 'application/json'
         }
     };
+}
+function tokenHeaders(editorInput) {
+    const authString = localStorage.getItem(editorInput);
+    console.log("Auth String: " + authString);
+    if(authString && authString.length>0){
+        const authHeader = authString && authString.length>0 ? { 'Authorization': 'AMPPD ' + authString  } : {}
+        return {
+            headers: {
+                ...authHeader,
+                'Content-Type': 'application/json'
+            }
+        };
+    }
+    return headers();
 }
