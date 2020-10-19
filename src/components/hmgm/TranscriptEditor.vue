@@ -24,7 +24,6 @@
           :ref="player"
         >
         </BBCTranscriptEditor>
-        
       </div>
     </div>
   <modal v-if="showModal" @close="modalDismiss" class="my-modal">
@@ -71,9 +70,9 @@
 import AmpHeader from '@/components/shared/Header.vue'
 import Logout from '@/components/shared/Logout.vue'
 import TokenValidator from '@/components/hmgm/TokenValidator'
-import BBCTranscriptEditor from "@bbc/react-transcript-editor";
+import BBCTranscriptEditor from "@bbc/react-transcript-editor/dist";
 import Modal from '@/components/shared/Modal.vue'
-import { getTranscript, saveTranscript, completeTranscript } from '@/service/hmgm-service'; 
+import { getTranscript, saveTranscript, completeTranscript } from '@/service/hmgm-service';
 
 export default {
   name: 'TranscriptEditor',
@@ -122,7 +121,7 @@ export default {
     },
     // Set data for editor
     setData(content, temporaryFile){
-      if(temporaryFile===true || !this.transcriptType){  
+      if(temporaryFile===true || !this.transcriptType){
         this.sttType = "draftjs";
         this.transcriptDataValue = JSON.parse(content);
       }
@@ -244,7 +243,6 @@ export default {
     forceRender(){
       this.key+=1;
     }
-    
   },
   async mounted(){
     this.transcriptType = this.$route.query.type;

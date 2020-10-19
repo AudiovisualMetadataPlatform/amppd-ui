@@ -7,10 +7,11 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "start": "vue-cli-service serve --open",
-    "stop": "pkill --signal SIGINT amppd-ui"
+    "stop": "pkill --signal SIGINT amppd-ui",
+    "postinstall": "cd node_modules/@bbc/react-transcript-editor && npm i && npm run build:component"
   },
   "dependencies": {
-    "@bbc/react-transcript-editor": "^1.4.0",
+    "@bbc/react-transcript-editor": "https://github.com/AudiovisualMetadataPlatform/react-transcript-editor.git#AMP-896_transcript_scroll_bug",
     "@vuejs-community/vue-filter-date-format": "^1.3.2",
     "axios": "^0.19.0",
     "bootstrap": "^4.5.0",
