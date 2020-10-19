@@ -3,6 +3,9 @@ import BaseService from './base-service';
 const baseService = new BaseService();
 
 function auth_token_required(auth_string, input_file){
+    if(process.env.VUE_APP_DISABLE_AUTH == 'true'){
+        return false;
+    }
     var user_token = localStorage.getItem(input_file);
     if(!user_token){
         console.log("No input token defined")
@@ -12,9 +15,12 @@ function auth_token_required(auth_string, input_file){
     return !auth_token_valid(auth_string, input_file, user_token);
 }
 
-async function auth_token_valid(auth_string, input_file, user_token){    
+async function auth_token_valid(auth_string, input_file, user_token){   
+    if(process.env.VUE_APP_DISABLE_AUTH == 'true'){
+        return true;
+    } 
     const url = `/hmgm/authorize-editor?authString=${auth_string}&userToken=${user_token}&editorInput=${input_file}`;
-    var success = await baseService.get_auth(url).then(x=>{
+    var success = await baseService.get(url).then(x=>{
         if(x.data==true){
             localStorage.setItem(input_file, user_token);
         }

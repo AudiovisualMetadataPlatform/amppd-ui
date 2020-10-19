@@ -51,9 +51,7 @@ export default {
   },
   methods:{
     async submitToken(){
- 
-
-      var valid = await auth_token_valid(this.authString, this.datasetUrl, this.userToken);
+       var valid = await auth_token_valid(this.authString, this.datasetUrl, this.userToken);
       console.log(valid);
       this.invalidInput = !valid;
       if(valid){
