@@ -3,11 +3,12 @@ import {accountService} from './account-service';
 
 const baseService = new BaseService();
 
-function auth_token_required(auth_string, input_file){
+async function auth_token_required(auth_string, input_file){
     if(process.env.VUE_APP_DISABLE_AUTH == 'true'){
         return false;
     }
-    if(accountService.validate()==true){
+    const validated = await accountService.validate();
+    if(validated==true){
         return false;
     }
     var user_token = localStorage.getItem(input_file);
