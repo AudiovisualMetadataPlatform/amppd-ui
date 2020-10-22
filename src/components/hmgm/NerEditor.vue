@@ -11,7 +11,7 @@
             <input type="button" class="secondary-button" v-on:click="onReset" value="Reset"/>
           </div>
         </div>
-        <iframe v-if="!requireAuth" class="" :src="iframeUrl" id="timeliner" width="1500" height="800" style="border:none;"></iframe>
+        <iframe v-if="!requireAuth && iframeUrl" class="" :src="iframeUrl" id="timeliner" width="1500" height="800" style="border:none;"></iframe>
         <!-- TODO 
           Below code is for importing Timeliner as a React component and it didn't work, 
           possibly need extra code in Timeliner to export Timeliner root component along with its properties.
