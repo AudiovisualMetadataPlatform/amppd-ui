@@ -31,7 +31,7 @@ const state = {
         filtersEnabled : {submitterFilter :false, dateFilter : false, fileFilter : false, itemFilter : false, searchFilter : false, statusFilter : false, stepFilter : false, workflowFilter : false},
         searchQuery: {
             sortRule: {
-              columnName: 'date',
+              columnName: 'dateCreated',
               orderByDescending: true
             },
             pageNum: 1,

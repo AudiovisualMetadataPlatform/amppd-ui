@@ -24,7 +24,6 @@
           :ref="player"
         >
         </BBCTranscriptEditor>
-        
       </div>
     </div>
   <modal v-if="showModal" @close="modalDismiss" class="my-modal">
@@ -63,15 +62,17 @@
           <input type="button" class="primary-button" v-on:click="completeModalYes" value="Yes"/>
     </div>
   </modal>
+  <token-validator v-if="showTokenModal" @validAuth="authValidated" :datasetUrl="datasetUrl" :authString="authString"/>
   </div>
 </template>
 
 <script>
 import AmpHeader from '@/components/shared/Header.vue'
 import Logout from '@/components/shared/Logout.vue'
-import BBCTranscriptEditor from "@bbc/react-transcript-editor";
+import TokenValidator from '@/components/hmgm/TokenValidator'
+import BBCTranscriptEditor from "@bbc/react-transcript-editor/dist";
 import Modal from '@/components/shared/Modal.vue'
-import { getTranscript, saveTranscript, completeTranscript } from '@/service/hmgm-service'; 
+import { getTranscript, saveTranscript, completeTranscript } from '@/service/hmgm-service';
 
 export default {
   name: 'TranscriptEditor',
@@ -79,10 +80,14 @@ export default {
     AmpHeader,
     Logout,
     BBCTranscriptEditor,
+    TokenValidator,
     Modal
   },
   data(){
     return {
+      requireAuth: true,
+      datasetUrl: null,
+      authString: null,
       transcriptDataValue:null, 
       fileCount: 0,
       mediaUrl: "",
@@ -102,12 +107,21 @@ export default {
     }
   },
   computed:{
-
+    showTokenModal(){
+      if(!this.datasetUrl || this.datasetUrl.length == 0) return false;
+      if(!this.authString) return false;
+      return this.requireAuth;
+    }
   },
   methods:{
+    // This method is required by the token validator to load data on success callback
+    authValidated(){
+      this.requireAuth = false;
+      this.getFile(this.datasetUrl);
+    },
     // Set data for editor
     setData(content, temporaryFile){
-      if(temporaryFile===true || !this.transcriptType){  
+      if(temporaryFile===true || !this.transcriptType){
         this.sttType = "draftjs";
         this.transcriptDataValue = JSON.parse(content);
       }
@@ -229,13 +243,12 @@ export default {
     forceRender(){
       this.key+=1;
     }
-    
   },
-  mounted(){
+  async mounted(){
     this.transcriptType = this.$route.query.type;
-    console.log(this.transcriptType);
-    this.getFile(this.$route.query.datasetUrl);
-    this.mediaUrl = this.$route.query.mediaUrl;
+    this.authString = this.$route.query.auth;
+    this.datasetUrl = this.$route.query.datasetUrl;
+    this.mediaUrl = this.$route.query.mediaUrl;    
   },
   setData(data){
       this.transcriptDataValue = data;
