@@ -39,17 +39,18 @@ export default {
   data(){
     return {
 			statusList: [],
-			filterSuccess: false,
-			selectedStatuses: []
+			filterSuccess: false
     }
   },
   computed:{
 		workflowDashboard: sync("workflowDashboard"),
 		statuses: sync("workflowDashboard.searchResult.filters.statuses"),
-		// filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
 		getStatuses(){
 			if(!this.statuses) return [];
 			return this.statuses;
+		},
+		selectedStatuses(){
+			return this.workflowDashboard.searchQuery.selectedStatuses;
 		}
   },
   
@@ -79,12 +80,10 @@ export default {
 			else {
 				this.selectedStatuses.push(status);
 			}
-			this.workflowDashboard.searchQuery.filterByStatuses = this.selectedStatuses;
 		},
 		removeStatus(index) {
 			console.log("removing status at:" + index);
 			var removed = this.selectedStatuses.splice(index,1);
-			this.workflowDashboard.searchQuery.filterByStatuses = this.selectedStatuses;
 			console.log("selected statuses are: " + this.selectedStatuses + ", and removed element is: " + removed);
 		},
 		closeFilter(){
@@ -103,7 +102,6 @@ export default {
 		selectedStatuses: function() {
 			console.log("selected statuses: " + this.selectedStatuses);
 			this.selectedStatuses.length>0 ? this.workflowDashboard.filtersEnabled.statusFilter = true : this.workflowDashboard.filtersEnabled.statusFilter = false;
-			this.workflowDashboard.searchQuery.filterByStatuses = this.selectedStatuses;
 		}
   }, 
   

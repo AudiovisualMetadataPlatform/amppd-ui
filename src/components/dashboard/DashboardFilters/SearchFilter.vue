@@ -22,8 +22,7 @@ export default {
   data(){
     return {
         searchValue: '',
-        filterSuccess:false,
-        searchTerms:[]
+        filterSuccess:false
     }
   },
   computed:{
@@ -32,6 +31,9 @@ export default {
     getItems(){
         if(!this.searchTermList) return [];
         return this.searchTermList;
+    },
+    searchTerms(){
+        return this.workflowDashboard.searchQuery.filterBySearchTerm;
     }
   },
   props: {
@@ -44,7 +46,6 @@ export default {
         }
         else
             this.searchTerms.push(term);
-        this.workflowDashboard.searchQuery.filterBySearchTerm = this.searchTerms;
     }
   }
 
