@@ -59,7 +59,7 @@
 <script>
 
 import { sync } from 'vuex-pathify';
-import DashboardService from '../../service/dashboard-service';
+import WorkflowResultService from '../../service/workflow-result-service';
 import SortableHeader from '../shared/SortableHeader';
 import Pagination from '../shared/Pagination';
 import SearchFilter from './DashboardFilters/SearchFilter';
@@ -85,7 +85,7 @@ export default {
         {label: 'Output File', field: 'outputFile'},
         {label: 'Status', field: 'status'},
       ],
-      dashboardService: new DashboardService(),
+      workflowResultService: new WorkflowResultService(),
     }
   },
   computed:{
@@ -124,7 +124,7 @@ export default {
     },
     async refreshData(){
       this.workflowDashboard.loading = true;
-      this.workflowDashboard.searchResult = await this.dashboardService.getDashboardResults(this.workflowDashboard.searchQuery);
+      this.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
       this.workflowDashboard.loading = false;
     },
     getSourceUrl(rec) {
