@@ -48,20 +48,20 @@ function getTranscript(datasetPath, reset) {
         .then(x => x.data)
 }
 
-function saveTranscript(json, filePath) {
+function saveTranscript(json, filePath, originalFilename) {
     var formData = new FormData();
     
     formData.append('data', json);
     formData.append('filePath', filePath);
     const url = `/hmgm/transcript-editor/save`;
-    return baseService.post_token_auth(url, {json, filePath},filePath)
+    return baseService.post_token_auth(url, {json, filePath}, originalFilename)
         // get data
         .then(x => x.data)
 }
 
-function completeTranscript(filePath) {
+function completeTranscript(filePath, originalFilename) {
     const url = `/hmgm/transcript-editor/complete`;
-    return baseService.post_token_auth(url, {filePath:filePath},filePath)
+    return baseService.post_token_auth(url, {filePath:filePath},originalFilename)
         // get data
         .then(x => x.data)
 }
