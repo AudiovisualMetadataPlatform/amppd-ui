@@ -200,7 +200,7 @@ export default {
     },
     // Complete the edits
     async complete(){
-      var response = await completeTranscript(this.fileName);
+      var response = await completeTranscript(this.fileName, this.originalFileName);
       if(response===true){
         this.handleComplete();
       }
@@ -237,7 +237,7 @@ export default {
     },
     // Save temporary changes
     async saveTemporary(request){
-      saveTranscript(JSON.stringify(request.data), this.fileName);
+      saveTranscript(JSON.stringify(request.data), this.fileName, this.originalFileName);
     },
     // Force re-render of the editor when we reset.  Use key to do this.
     forceRender(){
