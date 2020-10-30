@@ -133,7 +133,7 @@ import Sidebar from '@/components/navigation/Sidebar.vue';
 import Logout from '@/components/shared/Logout.vue'
 import Modal from '@/components/shared/Modal.vue'
 import WorkflowService from '../../service/workflow-service';
-import DashboardService from '../../service/dashboard-service';
+import WorkflowResultService from '../../service/workflow-result-service';
 import SortableHeader from '../shared/SortableHeader';
 import Pagination from '../shared/Pagination';
 import Loader from '@/components/shared/Loader.vue';
@@ -151,7 +151,7 @@ export default {
   data(){
     return {
       workflowService: new WorkflowService(),
-      dashboardService: new DashboardService(),
+      workflowResultService: new WorkflowResultService(),
       sourceItem: {itemName: "None", primaryFileLabel: "None"},
       showModal: false,
       searchWord: "",
@@ -238,7 +238,7 @@ export default {
     },
     getOutputUrl(rec) {
       const BASE_URL = process.env.VUE_APP_AMP_URL;
-      const url = `${BASE_URL}/dashboard/${rec.id}/output`;
+      const url = `${BASE_URL}/workflow-results/${rec.id}/output`;
       return url; 
     },
     rowSelected(primaryFileId){
@@ -266,15 +266,15 @@ export default {
         await this.getResults();
       }
     },
-    async setIsFinal(dashboardResultId){
+    async setIsFinal(workflowResultId){
       for(var r = 0; r < this.rows.length; r++){
-        if(this.rows[r].id==dashboardResultId){
+        if(this.rows[r].id==workflowResultId){
           var thisRow = this.rows[r];
           if(!thisRow.isFinal){
             thisRow.isFinal = false;
           }
           thisRow.isFinal = !thisRow.isFinal;
-          this.dashboardService.setIsFinal(dashboardResultId, thisRow.isFinal);
+          this.workflowResultService.setIsFinal(workflowResultId, thisRow.isFinal);
           break;
         }
       }
@@ -334,7 +334,7 @@ export default {
         return;
       }
       self.loading = true;
-      var result = await this.dashboardService.getDashboardResults(self.searchQuery);
+      var result = await this.workflowResultService.getWorkflowResults(self.searchQuery);
       self.rows = result.rows;
       self.totalResults = result.totalResults;
       self.loading = false;
