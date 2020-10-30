@@ -48,7 +48,7 @@
                         <td>{{ rec.workflowName }}</td>
                         <td>{{ rec.workflowStep }}</td>
                         <td v-if="rec.outputPath == null">{{ rec.outputFile }}</td>
-                        <td v-else-if="rec.outputPath != null"><a v-bind:href="getOutputUrl(rec)" target="_blank">{{ rec.outputFile }}</a></td>
+                        <td v-else-if="rec.outputPath != null"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputFile }}</a></td>
                         <td>
                           <label class="switch" title="Final Choice">
                               <span class="sr-only">Final Choice</span>
@@ -208,11 +208,6 @@ export default {
       this.searchQuery.pageNum = 1;
       await this.getResults();
     },
-    getSourceUrl(rec) {
-      const BASE_URL = process.env.VUE_APP_AMP_URL;
-      const url = `${BASE_URL}/primaryfiles/${rec.primaryfileId}/media`;
-      return url; 
-    },
     onArrowDown(e) {
       e.preventDefault();
       let self = this;
@@ -235,11 +230,6 @@ export default {
         var thisElement = this.$refs['row'+this.selectedIndex];
         thisElement[0].focus();
         thisElement[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); 
-    },
-    getOutputUrl(rec) {
-      const BASE_URL = process.env.VUE_APP_AMP_URL;
-      const url = `${BASE_URL}/workflow-results/${rec.id}/output`;
-      return url; 
     },
     rowSelected(primaryFileId){
       return this.selectedItems.includes(primaryFileId);

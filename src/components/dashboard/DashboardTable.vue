@@ -26,10 +26,10 @@
               <td>{{ rec.submitter }}</td>
               <td>{{ rec.workflowName }}</td>
               <td>{{ rec.sourceItem }}</td>
-              <td><a v-bind:href="getSourceUrl(rec)" target="_blank">{{ rec.sourceFilename }}</a></td>
+              <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.sourceFilename }}</a></td>
               <td>{{ rec.workflowStep }}</td>
               <td v-if="rec.outputPath == null">{{ rec.outputFile }}</td>
-              <td v-else-if="rec.outputPath != null"><a v-bind:href="getOutputUrl(rec)" target="_blank">{{ rec.outputFile }}</a></td>
+              <td v-else-if="rec.outputPath != null"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputFile }}</a></td>
               <td> 
                 <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
                 <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width ">In Progress</button>
@@ -126,16 +126,6 @@ export default {
       this.workflowDashboard.loading = true;
       this.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
       this.workflowDashboard.loading = false;
-    },
-    getSourceUrl(rec) {
-      const BASE_URL = process.env.VUE_APP_AMP_URL;
-      const url = `${BASE_URL}/primaryfiles/${rec.primaryfileId}/media`;
-      return url; 
-    },
-    getOutputUrl(rec) {
-      const BASE_URL = process.env.VUE_APP_AMP_URL;
-      const url = `${BASE_URL}/dashboard/${rec.id}/output`;
-      return url; 
     }
   },
   async mounted(){

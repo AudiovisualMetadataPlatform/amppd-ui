@@ -15,4 +15,15 @@ export default class WorkflowResultService extends BaseService{
         });
         return data;
     }
+
+    getSourceUrl(primaryfileId) {
+        const BASE_URL = process.env.VUE_APP_AMP_URL;
+        const url = `${BASE_URL}/primaryfiles/${primaryfileId}/media`;
+        return url; 
+    }
+    getOutputUrl(id) {
+        const BASE_URL = process.env.VUE_APP_AMP_URL;
+        const url = `${BASE_URL}/workflow-results/${id}/output`;
+        return url; 
+    }
 }
