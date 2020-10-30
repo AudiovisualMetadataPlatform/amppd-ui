@@ -36,7 +36,7 @@
                 <button v-else-if="rec.status==='ERROR'" type="button" class="btn-sm btn btn-danger eq-width">Error</button>
                 <button v-else-if="rec.status==='SCHEDULED'" type="button" class="btn-sm btn btn-light eq-width">Scheduled</button>
                 <button v-else-if="rec.status==='PAUSED'" type="button" class="btn-sm btn btn-light eq-width">Paused</button>
-                <button v-else-if="rec.status==='DELETED'" type="button" class="btn-sm btn btn-light eq-width">Deleted</button>
+                <button v-else-if="rec.status==='DELETED'" type="button" class="btn-sm btn btn-dark eq-width">Deleted</button>
               </td>
             </tr>
           </tbody>
