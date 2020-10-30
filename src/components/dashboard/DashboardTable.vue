@@ -33,10 +33,10 @@
               <td>
                 <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
                 <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width">In Progress</button>
+                <button v-else-if="rec.status==='PAUSED'" type="button" class="btn-sm btn btn-primary eq-width">Paused</button>
                 <button v-else-if="rec.status==='ERROR'" type="button" class="btn-sm btn btn-danger eq-width">Error</button>
-                <button v-else-if="rec.status==='SCHEDULED'" type="button" class="btn-sm btn btn-light eq-width">Scheduled</button>
-                <button v-else-if="rec.status==='PAUSED'" type="button" class="btn-sm btn btn-light eq-width">Paused</button>
-                <button v-else-if="rec.status==='DELETED'" type="button" class="btn-sm btn btn-dark eq-width">Deleted</button>
+                <button v-else-if="rec.status==='SCHEDULED'" type="button" class="btn-sm btn btn-blue eq-width">Scheduled</button>
+                <button v-else-if="rec.status==='DELETED'" type="button" class="btn-sm btn eq-width">Deleted</button>
               </td>
             </tr>
           </tbody>
