@@ -55,8 +55,7 @@ export default {
   data(){
     return {
 		submitterList:[],
-		filterSuccess:false,
-		selectedSubmitters : [],
+		filterSuccess:false
     }
   },
   computed:{
@@ -65,6 +64,9 @@ export default {
 	getSubmitters(){
         if(!this.submitters) return [];
 		return this.submitters;
+	},
+	selectedSubmitters(){
+		return this.workflowDashboard.searchQuery.selectedSubmitters;
 	}
   },
   
@@ -93,13 +95,11 @@ export default {
 		}
 		else
 			this.selectedSubmitters.push(submitter);
-		this.workflowDashboard.searchQuery.filterBySubmitters = this.selectedSubmitters;
 	},
 	removeSubmitter(index){
 		//This function is the only place where submitters are removed
 		console.log("removing index:"+index);
 		var removed = this.selectedSubmitters.splice(index,1);
-		this.workflowDashboard.searchQuery.filterBySubmitters = this.selectedSubmitters;
 		console.log("selected submitters are:"+this.selectedSubmitters +" and removed element is:"+removed);
 	},
 	closeFilter(){

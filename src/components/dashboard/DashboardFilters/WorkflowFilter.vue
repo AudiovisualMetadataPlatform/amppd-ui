@@ -57,8 +57,7 @@ export default {
   data(){
     return {
 			workflowList: [],
-			filterSuccess: false,
-			selectedWorkflows: []
+			filterSuccess: false
     }
   },
   computed:{
@@ -67,6 +66,9 @@ export default {
 		getWorkflows(){
 			if(!this.workflows) return [];
 			return this.workflows;
+		},
+		selectedWorkflows(){
+			return this.workflowDashboard.searchQuery.filterByWorkflows;
 		}
   },
   
@@ -96,12 +98,10 @@ export default {
 			else {
 				this.selectedWorkflows.push(workflow);
 			}
-			this.workflowDashboard.searchQuery.filterByWorkflows = this.selectedWorkflows;
 		},
 		removeWorkflow(index) {
 			console.log("removing workflow at:" + index);
 			var removed = this.selectedWorkflows.splice(index,1);
-			this.workflowDashboard.searchQuery.filterByWorkflows = this.selectedWorkflows;
 			console.log("selected workflows are: " + this.selectedWorkflows + ", and removed element is: " + removed);
 		},
 		closeFilter(){
