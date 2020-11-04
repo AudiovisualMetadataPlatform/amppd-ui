@@ -57,8 +57,7 @@ export default {
   data(){
         return {
             fileList: [],
-            filterSuccess: false,
-            selectedFiles: []
+            filterSuccess: false
       }
   },
   computed:{
@@ -67,6 +66,9 @@ export default {
         getFiles(){
             if(!this.files) return [];
             return this.files;
+        },
+        selectedFiles(){
+            return this.workflowDashboard.searchQuery.filterByFiles;
         }
   },
   
@@ -96,12 +98,10 @@ export default {
             else {
                 this.selectedFiles.push(file);
             }
-            this.workflowDashboard.searchQuery.filterByFiles = this.selectedFiles;
         },
         removeFile(index) {
             console.log("removing file at:" + index);
             var removed = this.selectedFiles.splice(index,1);
-            this.workflowDashboard.searchQuery.filterByFiles = this.selectedFiles;
             console.log("selected files are: " + this.selectedFiles + ", and removed element is: " + removed);
         },
         closeFilter(){

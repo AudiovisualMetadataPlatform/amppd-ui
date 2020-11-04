@@ -192,6 +192,19 @@
   border-color: #F4871E;
   color: #F4871E; }
 
+.btn-blue {
+  background-color: #006de2;
+  border-color: #006de2;
+  color: #fff;
+}
+
+.btn-blue:hover,
+.btn-blue:active,
+.btn-blue:visited {
+    background-color: #007bff !important;
+    border-color: #007bff;
+}
+
 input[type="file"] {
   border-radius: .3em; }
 
@@ -701,7 +714,7 @@ svg.icon-user {
     position: relative;
     top: auto;
     right: auto; } }
-    
+
 @media screen and (max-width: 39em) {
   #logo {
     min-width: 100px;

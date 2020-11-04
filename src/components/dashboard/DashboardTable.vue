@@ -3,7 +3,7 @@
   <loader :show="workflowDashboard.loading"/>
   <div class="dataTables_length">
     <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
-      <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> 
+      <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
       entries
     </label>
   </div>
@@ -26,16 +26,17 @@
               <td>{{ rec.submitter }}</td>
               <td>{{ rec.workflowName }}</td>
               <td>{{ rec.sourceItem }}</td>
-              <td><a v-bind:href="getSourceUrl(rec)" target="_blank">{{ rec.sourceFilename }}</a></td>
+              <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.sourceFilename }}</a></td>
               <td>{{ rec.workflowStep }}</td>
               <td v-if="rec.outputPath == null">{{ rec.outputFile }}</td>
-              <td v-else-if="rec.outputPath != null"><a v-bind:href="getOutputUrl(rec)" target="_blank">{{ rec.outputFile }}</a></td>
+              <td v-else-if="rec.outputPath != null"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputFile }}</a></td>
               <td> 
                 <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
-                <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width ">In Progress</button>
-                <button v-else-if="rec.status==='ERROR'" type="button" class="btn-sm btn btn-danger eq-width ">Error</button>
-                <button v-else-if="rec.status==='SCHEDULED'" type="button" class="btn-sm btn btn-light eq-width ">Scheduled</button>
-                <button v-else-if="rec.status==='PAUSED'" type="button" class="btn-sm btn btn-light eq-width ">Paused</button>
+                <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width">In Progress</button>
+                <button v-else-if="rec.status==='PAUSED'" type="button" class="btn-sm btn btn-primary eq-width">Paused</button>
+                <button v-else-if="rec.status==='ERROR'" type="button" class="btn-sm btn btn-danger eq-width">Error</button>
+                <button v-else-if="rec.status==='SCHEDULED'" type="button" class="btn-sm btn btn-blue eq-width">Scheduled</button>
+                <button v-else-if="rec.status==='DELETED'" type="button" class="btn-sm btn eq-width">Deleted</button>
               </td>
             </tr>
           </tbody>
@@ -59,7 +60,7 @@
 <script>
 
 import { sync } from 'vuex-pathify';
-import DashboardService from '../../service/dashboard-service';
+import WorkflowResultService from '../../service/workflow-result-service';
 import SortableHeader from '../shared/SortableHeader';
 import Pagination from '../shared/Pagination';
 import SearchFilter from './DashboardFilters/SearchFilter';
@@ -85,7 +86,7 @@ export default {
         {label: 'Output File', field: 'outputFile'},
         {label: 'Status', field: 'status'},
       ],
-      dashboardService: new DashboardService(),
+      workflowResultService: new WorkflowResultService(),
     }
   },
   computed:{
@@ -107,11 +108,8 @@ export default {
       }
       return this.workflowDashboard.searchResult.rows;
     }
-
   },
-  props: {
-  },
-  
+  props: {},
   methods:{
     async sortQuery(sortRule) {
         this.workflowDashboard.searchQuery.sortRule = sortRule;
@@ -124,18 +122,8 @@ export default {
     },
     async refreshData(){
       this.workflowDashboard.loading = true;
-      this.workflowDashboard.searchResult = await this.dashboardService.getDashboardResults(this.workflowDashboard.searchQuery);
+      this.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
       this.workflowDashboard.loading = false;
-    },
-    getSourceUrl(rec) {
-      const BASE_URL = process.env.VUE_APP_AMP_URL;
-      const url = `${BASE_URL}/primaryfiles/${rec.primaryfileId}/media`;
-      return url; 
-    },
-    getOutputUrl(rec) {
-      const BASE_URL = process.env.VUE_APP_AMP_URL;
-      const url = `${BASE_URL}/dashboard/${rec.id}/output`;
-      return url; 
     }
   },
   async mounted(){
@@ -150,13 +138,11 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-
     filterByDates: function(){
       console.log("inside watcher for filterByDates",this.filterByDates[0]," ",this.filterByDates[1]);
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-
     filterByWorkflows: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
@@ -177,10 +163,7 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-
   }
-
-
 }
 </script>
 
@@ -191,10 +174,10 @@ export default {
     text-align: center;
     font-weight: 700;
     color: #c5c5c5c5;
-  } 
+  }
   table{font-size: .8em;}
 .font-light-gray-1 {
-  color: #dee2e6; 
+  color: #dee2e6;
 }
 .font-purple-1{
   color: #6f42c1;

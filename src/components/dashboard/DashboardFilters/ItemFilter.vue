@@ -58,7 +58,6 @@ export default {
     return {
         itemList: [],
         filterSuccess: false,
-        selectedItems: []
     }
   },
   computed:{
@@ -67,6 +66,9 @@ export default {
     getItems(){
         if(!this.items) return [];
         return this.items;
+    },
+    selectedItems(){
+      return this.workflowDashboard.searchQuery.filterByItems;
     }
   },
   
@@ -96,7 +98,7 @@ export default {
         else {
             this.selectedItems.push(item);
         }
-        this.workflowDashboard.searchQuery.filterByItems = this.selectedItems;
+        //this.workflowDashboard.searchQuery.filterByItems = this.selectedItems;
     },
     removeItem(index) {
         console.log("removing item at:" + index);

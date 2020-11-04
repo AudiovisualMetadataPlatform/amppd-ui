@@ -57,8 +57,7 @@ export default {
   data(){
     return {
         stepList: [],
-        filterSuccess: false,
-        selectedSteps: []
+        filterSuccess: false
     }
   },
   computed:{
@@ -67,7 +66,10 @@ export default {
     getSteps(){
         if(!this.steps) return [];
         return this.steps;
-    }
+    },
+		selectedSteps(){
+			return this.workflowDashboard.searchQuery.filterBySteps;
+		}
   },
   
   methods:{
@@ -96,12 +98,10 @@ export default {
         else {
             this.selectedSteps.push(step);
         }
-        this.workflowDashboard.searchQuery.filterBySteps = this.selectedSteps;
     },
     removeStep(index) {
         console.log("removing step at:" + index);
         var removed = this.selectedSteps.splice(index,1);
-        this.workflowDashboard.searchQuery.filterBySteps = this.selectedSteps;
         console.log("selected steps are: " + this.selectedSteps + ", and removed element is: " + removed);
     },
     closeFilter(){

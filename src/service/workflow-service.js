@@ -3,23 +3,23 @@ import BaseService from './base-service.js';
 const baseService = new BaseService();
 export default class WorkflowService extends BaseService{
     async searchFiles(searchWord, media_type){
-        return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + searchWord +'&mediaType=' + media_type).then(response => response.data);  
+        return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + encodeURIComponent(searchWord) +'&mediaType=' + media_type).then(response => response.data);
     }
 
     isAudioFile(primaryfile){
         if (primaryfile.mediaType)
             return primaryfile.mediaType.startsWith('audio');
         if (primaryfile.originalFilename)
-            return primaryfile.originalFilename.endsWith('.mp3') || 
+            return primaryfile.originalFilename.endsWith('.mp3') ||
                     primaryfile.originalFilename.endsWith('.wav') ||
-                    primaryfile.originalFilename.endsWith('.flac');        
-    } 
+                    primaryfile.originalFilename.endsWith('.flac');
+    }
 
     // concatenate IDs of selected primaryfiles into a query string
     getSelectedPrimaryfileIds(selectedFiles){
         if (selectedFiles === null || selectedFiles.size === 0)
             return "";
-        var primaryfileIds = ""; 
+        var primaryfileIds = "";
         for (let primaryfile of selectedFiles.values()) {
             primaryfileIds = primaryfileIds === "" ? primaryfile.id : primaryfileIds + "," + primaryfile.id;
         }
@@ -52,7 +52,7 @@ export default class WorkflowService extends BaseService{
         var tempName = name.replace(/(_)/g, ' ');
         tempName = tempName.replace(/(^\w)|(\s+\w)/g, match => match.toUpperCase());
         return tempName;
-    }    
+    }
     getWorkflows(){
         return super.get_auth('/workflows');
     }
@@ -71,7 +71,7 @@ export default class WorkflowService extends BaseService{
                 // Get the node keys
                 var nodeKeys = Object.keys(data);
                 for(var nodeKey in nodeKeys){
-                var thisNode = data[nodeKey]; 
+                var thisNode = data[nodeKey];
 
                 // Create a new node object
                 var newNode = {
