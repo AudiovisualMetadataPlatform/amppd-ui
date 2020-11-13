@@ -60,6 +60,17 @@
       <h3  slot="header">{{modalHeader}}</h3>
       <div slot="body">
          {{modalText}}
+
+         <div v-if="errors.length>0">
+            <div class="error-header"><strong>Failed submissions:</strong></div>
+            <div v-for="(error, index) in errors" v-bind:key="index" class="row">
+               <div class="col-md-12 error-item">Collection: {{error.collectionLabel}}</div>
+               <div class="col-md-12 error-item">Item: {{error.itemLabel}}</div>
+               <div class="col-md-12 error-item">File id: {{error.primaryfileId}}</div>
+               <div class="col-md-12 error-item">File name: {{error.fileName}}</div>
+               <div class="col-md-12 error-item">File label: {{error.fileLabel}}</div>
+            </div>
+         </div>
       </div>
       <div slot="footer">
             <input type="button" class="secondary-button" v-on:click="showModal = false" value="Ok"/>
@@ -88,7 +99,8 @@ export default {
       modalHeader: "",
       modalText: "",
       showModal: false,
-      selectedFilesArray: []
+      selectedFilesArray: [],
+      errors: []
     }
   },
   components:{
@@ -130,13 +142,22 @@ export default {
       console.log("Submitting workflow");
       let self = this;
       self.workflowSubmission.loading = true;
+      self.errors = [];
       await self.workflowService.submitWorkflow(this.workflowSubmission.selectedWorkflow, self.workflowService.getSelectedPrimaryfileIds(this.selectedFiles))
          .then(response => {
             let jobsobj = response.data;
-            this.jobs = new Map(Object.entries(jobsobj));
+
+            console.log(jobsobj);
+            for(var j = 0; j < jobsobj.length; j++){
+               var thisItem = jobsobj[j];
+               if(!thisItem.success){
+                  self.errors.push(thisItem);
+               }
+            }
+
             let total = this.selectedFilesArray.length;
-            let success = this.jobs.size;
-            let failure = total - success;
+            let success = total - self.errors.length;
+            let failure = self.errors.length;
             self.modalHeader = failure > 0 ? "Error" : "Success";
             self.modalText = `Total number of files submitted: ${total}; Number of jobs successfully created: ${success}; Number of jobs failed to be created: ${failure}`;
             self.showModal = true;
@@ -179,6 +200,16 @@ export default {
 .node-name{
    font-weight:700;
 }
+.error-item{
+   padding-left:40px;
+}
+.error-item:last-of-type{
+   margin-bottom:20px;
+}
+.error-header{
+   margin: 10px;
+}
+
 .btn-primary:disabled {
    background-color: rgba(187, 187, 187, 0.856) !important;
    border-color: rgba(187, 187, 187, 0.856) !important;
