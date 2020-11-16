@@ -146,8 +146,6 @@ export default {
       await self.workflowService.submitWorkflow(this.workflowSubmission.selectedWorkflow, self.workflowService.getSelectedPrimaryfileIds(this.selectedFiles))
          .then(response => {
             let jobsobj = response.data;
-
-            console.log(jobsobj);
             for(var j = 0; j < jobsobj.length; j++){
                var thisItem = jobsobj[j];
                if(!thisItem.success){
