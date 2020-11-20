@@ -184,7 +184,7 @@ export default {
             filterByItems:[],
             filterByFiles:[],
             filterBySteps:[],
-            filterByStatuses:[],
+            filterByStatuses:['COMPLETE'],
             filterBySearchTerm:[],
             filterByFinal: false
           },
