@@ -253,6 +253,7 @@ export default {
       this.showModal = false;
       if (this.selectedItems.length > 0){
         this.setItems();
+        this.searchQuery.pageNum = 1;
         await this.getResults();
       }
     },
