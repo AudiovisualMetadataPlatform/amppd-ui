@@ -1,12 +1,16 @@
 <template>
 <div class="dataTables_wrapper no-footer">
   <loader :show="workflowDashboard.loading"/>
+    <div class="row">
+        <input id="export-results" type="button" class="btn-sm" v-on:click="exportResults" value="Export Results"/>
+    </div>
   <div class="dataTables_length">
     <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
       <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
       entries
     </label>
   </div>
+    
  <search-filter />
       <div class="table-responsive">
         <table id="myTable" class="table dataTable no-footer">
@@ -25,8 +29,8 @@
               <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
               <td>{{ rec.submitter }}</td>
               <td>{{ rec.workflowName }}</td>
-              <td>{{ rec.sourceItem }}</td>
-              <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.sourceFilename }}</a></td>
+              <td>{{ rec.itemName }}</td>
+              <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
               <td>{{ rec.workflowStep }}</td>
               <td v-if="rec.outputPath == null">{{ rec.outputFile }}</td>
               <td v-else-if="rec.outputPath != null"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputFile }}</a></td>
@@ -80,8 +84,8 @@ export default {
         {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
         {label: 'Workflow Name', field: 'workflowName'},
-        {label: 'Source Item', field: 'sourceItem'},
-        {label: 'Source Filename', field: 'sourceFilename'},
+        {label: 'Source Item', field: 'itemName'},
+        {label: 'Source Filename', field: 'primaryfileName'},
         {label: 'Workflow Step', field: 'workflowStep'},
         {label: 'Output File', field: 'outputFile'},
         {label: 'Status', field: 'status'},
@@ -116,6 +120,15 @@ export default {
         this.workflowDashboard.searchQuery.pageNum = 1;
         this.refreshData();
       },
+    async exportResults(){
+      console.log("export results");
+      console.log(event.target);
+      var content = await this.workflowResultService.exportWorkflowResults(this.workflowDashboard.searchQuery);
+      var uriContent = "data:text/csv," + encodeURIComponent(content);
+      var nw = window.open(uriContent, "AmpWorkflowResultsExport");
+      
+      console.log(content);
+    },
     paginate(page_number) {
       this.workflowDashboard.searchQuery.pageNum = page_number;
       this.refreshData();
@@ -175,6 +188,9 @@ export default {
     font-weight: 700;
     color: #c5c5c5c5;
   }
+  .table-responsive{
+    padding-top:0;
+  }
   table{font-size: .8em;}
 .font-light-gray-1 {
   color: #dee2e6;
@@ -185,5 +201,10 @@ export default {
 th {
   padding: 10px 18px;
   border-bottom: 1px solid #111 !important;
+}
+#export-results{
+  width: 200px;
+  margin: 10px 0 10px 15px;
+  border: none;
 }
 </style>
