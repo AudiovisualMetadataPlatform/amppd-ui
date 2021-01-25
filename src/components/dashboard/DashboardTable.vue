@@ -1,8 +1,8 @@
 <template>
 <div class="dataTables_wrapper no-footer">
   <loader :show="workflowDashboard.loading"/>
-    <div class="row">
-        <input id="export-results" type="button" class="btn-sm" v-on:click="exportResults" value="Export Results"/>
+    <div class="export-row">
+        <input id="export-results" type="button" class="btn-sm" v-on:click="exportResults" value="Export to CSV"/>
     </div>
   <div class="dataTables_length">
     <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
@@ -32,8 +32,8 @@
               <td>{{ rec.itemName }}</td>
               <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
               <td>{{ rec.workflowStep }}</td>
-              <td v-if="rec.outputPath == null">{{ rec.outputFile }}</td>
-              <td v-else-if="rec.outputPath != null"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputFile }}</a></td>
+              <td v-if="rec.outputPath == null">{{ rec.outputName }}</td>
+              <td v-else-if="rec.outputPath != null"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputName }}</a></td>
               <td> 
                 <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
                 <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width">In Progress</button>
@@ -217,5 +217,9 @@ th {
   width: 200px;
   margin: 10px 0 10px 15px;
   border: none;
+}
+.export-row{
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
