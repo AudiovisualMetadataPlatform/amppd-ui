@@ -2,7 +2,7 @@
 <div class="dataTables_wrapper no-footer">
   <loader :show="workflowDashboard.loading"/>
     <div class="export-row">
-        <input id="export-results" type="button" class="btn-sm" v-on:click="exportResults" value="Export to CSV"/>
+        <input id="export-results" type="button" class="btn btn-outline-primary btn-sm" v-on:click="exportResults" value="Export to CSV"/>
     </div>
   <div class="dataTables_length">
     <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
@@ -216,7 +216,6 @@ th {
 #export-results{
   width: 200px;
   margin: 10px 0 10px 15px;
-  border: none;
 }
 .export-row{
   display: flex;
