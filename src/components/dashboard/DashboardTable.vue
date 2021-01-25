@@ -120,14 +120,25 @@ export default {
         this.workflowDashboard.searchQuery.pageNum = 1;
         this.refreshData();
       },
+      getDateString() {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = `${date.getMonth() + 1}`.padStart(2, '0');
+        const day =`${date.getDate()}`.padStart(2, '0');
+        return `${year}${month}${day}`
+    },
     async exportResults(){
       console.log("export results");
       console.log(event.target);
       var content = await this.workflowResultService.exportWorkflowResults(this.workflowDashboard.searchQuery);
-      var uriContent = "data:text/csv," + encodeURIComponent(content);
-      var nw = window.open(uriContent, "AmpWorkflowResultsExport");
+      var uriContent = encodeURIComponent(content);
+      //var nw = window.open(uriContent, "AmpWorkflowResultsExport");
       
-      console.log(content);
+      var link = document.createElement('a');
+      var dateString 
+      link.download = "AMPDashboardExport_" + this.getDateString();
+      link.href = 'data:text:/csv,' + uriContent;
+      link.click();
     },
     paginate(page_number) {
       this.workflowDashboard.searchQuery.pageNum = page_number;
