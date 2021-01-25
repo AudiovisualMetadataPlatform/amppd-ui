@@ -136,8 +136,8 @@ export default {
       
       var link = document.createElement('a');
       var dateString 
-      link.download = "AMPDashboardExport_" + this.getDateString();
-      link.href = 'data:text:/csv,' + uriContent;
+      link.download = "AMPDashboardExport_" + this.getDateString() + ".csv";
+      link.href = 'data:text/csv,' + uriContent;
       link.click();
     },
     paginate(page_number) {
