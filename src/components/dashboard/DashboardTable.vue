@@ -1,12 +1,16 @@
 <template>
 <div class="dataTables_wrapper no-footer">
   <loader :show="workflowDashboard.loading"/>
+    <div class="export-row">
+        <input id="export-results" type="button" class="btn btn-outline-primary btn-sm" v-on:click="exportResults" value="Export to CSV"/>
+    </div>
   <div class="dataTables_length">
     <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
       <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
       entries
     </label>
   </div>
+    
  <search-filter />
       <div class="table-responsive">
         <table id="myTable" class="table dataTable no-footer">
@@ -25,11 +29,11 @@
               <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
               <td>{{ rec.submitter }}</td>
               <td>{{ rec.workflowName }}</td>
-              <td>{{ rec.sourceItem }}</td>
-              <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.sourceFilename }}</a></td>
+              <td>{{ rec.itemName }}</td>
+              <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
               <td>{{ rec.workflowStep }}</td>
-              <td v-if="rec.outputPath == null">{{ rec.outputFile }}</td>
-              <td v-else-if="rec.outputPath != null"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputFile }}</a></td>
+              <td v-if="rec.outputPath == null">{{ rec.outputName }}</td>
+              <td v-else-if="rec.outputPath != null"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputName }}</a></td>
               <td> 
                 <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
                 <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width">In Progress</button>
@@ -80,8 +84,8 @@ export default {
         {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
         {label: 'Workflow Name', field: 'workflowName'},
-        {label: 'Source Item', field: 'sourceItem'},
-        {label: 'Source Filename', field: 'sourceFilename'},
+        {label: 'Source Item', field: 'itemName'},
+        {label: 'Source Filename', field: 'primaryfileName'},
         {label: 'Workflow Step', field: 'workflowStep'},
         {label: 'Output File', field: 'outputFile'},
         {label: 'Status', field: 'status'},
@@ -116,6 +120,26 @@ export default {
         this.workflowDashboard.searchQuery.pageNum = 1;
         this.refreshData();
       },
+      getDateString() {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = `${date.getMonth() + 1}`.padStart(2, '0');
+        const day =`${date.getDate()}`.padStart(2, '0');
+        return `${year}${month}${day}`
+    },
+    async exportResults(){
+      console.log("export results");
+      console.log(event.target);
+      var content = await this.workflowResultService.exportWorkflowResults(this.workflowDashboard.searchQuery);
+      var uriContent = encodeURIComponent(content);
+      //var nw = window.open(uriContent, "AmpWorkflowResultsExport");
+      
+      var link = document.createElement('a');
+      var dateString 
+      link.download = "AMPDashboardExport_" + this.getDateString() + ".csv";
+      link.href = 'data:text/csv,' + uriContent;
+      link.click();
+    },
     paginate(page_number) {
       this.workflowDashboard.searchQuery.pageNum = page_number;
       this.refreshData();
@@ -175,6 +199,9 @@ export default {
     font-weight: 700;
     color: #c5c5c5c5;
   }
+  .table-responsive{
+    padding-top:0;
+  }
   table{font-size: .8em;}
 .font-light-gray-1 {
   color: #dee2e6;
@@ -185,5 +212,13 @@ export default {
 th {
   padding: 10px 18px;
   border-bottom: 1px solid #111 !important;
+}
+#export-results{
+  width: 200px;
+  margin: 10px 0 10px 15px;
+}
+.export-row{
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
