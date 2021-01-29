@@ -47,8 +47,8 @@
                         <td>{{ rec.submitter }}</td>
                         <td>{{ rec.workflowName }}</td>
                         <td>{{ rec.workflowStep }}</td>
-                        <td v-if="rec.outputPath == null">{{ rec.outputFile }}</td>
-                        <td v-else-if="rec.outputPath != null"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputFile }}</a></td>
+                        <td v-if="rec.outputPath == null">{{ rec.outputName }}</td>
+                        <td v-else-if="rec.outputPath != null"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputName }}</a></td>
                         <td>
                           <label class="switch" title="Final Choice">
                               <span class="sr-only">Final Choice</span>
@@ -168,12 +168,12 @@ export default {
         {label: 'Submitter', field: 'submitter'},
         {label: 'Workflow Name', field: 'workflowName'},
         {label: 'Workflow Step', field: 'workflowStep'},
-        {label: 'Output File', field: 'outputFile'},
+        {label: 'Output File', field: 'outputName'},
         {label: 'Final', field: 'isFinal'}
       ],
       searchQuery: {
             sortRule: {
-              columnName: 'outputFile',
+              columnName: 'outputName',
               orderByDescending: false
             },
             pageNum: 1,

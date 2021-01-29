@@ -87,7 +87,7 @@ export default {
         {label: 'Source Item', field: 'itemName'},
         {label: 'Source Filename', field: 'primaryfileName'},
         {label: 'Workflow Step', field: 'workflowStep'},
-        {label: 'Output File', field: 'outputFile'},
+        {label: 'Output File', field: 'outputName'},
         {label: 'Status', field: 'status'},
       ],
       workflowResultService: new WorkflowResultService(),
