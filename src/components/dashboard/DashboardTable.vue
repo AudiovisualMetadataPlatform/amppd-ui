@@ -29,6 +29,8 @@
               <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
               <td>{{ rec.submitter }}</td>
               <td>{{ rec.workflowName }}</td>
+              <td>{{ rec.collectionName }}</td>
+              <td>{{ rec.externalId }}</td>
               <td>{{ rec.itemName }}</td>
               <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
               <td>{{ rec.workflowStep }}</td>
@@ -84,6 +86,8 @@ export default {
         {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
         {label: 'Workflow Name', field: 'workflowName'},
+        {label: 'Collection', field: 'collectionName'},
+        {label: 'External Id', field: 'externalId'},
         {label: 'Source Item', field: 'itemName'},
         {label: 'Source Filename', field: 'primaryfileName'},
         {label: 'Workflow Step', field: 'workflowStep'},
@@ -99,6 +103,7 @@ export default {
     filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
     filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
+    filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
     filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
     filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
     filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
@@ -168,6 +173,10 @@ export default {
       this.refreshData();
     },
     filterByWorkflows: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByCollections: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },

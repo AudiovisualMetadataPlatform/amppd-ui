@@ -123,6 +123,7 @@
                     <DateFilter/>
                     <SubmitterFilter/>
                     <WorkflowFilter/>
+                    <CollectionFilter/>
                     <ItemFilter/>
                     <FileFilter/>
                     <StepFilter/>
@@ -150,6 +151,7 @@ import DashboardTable from '@/components/dashboard/DashboardTable.vue';
 import SubmitterFilter from '@/components/dashboard/DashboardFilters/SubmitterFilter';
 import DateFilter from '@/components/dashboard/DashboardFilters/DateFilter';
 import WorkflowFilter from '@/components/dashboard/DashboardFilters/WorkflowFilter';
+import CollectionFilter from '@/components/dashboard/DashboardFilters/CollectionFilter';
 import ItemFilter from '@/components/dashboard/DashboardFilters/ItemFilter';
 import FileFilter from '@/components/dashboard/DashboardFilters/FileFilter';
 import StepFilter from '@/components/dashboard/DashboardFilters/StepFilter';
@@ -165,6 +167,7 @@ export default {
     SubmitterFilter,
     DateFilter,
     WorkflowFilter,
+    CollectionFilter,
     ItemFilter,
     FileFilter,
     StepFilter,
@@ -188,6 +191,7 @@ export default {
         + this.workflowDashboard.searchQuery.filterBySearchTerm.length 
         + dateFilter
         + this.workflowDashboard.searchQuery.filterByWorkflows.length 
+        + this.workflowDashboard.searchQuery.filterByCollections.length 
         + this.workflowDashboard.searchQuery.filterByItems.length 
         + this.workflowDashboard.searchQuery.filterByFiles.length 
         + this.workflowDashboard.searchQuery.filterBySteps.length 
@@ -200,6 +204,7 @@ export default {
     clearAll(){
       this.workflowDashboard.searchQuery.filterBySubmitters=[];
       this.workflowDashboard.searchQuery.filterByWorkflows=[];
+      this.workflowDashboard.searchQuery.filterByCollections=[];
       this.workflowDashboard.searchQuery.filterByItems=[];
       this.workflowDashboard.searchQuery.filterByFiles=[];
       this.workflowDashboard.searchQuery.filterBySteps=[];
@@ -241,6 +246,10 @@ export default {
     removeSearchFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySearchTerm.splice(index,1);
       console.log("selected search terms are:"+this.workflowDashboard.searchQuery.filterBySearchTerm +" and removed element is:"+removed);
+    },
+    removeCollectionFilter(index){
+      var removed = this.workflowDashboard.searchQuery.filterByCollections.splice(index,1);
+      console.log("selected search terms are:" + this.workflowDashboard.searchQuery.filterByCollections + " and removed element is:"+removed);
     },
   },
 
