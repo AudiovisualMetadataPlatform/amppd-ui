@@ -30,6 +30,7 @@
               <td>{{ rec.submitter }}</td>
               <td>{{ rec.workflowName }}</td>
               <td>{{ rec.collectionName }}</td>
+              <td>{{ rec.externalSource }}</td>
               <td>{{ rec.externalId }}</td>
               <td>{{ rec.itemName }}</td>
               <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
@@ -87,9 +88,10 @@ export default {
         {label: 'Submitter', field: 'submitter'},
         {label: 'Workflow Name', field: 'workflowName'},
         {label: 'Collection', field: 'collectionName'},
+        {label: 'External Source', field: 'externalSource'},
         {label: 'External Id', field: 'externalId'},
         {label: 'Item', field: 'itemName'},
-        {label: 'Filename', field: 'primaryfileName'},
+        {label: 'Primary File', field: 'primaryfileName'},
         {label: 'Workflow Step', field: 'workflowStep'},
         {label: 'Output File', field: 'outputName'},
         {label: 'Status', field: 'status'},
