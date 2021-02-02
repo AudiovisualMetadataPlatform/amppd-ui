@@ -1,10 +1,10 @@
 <template>
 	<div class="dropdown" >
-		<button class="btn btn-info dropdown-toggle" :class="{ 'show' : workflowDashboard.filtersEnabled.statusFilter === true }" type="button" id="dropdownMenuButton1" 
-			data-toggle="dropdown" aria-haspopup="true" aria-expanded="workflowDashboard.filtersEnabled.statusFilter ? 'true' : 'false'" v-on:click="setFilterFlags">
+		<button class="btn btn-info dropdown-toggle" :class="{ 'show' : displayFilter === true }" type="button" id="dropdownMenuButton1" 
+			data-toggle="dropdown" aria-haspopup="true" aria-expanded="displayFilter ? 'true' : 'false'" v-on:click="setFilterFlags">
 			Status
 		</button>
-		<div v-click-outside="closeFilter" class="dropdown-menu compact-form" :class="{ 'show' : workflowDashboard.filtersEnabled.statusFilter === true }" aria-labelledby="dropdownMenuButton" 
+		<div v-click-outside="closeFilter" class="dropdown-menu compact-form" :class="{ 'show' : displayFilter === true }" aria-labelledby="dropdownMenuButton" 
 			x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
       <b-form-checkbox-group
         v-model="workflowDashboard.searchQuery.filterByStatuses"
@@ -39,7 +39,8 @@ export default {
   data(){
     return {
 			statusList: [],
-			filterSuccess: false
+			filterSuccess: false,
+			displayFilter: false
     }
   },
   computed:{
@@ -56,17 +57,8 @@ export default {
   
   methods:{
 	setFilterFlags(){
-		this.workflowDashboard.filtersEnabled.statusFilter = !this.workflowDashboard.filtersEnabled.statusFilter;
-		if(this.workflowDashboard.filtersEnabled.statusFilter)
-		{
-            this.workflowDashboard.filtersEnabled.dateFilter=false;
-            this.workflowDashboard.filtersEnabled.submitterFilter =false;
-            this.workflowDashboard.filtersEnabled.fileFilter=false;
-            this.workflowDashboard.filtersEnabled.searchFilter=false;
-            this.workflowDashboard.filtersEnabled.itemFilter=false;
-            this.workflowDashboard.filtersEnabled.stepFilter=false;
-            this.workflowDashboard.filtersEnabled.workflowFilter=false;
-		}
+		this.displayFilter = !this.displayFilter;
+		this.$emit('displayChanged', this.displayFilter);
 	},
 		addStatus(status) {
 			if (this.selectedStatuses.length >0) {
@@ -87,8 +79,8 @@ export default {
 			console.log("selected statuses are: " + this.selectedStatuses + ", and removed element is: " + removed);
 		},
 		closeFilter(){
-			this.workflowDashboard.filtersEnabled.statusFilter = false;
-			console.log("selected statuses: " + this.selectedStatuses);
+			this.displayFilter = false;
+			this.$emit('displayChanged', this.displayFilter);
 		}
   },
   directives: {
