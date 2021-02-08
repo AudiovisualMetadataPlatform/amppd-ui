@@ -120,13 +120,52 @@
                 
                 <div class="container-fluid">
                   <div class="row filter-btns">
-                    <DateFilter/>
-                    <SubmitterFilter/>
-                    <WorkflowFilter/>
-                    <ItemFilter/>
-                    <FileFilter/>
-                    <StepFilter/>
-                    <StatusFilter/>
+                    <DateFilter
+                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.dateFilter)"/>
+                    <DashboardFilter                      
+                      name="Submitter Filter"
+                      title="Submitter"
+                      :items="workflowDashboard.searchResult.filters.submitters"
+                      :selectedItems="workflowDashboard.searchQuery.filterBySubmitters"
+                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.submitterFilter)"
+                    />
+                    <DashboardFilter                      
+                      name="Workflow Filter"
+                      title="Workflow"
+                      :items="workflowDashboard.searchResult.filters.workflows"
+                      :selectedItems="workflowDashboard.searchQuery.filterByWorkflows"
+                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.workflowFilter)"
+                    />
+                    <DashboardFilter                      
+                      name="Collection Filter"
+                      title="Collections"
+                      :items="workflowDashboard.searchResult.filters.collections"
+                      :selectedItems="workflowDashboard.searchQuery.filterByCollections"
+                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.collectionFilter)"
+                    />
+                    <DashboardFilter                      
+                      name="Item Filter"
+                      title="Items"
+                      :items="workflowDashboard.searchResult.filters.items"
+                      :selectedItems="workflowDashboard.searchQuery.filterByItems"
+                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.itemFilter)"
+                    />
+                    <DashboardFilter                      
+                      name="Source File Filter"
+                      title="Source Files"
+                      :items="workflowDashboard.searchResult.filters.files"
+                      :selectedItems="workflowDashboard.searchQuery.filterByFiles"
+                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.fileFilter)"
+                    />
+                    <DashboardFilter                      
+                      name="Workflow Step Filter"
+                      title="Workflow Step"
+                      :items="workflowDashboard.searchResult.filters.steps"
+                      :selectedItems="workflowDashboard.searchQuery.filterBySteps"
+                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.stepFilter)"
+                    />
+                    <StatusFilter
+                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.statusFilter)"/>
                   </div>
                   <div class="row spacer">
                   </div>
@@ -147,12 +186,8 @@
 import { sync } from 'vuex-pathify'
 import Sidebar from '@/components/navigation/Sidebar.vue'; 
 import DashboardTable from '@/components/dashboard/DashboardTable.vue';
-import SubmitterFilter from '@/components/dashboard/DashboardFilters/SubmitterFilter';
 import DateFilter from '@/components/dashboard/DashboardFilters/DateFilter';
-import WorkflowFilter from '@/components/dashboard/DashboardFilters/WorkflowFilter';
-import ItemFilter from '@/components/dashboard/DashboardFilters/ItemFilter';
-import FileFilter from '@/components/dashboard/DashboardFilters/FileFilter';
-import StepFilter from '@/components/dashboard/DashboardFilters/StepFilter';
+import TextFilter from '@/components/dashboard/DashboardFilters/TextFilter';
 import StatusFilter from '@/components/dashboard/DashboardFilters/StatusFilter';
 import Logout from '@/components/shared/Logout.vue'
 
@@ -162,12 +197,8 @@ export default {
   components:{
     Sidebar,
     DashboardTable,
-    SubmitterFilter,
     DateFilter,
-    WorkflowFilter,
-    ItemFilter,
-    FileFilter,
-    StepFilter,
+    TextFilter,
     StatusFilter,
     Logout
   },
@@ -188,6 +219,7 @@ export default {
         + this.workflowDashboard.searchQuery.filterBySearchTerm.length 
         + dateFilter
         + this.workflowDashboard.searchQuery.filterByWorkflows.length 
+        + this.workflowDashboard.searchQuery.filterByCollections.length 
         + this.workflowDashboard.searchQuery.filterByItems.length 
         + this.workflowDashboard.searchQuery.filterByFiles.length 
         + this.workflowDashboard.searchQuery.filterBySteps.length 
@@ -197,9 +229,21 @@ export default {
   props: {
   },
   methods:{
+    changeDisplayedFilter(item){
+      this.workflowDashboard.filtersEnabled.dateFilter=false;
+      this.workflowDashboard.filtersEnabled.submitterFilter =false;
+      this.workflowDashboard.filtersEnabled.fileFilter=false;
+      this.workflowDashboard.filtersEnabled.searchFilter=false;
+      this.workflowDashboard.filtersEnabled.statusFilter=false;
+      this.workflowDashboard.filtersEnabled.stepFilter=false;
+      this.workflowDashboard.filtersEnabled.itemFilter=false;
+      this.workflowDashboard.filtersEnabled.collectionFilter = false;
+      item = !item;
+    },
     clearAll(){
       this.workflowDashboard.searchQuery.filterBySubmitters=[];
       this.workflowDashboard.searchQuery.filterByWorkflows=[];
+      this.workflowDashboard.searchQuery.filterByCollections=[];
       this.workflowDashboard.searchQuery.filterByItems=[];
       this.workflowDashboard.searchQuery.filterByFiles=[];
       this.workflowDashboard.searchQuery.filterBySteps=[];
@@ -241,6 +285,10 @@ export default {
     removeSearchFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySearchTerm.splice(index,1);
       console.log("selected search terms are:"+this.workflowDashboard.searchQuery.filterBySearchTerm +" and removed element is:"+removed);
+    },
+    removeCollectionFilter(index){
+      var removed = this.workflowDashboard.searchQuery.filterByCollections.splice(index,1);
+      console.log("selected search terms are:" + this.workflowDashboard.searchQuery.filterByCollections + " and removed element is:"+removed);
     },
   },
 
