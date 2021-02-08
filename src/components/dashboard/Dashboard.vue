@@ -122,42 +122,42 @@
                   <div class="row filter-btns">
                     <DateFilter
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.dateFilter)"/>
-                    <DashboardFilter                      
+                    <TextFilter                      
                       name="Submitter Filter"
                       title="Submitter"
                       :items="workflowDashboard.searchResult.filters.submitters"
                       :selectedItems="workflowDashboard.searchQuery.filterBySubmitters"
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.submitterFilter)"
                     />
-                    <DashboardFilter                      
+                    <TextFilter                      
                       name="Workflow Filter"
                       title="Workflow"
                       :items="workflowDashboard.searchResult.filters.workflows"
                       :selectedItems="workflowDashboard.searchQuery.filterByWorkflows"
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.workflowFilter)"
                     />
-                    <DashboardFilter                      
+                    <TextFilter                      
                       name="Collection Filter"
                       title="Collections"
                       :items="workflowDashboard.searchResult.filters.collections"
                       :selectedItems="workflowDashboard.searchQuery.filterByCollections"
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.collectionFilter)"
                     />
-                    <DashboardFilter                      
+                    <TextFilter                      
                       name="Item Filter"
                       title="Items"
                       :items="workflowDashboard.searchResult.filters.items"
                       :selectedItems="workflowDashboard.searchQuery.filterByItems"
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.itemFilter)"
                     />
-                    <DashboardFilter                      
+                    <TextFilter                      
                       name="Source File Filter"
                       title="Source Files"
                       :items="workflowDashboard.searchResult.filters.files"
                       :selectedItems="workflowDashboard.searchQuery.filterByFiles"
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.fileFilter)"
                     />
-                    <DashboardFilter                      
+                    <TextFilter                      
                       name="Workflow Step Filter"
                       title="Workflow Step"
                       :items="workflowDashboard.searchResult.filters.steps"
