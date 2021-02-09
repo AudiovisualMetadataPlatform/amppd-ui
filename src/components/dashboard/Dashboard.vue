@@ -149,21 +149,21 @@
                     />
                     <TextFilter                      
                       name="Collection Filter"
-                      title="Collections"
+                      title="Collection"
                       :items="workflowDashboard.searchResult.filters.collections"
                       :selectedItems="workflowDashboard.searchQuery.filterByCollections"
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.collectionFilter)"
                     />
                     <TextFilter                      
                       name="Item Filter"
-                      title="Items"
+                      title="Item"
                       :items="workflowDashboard.searchResult.filters.items"
                       :selectedItems="workflowDashboard.searchQuery.filterByItems"
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.itemFilter)"
                     />
                     <TextFilter                      
                       name="File Name Filter"
-                      title="File Names"
+                      title="File Name"
                       :items="workflowDashboard.searchResult.filters.files"
                       :selectedItems="workflowDashboard.searchQuery.filterByFiles"
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.fileFilter)"
