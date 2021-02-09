@@ -151,8 +151,8 @@
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.itemFilter)"
                     />
                     <TextFilter                      
-                      name="Source File Filter"
-                      title="Source Files"
+                      name="File Name Filter"
+                      title="File Names"
                       :items="workflowDashboard.searchResult.filters.files"
                       :selectedItems="workflowDashboard.searchQuery.filterByFiles"
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.fileFilter)"
