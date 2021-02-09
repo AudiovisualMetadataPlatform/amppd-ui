@@ -29,6 +29,9 @@
               <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
               <td>{{ rec.submitter }}</td>
               <td>{{ rec.workflowName }}</td>
+              <td>{{ rec.collectionName }}</td>
+              <td>{{ rec.externalSource }}</td>
+              <td>{{ rec.externalId }}</td>
               <td>{{ rec.itemName }}</td>
               <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
               <td>{{ rec.workflowStep }}</td>
@@ -84,8 +87,11 @@ export default {
         {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
         {label: 'Workflow Name', field: 'workflowName'},
-        {label: 'Source Item', field: 'itemName'},
-        {label: 'Source Filename', field: 'primaryfileName'},
+        {label: 'Collection', field: 'collectionName'},
+        {label: 'External Source', field: 'externalSource'},
+        {label: 'External Id', field: 'externalId'},
+        {label: 'Item', field: 'itemName'},
+        {label: 'Primary File', field: 'primaryfileName'},
         {label: 'Workflow Step', field: 'workflowStep'},
         {label: 'Output File', field: 'outputName'},
         {label: 'Status', field: 'status'},
@@ -99,6 +105,7 @@ export default {
     filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
     filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
+    filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
     filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
     filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
     filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
@@ -171,6 +178,10 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
+    filterByCollections: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
     filterByItems: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
@@ -220,5 +231,26 @@ th {
 .export-row{
   display: flex;
   justify-content: flex-end;
+}
+.btn-blue:hover, .btn-blue:active, .btn-blue:visited{
+  background-color: #006de2 !important;
+  border-color: #006de2 !important;
+  cursor:auto;
+}
+.btn-success:hover, .btn-success:active, .btn-success:visited{
+  background-color: #28a745 !important;
+  border-color: #28a745 !important;
+  cursor:auto;
+}
+.btn-danger:hover, .btn-danger:active, .btn-danger:visited{
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+  cursor:auto;
+}
+.btn-primary:hover, .btn-primary:active, .btn-primary:visited{
+  background-color: #F4871E !important;
+  border-color: #F4871E !important;
+  color: #153c4d !important;
+  cursor:auto;
 }
 </style>
