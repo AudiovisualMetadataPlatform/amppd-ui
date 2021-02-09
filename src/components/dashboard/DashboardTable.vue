@@ -235,18 +235,22 @@ th {
 .btn-blue:hover, .btn-blue:active, .btn-blue:visited{
   background-color: #006de2 !important;
   border-color: #006de2 !important;
+  cursor:auto;
 }
 .btn-success:hover, .btn-success:active, .btn-success:visited{
   background-color: #28a745 !important;
   border-color: #28a745 !important;
+  cursor:auto;
 }
 .btn-danger:hover, .btn-danger:active, .btn-danger:visited{
   background-color: #dc3545 !important;
   border-color: #dc3545 !important;
+  cursor:auto;
 }
 .btn-primary:hover, .btn-primary:active, .btn-primary:visited{
   background-color: #F4871E !important;
   border-color: #F4871E !important;
   color: #153c4d !important;
+  cursor:auto;
 }
 </style>
