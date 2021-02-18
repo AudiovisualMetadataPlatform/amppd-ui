@@ -68,6 +68,7 @@
                <div class="col-md-12 error-item">Collection: {{error.collectionName}}</div>
                <div class="col-md-12 error-item">Item: {{error.itemName}}</div>
                <div class="col-md-12 error-item">Primaryfile: {{error.primaryfileName}}</div>
+               <div class="col-md-12 error-item">Error: {{error.error}}</div>
             </div>
          </div>
       </div>
