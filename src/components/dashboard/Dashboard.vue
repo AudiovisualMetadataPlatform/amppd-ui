@@ -16,6 +16,18 @@
                   <div class="row selected-filters-row">
                     <div class="col-sm-2 label-bold">CURRENTLY FILTERED BY</div>
                     
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-if="workflowDashboard.searchQuery.filterByDates.length>0"> 
+                      <div class="row">
+                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeDateFilter()">
+                        <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
+                        </svg>
+                        <div class="col-sm-1">
+                          <label class="row label-bold no-padding-col">Date Range </label>
+                          <label class="row no-padding-col">{{workflowDashboard.searchQuery.filterByDates[0].getMonth()+1}}/{{workflowDashboard.searchQuery.filterByDates[0].getDate()}}/{{workflowDashboard.searchQuery.filterByDates[0].getFullYear()}}
+                             - {{workflowDashboard.searchQuery.filterByDates[1].getMonth()+1}}/{{workflowDashboard.searchQuery.filterByDates[1].getDate()}}/{{workflowDashboard.searchQuery.filterByDates[1].getFullYear()}}</label>
+                        </div>
+                      </div>
+                    </button>     
                     <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(submitter,index) in workflowDashboard.searchQuery.filterBySubmitters" v-bind:submitter="submitter" v-bind:index="index" v-bind:key="submitter.id"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeSubmitterFilter(index)">
@@ -27,17 +39,6 @@
                         </div>
                       </div>
                     </button>       
-                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(workflow,index) in workflowDashboard.searchQuery.filterByWorkflows" v-bind:workflow="workflow" v-bind:index="index" v-bind:key="workflow.id"> 
-                      <div class="row">
-                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeWorkflowFilter(index)">
-                          <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
-                        </svg>
-                        <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Workflow </label>
-                          <label class="row no-padding-col">{{workflow}}</label>
-                        </div>
-                      </div>
-                    </button>      
                     <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(collection,index) in workflowDashboard.searchQuery.filterByCollections" v-bind:workflow="collection" v-bind:index="index" v-bind:key="collection.id"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeCollectionFilter(index)">
@@ -66,11 +67,22 @@
                           <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">File </label>
+                          <label class="row label-bold no-padding-col">Primaryfile </label>
                           <label class="row no-padding-col">{{file}}</label>
                         </div>
                       </div>
                     </button>       
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(workflow,index) in workflowDashboard.searchQuery.filterByWorkflows" v-bind:workflow="workflow" v-bind:index="index" v-bind:key="workflow.id"> 
+                      <div class="row">
+                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeWorkflowFilter(index)">
+                          <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
+                        </svg>
+                        <div class="col-sm-1">
+                          <label class="row label-bold no-padding-col">Workflow </label>
+                          <label class="row no-padding-col">{{workflow}}</label>
+                        </div>
+                      </div>
+                    </button>      
                     <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(step,index) in workflowDashboard.searchQuery.filterBySteps" v-bind:step="step" v-bind:index="index" v-bind:key="step.id"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeStepFilter(index)">
@@ -104,18 +116,6 @@
                         </div>
                       </div>
                     </button>     
-                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-if="workflowDashboard.searchQuery.filterByDates.length>0"> 
-                      <div class="row">
-                        <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeDateFilter()">
-                        <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
-                        </svg>
-                        <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Date Range </label>
-                          <label class="row no-padding-col">{{workflowDashboard.searchQuery.filterByDates[0].getMonth()+1}}/{{workflowDashboard.searchQuery.filterByDates[0].getDate()}}/{{workflowDashboard.searchQuery.filterByDates[0].getFullYear()}}
-                             - {{workflowDashboard.searchQuery.filterByDates[1].getMonth()+1}}/{{workflowDashboard.searchQuery.filterByDates[1].getDate()}}/{{workflowDashboard.searchQuery.filterByDates[1].getFullYear()}}</label>
-                        </div>
-                      </div>
-                    </button>     
                     <button class="btn btn-outline col-sm-2 selected-filter-button" v-if="filterCount>1"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="clearAll()">
@@ -141,13 +141,6 @@
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.submitterFilter)"
                     />
                     <TextFilter                      
-                      name="Workflow Filter"
-                      title="Workflow"
-                      :items="workflowDashboard.searchResult.filters.workflows"
-                      :selectedItems="workflowDashboard.searchQuery.filterByWorkflows"
-                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.workflowFilter)"
-                    />
-                    <TextFilter                      
                       name="Collection Filter"
                       title="Collection"
                       :items="workflowDashboard.searchResult.filters.collections"
@@ -162,15 +155,22 @@
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.itemFilter)"
                     />
                     <TextFilter                      
-                      name="File Name Filter"
-                      title="File Name"
+                      name="Primaryfile Filter"
+                      title="Primaryfile"
                       :items="workflowDashboard.searchResult.filters.files"
                       :selectedItems="workflowDashboard.searchQuery.filterByFiles"
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.fileFilter)"
                     />
                     <TextFilter                      
+                      name="Workflow Filter"
+                      title="Workflow"
+                      :items="workflowDashboard.searchResult.filters.workflows"
+                      :selectedItems="workflowDashboard.searchQuery.filterByWorkflows"
+                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.workflowFilter)"
+                    />
+                    <TextFilter                      
                       name="Workflow Step Filter"
-                      title="Workflow Step"
+                      title="Step"
                       :items="workflowDashboard.searchResult.filters.steps"
                       :selectedItems="workflowDashboard.searchQuery.filterBySteps"
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.stepFilter)"

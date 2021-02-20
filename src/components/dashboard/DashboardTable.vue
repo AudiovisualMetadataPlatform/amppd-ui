@@ -92,7 +92,7 @@ export default {
         {label: 'Item', field: 'itemName'},
         {label: 'Primaryfile', field: 'primaryfileName'},
         {label: 'Workflow', field: 'workflowName'},
-        {label: 'Workflow Step', field: 'workflowStep'},
+        {label: 'Step', field: 'workflowStep'},
         {label: 'Output', field: 'outputName'},
         {label: 'Status', field: 'status'},
       ],
@@ -101,15 +101,15 @@ export default {
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
-    filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
-    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
-    filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
+    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
     filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
     filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
+    filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
     filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
     filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
+    filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
