@@ -28,12 +28,12 @@
               :key="rec.id">
               <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
               <td>{{ rec.submitter }}</td>
-              <td>{{ rec.workflowName }}</td>
               <td>{{ rec.collectionName }}</td>
               <td>{{ rec.externalSource }}</td>
               <td>{{ rec.externalId }}</td>
               <td>{{ rec.itemName }}</td>
               <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
+              <td>{{ rec.workflowName }}</td>
               <td>{{ rec.workflowStep }}</td>
               <td v-if="rec.outputPath != null && rec.status =='COMPLETE'"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputName }}</a></td>
               <td v-else>{{ rec.outputName }}</td>
@@ -86,14 +86,14 @@ export default {
       columns:[
         {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
-        {label: 'Workflow Name', field: 'workflowName'},
         {label: 'Collection', field: 'collectionName'},
         {label: 'External Source', field: 'externalSource'},
-        {label: 'External Id', field: 'externalId'},
+        {label: 'External ID', field: 'externalId'},
         {label: 'Item', field: 'itemName'},
-        {label: 'Primary File', field: 'primaryfileName'},
-        {label: 'Workflow Step', field: 'workflowStep'},
-        {label: 'Output File', field: 'outputName'},
+        {label: 'Primaryfile', field: 'primaryfileName'},
+        {label: 'Workflow', field: 'workflowName'},
+        {label: 'Step', field: 'workflowStep'},
+        {label: 'Output', field: 'outputName'},
         {label: 'Status', field: 'status'},
       ],
       workflowResultService: new WorkflowResultService(),
@@ -101,15 +101,15 @@ export default {
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
-    filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
-    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
-    filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
+    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
     filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
     filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
+    filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
     filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
     filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
+    filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);

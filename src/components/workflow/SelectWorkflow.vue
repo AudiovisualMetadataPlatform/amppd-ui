@@ -64,11 +64,11 @@
          <div v-if="errors.length>0">
             <div class="error-header"><strong>Failed submissions:</strong></div>
             <div v-for="(error, index) in errors" v-bind:key="index" class="row">
-               <div class="col-md-12 error-item">Collection: {{error.collectionLabel}}</div>
-               <div class="col-md-12 error-item">Item: {{error.itemLabel}}</div>
-               <div class="col-md-12 error-item">File id: {{error.primaryfileId}}</div>
-               <div class="col-md-12 error-item">File name: {{error.fileName}}</div>
-               <div class="col-md-12 error-item">File label: {{error.fileLabel}}</div>
+               <div class="col-md-12 error-item">Primaryfile ID: {{error.primaryfileId}}</div>
+               <div class="col-md-12 error-item">Collection: {{error.collectionName}}</div>
+               <div class="col-md-12 error-item">Item: {{error.itemName}}</div>
+               <div class="col-md-12 error-item">Primaryfile: {{error.primaryfileName}}</div>
+               <div class="col-md-12 error-item">Error: {{error.error}}</div>
             </div>
          </div>
       </div>
