@@ -22,7 +22,7 @@
                         <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Date Range </label>
+                          <label class="row label-bold no-padding-col">Date Range</label>
                           <label class="row no-padding-col">{{workflowDashboard.searchQuery.filterByDates[0].getMonth()+1}}/{{workflowDashboard.searchQuery.filterByDates[0].getDate()}}/{{workflowDashboard.searchQuery.filterByDates[0].getFullYear()}}
                              - {{workflowDashboard.searchQuery.filterByDates[1].getMonth()+1}}/{{workflowDashboard.searchQuery.filterByDates[1].getDate()}}/{{workflowDashboard.searchQuery.filterByDates[1].getFullYear()}}</label>
                         </div>
@@ -34,7 +34,7 @@
                           <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Submitter </label>
+                          <label class="row label-bold no-padding-col">Submitter</label>
                           <label class="row no-padding-col">{{submitter}}</label>
                         </div>
                       </div>
@@ -45,7 +45,7 @@
                           <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Collection </label>
+                          <label class="row label-bold no-padding-col">Collection</label>
                           <label class="row no-padding-col">{{collection}}</label>
                         </div>
                       </div>
@@ -56,7 +56,7 @@
                           <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Item </label>
+                          <label class="row label-bold no-padding-col">Item</label>
                           <label class="row no-padding-col">{{item}}</label>
                         </div>
                       </div>
@@ -67,7 +67,7 @@
                           <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Primaryfile </label>
+                          <label class="row label-bold no-padding-col">Primaryfile</label>
                           <label class="row no-padding-col">{{file}}</label>
                         </div>
                       </div>
@@ -78,7 +78,7 @@
                           <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Workflow </label>
+                          <label class="row label-bold no-padding-col">Workflow</label>
                           <label class="row no-padding-col">{{workflow}}</label>
                         </div>
                       </div>
@@ -89,7 +89,7 @@
                           <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Step </label>
+                          <label class="row label-bold no-padding-col">Step</label>
                           <label class="row no-padding-col">{{step}}</label>
                         </div>
                       </div>
@@ -100,7 +100,7 @@
                           <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Status </label>
+                          <label class="row label-bold no-padding-col">Status</label>
                           <label class="row no-padding-col">{{status}}</label>
                         </div>
                       </div>
@@ -111,7 +111,7 @@
                         <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
                         </svg>
                         <div class="col-sm-1">
-                          <label class="row label-bold no-padding-col">Search Term </label>
+                          <label class="row label-bold no-padding-col">Search Term</label>
                           <label class="row no-padding-col">{{searchTerm}}</label>
                         </div>
                       </div>
@@ -243,39 +243,40 @@ export default {
     changeDisplayedFilter(item){
       this.workflowDashboard.filtersEnabled.dateFilter=false;
       this.workflowDashboard.filtersEnabled.submitterFilter =false;
-      this.workflowDashboard.filtersEnabled.fileFilter=false;
-      this.workflowDashboard.filtersEnabled.searchFilter=false;
-      this.workflowDashboard.filtersEnabled.statusFilter=false;
-      this.workflowDashboard.filtersEnabled.stepFilter=false;
-      this.workflowDashboard.filtersEnabled.itemFilter=false;
       this.workflowDashboard.filtersEnabled.collectionFilter = false;
+      this.workflowDashboard.filtersEnabled.itemFilter=false;
+      this.workflowDashboard.filtersEnabled.fileFilter=false;
+      this.workflowDashboard.filtersEnabled.workflowFilter=false;
+      this.workflowDashboard.filtersEnabled.stepFilter=false;
+      this.workflowDashboard.filtersEnabled.statusFilter=false;
+      this.workflowDashboard.filtersEnabled.searchFilter=false;
       item = !item;
     },
     clearAll(){
+      this.workflowDashboard.searchQuery.filterByDates = [];
       this.workflowDashboard.searchQuery.filterBySubmitters=[];
-      this.workflowDashboard.searchQuery.filterByWorkflows=[];
       this.workflowDashboard.searchQuery.filterByCollections=[];
       this.workflowDashboard.searchQuery.filterByItems=[];
       this.workflowDashboard.searchQuery.filterByFiles=[];
+      this.workflowDashboard.searchQuery.filterByWorkflows=[];
       this.workflowDashboard.searchQuery.filterBySteps=[];
       this.workflowDashboard.searchQuery.filterByStatuses=[];
       this.workflowDashboard.searchQuery.filterBySearchTerm=[];
-      this.workflowDashboard.searchQuery.filterByDates = [];
     },
     startWorkflow(){
       this.$router.push('/workflow/submit');
-    },
-    removeSubmitterFilter(index){
-      var removed = this.workflowDashboard.searchQuery.filterBySubmitters.splice(index,1);
-      console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySubmitters +" and removed element is:"+removed);
     },
     removeDateFilter() {
       this.workflowDashboard.searchQuery.filterByDates = []
       console.log("current date filter is:"+this.workflowDashboard.searchQuery.filterByDates);
     },
-    removeWorkflowFilter(index){
-      var removed = this.workflowDashboard.searchQuery.filterByWorkflows.splice(index,1);
-      console.log("selected workflows are:"+this.workflowDashboard.searchQuery.filterByWorkflows +" and removed element is:"+removed);
+    removeSubmitterFilter(index){
+      var removed = this.workflowDashboard.searchQuery.filterBySubmitters.splice(index,1);
+      console.log("selected submitters are:"+this.workflowDashboard.searchQuery.filterBySubmitters +" and removed element is:"+removed);
+    },
+    removeCollectionFilter(index){
+      var removed = this.workflowDashboard.searchQuery.filterByCollections.splice(index,1);
+      console.log("selected search terms are:" + this.workflowDashboard.searchQuery.filterByCollections + " and removed element is:"+removed);
     },
     removeItemFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterByItems.splice(index,1);
@@ -284,6 +285,10 @@ export default {
     removeFileFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterByFiles.splice(index,1);
       console.log("selected files are:"+this.workflowDashboard.searchQuery.filterByFiles +" and removed element is:"+removed);
+    },
+    removeWorkflowFilter(index){
+      var removed = this.workflowDashboard.searchQuery.filterByWorkflows.splice(index,1);
+      console.log("selected workflows are:"+this.workflowDashboard.searchQuery.filterByWorkflows +" and removed element is:"+removed);
     },
     removeStepFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySteps.splice(index,1);
@@ -296,10 +301,6 @@ export default {
     removeSearchFilter(index){
       var removed = this.workflowDashboard.searchQuery.filterBySearchTerm.splice(index,1);
       console.log("selected search terms are:"+this.workflowDashboard.searchQuery.filterBySearchTerm +" and removed element is:"+removed);
-    },
-    removeCollectionFilter(index){
-      var removed = this.workflowDashboard.searchQuery.filterByCollections.splice(index,1);
-      console.log("selected search terms are:" + this.workflowDashboard.searchQuery.filterByCollections + " and removed element is:"+removed);
     },
   },
 

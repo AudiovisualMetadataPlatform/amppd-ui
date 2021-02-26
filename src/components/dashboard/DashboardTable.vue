@@ -9,58 +9,57 @@
       <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
       entries
     </label>
+  </div>   
+  <search-filter />
+  <div class="table-responsive">
+    <table id="myTable" class="table dataTable no-footer">
+      <thead>
+        <tr>
+          <sortable-header v-for="column in columns" :key="column.field"
+                  :property-name="column.field"
+                    :sort-rule="workflowDashboard.searchQuery.sortRule"
+                    @sort="sortQuery"
+                    :label="column.label" />
+        </tr>
+      </thead>
+      <tbody v-if="visibleRows && visibleRows.length>0">
+        <tr v-for="rec in visibleRows"
+          :key="rec.id">
+          <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
+          <td>{{ rec.submitter }}</td>
+          <td>{{ rec.collectionName }}</td>
+          <td>{{ rec.externalSource }}</td>
+          <td>{{ rec.externalId }}</td>
+          <td>{{ rec.itemName }}</td>
+          <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
+          <td>{{ rec.workflowName }}</td>
+          <td>{{ rec.workflowStep }}</td>
+          <td v-if="rec.outputPath != null && rec.status =='COMPLETE'"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputName }}</a></td>
+          <td v-else>{{ rec.outputName }}</td>
+          <td> 
+            <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
+            <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width">In Progress</button>
+            <button v-else-if="rec.status==='PAUSED'" type="button" class="btn-sm btn btn-primary eq-width">Paused</button>
+            <button v-else-if="rec.status==='ERROR'" type="button" class="btn-sm btn btn-danger eq-width">Error</button>
+            <button v-else-if="rec.status==='SCHEDULED'" type="button" class="btn-sm btn btn-blue eq-width">Scheduled</button>
+            <button v-else-if="rec.status==='DELETED'" type="button" class="btn-sm btn eq-width">Deleted</button>
+          </td>
+        </tr>
+      </tbody>
+      <tbody v-else>
+        <tr>
+          <td v-if="workflowDashboard.loading" colspan="8" class="no-results"><i class="fas fa-cog fa-spin"></i> Loading</td>
+          <td v-else colspan="8" class="no-results">No results</td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination v-if="this.workflowDashboard.searchQuery"
+          :pageNum="workflowDashboard.searchQuery.pageNum"
+          :resultsPerPage="Number.parseInt(workflowDashboard.searchQuery.resultsPerPage)"
+          :totalResults="workflowDashboard.searchResult.totalResults"
+          :maxPages="1"
+          @paginate="paginate" />
   </div>
-    
- <search-filter />
-      <div class="table-responsive">
-        <table id="myTable" class="table dataTable no-footer">
-          <thead>
-            <tr>
-              <sortable-header v-for="column in columns" :key="column.field"
-                      :property-name="column.field"
-                       :sort-rule="workflowDashboard.searchQuery.sortRule"
-                       @sort="sortQuery"
-                       :label="column.label" />
-            </tr>
-          </thead>
-          <tbody v-if="visibleRows && visibleRows.length>0">
-            <tr v-for="rec in visibleRows"
-              :key="rec.id">
-              <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
-              <td>{{ rec.submitter }}</td>
-              <td>{{ rec.collectionName }}</td>
-              <td>{{ rec.externalSource }}</td>
-              <td>{{ rec.externalId }}</td>
-              <td>{{ rec.itemName }}</td>
-              <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
-              <td>{{ rec.workflowName }}</td>
-              <td>{{ rec.workflowStep }}</td>
-              <td v-if="rec.outputPath != null && rec.status =='COMPLETE'"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputName }}</a></td>
-              <td v-else>{{ rec.outputName }}</td>
-              <td> 
-                <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
-                <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width">In Progress</button>
-                <button v-else-if="rec.status==='PAUSED'" type="button" class="btn-sm btn btn-primary eq-width">Paused</button>
-                <button v-else-if="rec.status==='ERROR'" type="button" class="btn-sm btn btn-danger eq-width">Error</button>
-                <button v-else-if="rec.status==='SCHEDULED'" type="button" class="btn-sm btn btn-blue eq-width">Scheduled</button>
-                <button v-else-if="rec.status==='DELETED'" type="button" class="btn-sm btn eq-width">Deleted</button>
-              </td>
-            </tr>
-          </tbody>
-          <tbody v-else>
-            <tr>
-              <td v-if="workflowDashboard.loading" colspan="8" class="no-results"><i class="fas fa-cog fa-spin"></i> Loading</td>
-              <td v-else colspan="8" class="no-results">No results</td>
-            </tr>
-          </tbody>
-        </table>
-          <pagination v-if="this.workflowDashboard.searchQuery"
-                :pageNum="workflowDashboard.searchQuery.pageNum"
-                :resultsPerPage="Number.parseInt(workflowDashboard.searchQuery.resultsPerPage)"
-                :totalResults="workflowDashboard.searchResult.totalResults"
-                :maxPages="1"
-                @paginate="paginate" />
-      </div>
 </div>
 </template>
 

@@ -13,14 +13,14 @@
                 <h1 class="card-title">AMP Deliverables</h1>
                 <button v-bind:disabled="!canBagFinalSelection" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg">Bag Final Selection</button>
                   <div>
-                  <h2 class="sub-title">Source Item: <span>{{sourceItem.itemName}}</span></h2>
-                  <h2 class="sub-title">Source Filename: <span>{{sourceItem.primaryFileLabel}}</span></h2>
+                  <h2 class="sub-title">Item: <span>{{sourceItem.itemName}}</span></h2>
+                  <h2 class="sub-title">Primaryfile: <span>{{sourceItem.primaryFileLabel}}</span></h2>
                   </div>
                   <div class="table-responsive">
                   <button v-on:click="searchModal" id="btn-search-modal" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg-2">Search</button>       
                   
-                  <div class="final-choice-top"><span class="txt-v">Show Final Choices Only</span>
-                    <label class="switch" title="Final Choice"><span class="sr-only">Final Choice</span>
+                  <div class="final-choice-top"><span class="txt-v">Show Final Results Only</span>
+                    <label class="switch" title="Final Choice"><span class="sr-only">Final Result</span>
                       <input type="checkbox" v-on:click="filterByFinal">
                       <span class="slider round"></span>
                     </label>
@@ -52,7 +52,7 @@
                         <td>
                           <label class="switch" title="Final Choice">
                               <span class="sr-only">Final Choice</span>
-                                <input type="checkbox" v-model="rec.isFinal"  v-on:click="setIsFinal(rec.id)">
+                                <input type="checkbox" v-model="rec.isFinal"  v-on:click="setWorkflowResultFinal(rec.id)">
                               <span class="slider round"></span>
                           </label>
                         </td>
@@ -166,9 +166,9 @@ export default {
       columns:[
         {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
-        {label: 'Workflow Name', field: 'workflowName'},
+        {label: 'Workflow', field: 'workflowName'},
         {label: 'Workflow Step', field: 'workflowStep'},
-        {label: 'Output File', field: 'outputName'},
+        {label: 'Output', field: 'outputName'},
         {label: 'Final', field: 'isFinal'}
       ],
       searchQuery: {
@@ -257,7 +257,7 @@ export default {
         await this.getResults();
       }
     },
-    async setIsFinal(workflowResultId){
+    async setWorkflowResultFinal(workflowResultId){
       for(var r = 0; r < this.rows.length; r++){
         if(this.rows[r].id==workflowResultId){
           var thisRow = this.rows[r];
@@ -265,7 +265,7 @@ export default {
             thisRow.isFinal = false;
           }
           thisRow.isFinal = !thisRow.isFinal;
-          this.workflowResultService.setIsFinal(workflowResultId, thisRow.isFinal);
+          this.workflowResultService.setWorkflowResultFinal(workflowResultId, thisRow.isFinal);
           break;
         }
       }
