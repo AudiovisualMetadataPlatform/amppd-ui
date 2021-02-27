@@ -28,7 +28,17 @@ const state = {
     },
     workflowDashboard:{
         loading:false,
-        filtersEnabled : {submitterFilter :false, dateFilter : false, fileFilter : false, itemFilter : false, searchFilter : false, statusFilter : false, collectionFilter : false, stepFilter : false, workflowFilter : false},
+        filtersEnabled: {
+          dateFilter: false, 
+          submitterFilter: false, 
+          collectionFilter: false, 
+          itemFilter: false, 
+          fileFilter: false, 
+          workflowFilter: false,
+          stepFilter: false, 
+          statusFilter: false, 
+          searchFilter: false,
+        },
         searchQuery: {
             sortRule: {
               columnName: 'dateCreated',
@@ -36,29 +46,30 @@ const state = {
             },
             pageNum: 1,
             resultsPerPage: 10,
-            filterBySubmitters:[],
             filterByDates:[],
-            filterByWorkflows:[],
+            filterBySubmitters:[],
             filterByCollections:[],
             filterByItems:[],
             filterByFiles:[],
+            filterByWorkflows:[],
             filterBySteps:[],
             filterByStatuses:[],
-            filterBySearchTerm:[]
+            filterBySearchTerms:[],
+            filterByRelevant:true,
           },
           searchResult: {
             rows: [],
             totalResults: 0,
             filters:{
-              searchTerms:[],
-              submitters:[],
               dates:[],
-              workflows:[],
+              submitters:[],
               collections:[],
               items:[],
               files:[],
+              workflows:[],
               steps:[],
               statuses:[],
+              searchTerms:[],
             }
           },
           rows:[]

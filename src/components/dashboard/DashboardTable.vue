@@ -11,6 +11,12 @@
     </label>
   </div>   
   <search-filter />
+  <div class="togggle-top"><span class="txt-v">Show Relevant Results Only</span>
+    <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
+      <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
+      <span class="slider round"></span>
+    </label>
+  </div>      
   <div class="table-responsive">
     <table id="myTable" class="table dataTable no-footer">
       <thead>
@@ -108,7 +114,8 @@ export default {
     filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
     filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
     filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
-    filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
+    filterBySearchTerms: sync("workflowDashboard.searchQuery.filterBySearchTerms"),
+    filterByRelevant: sync("workflowDashboard.searchQuery.filterByRelevant"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
@@ -125,20 +132,19 @@ export default {
         this.workflowDashboard.searchQuery.sortRule = sortRule;
         this.workflowDashboard.searchQuery.pageNum = 1;
         this.refreshData();
-      },
-      getDateString() {
+    },
+    getDateString() {
         const date = new Date();
         const year = date.getFullYear();
         const month = `${date.getMonth() + 1}`.padStart(2, '0');
         const day =`${date.getDate()}`.padStart(2, '0');
         return `${year}${month}${day}`
     },
-    async exportResults(){
+    async exportResults() {
       console.log("export results");
       console.log(event.target);
       var content = await this.workflowResultService.exportWorkflowResults(this.workflowDashboard.searchQuery);
       var uriContent = encodeURIComponent(content);
-      //var nw = window.open(uriContent, "AmpWorkflowResultsExport");
       
       var link = document.createElement('a');
       var dateString 
@@ -160,20 +166,12 @@ export default {
     this.refreshData();
   },
   watch:{
-    filterBySearchTerm: function(){
+    filterByDates: function(){
+      // console.log("inside watcher for filterByDates",this.filterByDates[0]," ",this.filterByDates[1]);
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
     filterBySubmitters: function(){
-      this.workflowDashboard.searchQuery.pageNum = 1;
-      this.refreshData();
-    },
-    filterByDates: function(){
-      console.log("inside watcher for filterByDates",this.filterByDates[0]," ",this.filterByDates[1]);
-      this.workflowDashboard.searchQuery.pageNum = 1;
-      this.refreshData();
-    },
-    filterByWorkflows: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
@@ -189,6 +187,10 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
+    filterByWorkflows: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
     filterBySteps: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
@@ -197,6 +199,14 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
+    filterBySearchTerms: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByRelevant: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },    
   }
 }
 </script>
@@ -251,5 +261,13 @@ th {
   border-color: #F4871E !important;
   color: #153c4d !important;
   cursor:auto;
+}
+.togggle-top {
+    z-index: 1001;
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    top: 0;
+    left: 170px;
 }
 </style>

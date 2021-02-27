@@ -11,7 +11,7 @@
             <div class="card">
               <div class="card-body">
                 <h1 class="card-title">AMP Deliverables</h1>
-                <button v-bind:disabled="!canBagFinalSelection" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg">Bag Final Selection</button>
+                <button v-bind:disabled="!canBagFinalSelection" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg">Bag Final Results</button>
                   <div>
                   <h2 class="sub-title">Item: <span>{{sourceItem.itemName}}</span></h2>
                   <h2 class="sub-title">Primaryfile: <span>{{sourceItem.primaryFileLabel}}</span></h2>
@@ -20,7 +20,7 @@
                   <button v-on:click="searchModal" id="btn-search-modal" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg-2">Search</button>       
                   
                   <div class="final-choice-top"><span class="txt-v">Show Final Results Only</span>
-                    <label class="switch" title="Final Choice"><span class="sr-only">Final Result</span>
+                    <label class="switch" title="Final Result"><span class="sr-only">Final Result</span>
                       <input type="checkbox" v-on:click="filterByFinal">
                       <span class="slider round"></span>
                     </label>
@@ -50,8 +50,8 @@
                         <td v-if="rec.outputPath == null">{{ rec.outputName }}</td>
                         <td v-else-if="rec.outputPath != null"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputName }}</a></td>
                         <td>
-                          <label class="switch" title="Final Choice">
-                              <span class="sr-only">Final Choice</span>
+                          <label class="switch" title="Final Result">
+                              <span class="sr-only">Final Result</span>
                                 <input type="checkbox" v-model="rec.isFinal"  v-on:click="setWorkflowResultFinal(rec.id)">
                               <span class="slider round"></span>
                           </label>
@@ -167,7 +167,7 @@ export default {
         {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
         {label: 'Workflow', field: 'workflowName'},
-        {label: 'Workflow Step', field: 'workflowStep'},
+        {label: 'Step', field: 'workflowStep'},
         {label: 'Output', field: 'outputName'},
         {label: 'Final', field: 'isFinal'}
       ],
@@ -178,14 +178,14 @@ export default {
             },
             pageNum: 1,
             resultsPerPage: 10,
-            filterBySubmitters:[],
             filterByDates:[],
-            filterByWorkflows:[],
+            filterBySubmitters:[],
             filterByItems:[],
             filterByFiles:[],
+            filterByWorkflows:[],
             filterBySteps:[],
             filterByStatuses:['COMPLETE'],
-            filterBySearchTerm:[],
+            filterBySearchTerms:[],
             filterByFinal: false
           },
     }

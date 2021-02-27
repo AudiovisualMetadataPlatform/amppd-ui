@@ -105,7 +105,7 @@
                         </div>
                       </div>
                     </button>       
-                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(searchTerm,index) in workflowDashboard.searchQuery.filterBySearchTerm" v-bind:searchTerm="searchTerm" v-bind:index="index" v-bind:key="index"> 
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(searchTerm,index) in workflowDashboard.searchQuery.filterBySearchTerms" v-bind:searchTerm="searchTerm" v-bind:index="index" v-bind:key="index"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeSearchFilter(index)">
                         <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
@@ -226,15 +226,15 @@ export default {
       var dateFilter = 0;
       if(this.workflowDashboard.searchQuery.filterByDates.length > 0)
         dateFilter = 1;
-      return this.workflowDashboard.searchQuery.filterBySubmitters.length 
-        + this.workflowDashboard.searchQuery.filterBySearchTerm.length 
-        + dateFilter
+      return dateFilter 
+        + this.workflowDashboard.searchQuery.filterBySubmitters.length 
         + this.workflowDashboard.searchQuery.filterByWorkflows.length 
         + this.workflowDashboard.searchQuery.filterByCollections.length 
         + this.workflowDashboard.searchQuery.filterByItems.length 
         + this.workflowDashboard.searchQuery.filterByFiles.length 
         + this.workflowDashboard.searchQuery.filterBySteps.length 
         + this.workflowDashboard.searchQuery.filterByStatuses.length;
+        + this.workflowDashboard.searchQuery.filterBySearchTerms.length 
     }
   },
   props: {
@@ -261,7 +261,7 @@ export default {
       this.workflowDashboard.searchQuery.filterByWorkflows=[];
       this.workflowDashboard.searchQuery.filterBySteps=[];
       this.workflowDashboard.searchQuery.filterByStatuses=[];
-      this.workflowDashboard.searchQuery.filterBySearchTerm=[];
+      this.workflowDashboard.searchQuery.filterBySearchTerms=[];
     },
     startWorkflow(){
       this.$router.push('/workflow/submit');
@@ -299,8 +299,8 @@ export default {
       console.log("selected statuses are:"+this.workflowDashboard.searchQuery.filterByStatuses +" and removed element is:"+removed);
     },
     removeSearchFilter(index){
-      var removed = this.workflowDashboard.searchQuery.filterBySearchTerm.splice(index,1);
-      console.log("selected search terms are:"+this.workflowDashboard.searchQuery.filterBySearchTerm +" and removed element is:"+removed);
+      var removed = this.workflowDashboard.searchQuery.filterBySearchTerms.splice(index,1);
+      console.log("selected search terms are:"+this.workflowDashboard.searchQuery.filterBySearchTerms +" and removed element is:"+removed);
     },
   },
 

@@ -33,7 +33,7 @@ export default {
         return this.searchTermList;
     },
     searchTerms(){
-        return this.workflowDashboard.searchQuery.filterBySearchTerm;
+        return this.workflowDashboard.searchQuery.filterBySearchTerms;
     }
   },
   props: {
