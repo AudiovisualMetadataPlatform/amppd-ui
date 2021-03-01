@@ -233,8 +233,8 @@ export default {
         + this.workflowDashboard.searchQuery.filterByItems.length 
         + this.workflowDashboard.searchQuery.filterByFiles.length 
         + this.workflowDashboard.searchQuery.filterBySteps.length 
-        + this.workflowDashboard.searchQuery.filterByStatuses.length;
-        + this.workflowDashboard.searchQuery.filterBySearchTerms.length 
+        + this.workflowDashboard.searchQuery.filterByStatuses.length
+        + this.workflowDashboard.searchQuery.filterBySearchTerms.length;
     }
   },
   props: {
