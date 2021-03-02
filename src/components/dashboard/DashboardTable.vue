@@ -1,22 +1,27 @@
 <template>
 <div class="dataTables_wrapper no-footer">
   <loader :show="workflowDashboard.loading"/>
-    <div class="export-row">
-        <input id="export-results" type="button" class="btn btn-outline-primary btn-sm" v-on:click="exportResults" value="Export to CSV"/>
-    </div>
+  <div class="export-row">
+    <input id="export-results" type="button" class="btn btn-outline-primary btn-sm" v-on:click="exportResults" value="Export to CSV"/>
+  </div>
   <div class="dataTables_length">
     <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
       <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
-      entries
+      Entries
     </label>
+    <!-- <span class="txt-v"> Show Relevant Results Only </span>
+    <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
+      <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
+      <span class="slider round"></span>
+    </label> -->
   </div>   
-  <search-filter />
-  <div class="togggle-top"><span class="txt-v">Show Relevant Results Only</span>
+  <div class="relevant-togggle"><span class="txt-v">Show Relevant Results Only</span>
     <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
       <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
       <span class="slider round"></span>
     </label>
-  </div>      
+  </div>     
+  <search-filter/> 
   <div class="table-responsive">
     <table id="myTable" class="table dataTable no-footer">
       <thead>
@@ -213,61 +218,63 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  @import '/amppd-ui/src/styles/style.css';
-  .no-results{
+  @import '/amppd-ui/src/styles/style.css';  
+  .no-results {
     text-align: center;
     font-weight: 700;
     color: #c5c5c5c5;
   }
-  .table-responsive{
+  .table-responsive {
     padding-top:0;
   }
-  table{font-size: .8em;}
-.font-light-gray-1 {
-  color: #dee2e6;
-}
-.font-purple-1{
-  color: #6f42c1;
-}
-th {
-  padding: 10px 18px;
-  border-bottom: 1px solid #111 !important;
-}
-#export-results{
-  width: 200px;
-  margin: 10px 0 10px 15px;
-}
-.export-row{
-  display: flex;
-  justify-content: flex-end;
-}
-.btn-blue:hover, .btn-blue:active, .btn-blue:visited{
-  background-color: #006de2 !important;
-  border-color: #006de2 !important;
-  cursor:auto;
-}
-.btn-success:hover, .btn-success:active, .btn-success:visited{
-  background-color: #28a745 !important;
-  border-color: #28a745 !important;
-  cursor:auto;
-}
-.btn-danger:hover, .btn-danger:active, .btn-danger:visited{
-  background-color: #dc3545 !important;
-  border-color: #dc3545 !important;
-  cursor:auto;
-}
-.btn-primary:hover, .btn-primary:active, .btn-primary:visited{
-  background-color: #F4871E !important;
-  border-color: #F4871E !important;
-  color: #153c4d !important;
-  cursor:auto;
-}
-.togggle-top {
-    z-index: 1001;
+  table {
+    font-size: .8em;
+  }
+  .font-light-gray-1 {
+    color: #dee2e6;
+  }
+  .font-purple-1 {
+    color: #6f42c1;
+  }
+  th {
+    padding: 10px 18px;
+    border-bottom: 1px solid #111 !important;
+  }
+  #export-results {
+    width: 200px;
+    margin: 10px 0 10px 15px;
+  }
+  .export-row{
+    display: flex;
+    justify-content: flex-end;
+  }
+  .relevant-togggle {
+    /* z-index: 1001; */
     display: flex;
     justify-content: space-around;
     position: absolute;
     top: 0;
     left: 170px;
-}
+  }  
+  .btn-blue:hover, .btn-blue:active, .btn-blue:visited {
+    background-color: #006de2 !important;
+    border-color: #006de2 !important;
+    cursor:auto;
+  }
+  .btn-success:hover, .btn-success:active, .btn-success:visited {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    cursor:auto;
+  }
+  .btn-danger:hover, .btn-danger:active, .btn-danger:visited {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    cursor:auto;
+  }
+  .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #F4871E !important;
+    border-color: #F4871E !important;
+    color: #153c4d !important;
+    cursor:auto;
+  }
 </style>

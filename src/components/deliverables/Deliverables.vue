@@ -13,19 +13,18 @@
                 <h1 class="card-title">AMP Deliverables</h1>
                 <button v-bind:disabled="!canBagFinalSelection" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg">Bag Final Results</button>
                   <div>
-                  <h2 class="sub-title">Item: <span>{{sourceItem.itemName}}</span></h2>
-                  <h2 class="sub-title">Primaryfile: <span>{{sourceItem.primaryFileLabel}}</span></h2>
+                    <h2 class="sub-title">Item: <span>{{item.itemName}}</span></h2>
+                    <h2 class="sub-title">Primaryfile: <span>{{item.primaryFileLabel}}</span></h2>
                   </div>
                   <div class="table-responsive">
-                  <button v-on:click="searchModal" id="btn-search-modal" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg-2">Search</button>       
-                  
-                  <div class="final-choice-top"><span class="txt-v">Show Final Results Only</span>
-                    <label class="switch" title="Final Result"><span class="sr-only">Final Result</span>
-                      <input type="checkbox" v-on:click="filterByFinal">
-                      <span class="slider round"></span>
-                    </label>
-                  </div>    
-                  <div id="myTable_wrapper" class="dataTables_wrapper no-footer">
+                    <button v-on:click="searchModal" id="btn-search-modal" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg-2">Search</button>                         
+                    <div class="final-choice-top"><span class="txt-v">Show Final Results Only</span>
+                      <label class="switch" title="Final Result"><span class="sr-only">Final Result</span>
+                        <input type="checkbox" v-on:click="filterByFinal">
+                        <span class="slider round"></span>
+                      </label>
+                    </div>    
+                    <div id="myTable_wrapper" class="dataTables_wrapper no-footer">
                     <div class="dataTables_length" id="myTable_length">
                       <label>Show <select name="myTable_length" aria-controls="myTable" class="" v-model="searchQuery.resultsPerPage"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> entries</label>
                     </div>
@@ -95,8 +94,8 @@
              <table id="myTable" data-detail-view="true" class="table" ref="tbl">
                <thead>
                  <tr>
-                   <th data-sortable="true" data-field="type">Source items</th>
-                   <th data-sortable="true" data-field="item">Source filenames</th>
+                   <th data-sortable="true" data-field="type">Items</th>
+                   <th data-sortable="true" data-field="item">Primaryfiles</th>
                  </tr>
                </thead>
                <tbody>
@@ -152,7 +151,7 @@ export default {
     return {
       workflowService: new WorkflowService(),
       workflowResultService: new WorkflowResultService(),
-      sourceItem: {itemName: "None", primaryFileLabel: "None"},
+      item: {itemName: "None", primaryFileLabel: "None"},
       showModal: false,
       searchWord: "",
       searchedItems: [],
@@ -192,7 +191,7 @@ export default {
   },
   methods:{
     reset(){
-      this.sourceItem  = {itemName: "None", primaryFileLabel: "None"};
+      this.item  = {itemName: "None", primaryFileLabel: "None"};
     },
     async paginate(page_number){
       this.searchQuery.pageNum = page_number;
@@ -314,14 +313,14 @@ export default {
           if(thisItem.primaryFileId === this.selectedItems[s]){
             this.searchQuery.filterByItems.push(thisItem.itemName);
             this.searchQuery.filterByFiles.push(thisItem.primaryFileLabel);
-            this.sourceItem = thisItem;
+            this.item = thisItem;
           }
         }
       }
     },
     async getResults(){
       let self = this;
-      if(self.sourceItem.itemName == "None"){
+      if(self.item.itemName == "None"){
         return;
       }
       self.loading = true;
@@ -351,7 +350,7 @@ export default {
     font-weight: bold;
     padding: 0;
     margin: 0 1em 0 0;
-}
+  }
   .sub-title span {
     font-weight:normal
   }
@@ -364,19 +363,19 @@ export default {
   .table-responsive {
     position: relative;
     padding-top: 19px;
-}
-.final-choice-top {
+  }
+ .final-choice-top {
     z-index: 1001;
     display: flex;
     justify-content: space-around;
     position: absolute;
     top: 0;
     left: 170px;
-}
-.modalOpen {
-    position: fixed;
-}
-.final-choice-top {
+  }
+  .modalOpen {
+      position: fixed;
+  }
+ .final-choice-top {
     z-index: 1001;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -386,10 +385,10 @@ export default {
     position: absolute;
     top: 0;
     left: 170px;
-}
-#myTable{
+  }
+  #myTable{
     z-index: 20;
-}
+  }
 
   @media screen and (max-width: 700px) {
     #btn-search-modal{

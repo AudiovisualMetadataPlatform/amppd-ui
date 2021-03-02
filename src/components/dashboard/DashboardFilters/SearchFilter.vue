@@ -1,12 +1,10 @@
-<template>
-          
-     <div id="myTable_filter" class="dataTables_filter">
-      <label>Search:
-          </label>
-          <typeahead :source="getItems" filter-key="searchValue" :start-at="1" @selection="addSearchTerm"
-            filter-type="contains"
-            id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder=""/>
-      </div>                 
+<template>          
+  <div id="myTable_filter" class="dataTables_filter">
+    <label>Search:</label>
+    <typeahead :source="getItems" filter-key="searchValue" :start-at="1" @selection="addSearchTerm"
+      filter-type="contains"
+      id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder=""/>
+  </div>                 
 </template>
 
 <script>
@@ -54,9 +52,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-    #search-input{
-        display:inline;
-    }
+  #search-input{
+      display:inline;
+  }
   .spacer{
     height: 24px;
   }
