@@ -44,7 +44,7 @@ export default class WorkflowService extends BaseService{
 
     submitWorkflow(selectedWorkflow, primaryfileIds){
         console.log('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds);
-        return super.post_auth('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds);
+        return super.post_auth('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds, null);
     }
 
     cleanParameterName(name){

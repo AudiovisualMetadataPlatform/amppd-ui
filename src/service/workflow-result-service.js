@@ -2,21 +2,21 @@
 import BaseService from './base-service'
 export default class WorkflowResultService extends BaseService{
     async getWorkflowResults(searchQuery){
-        var data = await super.post_auth('/workflow-results',  searchQuery).
+        var data = await super.post_auth('/workflow-results', searchQuery).
         then(result=>{
             return result.data;
         });
         return data;
     }
     async exportWorkflowResults(searchQuery){
-        var data = await super.post_auth('/workflow-results/export',  searchQuery).
+        var data = await super.post_auth('/workflow-results/export', searchQuery).
         then(result=>{
             return result.data;
         });
         return data;
     }
     async setWorkflowResultFinal(id, isFinal){
-        var data = await super.post_auth('/workflow-results/' + id + '?isFinal=' + isFinal,  null).
+        var data = await super.post_auth('/workflow-results/' + id + '?isFinal=' + isFinal, null).
         then(result=>{
             return result.data;
         });
