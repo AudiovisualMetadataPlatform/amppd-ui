@@ -1,66 +1,76 @@
 <template>
 <div class="dataTables_wrapper no-footer">
   <loader :show="workflowDashboard.loading"/>
-    <div class="export-row">
-        <input id="export-results" type="button" class="btn btn-outline-primary btn-sm" v-on:click="exportResults" value="Export to CSV"/>
-    </div>
+  <div class="export-row">
+    <input id="export-results" type="button" class="btn btn-outline-primary btn-sm" v-on:click="exportResults" value="Export to CSV"/>
+  </div>
   <div class="dataTables_length">
     <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
       <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
-      entries
+      Entries
     </label>
+    <!-- <span class="txt-v"> Show Relevant Results Only </span>
+    <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
+      <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
+      <span class="slider round"></span>
+    </label> -->
+  </div>   
+  <div class="relevant-togggle"><span class="txt-v">Show Relevant Results Only</span>
+    <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
+      <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
+      <span class="slider round"></span>
+    </label>
+  </div>     
+  <search-filter/> 
+  <div class="table-responsive">
+    <table id="myTable" class="table dataTable no-footer">
+      <thead>
+        <tr>
+          <sortable-header v-for="column in columns" :key="column.field"
+                  :property-name="column.field"
+                    :sort-rule="workflowDashboard.searchQuery.sortRule"
+                    @sort="sortQuery"
+                    :label="column.label" />
+        </tr>
+      </thead>
+      <tbody v-if="visibleRows && visibleRows.length>0">
+        <tr v-for="rec in visibleRows"
+          :key="rec.id">
+          <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
+          <td>{{ rec.submitter }}</td>
+          <td>{{ rec.collectionName }}</td>
+          <td>{{ rec.externalSource }}</td>
+          <td>{{ rec.externalId }}</td>
+          <td>{{ rec.itemName }}</td>
+          <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
+          <td>{{ rec.workflowName }}</td>
+          <td>{{ rec.workflowStep }}</td>
+          <td v-if="rec.outputPath != null && rec.status =='COMPLETE'"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputName }}</a></td>
+          <td v-else>{{ rec.outputName }}</td>
+          <td> 
+            <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
+            <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width">In Progress</button>
+            <button v-else-if="rec.status==='PAUSED'" type="button" class="btn-sm btn btn-primary eq-width">Paused</button>
+            <button v-else-if="rec.status==='ERROR'" type="button" class="btn-sm btn btn-danger eq-width">Error</button>
+            <button v-else-if="rec.status==='SCHEDULED'" type="button" class="btn-sm btn btn-blue eq-width">Scheduled</button>
+            <button v-else-if="rec.status==='DELETED'" type="button" class="btn-sm btn eq-width">Deleted</button>
+          </td>
+        </tr>
+      </tbody>
+      <tbody v-else>
+        <tr>
+          <td v-if="workflowDashboard.loading" colspan="8" class="no-results"><i class="fas fa-cog fa-spin"></i> Loading</td>
+          <td v-else colspan="8" class="no-results">No results</td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination v-if="this.workflowDashboard.searchQuery"
+          :pageNum="workflowDashboard.searchQuery.pageNum"
+          :resultsPerPage="Number.parseInt(workflowDashboard.searchQuery.resultsPerPage)"
+          :totalResults="workflowDashboard.searchResult.totalResults"
+          :maxPages="1"
+          @paginate="paginate" />
   </div>
-    
- <search-filter />
-      <div class="table-responsive">
-        <table id="myTable" class="table dataTable no-footer">
-          <thead>
-            <tr>
-              <sortable-header v-for="column in columns" :key="column.field"
-                      :property-name="column.field"
-                       :sort-rule="workflowDashboard.searchQuery.sortRule"
-                       @sort="sortQuery"
-                       :label="column.label" />
-            </tr>
-          </thead>
-          <tbody v-if="visibleRows && visibleRows.length>0">
-            <tr v-for="rec in visibleRows"
-              :key="rec.id">
-              <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
-              <td>{{ rec.submitter }}</td>
-              <td>{{ rec.workflowName }}</td>
-              <td>{{ rec.collectionName }}</td>
-              <td>{{ rec.externalSource }}</td>
-              <td>{{ rec.externalId }}</td>
-              <td>{{ rec.itemName }}</td>
-              <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
-              <td>{{ rec.workflowStep }}</td>
-              <td v-if="rec.outputPath != null && rec.status =='COMPLETE'"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputName }}</a></td>
-              <td v-else>{{ rec.outputName }}</td>
-              <td> 
-                <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
-                <button v-else-if="rec.status==='IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width">In Progress</button>
-                <button v-else-if="rec.status==='PAUSED'" type="button" class="btn-sm btn btn-primary eq-width">Paused</button>
-                <button v-else-if="rec.status==='ERROR'" type="button" class="btn-sm btn btn-danger eq-width">Error</button>
-                <button v-else-if="rec.status==='SCHEDULED'" type="button" class="btn-sm btn btn-blue eq-width">Scheduled</button>
-                <button v-else-if="rec.status==='DELETED'" type="button" class="btn-sm btn eq-width">Deleted</button>
-              </td>
-            </tr>
-          </tbody>
-          <tbody v-else>
-            <tr>
-              <td v-if="workflowDashboard.loading" colspan="8" class="no-results"><i class="fas fa-cog fa-spin"></i> Loading</td>
-              <td v-else colspan="8" class="no-results">No results</td>
-            </tr>
-          </tbody>
-        </table>
-          <pagination v-if="this.workflowDashboard.searchQuery"
-                :pageNum="workflowDashboard.searchQuery.pageNum"
-                :resultsPerPage="Number.parseInt(workflowDashboard.searchQuery.resultsPerPage)"
-                :totalResults="workflowDashboard.searchResult.totalResults"
-                :maxPages="1"
-                @paginate="paginate" />
-      </div>
 </div>
 </template>
 
@@ -86,14 +96,14 @@ export default {
       columns:[
         {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
-        {label: 'Workflow Name', field: 'workflowName'},
         {label: 'Collection', field: 'collectionName'},
         {label: 'External Source', field: 'externalSource'},
-        {label: 'External Id', field: 'externalId'},
+        {label: 'External ID', field: 'externalId'},
         {label: 'Item', field: 'itemName'},
-        {label: 'Primary File', field: 'primaryfileName'},
-        {label: 'Workflow Step', field: 'workflowStep'},
-        {label: 'Output File', field: 'outputName'},
+        {label: 'Primaryfile', field: 'primaryfileName'},
+        {label: 'Workflow', field: 'workflowName'},
+        {label: 'Step', field: 'workflowStep'},
+        {label: 'Output', field: 'outputName'},
         {label: 'Status', field: 'status'},
       ],
       workflowResultService: new WorkflowResultService(),
@@ -101,15 +111,16 @@ export default {
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
-    filterBySearchTerm: sync("workflowDashboard.searchQuery.filterBySearchTerm"),
-    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
-    filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
+    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
     filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
     filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
+    filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
     filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
     filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
+    filterBySearchTerms: sync("workflowDashboard.searchQuery.filterBySearchTerms"),
+    filterByRelevant: sync("workflowDashboard.searchQuery.filterByRelevant"),
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
@@ -126,20 +137,19 @@ export default {
         this.workflowDashboard.searchQuery.sortRule = sortRule;
         this.workflowDashboard.searchQuery.pageNum = 1;
         this.refreshData();
-      },
-      getDateString() {
+    },
+    getDateString() {
         const date = new Date();
         const year = date.getFullYear();
         const month = `${date.getMonth() + 1}`.padStart(2, '0');
         const day =`${date.getDate()}`.padStart(2, '0');
         return `${year}${month}${day}`
     },
-    async exportResults(){
+    async exportResults() {
       console.log("export results");
       console.log(event.target);
       var content = await this.workflowResultService.exportWorkflowResults(this.workflowDashboard.searchQuery);
       var uriContent = encodeURIComponent(content);
-      //var nw = window.open(uriContent, "AmpWorkflowResultsExport");
       
       var link = document.createElement('a');
       var dateString 
@@ -161,20 +171,12 @@ export default {
     this.refreshData();
   },
   watch:{
-    filterBySearchTerm: function(){
+    filterByDates: function(){
+      // console.log("inside watcher for filterByDates",this.filterByDates[0]," ",this.filterByDates[1]);
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
     filterBySubmitters: function(){
-      this.workflowDashboard.searchQuery.pageNum = 1;
-      this.refreshData();
-    },
-    filterByDates: function(){
-      console.log("inside watcher for filterByDates",this.filterByDates[0]," ",this.filterByDates[1]);
-      this.workflowDashboard.searchQuery.pageNum = 1;
-      this.refreshData();
-    },
-    filterByWorkflows: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
@@ -190,6 +192,10 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
+    filterByWorkflows: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
     filterBySteps: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
@@ -198,59 +204,77 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
+    filterBySearchTerms: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByRelevant: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },    
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  @import '/amppd-ui/src/styles/style.css';
-  .no-results{
+  @import '/amppd-ui/src/styles/style.css';  
+  .no-results {
     text-align: center;
     font-weight: 700;
     color: #c5c5c5c5;
   }
-  .table-responsive{
+  .table-responsive {
     padding-top:0;
   }
-  table{font-size: .8em;}
-.font-light-gray-1 {
-  color: #dee2e6;
-}
-.font-purple-1{
-  color: #6f42c1;
-}
-th {
-  padding: 10px 18px;
-  border-bottom: 1px solid #111 !important;
-}
-#export-results{
-  width: 200px;
-  margin: 10px 0 10px 15px;
-}
-.export-row{
-  display: flex;
-  justify-content: flex-end;
-}
-.btn-blue:hover, .btn-blue:active, .btn-blue:visited{
-  background-color: #006de2 !important;
-  border-color: #006de2 !important;
-  cursor:auto;
-}
-.btn-success:hover, .btn-success:active, .btn-success:visited{
-  background-color: #28a745 !important;
-  border-color: #28a745 !important;
-  cursor:auto;
-}
-.btn-danger:hover, .btn-danger:active, .btn-danger:visited{
-  background-color: #dc3545 !important;
-  border-color: #dc3545 !important;
-  cursor:auto;
-}
-.btn-primary:hover, .btn-primary:active, .btn-primary:visited{
-  background-color: #F4871E !important;
-  border-color: #F4871E !important;
-  color: #153c4d !important;
-  cursor:auto;
-}
+  table {
+    font-size: .8em;
+  }
+  .font-light-gray-1 {
+    color: #dee2e6;
+  }
+  .font-purple-1 {
+    color: #6f42c1;
+  }
+  th {
+    padding: 10px 18px;
+    border-bottom: 1px solid #111 !important;
+  }
+  #export-results {
+    width: 200px;
+    margin: 10px 0 10px 15px;
+  }
+  .export-row{
+    display: flex;
+    justify-content: flex-end;
+  }
+  .relevant-togggle {
+    /* z-index: 1001; */
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    top: 0;
+    left: 170px;
+  }  
+  .btn-blue:hover, .btn-blue:active, .btn-blue:visited {
+    background-color: #006de2 !important;
+    border-color: #006de2 !important;
+    cursor:auto;
+  }
+  .btn-success:hover, .btn-success:active, .btn-success:visited {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    cursor:auto;
+  }
+  .btn-danger:hover, .btn-danger:active, .btn-danger:visited {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    cursor:auto;
+  }
+  .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #F4871E !important;
+    border-color: #F4871E !important;
+    color: #153c4d !important;
+    cursor:auto;
+  }
 </style>
