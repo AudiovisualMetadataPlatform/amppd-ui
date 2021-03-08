@@ -53,7 +53,7 @@ function saveTranscript(json, filePath, originalFilename) {
     
     formData.append('data', json);
     formData.append('filePath', filePath);
-    const url = `/hmgm/transcript-editor/save`;
+    const url = `/hmgm/transcript-editor`;
     return baseService.post_token_auth(url, {json, filePath}, originalFilename)
         // get data
         .then(x => x.data)
