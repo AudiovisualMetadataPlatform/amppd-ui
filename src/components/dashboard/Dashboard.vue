@@ -170,7 +170,7 @@
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.collectionFilter)"
                     />
                    <TextFilter
-                    name="Exteranl ID Filter"
+                    name="External ID Filter"
                     title="External ID"
                     :items="workflowDashboard.searchResult.filters.externalIds"
                     :selectedItems="workflowDashboard.searchQuery.filterByExternalIds"
