@@ -91,12 +91,12 @@ export default {
             let self = this;
             if(self.filterType=="starts"){
                 return self.items.filter((item) => {
-                    return item.toLowerCase().startsWith(self.query.toLowerCase());
+                    return item && item.toLowerCase().startsWith(self.query.toLowerCase());
                     });
             }
             else if(self.filterType=="contains") {
                 return self.items.filter((item) => {
-                    return item.toLowerCase().includes(self.query.toLowerCase());
+                    return item && item.toLowerCase().includes(self.query.toLowerCase());
                     });
             }
         },
