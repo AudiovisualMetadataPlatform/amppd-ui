@@ -17,12 +17,18 @@
             </p>
           </div>
           <div class="form-group">
-            <label for="email">User ID: {{this.$route.params.id}}</label>
+            <label for="userId">User ID: {{this.$route.params.id}}</label>
           </div>
           <div class="form-group">
+            <label for="email">Email: {{approve_user_emailId}}</label>
+          </div>
+           <div class="form-group" v-if="isUserApproved">
+            <label>The user has already been approved. </label>
+          </div>
+          <div class="form-group" v-if="isRequested" >
             <button class="btn btn-primary marg-bot-4" v-on:click="approveUser()">Approve</button>
           </div>
-          <div class="form-group">
+          <div class="form-group" v-if="isRequested">
             <button class="btn btn-primary marg-bot-4" v-on:click="rejectUser()">Reject</button>
           </div>
           <div class="form-group" v-if="approve_user">
@@ -52,7 +58,24 @@ import {accountService} from '@/service/account-service';
 			errors: [],
 			id: null,
 			approve_user: false,
-      reject_user: false
+      reject_user: false,
+      approve_user_emailId:null,
+      approve_user_status:null
+    }
+  },
+computed:{
+    isRequested: function(){
+      if(this.approve_user_status=='REQUESTED')
+      {
+          return true;
+      }
+      return false;
+    },
+    isUserApproved: function(){
+      if(this.approve_user_status == 'ACTIVATED' || this.approve_user_status == 'ACCEPTED'){
+          return true;
+      }
+      return false;
     }
   },
   methods:{
@@ -75,6 +98,19 @@ import {accountService} from '@/service/account-service';
       this.errors.push('User was not approved');
     }
     },
+
+    async getApproveUserdata(){
+      event.preventDefault();
+      let self= this;
+     await accountService.loadApproveUserData(this.$route.params.id)
+     .then(response => {
+       self.approve_user_emailId = response.email;
+       self.approve_user_status = response.status;
+     })
+     .catch(e => {
+      console.log(e);
+		});
+    },
     async rejectUser() {
       event.preventDefault();
       let self = this;
@@ -95,8 +131,8 @@ import {accountService} from '@/service/account-service';
       }
     }
   },
-  mounted() {
-    //console.log("IT WORKS");
+  beforeMount() {
+    this.getApproveUserdata();
   }
 };
 </script>
