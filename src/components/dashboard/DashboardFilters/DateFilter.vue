@@ -95,7 +95,7 @@ export default {
   },
 }
 </script>
-<style>
+<style scoped>
 input {
 	width: -webkit-fill-available;
 	border-radius: 4px;
