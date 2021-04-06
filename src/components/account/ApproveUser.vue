@@ -99,10 +99,10 @@ computed:{
     }
     },
 
-    async getApproveUserdata(){
+    async loadUser(){
       event.preventDefault();
       let self= this;
-     await accountService.loadApproveUserData(this.$route.params.id)
+     await accountService.getUser(this.$route.params.id)
      .then(response => {
        self.approve_user_emailId = response.email;
        self.approve_user_status = response.status;
@@ -132,7 +132,7 @@ computed:{
     }
   },
   beforeMount() {
-    this.getApproveUserdata();
+    this.loadUser();
   }
 };
 </script>

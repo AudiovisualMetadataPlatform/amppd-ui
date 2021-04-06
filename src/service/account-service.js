@@ -44,13 +44,10 @@ function sendForgotPswdEmailRequest(emailid) {
         .then(x => x.data)
 }
 
-function loadApproveUserData(userid){
-  const url = `/account/approveUserData`;
-    return  baseService.post_auth(url,
-      {
-        userId: userid
-      })
-       .then(x => x.data)
+function getUser(userid){
+  const url = `/account/getUser/`+userid;
+  return baseService.get_auth(url)
+  .then(x => x.data)
   }
 
 function sendApproveUserRequest(userid) {
@@ -118,7 +115,7 @@ export const accountService = {
   sendResetRequest, 
   sendfetchEmailRequest, 
   sendForgotPswdEmailRequest,
-  loadApproveUserData,  
+  getUser,  
   sendApproveUserRequest,
   sendActivateUserRequest,
   sendRejectUserRequest, 
