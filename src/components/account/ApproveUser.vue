@@ -65,17 +65,10 @@ import {accountService} from '@/service/account-service';
   },
 computed:{
     isRequested: function(){
-      if(this.approve_user_status=='REQUESTED')
-      {
-          return true;
-      }
-      return false;
+      return this.approve_user_status=='REQUESTED';
     },
     isUserApproved: function(){
-      if(this.approve_user_status == 'ACTIVATED' || this.approve_user_status == 'ACCEPTED'){
-          return true;
-      }
-      return false;
+      return this.approve_user_status == 'ACTIVATED' || this.approve_user_status == 'ACCEPTED';
     }
   },
   methods:{

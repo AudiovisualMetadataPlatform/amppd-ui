@@ -45,7 +45,7 @@ function sendForgotPswdEmailRequest(emailid) {
 }
 
 function getUser(userid){
-  const url = `/account/getUser/`+userid;
+  const url = `/account/`+userid;
   return baseService.get_auth(url)
   .then(x => x.data)
   }
