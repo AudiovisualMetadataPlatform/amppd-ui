@@ -37,6 +37,10 @@
        Loader,
        Logout
      },
+     mounted:function(){
+        this.workflowSubmission.selectedFiles = new Map();
+        this.workflowSubmission.updateSelectedFiles = 0;
+     },
     computed:{
       workflowSubmission: sync('workflowSubmission')
     }

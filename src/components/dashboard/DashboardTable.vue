@@ -114,10 +114,12 @@ export default {
     filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
     filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
+    filterByExternalIds: sync("workflowDashboard.searchQuery.filterByExternalIds"),
     filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
     filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
     filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
     filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
+    filterByOutputs: sync("workflowDashboard.searchQuery.filterByOutputs"),
     filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
     filterBySearchTerms: sync("workflowDashboard.searchQuery.filterBySearchTerms"),
     filterByRelevant: sync("workflowDashboard.searchQuery.filterByRelevant"),
@@ -184,6 +186,10 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
+    filterByExternalIds: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
     filterByItems: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
@@ -197,6 +203,10 @@ export default {
       this.refreshData();
     },
     filterBySteps: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+     filterByOutputs: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },

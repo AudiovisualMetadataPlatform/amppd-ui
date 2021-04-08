@@ -22,7 +22,7 @@ const state = {
       showSaveBundle:false,
       bundles: [],
       selectedFiles: new Map(), // use map instead of array to improve search performance
-      updateSelectedFiles: 0,   // flag to indiate changes in selectedFiles, a work-around to solve the issue that Vue does not watch Map
+      updateSelectedFiles: 0,   // flag to indicate changes in selectedFiles, a work-around to solve the issue that Vue does not watch Map
       selectedWorkflow: null,
       selectedWorkflowParameters: []
     },
@@ -31,11 +31,13 @@ const state = {
         filtersEnabled: {
           dateFilter: false, 
           submitterFilter: false, 
-          collectionFilter: false, 
+          collectionFilter: false,
+          externalIdFilter: false, 
           itemFilter: false, 
           fileFilter: false, 
           workflowFilter: false,
           stepFilter: false, 
+          outputFilter: false,
           statusFilter: false, 
           searchFilter: false,
         },
@@ -49,10 +51,12 @@ const state = {
             filterByDates:[],
             filterBySubmitters:[],
             filterByCollections:[],
+            filterByExternalIds:[],
             filterByItems:[],
             filterByFiles:[],
             filterByWorkflows:[],
             filterBySteps:[],
+            filterByOutputs:[],
             filterByStatuses:[],
             filterBySearchTerms:[],
             filterByRelevant:true,
@@ -64,10 +68,12 @@ const state = {
               dates:[],
               submitters:[],
               collections:[],
+              externalIds:[],
               items:[],
               files:[],
               workflows:[],
               steps:[],
+              outputs:[],
               statuses:[],
               searchTerms:[],
             }
