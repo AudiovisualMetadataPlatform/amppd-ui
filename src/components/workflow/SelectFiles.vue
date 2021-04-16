@@ -62,8 +62,9 @@
                         <path class="hotlink" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path>
                      </svg>
                      <span class="sr-only">Toggle hidden content</span>
-                     {{item.itemName}}
+                     {{item.itemName}} 
                   </button>
+                   <button class="btn btn-link item-id"> {{item.externalId}}</button>
                   <!-- -->
                   <button class="btn btn-link float-right" v-on:click="addAllFiles(index)" v-bind:disabled=hasValues(index) :key="updateSelectedFiles">
                      <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
@@ -91,6 +92,7 @@
                            </svg>
                            {{primaryfile.name}}
                         </button>
+                         <button class="btn file-name">{{primaryfile.originalFilename}}</button>
                         <button class="btn btn-link  add-remove float-right file-list-item-add" v-on:click="addFile(index,file_index)" v-bind:disabled=hasValue(item.primaryFiles[file_index].id)>
                            <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
                               <path class="circle-stroke" d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
@@ -256,5 +258,8 @@ export default {
   .item-name{
      white-space: normal !important;
      text-align: left !important;
+  }
+  .item-id{
+    margin-left: 30%;
   }
 </style>
