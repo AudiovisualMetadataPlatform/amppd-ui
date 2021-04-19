@@ -14,7 +14,7 @@
                 <button v-bind:disabled="!canBagFinalSelection" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg">Bag Final Results</button>
                   <div>
                     <h2 class="sub-title">Item: <span>{{item.itemName}}</span></h2>
-                    <h2 class="sub-title">Item ID: <span>{{item.itemId}}</span></h2>
+                    <h2 class="sub-title">External ID: <span>{{item.externalId}}</span></h2>
                     <h2 class="sub-title">Primaryfile: <span>{{item.primaryFileLabel}}</span></h2>
                      <h2 class="sub-title">Filename: <span>{{item.primaryFileOriginalname}}</span></h2>
                   </div>
@@ -97,7 +97,7 @@
                <thead>
                  <tr>
                    <th data-sortable="true" data-field="type">Items</th>
-                   <th data-sortable="true" data-field="id">Item ID</th>
+                   <th data-sortable="true" data-field="externalId">External ID</th>
                    <th data-sortable="true" data-field="item">Primaryfiles</th>
                    <th data-sortable="true" data-field="filename">Filename</th>
                  </tr>
@@ -113,7 +113,7 @@
                       v-bind:class="{ highlight: rowSelected(item.primaryFileId) }"
                       >
                    <td>{{item.itemName}}</td>
-                    <td>{{item.itemId}}</td>
+                    <td>{{item.externalId}}</td>
                    <td>{{item.primaryFileLabel}}</td>
                    <td>{{item.primaryFileOriginalname }}</td>
                  </tr>
@@ -157,7 +157,7 @@ export default {
     return {
       workflowService: new WorkflowService(),
       workflowResultService: new WorkflowResultService(),
-      item: {itemName: "None", itemId:"None", primaryFileLabel: "None", primaryFileOriginalname:"None"},
+      item: {itemName: "None", externalId:"None", primaryFileLabel: "None", primaryFileOriginalname:"None"},
       showModal: false,
       searchWord: "",
       searchedItems: [],
@@ -197,7 +197,7 @@ export default {
   },
   methods:{
     reset(){
-      this.item  = {itemName: "None", itemId:"None", primaryFileLabel: "None", primaryFileOriginalname:"None"};
+      this.item  = {itemName: "None", externalId:"None", primaryFileLabel: "None", primaryFileOriginalname:"None"};
     },
     async paginate(page_number){
       this.searchQuery.pageNum = page_number;
@@ -295,7 +295,7 @@ export default {
                 var thisPrimaryFile = thisItem.primaryFiles[p];
                 self.searchedItems.push(
                   {
-                    itemId: thisItem.externalId,
+                    externalId: thisItem.externalId,
                     itemName: thisItem.itemName,
                     primaryFileId: thisPrimaryFile.id,
                     primaryFileLabel: thisPrimaryFile.name,
