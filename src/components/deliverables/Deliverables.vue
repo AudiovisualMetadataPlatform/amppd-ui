@@ -14,7 +14,7 @@
                 <button v-bind:disabled="!canBagFinalSelection" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg">Bag Final Results</button>
                   <div>
                     <h2 class="sub-title">Item: <span>{{item.itemName}}</span></h2>
-                    <h2 class="sub-title">External ID: <span>{{item.externalId}}</span></h2>
+                    <h2 class="sub-title">Item ID: <span>{{item.externalId}}</span></h2>
                     <h2 class="sub-title">Primaryfile: <span>{{item.primaryFileLabel}}</span></h2>
                      <h2 class="sub-title">Filename: <span>{{item.primaryFileOriginalname}}</span></h2>
                   </div>
@@ -97,7 +97,7 @@
                <thead>
                  <tr>
                    <th data-sortable="true" data-field="type">Items</th>
-                   <th data-sortable="true" data-field="externalId">External ID</th>
+                   <th data-sortable="true" data-field="itemId">Item ID</th>
                    <th data-sortable="true" data-field="item">Primaryfiles</th>
                    <th data-sortable="true" data-field="filename">Filename</th>
                  </tr>
