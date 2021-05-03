@@ -46,6 +46,7 @@
                         :key="rec.id">
                         <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
                         <td>{{ rec.submitter }}</td>
+                        <td>{{ rec.collectionName }}</td>
                         <td>{{ rec.workflowName }}</td>
                         <td>{{ rec.workflowStep }}</td>
                         <td v-if="rec.outputPath == null">{{ rec.outputName }}</td>
