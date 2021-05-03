@@ -96,7 +96,7 @@
              <table id="myTable" data-detail-view="true" class="table" ref="tbl">
                <thead>
                  <tr>
-                   <th data-sortable="true" data-field="collection">Collection</th>
+                   <th data-sortable="true" data-field="collectionName">Collection</th>
                    <th data-sortable="true" data-field="type">Items</th>
                    <th data-sortable="true" data-field="itemId">Item ID</th>
                    <th data-sortable="true" data-field="item">Primaryfiles</th>
@@ -113,7 +113,7 @@
                       v-on:click="rowClicked(index)" 
                       v-bind:class="{ highlight: rowSelected(item.primaryFileId) }"
                       >
-                    <td>{{item.collection}}</td>
+                    <td>{{item.collectionName}}</td>
                     <td>{{item.itemName}}</td>
                     <td>{{item.externalId}}</td>
                    <td>{{item.primaryFileLabel}}</td>
@@ -173,7 +173,7 @@ export default {
       columns:[
         {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
-        {label: 'Collection', field: 'collection'},
+        {label: 'Collection', field: 'collectionName'},
         {label: 'Workflow', field: 'workflowName'},
         {label: 'Step', field: 'workflowStep'},
         {label: 'Output', field: 'outputName'},
@@ -300,7 +300,7 @@ export default {
                   {
                     externalId: thisItem.externalId,
                     itemName: thisItem.itemName,
-                    collection:thisItem.collectionName,
+                    collectionName:thisItem.collectionName,
                     primaryFileId: thisPrimaryFile.id,
                     primaryFileLabel: thisPrimaryFile.name,
                     primaryFileOriginalname: thisPrimaryFile.originalFilename
