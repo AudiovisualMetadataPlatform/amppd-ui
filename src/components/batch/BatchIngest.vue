@@ -25,10 +25,10 @@
                   </div>
                 </div>
                 <div class="form-row">
-                  <div class="col">
+                  <div class="col-lg-6">
                     <input type="file" class="form-control-file btn btn-light btn-lg" id="exampleFormControlFile1" ref="inputFile" value="Upload batch manifest" :disabled="inProgress" v-bind="filename" accept=".csv" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length">
                   </div>
-                  <div class="col">
+                  <div class="col-lg-6">
                       <button class="btn btn-secondary btn-lg" @click="save()" :disabled="inProgress">Upload</button>
                   </div>
                 </div>
@@ -55,9 +55,6 @@
         <ul>
           <li class="error-li" v-for="(error, index) in validationResponse.processingErrors" v-bind:key="index">{{error}}</li>
         </ul>
-      </div>
-      <div v-else-if="validationResponse && !validationResponse.success" class="batch-errors">
-        <p>There is an error processing your batch.</p>
       </div> 
       <div v-else>
         Your batch has been successfully submitted and all files are ready to be submitted to a workflow.
@@ -188,7 +185,9 @@ export default {
   .error-li {
     margin-left: 10px;                                      
   }
-
   
+input[type="file"]::file-selector-button {
+margin-right:5%;
+}
 
 </style>

@@ -46,6 +46,7 @@
                         :key="rec.id">
                         <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
                         <td>{{ rec.submitter }}</td>
+                        <td>{{ rec.collectionName }}</td>
                         <td>{{ rec.workflowName }}</td>
                         <td>{{ rec.workflowStep }}</td>
                         <td v-if="rec.outputPath == null">{{ rec.outputName }}</td>
@@ -96,6 +97,7 @@
              <table id="myTable" data-detail-view="true" class="table" ref="tbl">
                <thead>
                  <tr>
+                   <th data-sortable="true" data-field="collectionName">Collection</th>
                    <th data-sortable="true" data-field="type">Items</th>
                    <th data-sortable="true" data-field="itemId">Item ID</th>
                    <th data-sortable="true" data-field="item">Primaryfiles</th>
@@ -112,7 +114,8 @@
                       v-on:click="rowClicked(index)" 
                       v-bind:class="{ highlight: rowSelected(item.primaryFileId) }"
                       >
-                   <td>{{item.itemName}}</td>
+                    <td>{{item.collectionName}}</td>
+                    <td>{{item.itemName}}</td>
                     <td>{{item.externalId}}</td>
                    <td>{{item.primaryFileLabel}}</td>
                    <td>{{item.primaryFileOriginalname }}</td>
@@ -171,6 +174,7 @@ export default {
       columns:[
         {label: 'Date', field: 'dateCreated'},
         {label: 'Submitter', field: 'submitter'},
+        {label: 'Collection', field: 'collectionName'},
         {label: 'Workflow', field: 'workflowName'},
         {label: 'Step', field: 'workflowStep'},
         {label: 'Output', field: 'outputName'},
@@ -297,6 +301,7 @@ export default {
                   {
                     externalId: thisItem.externalId,
                     itemName: thisItem.itemName,
+                    collectionName:thisItem.collectionName,
                     primaryFileId: thisPrimaryFile.id,
                     primaryFileLabel: thisPrimaryFile.name,
                     primaryFileOriginalname: thisPrimaryFile.originalFilename
