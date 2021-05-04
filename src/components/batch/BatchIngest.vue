@@ -185,7 +185,9 @@ export default {
   .error-li {
     margin-left: 10px;                                      
   }
-
   
+input[type="file"]::file-selector-button {
+margin-right:5%;
+}
 
 </style>
