@@ -56,7 +56,7 @@
 
          <div class="card" v-for="(item, index) in searchedItems.rows" v-bind:key="index" >
             <div class="card-header" id="headingTwo">
-               <h5 class="mb-0">
+               <h5 class="mb-0 file-list-item">
                   <button class="btn btn-link item-name" :class="{ 'collapsed' : !(visible === index) }" :key="item.id" v-on:click="itemClicked(index)" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="visible[index] ? 'true' : 'false'"  aria-controls="collapseTwo">
                      <svg aria-hidden="true" focusable="false" class="svg-inline dwn-arrow" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                         <path class="hotlink" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path>
@@ -64,7 +64,7 @@
                      <span class="sr-only">Toggle hidden content</span>
                      {{item.itemName}} 
                   </button>
-                   <button class="btn btn-link item-id"> {{item.externalId}}</button>
+                   <button class="btn file-name bg-transparent"> {{item.externalId}}</button>
                   <!-- -->
                   <button class="btn btn-link float-right" v-on:click="addAllFiles(index)" v-bind:disabled=hasValues(index) :key="updateSelectedFiles">
                      <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
@@ -259,7 +259,7 @@ export default {
      white-space: normal !important;
      text-align: left !important;
   }
-  .item-id{
-    margin-left: 30%;
+  .bg-transparent{
+     background: transparent;
   }
 </style>
