@@ -64,7 +64,7 @@
                      <span class="sr-only">Toggle hidden content</span>
                      {{item.itemName}} 
                   </button>
-                   <button class="btn file-name bg-transparent"> {{item.externalId}}</button>
+                   <button class="btn bg-transparent"> {{item.externalId}}</button>
                   <!-- -->
                   <button class="btn btn-link float-right" v-on:click="addAllFiles(index)" v-bind:disabled=hasValues(index) :key="updateSelectedFiles">
                      <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
