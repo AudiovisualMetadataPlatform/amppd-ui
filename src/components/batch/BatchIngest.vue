@@ -1,5 +1,6 @@
 <template> 
   <div class="batch-ingest">
+  <loader :show="inProgress"/>
   <div class="container col-12">   
       <div class="row expand-h">        
       <Sidebar/>    
@@ -68,15 +69,16 @@
 import Sidebar from '@/components/navigation/Sidebar.vue';
 import Logout from '@/components/shared/Logout.vue'
 import Modal from '@/components/shared/Modal.vue'
+import Loader from '@/components/shared/Loader.vue';
 import { upload,downloadFile} from '@/service/batch-ingest-service';
-
 
 export default {
   name: 'Workflow',
   components:{
     Sidebar,
     Logout,
-    Modal
+    Modal,
+    Loader
   },
   data(){
     return {
@@ -119,7 +121,7 @@ export default {
         }
 
         if(this.errors.length>0) return;
-        self.inProgress = true;
+        this.inProgress = true;
         upload(this.formData)
           .then(x => {
             this.validationResponse = x;
