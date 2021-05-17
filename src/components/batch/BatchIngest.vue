@@ -12,13 +12,13 @@
                 <div class="row">
                   <h1 class="col-lg-12">
                     Batch Ingest
-                    <button class="btn btn-outline-primary btn-lg marg-bot-3 float-right">Batch manifest template</button>
+                    <button class="btn btn-outline-primary btn-lg marg-bot-3 float-right" @click="batchIngestTemplate()">Batch Ingest template</button>
                   </h1>
                   <p class="text-muted col-lg-12">
                     Add items to Unit: {{unitName}}
                   </p>
                   <div class="col-lg-9">
-                    To add items as a batch, please use the <a href="#">AMP Batch Item template</a>. Once items have been prepared using the template, click upload below.
+                    To add items as a batch, please use the <a href="#" @click="batchIngestTemplate()" >AMP Batch Ingest template</a>. Once items have been prepared using the template, click upload below.
                   </div>
                   <div class="col-lg-3">
                   
@@ -68,7 +68,7 @@
 import Sidebar from '@/components/navigation/Sidebar.vue';
 import Logout from '@/components/shared/Logout.vue'
 import Modal from '@/components/shared/Modal.vue'
-import { upload } from '@/service/batch-ingest-service';
+import { upload,downloadFile} from '@/service/batch-ingest-service';
 
 
 export default {
@@ -149,7 +149,21 @@ export default {
         this.formData.append('file', fileList[x], fileList[x].name);
       }
       this.formData.append('unitName', this.unitName)
+    },
+    async batchIngestTemplate(){
+      var fileName="AmpBatchIngestTemplate.csv";
+      await downloadFile(fileName).then(x => {
+        var uriContent = encodeURIComponent(x);
+        var link = document.createElement('a');
+        link.download=fileName;
+        link.href = 'data:text/csv,' + uriContent;
+        link.click();
+      }).catch(err =>{
+        console.log(err.response);
+      });
+
     }
+
 
   },
   mounted(){
