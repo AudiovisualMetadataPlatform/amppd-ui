@@ -7,7 +7,7 @@ function upload(formData) {
     return baseService.post_auth(url, formData).then(x => x.data);
 }
 function downloadFile(fileName){
-    const url = `/serveFile/`+fileName;
+    const url = `/`+fileName;
     return baseService.get_auth(url).then(x => x.data); 
 }
 
