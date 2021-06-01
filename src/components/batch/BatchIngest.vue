@@ -13,13 +13,13 @@
                 <div class="row">
                   <h1 class="col-lg-12">
                     Batch Ingest
-                    <button class="btn btn-outline-primary btn-lg marg-bot-3 float-right" @click="batchIngestTemplate()">Batch Ingest template</button>
+                    <button class="btn btn-outline-primary btn-lg marg-bot-3 float-right" @click="batchIngestTemplate()">Batch Manifest Template</button>
                   </h1>
                   <p class="text-muted col-lg-12">
                     Add items to Unit: {{unitName}}
                   </p>
                   <div class="col-lg-9">
-                    To add items as a batch, please use the <a href="#" @click="batchIngestTemplate()" >AMP Batch Ingest template</a>. Once items have been prepared using the template, click upload below.
+                    To add items as a batch, please use the <a href="#" @click="batchIngestTemplate()" >AMP Batch Manifest Template</a>. Once items have been prepared using the template, click upload below.
                   </div>
                   <div class="col-lg-3">
                   
