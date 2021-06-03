@@ -54,7 +54,7 @@ export default class WorkflowService extends BaseService{
         return tempName;
     }
     getWorkflows(){
-        return super.get_auth('/workflows');
+        return super.get_auth('/workflows?showPublished=true');
     }
     async getWorkflowDetails(id){
         var tempParams = [];
