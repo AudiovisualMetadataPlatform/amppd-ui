@@ -64,7 +64,7 @@
                      <span class="sr-only">Toggle hidden content</span>
                      {{item.itemName}} 
                   </button>
-                   <button class="btn bg-transparent"> {{item.externalId}}</button>
+                   <button class="btn bg-transparent bx-shadow"> {{item.externalId}}</button>
                   <!-- -->
                   <button class="btn btn-link float-right" v-on:click="addAllFiles(index)" v-bind:disabled=hasValues(index) :key="updateSelectedFiles">
                      <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
@@ -92,7 +92,7 @@
                            </svg>
                            {{primaryfile.name}}
                         </button>
-                         <button class="btn file-name">{{primaryfile.originalFilename}}</button>
+                         <button class="btn file-name bx-shadow">{{primaryfile.originalFilename}}</button>
                         <button class="btn btn-link  add-remove float-right file-list-item-add" v-on:click="addFile(index,file_index)" v-bind:disabled=hasValue(item.primaryFiles[file_index].id)>
                            <svg class="icon-plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 311.5 311.5" style="enable-background:new 0 0 311.5 311.5;" xml:space="preserve">
                               <path class="circle-stroke" d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
@@ -261,5 +261,8 @@ export default {
   }
   .bg-transparent{
      background: transparent;
+  }
+  .bx-shadow{
+     box-shadow: none !important;
   }
 </style>
