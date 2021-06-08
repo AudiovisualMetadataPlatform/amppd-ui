@@ -7,7 +7,7 @@
        Enter the editor password to view the page:
        <div class="form-input">
         <label class="form-errors" v-if="invalidInput">Invalid password</label>
-        <input v-model="userToken" type="text"/>
+        <input v-model="userToken" type="text" v-on:keyup.enter="submitToken"/>
        </div>
     </div>
     <div slot="footer">
