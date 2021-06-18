@@ -779,6 +779,9 @@ svg.icon-user {
   text-overflow: ellipsis;
   padding-right: 5px !important;
 }
+.no-bx-shadow{
+  box-shadow: none !important;
+}
 @media screen and (max-width: 580px) {
   .file-list-item {
     flex-direction: column;
