@@ -13,12 +13,12 @@
                 <h1 class="card-title">AMP Deliverables</h1>
                 <button v-bind:disabled="!canDeliverFinalResults" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg">Deliver Final Results</button>
                   <div>
-                    <h2 class="sub-title">Collection: <span>{{item.collectionName}}</span></h2>
-                    <h2 class="sub-title">Item: <span>{{item.itemName}}</span></h2>
-                    <h2 class="sub-title">Extneral Source: <span>{{item.externalSource}}</span></h2>
-                    <h2 class="sub-title">Extneral ID: <span>{{item.externalId}}</span></h2>
-                    <h2 class="sub-title">Primaryfile: <span>{{item.primaryfileName}}</span></h2>
-                    <h2 class="sub-title">Filename: <span>{{item.primaryfileOriginalname}}</span></h2>
+                    <h2 class="sub-title">Collection: <span>{{pfile.collectionName}}</span></h2>
+                    <h2 class="sub-title">Item: <span>{{pfile.itemName}}</span></h2>
+                    <h2 class="sub-title">Extneral Source: <span>{{pfile.externalSource}}</span></h2>
+                    <h2 class="sub-title">Extneral ID: <span>{{pfile.externalId}}</span></h2>
+                    <h2 class="sub-title">Primaryfile: <span>{{pfile.primaryfileName}}</span></h2>
+                    <h2 class="sub-title">Filename: <span>{{pfile.primaryfileOriginalname}}</span></h2>
                   </div>
                   <div class="table-responsive">
                     <button v-on:click="searchModal" id="btn-search-modal" class=" btn btn-primary marg-bot-4" data-toggle="modal" data-target=".bd-example-modal-lg-2">Search</button>                         
@@ -107,21 +107,21 @@
                  </tr>
                </thead>
                <tbody>
-                 <tr v-for="(item, index) in searchedItems" 
+                 <tr v-for="(pfile, index) in searchedPfiles" 
                       v-bind:key="index" 
                       :ref="'row'+index"
                       tabindex="0"
                       v-on:keyup.down="onArrowDown"
                       v-on:keyup.up="onArrowUp"
                       v-on:click="rowClicked(index)" 
-                      v-bind:class="{ highlight: rowSelected(item.primaryfileId) }"
+                      v-bind:class="{ highlight: rowSelected(pfile.primaryfileId) }"
                       >
-                    <td>{{item.collectionName}}</td>
-                    <td>{{item.itemName}}</td>
-                    <td>{{item.externalSource}}</td>
-                    <td>{{item.externalId}}</td>
-                    <td>{{item.primaryfileName}}</td>
-                    <td>{{item.primaryfileOriginalname }}</td>
+                    <td>{{pfile.collectionName}}</td>
+                    <td>{{pfile.itemName}}</td>
+                    <td>{{pfile.externalSource}}</td>
+                    <td>{{pfile.externalId}}</td>
+                    <td>{{pfile.primaryfileName}}</td>
+                    <td>{{pfile.primaryfileOriginalname }}</td>
                  </tr>
                </tbody>
              </table>
@@ -163,13 +163,13 @@ export default {
     return {
       workflowService: new WorkflowService(),
       workflowResultService: new WorkflowResultService(),
-      item: {collectionName: "None", itemName: "None", externalSource:"None", externalId:"None", primaryfileName: "None", primaryfileOriginalname:"None"},
+      pfile: {collectionName: "None", itemName: "None", externalSource:"None", externalId:"None", primaryfileName: "None", primaryfileOriginalname:"None"},
       showModal: false,
       searchWord: "",
-      searchedItems: [],
-      selectedItems: [],
+      searchedPfiles: [],
+      selectedPfileIds: [],
       selectedIndex: -1,
-      finalItems: [],
+      finalResults: [],
       rows: [],
       totalResults: 0,
       loading: false,
@@ -191,6 +191,7 @@ export default {
             resultsPerPage: 10,
             filterByDates:[],
             filterBySubmitters:[],
+            filterByCollections:[],
             filterByItems:[],
             filterByFiles:[],
             filterByWorkflows:[],
@@ -203,7 +204,7 @@ export default {
   },
   methods:{
     reset(){
-      this.item  = {collectionName: "None", itemName: "None", externalSource:"None", externalId:"None", primaryfileName: "None", primaryfileOriginalname:"None"};
+      this.pfile  = {collectionName: "None", itemName: "None", externalSource:"None", externalId:"None", primaryfileName: "None", primaryfileOriginalname:"None"};
     },
     async paginate(page_number){
       this.searchQuery.pageNum = page_number;
@@ -222,7 +223,7 @@ export default {
     onArrowDown(e) {
       e.preventDefault();
       let self = this;
-      if(self.selectedIndex < self.searchedItems.length -1){
+      if(self.selectedIndex < self.searchedPfiles.length -1){
         self.selectedIndex++;
         self.setPrimaryfileId(self.selectedIndex);
         this.$nextTick(() => this.scroll())
@@ -243,7 +244,7 @@ export default {
         thisElement[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); 
     },
     rowSelected(primaryfileId){
-      return this.selectedItems.includes(primaryfileId);
+      return this.selectedPfileIds.includes(primaryfileId);
     },
     rowClicked(selIndex){
       let self = this;
@@ -252,18 +253,18 @@ export default {
     },
     setPrimaryfileId(index){
       let self = this;
-      self.selectedItems = [];
-      var primaryfile = self.searchedItems[index];
-      self.selectedItems.push(primaryfile.primaryfileId);
+      self.selectedPfileIds = [];
+      var primaryfile = self.searchedPfiles[index];
+      self.selectedPfileIds.push(primaryfile.primaryfileId);
     },
     close(){
       this.showModal = false;
-      this.selectedItems = [];
+      this.selectedPfileIds = [];
     },
     async done(){
       this.showModal = false;
-      if (this.selectedItems.length > 0){
-        this.setItems();
+      if (this.selectedPfileIds.length > 0){
+        this.setPfiles();
         this.searchQuery.pageNum = 1;
         await this.getResults();
       }
@@ -289,8 +290,8 @@ export default {
     async searchFiles() {
         let self = this;
         self.selectedIndex = -1;
-        self.selectedItems = [];
-        self.searchedItems = [];
+        self.selectedPfileIds = [];
+        self.searchedPfiles = [];
         self.loading = true;
         if(self.searchWord.length >0){
           var response = await self.workflowService.searchFiles(this.searchWord, '000');
@@ -299,7 +300,7 @@ export default {
               var thisItem = response.rows[i];
               for(var p=0; p < thisItem.primaryfiles.length; p++){
                 var thisPrimaryFile = thisItem.primaryfiles[p];
-                self.searchedItems.push(
+                self.searchedPfiles.push(
                   {
                     collectionName:thisItem.collectionName,
                     itemName: thisItem.itemName,
@@ -315,28 +316,30 @@ export default {
           }
         }
         else {
-          self.searchedItems = []
+          self.searchedPfiles = []
         }
         self.loading = false;
     },
-    setItems(){
+    setPfiles(){
       let self = this;
+      this.searchQuery.filterByCollections = [];
       this.searchQuery.filterByItems = [];
       this.searchQuery.filterByFiles = [];
-      for(var s = 0; s < this.selectedItems.length; s++){
-        for(var i = 0; i < this.searchedItems.length; i++){
-          var thisItem = this.searchedItems[i];
-          if(thisItem.primaryfileId === this.selectedItems[s]){
-            this.searchQuery.filterByItems.push(thisItem.itemName);
-            this.searchQuery.filterByFiles.push(thisItem.primaryfileName);
-            this.item = thisItem;
+      for(var s = 0; s < this.selectedPfileIds.length; s++){
+        for(var i = 0; i < this.searchedPfiles.length; i++){
+          var thisPfile = this.searchedPfiles[i];
+          if(thisPfile.primaryfileId === this.selectedPfileIds[s]){
+            this.searchQuery.filterByCollections.push(thisPfile.collectionName);
+            this.searchQuery.filterByItems.push(thisPfile.itemName);
+            this.searchQuery.filterByFiles.push(thisPfile.primaryfileName);
+            this.pfile = thisPfile;
           }
         }
       }
     },
     async getResults(){
       let self = this;
-      if(self.item.itemName == "None"){
+      if(self.pfile.itemName == "None"){
         return;
       }
       self.loading = true;
