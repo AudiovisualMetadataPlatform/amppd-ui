@@ -13,6 +13,7 @@ import BatchIngest from "./components/batch/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
 import NerEditor from "./components/hmgm/NerEditor.vue";
 import {accountService} from './service/account-service.js';
+import  Collections from './components/collections/Collections.vue'
 
 
 Vue.use(Router);
@@ -90,6 +91,12 @@ var router = new Router({
       path: "/hmgm/ner-editor", 
       name: 'ner-editor', 
       component: NerEditor, 
+    }  ,
+    {
+      path: "/collections", 
+      name: 'collections', 
+      component: Collections, 
+      meta: { authorize: [] } 
     }  
   ]
 });

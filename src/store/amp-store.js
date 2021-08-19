@@ -80,7 +80,16 @@ const state = {
           },
           rows:[]
     },
-    typeAheadResult:''
+    typeAheadResult:'',
+    Collections:{
+      page:{number: 1,
+      size: 20,
+      totalElements: 0,
+      },
+      _embedded:{collections:[]},
+      loading:false
+    },
+     
 };
 
 /*======================================================
