@@ -96,6 +96,7 @@ var router = new Router({
       path: "/collections", 
       name: 'collections', 
       component: Collections, 
+      meta: { authorize: [] } 
     }  
   ]
 });

@@ -101,7 +101,6 @@ export default {
     async getCollections(a, b) {
       let self = this;
       self.Collections.loading=true;
-      console.log("rahul", this.CollectionService);
       this.collectionService.getCollectionPage(a, b).then((response) => {
         self.Collections = response.data;
         self.Collections.page.number = self.Collections.page.number + 1;
