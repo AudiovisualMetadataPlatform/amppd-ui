@@ -43,7 +43,10 @@
                           </p>
                         </div>
                         <div class="col-md-2 text-right">
-                          <button class="btn btn-primary btn marg-t-5">
+                          <button
+                            class="btn btn-primary btn marg-t-5"
+                            @click="onClickHandler(rec.id)"
+                          >
                             View
                           </button>
                         </div>
@@ -61,9 +64,9 @@
                 </div>
               </div>
             </div>
-            <div class="pad-all-3 my-collection"  v-else>
-              <loader v-if="Collections.loading" :show="Collections.loading"/>
-           <div v-else colspan="8" class="no-results">No results</div>
+            <div class="pad-all-3 my-collection" v-else>
+              <loader v-if="Collections.loading" :show="Collections.loading" />
+              <div v-else colspan="8" class="no-results">No results</div>
             </div>
           </main>
         </div>
@@ -78,7 +81,7 @@ import Sidebar from "@/components/navigation/Sidebar.vue";
 import Logout from "@/components/shared/Logout.vue";
 import CollectionService from "../../service/collection-service";
 import Pagination from "../shared/Pagination";
-import Loader from '@/components/shared/Loader.vue';
+import Loader from "@/components/shared/Loader.vue";
 
 export default {
   name: "Collections",
@@ -86,7 +89,7 @@ export default {
     Sidebar,
     Logout,
     Pagination,
-    Loader
+    Loader,
   },
   props: {},
   data() {
@@ -96,15 +99,22 @@ export default {
   },
   computed: {
     Collections: sync("Collections"),
+    selectedCollection:sync("selectedCollection"),
   },
   methods: {
+    onClickHandler(id) {
+       let self = this;
+      self.selectedCollection=id;
+      self.$router.push("/collections/collection-details");
+    },
+
     async getCollections(a, b) {
       let self = this;
-      self.Collections.loading=true;
+      self.Collections.loading = true;
       this.collectionService.getCollectionPage(a, b).then((response) => {
         self.Collections = response.data;
         self.Collections.page.number = self.Collections.page.number + 1;
-        self.Collections.loading=false;
+        self.Collections.loading = false;
       });
     },
     paginate(page_number) {
@@ -123,6 +133,5 @@ export default {
 </script>
 
 <style scoped>
-  @import '/amppd-ui/src/styles/style.css';  
- 
+@import "/amppd-ui/src/styles/style.css";
 </style>
