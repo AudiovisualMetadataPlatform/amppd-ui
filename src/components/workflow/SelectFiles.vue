@@ -1,6 +1,6 @@
 <template>
 <div class="col-lg-7">
-   <h1>Workflow Submissions</h1>
+   <h1>Workflow Submission</h1>
    <h2>Select files</h2>
    <form class="marg-t-3 filter-form" v-on:submit.prevent v-on:keyup.enter="searchFiles()">
       <div class="container-fluid">
