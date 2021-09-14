@@ -12,116 +12,118 @@ import ApproveUser from "./components/account/ApproveUser.vue";
 import BatchIngest from "./components/batch/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
 import NerEditor from "./components/hmgm/NerEditor.vue";
-import {accountService} from './service/account-service.js';
-import  Collections from './components/collections/Collections.vue'
-
+import { accountService } from "./service/account-service.js";
+import Collections from "./components/collections/Collections.vue";
+import CollectionDetails from "./components/collections/CollectionDetails.vue";
 
 Vue.use(Router);
 
 var router = new Router({
   routes: [
     {
-      // TODO we may want to have a separate landing/welcome page with some greeting and a brief introduction to AMP 
+      // TODO we may want to have a separate landing/welcome page with some greeting and a brief introduction to AMP
       path: "/",
       name: "home",
       component: WorkflowDashboard,
-      meta: { authorize: [] } 
+      meta: { authorize: [] },
     },
     {
       path: "/account/register",
       name: "register",
-      component: Register
+      component: Register,
     },
     {
       path: "/account/login",
       name: "login",
-      component: Login
+      component: Login,
     },
     {
       path: "/account/forgot-password",
       name: "forgot-password",
-      component: ForgotPassword
-    },  
+      component: ForgotPassword,
+    },
     {
-      path: "/account/reset-password/:token", 
-      name: 'reset-password', 
-      component: ResetPassword, 
-    }, 
+      path: "/account/reset-password/:token",
+      name: "reset-password",
+      component: ResetPassword,
+    },
     {
-      path: "/account/activate/:token", 
-      name: 'activate-account', 
-      component: Login, 
-    },  
+      path: "/account/activate/:token",
+      name: "activate-account",
+      component: Login,
+    },
     {
-      path: "/account/approve/:id", 
-      name: 'approve-user', 
+      path: "/account/approve/:id",
+      name: "approve-user",
       component: ApproveUser,
-      meta: { authorize: [] }  
+      meta: { authorize: [] },
     },
     {
       path: "/workflow/submit",
       name: "workflow",
       component: Workflow,
-      meta: { authorize: [] } 
+      meta: { authorize: [] },
     },
     {
       path: "/dashboard",
       name: "dashboard",
       component: WorkflowDashboard,
-      meta: { authorize: [] } 
+      meta: { authorize: [] },
     },
     {
-      path: "/batch/ingest", 
-      name: 'batch-ingest', 
-      component: BatchIngest, 
-      meta: { authorize: [] } 
-    },  
+      path: "/batch/ingest",
+      name: "batch-ingest",
+      component: BatchIngest,
+      meta: { authorize: [] },
+    },
     {
-      path: "/deliverables", 
-      name: 'deliverables', 
-      component: Deliverables, 
-      meta: { authorize: [] } 
-    },  
+      path: "/deliverables",
+      name: "deliverables",
+      component: Deliverables,
+      meta: { authorize: [] },
+    },
     {
-      path: "/hmgm/transcript-editor", 
-      name: 'transcript-editor', 
-      component: TranscriptEditor, 
-    } ,
+      path: "/hmgm/transcript-editor",
+      name: "transcript-editor",
+      component: TranscriptEditor,
+    },
     {
-      path: "/hmgm/ner-editor", 
-      name: 'ner-editor', 
-      component: NerEditor, 
-    }  ,
+      path: "/hmgm/ner-editor",
+      name: "ner-editor",
+      component: NerEditor,
+    },
     {
-      path: "/collections", 
-      name: 'collections', 
-      component: Collections, 
-      meta: { authorize: [] } 
-    }  
-  ]
+      path: "/collections",
+      name: "collections",
+      component: Collections,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collections/collection-details",
+      name: "collection-details",
+      component: CollectionDetails,
+      meta: { authorize: [] },
+    },
+  ],
 });
-
 export default router;
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const { authorize } = to.meta;
   const currentUser = accountService.currentUserValue;
 
-  if (process.env.VUE_APP_DISABLE_AUTH == 'true' || !authorize) {
+  if (process.env.VUE_APP_DISABLE_AUTH == "true" || !authorize) {
     return next();
-  }
-  else if (!currentUser) {
+  } else if (!currentUser) {
     console.log("not current user");
     // not logged in so redirect to login page with the return url
-    return next({ path: '/account/login', query: { returnUrl: to.path } });
-  }
-  else {
+    return next({ path: "/account/login", query: { returnUrl: to.path } });
+  } else {
     var success = await accountService.validate();
     if (!success) {
-      return next({ path: '/account/login', query: { returnUrl: to.path } });
-    }
-    else {
+      return next({ path: "/account/login", query: { returnUrl: to.path } });
+    } else {
       return next();
-    }    
+    }
   }
-})
+});

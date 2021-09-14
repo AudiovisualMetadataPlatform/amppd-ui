@@ -89,6 +89,10 @@ const state = {
       _embedded:{collections:[]},
       loading:false
     },
+    selectedCollection:null,
+    collectionDetails:{
+      items:{}
+    },
      
 };
 
