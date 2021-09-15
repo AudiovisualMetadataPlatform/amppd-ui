@@ -6,7 +6,7 @@
     <h1>Welcome</h1>      
         <div class="form-content">
           <div class="row"><router-link :to="{ name: 'batch-ingest'}">Batch Ingest</router-link></div>
-          <div class="row"><router-link :to="{ name: 'workflow', query: { email: name }}">Workflow Selection</router-link></div>
+          <div class="row"><router-link :to="{ name: 'workflow', query: { email: name }}">Workflow Submission</router-link></div>
         </div>
     </div>
 </div>
