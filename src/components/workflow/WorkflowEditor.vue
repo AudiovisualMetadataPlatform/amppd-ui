@@ -7,10 +7,10 @@
         <div class="header-row">
           <h2>Workflow Editor</h2>
           <div class="action-buttons">
-            <input type="button" class="primary-button" v-on:click="onComplete" value="Complete"/>
+            <input type="button" class="primary-button" v-on:click="onDone " value="Done"/>
           </div>
         </div>
-        <iframe v-if="!requireAuth && iframeUrl" class="" :src="iframeUrl" id="timeliworkflow" width="1500" height="800" style="border:none;"></iframe>
+        <iframe v-if="iframeUrl" class="" :src="iframeUrl" id="workflow-editor" width="1500" height="800" style="border:none;"></iframe>
       </div>
     </div>
     <!-- <modal v-if="showValidation" @close="modalDismiss">
@@ -27,7 +27,40 @@ import AmpHeader from '@/components/shared/Header.vue'
 import Logout from '@/components/shared/Logout.vue'
 import Modal from '@/components/shared/Modal.vue'
 
-
+export default {
+  name: 'WorkflowEditor',
+  components:{
+    AmpHeader,
+    Logout,
+    Modal,
+  },
+  data(){
+    return {
+      id: "",
+      iframeUrl: "",
+      responseHeader: "",
+      responseBody: "",
+      modalDismiss: null,
+      showValidation: false,
+    }
+  },
+  computed:{
+  },
+  methods:{
+    getIframeUrl(id) {
+      return process.env.VUE_APP_GALAXY_WORKFLOW_URL + id
+    },
+    async onDone() {
+      // validate workflow saved in Galaxy for AMP workflow submission
+      console.log("Validating workflow after saved to Galaxy: " + this.id);
+    },
+  },
+  mounted(){
+    this.id = this.$route.query.id
+    this.iframeUrl = this.getIframeUrl(id)
+    console.log("workflowId = " + this.id + ", iframeUrl = " + this.iframeUrl);
+  },
+}
 </script>
 
 <style scoped>
