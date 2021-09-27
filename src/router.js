@@ -15,7 +15,9 @@ import NerEditor from "./components/hmgm/NerEditor.vue";
 import { accountService } from "./service/account-service.js";
 import Collections from "./components/collections/Collections.vue";
 import CollectionDetails from "./components/collections/CollectionDetails.vue";
-
+import CreateCollection from "./components/collections/CreateCollection.vue";
+import AddItemToCollection from "./components/collections/AddItemToCollection.vue";
+import EditCollection from "./components/collections/EditCollection.vue"
 Vue.use(Router);
 
 var router = new Router({
@@ -104,8 +106,28 @@ var router = new Router({
       component: CollectionDetails,
       meta: { authorize: [] },
     },
+    {
+      path: "/collections/create-collection",
+      name: "create-collection",
+      component: CreateCollection,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collections/add-item-to-collection",
+      name: "add-item-to-collection",
+      component: AddItemToCollection,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collections/edit-collection",
+      name: "edit-collection",
+      component: EditCollection,
+      meta: { authorize: [] },
+    },
   ],
 });
+
+
 export default router;
 router.beforeEach(async (to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page

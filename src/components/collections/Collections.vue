@@ -11,7 +11,7 @@
                 <div class="card-body">
                   <h1 class="card-title">Create a new collection</h1>
                   <a
-                    href="create-new.html"
+                    href="/#/collections/create-collection"
                     class="btn btn-primary btn-lg marg-top-bot-4"
                     >Start</a
                   >

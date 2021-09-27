@@ -30,6 +30,12 @@ export const requestOptions = {
             body: JSON.stringify(body)
         };
     },
+    patchToken(editorInput) {
+        return {
+            method: 'PATCH',
+            ...tokenHeaders(editorInput)
+        };
+    },
     put(body) {
         return {
             method: 'PUT',

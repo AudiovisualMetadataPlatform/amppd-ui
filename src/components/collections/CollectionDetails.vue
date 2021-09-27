@@ -42,11 +42,15 @@
                           >
                             Delete
                           </button>
-                          <button
+                            <a
+                    href="/#/collections/edit-collection"
+                    class="btn btn-outline-primary btn-lg marg-bot-1"
+                    >Edit</a>
+                          <!-- <button
                             class="btn btn-outline-primary btn-lg marg-bot-1"
                           >
                             Edit
-                          </button>
+                          </button> -->
                           <button class="btn btn-primary btn-lg marg-bot-1">
                             View workflow results
                           </button>
@@ -108,19 +112,8 @@ export default {
           self.collectionDetails = response.data;
         }
       );
-      self.getCollectionItems();
     },
-    async getCollectionItems() {
-      let self = this;
-      this.CollectionDetailsService.getCollectionItems(
-        self.selectedCollection
-      ).then((response) => {
-        self.collectionDetails = {
-          ...self.collectionDetails,
-          items: response.data._embedded.items,
-        };
-      });
-    },
+
   },
   mounted() {
     let self = this;
