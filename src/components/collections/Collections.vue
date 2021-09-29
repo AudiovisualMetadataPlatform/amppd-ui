@@ -45,7 +45,7 @@
                         <div class="col-md-2 text-right">
                           <label class="switch" title="Active">
                               <span class="sr-only">Active</span>
-                                <input type="checkbox" v-model="rec.active"  v-on:click="activateCollection(rec.id, !rec.active)">
+                                <input type="checkbox" v-model="rec.active"  v-on:click="toggleCollectionActive(rec)">
                               <span class="slider round"></span>
                           </label>
                           <button
@@ -108,9 +108,9 @@ export default {
     selectedCollection:sync("selectedCollection"),
   },
   methods: {
-    activateCollection(id, active) {
-      this.collectionService.activateCollection(id, active)
-      // TODO enable/disable View button
+    toggleCollectionActive(collection) {
+      collection.active = !collection.active
+      this.collectionService.activateCollection(collection.id, collection.active)
     },
     onClickHandler(id) {
       let self = this;
