@@ -23,20 +23,19 @@ export const requestOptions = {
             ...tokenHeaders(editorInput)
         };
     },
-    patch(body) {
+    patch() {
         return {
             method: 'PATCH',
-            ...headers(),
-            body: JSON.stringify(body)
+            ...headers()
         };
     },
-    put(body) {
-        return {
-            method: 'PUT',
-            ...headers(),
-            body: JSON.stringify(body)
-        };
-    },
+    // put(body) {
+    //     return {
+    //         method: 'PUT',
+    //         ...headers(),
+    //         body: JSON.stringify(body)
+    //     };
+    // },
     delete() {
         return {
             method: 'DELETE',
