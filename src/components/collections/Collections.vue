@@ -107,12 +107,6 @@ export default {
     selectedCollection: sync("selectedCollection"),
   },
   methods: {
-    getActiveHint(active) {
-      if (active)
-        return "Deactivate Collection"
-      else
-        return "Activate Collection"
-    },
     toggleCollectionActive(collection) {
       collection.active = !collection.active
       this.collectionService.activateCollection(collection.id, collection.active)
