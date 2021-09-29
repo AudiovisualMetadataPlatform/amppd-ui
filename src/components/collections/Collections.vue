@@ -43,7 +43,13 @@
                           </p>
                         </div>
                         <div class="col-md-2 text-right">
+                          <label class="switch" title="Active">
+                              <span class="sr-only">Active</span>
+                                <input type="checkbox" v-model="rec.active"  v-on:click="activateCollection(rec.id, !rec.active)">
+                              <span class="slider round"></span>
+                          </label>
                           <button
+                            :disabled="!rec.active"
                             class="btn btn-primary btn marg-t-5"
                             @click="onClickHandler(rec.id)"
                           >
@@ -102,12 +108,15 @@ export default {
     selectedCollection:sync("selectedCollection"),
   },
   methods: {
+    activateCollection(id, active) {
+      this.collectionService.activateCollection(id, active)
+      // TODO enable/disable View button
+    },
     onClickHandler(id) {
-       let self = this;
+      let self = this;
       self.selectedCollection=id;
       self.$router.push("/collections/collection-details");
     },
-
     async getCollections(a, b) {
       let self = this;
       self.Collections.loading = true;
