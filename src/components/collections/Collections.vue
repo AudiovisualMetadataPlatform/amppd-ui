@@ -43,8 +43,9 @@
                           </p>
                         </div>
                         <div class="col-md-2 text-right">
-                          <label class="switch" title="Active">
-                              <span class="sr-only">Active</span>
+                          <label class="switch" title="getActiveHint(rec.active)">
+                              <!-- <span class="sr-only">Active</span> -->
+                                <!-- <input type="checkbox" v-b-tooltip.hover title="De/Activate" v-model="rec.active"  v-on:click="toggleCollectionActive(rec)"> -->
                                 <input type="checkbox" v-model="rec.active"  v-on:click="toggleCollectionActive(rec)">
                               <span class="slider round"></span>
                           </label>
@@ -108,6 +109,12 @@ export default {
     selectedCollection:sync("selectedCollection"),
   },
   methods: {
+    getActiveHint(active) {
+      if (active)
+        return "Deactivate Collection"
+    else
+      return "Activate Collection"
+    },
     toggleCollectionActive(collection) {
       collection.active = !collection.active
       this.collectionService.activateCollection(collection.id, collection.active)
