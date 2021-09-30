@@ -107,7 +107,7 @@ export default {
     selectedCollection: sync("selectedCollection"),
   },
   methods: {
-    toggleCollectionActive(collection) {
+    async toggleCollectionActive(collection) {
       collection.active = !collection.active
       this.collectionService.activateCollection(collection.id, collection.active)
     },
