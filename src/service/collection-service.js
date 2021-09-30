@@ -9,11 +9,11 @@ export default class CollectionService extends BaseService{
         else return super.get_auth('/collections');
     }
     async activateCollection(id, active){        
-        // return await super.post_auth(`/collections/${id}/activate?active=${active}`).then(result => result.data)
         return await super.patch_auth(`/collections/${id}`, 
            {
                 active: active
            })
            .then(result => result.data)
+        // return await super.post_auth(`/collections/${id}/activate?active=${active}`).then(result => result.data)
     }
 }
