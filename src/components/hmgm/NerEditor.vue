@@ -55,6 +55,7 @@ import Logout from '@/components/shared/Logout.vue'
 import Modal from '@/components/shared/Modal.vue'
 import { completeNer, resetNer } from '@/service/hmgm-service'; 
 import TokenValidator from '@/components/hmgm/TokenValidator'
+import { env } from "../../helpers/env";
 // import Timeliner from '@/components/hmgm/Timeliner.js';
 
 export default {

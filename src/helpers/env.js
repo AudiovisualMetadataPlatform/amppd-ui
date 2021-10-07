@@ -1,6 +1,11 @@
 export const env = {
   getEnv(name) {
-	  return this.$config[name] || process.env[name]	
+	  return process.env[name]	
+//	  return this.$config[name] || process.env[name]	
+  },
+
+  getDisableAuth() {
+	return this.getEnv('VUE_APP_DISABLE_AUTH')
   },
 
   getAmpUrl() {

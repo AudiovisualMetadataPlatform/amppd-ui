@@ -15,6 +15,7 @@ import NerEditor from "./components/hmgm/NerEditor.vue";
 import { accountService } from "./service/account-service.js";
 import Collections from "./components/collections/Collections.vue";
 import CollectionDetails from "./components/collections/CollectionDetails.vue";
+import { env } from "./helpers/env.js";
 
 Vue.use(Router);
 
@@ -106,13 +107,14 @@ var router = new Router({
     },
   ],
 });
+
 export default router;
 router.beforeEach(async (to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const { authorize } = to.meta;
   const currentUser = accountService.currentUserValue;
 
-  if (process.env.VUE_APP_DISABLE_AUTH == "true" || !authorize) {
+  if (env.getDisableAuth() == "true" || !authorize) {
     return next();
   } else if (!currentUser) {
     console.log("not current user");

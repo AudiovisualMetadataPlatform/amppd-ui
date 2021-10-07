@@ -71,7 +71,7 @@ import Logout from '@/components/shared/Logout.vue'
 import Modal from '@/components/shared/Modal.vue'
 import Loader from '@/components/shared/Loader.vue';
 import { upload,downloadFile} from '@/service/batch-ingest-service';
-import { env } from "../helpers/env";
+import { env } from "../../helpers/env";
 
 export default {
   name: 'Workflow',
