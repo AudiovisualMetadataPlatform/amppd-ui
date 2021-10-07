@@ -2,13 +2,15 @@ import { requestOptions } from "../helpers/request-options";
 import axios from 'axios';
 import {handleResponse} from "../helpers/handle-response";
 import { accountService } from '@/service/account-service';
+import { env } from "../helpers/env";
+
 const axiosInstance = axios.create({
   });
   
   
 export default class BaseService{
     constructor(){
-        this.API_URL = process.env.VUE_APP_AMP_URL;
+        this.API_URL = env.getAmpUrl();
         this.axiosInstance = axios.create({});
         this.axiosInstance.interceptors.response.use(
             (response) => {

@@ -185,7 +185,7 @@ export default {
       console.log("Reload Timeliner, iframe src = " + document.getElementById('timeliner').src);
     },
     getFileUrl(resourcePath) {
-      const BASE_URL = process.env.VUE_APP_AMP_URL;
+      const BASE_URL = env.getAmpUrl();
       const url = `${BASE_URL}/hmgm/ner-editor?resourcePath=${resourcePath}`;
       return url; 
     },

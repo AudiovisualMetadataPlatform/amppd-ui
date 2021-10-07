@@ -27,12 +27,17 @@ Vue.use(VueFilterDateFormat, {
   ]
 });
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
-
+fetch("./config.json")
+  .then((response) => response.json())
+  .then((config) => {
+    Vue.prototype.$config = config
+    new Vue({
+      router,
+      store,
+      render: h => h(App)
+    }).$mount('#app')
+  })
+  .catch(error => console.error(error));
 process.title = "amppd-ui";
 
 
