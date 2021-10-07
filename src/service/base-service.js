@@ -28,17 +28,22 @@ export default class BaseService{
         return Promise.reject(error);
     }
 
-    get_auth(url){
-        return this.axiosInstance.get(this.API_URL + url, requestOptions.get());
-    }
-
     get(url){
         return this.axiosInstance.get(this.API_URL + url);
+    }
+
+    get_auth(url){
+        return this.axiosInstance.get(this.API_URL + url, requestOptions.get());
     }
 
     get_token_auth(url, input_dataset){
         return this.axiosInstance.get(this.API_URL + url, requestOptions.getToken(input_dataset));
     }   
+    
+    post(url, body){
+        console.log("sending post via base service");
+        return this.axiosInstance.post(this.API_URL + url, body);
+    }
 
     post_auth(url, body){
         console.log("sending post via base service");
@@ -49,9 +54,10 @@ export default class BaseService{
         console.log("sending post via base service");
         return this.axiosInstance.post(this.API_URL + url, body, requestOptions.postToken(input_dataset));
     }
-    
-    post(url, body){
-        console.log("sending post via base service");
-        return this.axiosInstance.post(this.API_URL + url, body);
+
+    patch_auth(url, body){
+        console.log("sending patch via base service");
+        return this.axiosInstance.patch(this.API_URL + url, body, requestOptions.patch());
     }
+
 }

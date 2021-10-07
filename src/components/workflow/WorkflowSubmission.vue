@@ -29,7 +29,7 @@
    import Logout from '@/components/shared/Logout.vue'
    
    export default {
-     name: 'Workflow',
+     name: 'WorkflowSubmission',
      components:{
        SelectFiles,
        SelectWorkflow,
