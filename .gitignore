@@ -1,11 +1,16 @@
-.DS_Store
+# nodeJS files
 node_modules
-/public/symlink
 /dist
 
+# external config/data
+/public/symlink
+/public/config.json
+
 # local env files
-.env.local
 .env.*.local
+.env.local
+#.env.test
+#.env.staging
 
 # Log files
 npm-debug.log*
@@ -22,3 +27,4 @@ yarn-error.log*
 *.sw?
 /.project
 /.settings
+.DS_Store
