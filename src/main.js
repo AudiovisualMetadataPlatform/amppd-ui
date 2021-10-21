@@ -4,6 +4,7 @@ import router from './router'
 import store from './store/amp-store'
 import { VuePlugin } from 'vuera'
 import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
+import Env from 'helpers/env.js';
 
 
 Vue.use(VuePlugin)
@@ -30,7 +31,9 @@ Vue.use(VueFilterDateFormat, {
 fetch("./config.json")
   .then((response) => response.json())
   .then((config) => {
+    console.log("config.VUE_APP_AMP_URL = " + config.VUE_APP_AMP_URL)
     Vue.prototype.$config = config
+    Env.config = config
     new Vue({
       router,
       store,
