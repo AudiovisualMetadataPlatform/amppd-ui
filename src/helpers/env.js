@@ -22,12 +22,12 @@ class Env {
       .then((response) => response.json())
       .then((config) => {
         this.config = config
-        console.log("Fetched config: name = " + name + ", config = " + config[name])	
+        console.log("Env.getEnv: fetched config from file: name = " + name + ", config = " + config[name])	
         return config[name] || process.env[name]
       })
     }
     else {
-      console.log("Already populated config: name = " + name + ", config = " + this.config[name])
+      console.log("Env.getEnv: already populated config: name = " + name + ", config = " + this.config[name])
       return this.config[name] || process.env[name]
     }
 
