@@ -31,7 +31,6 @@ Vue.use(VueFilterDateFormat, {
 fetch("./config.json")
   .then((response) => response.json())
   .then((config) => {
-    console.log("config.VUE_APP_AMP_URL = " + config.VUE_APP_AMP_URL)
     Vue.prototype.$config = config
     new Vue({
       router,

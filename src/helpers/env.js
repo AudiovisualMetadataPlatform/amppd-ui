@@ -22,12 +22,12 @@ class Env {
       .then((response) => response.json())
       .then((config) => {
         this.config = config
-        console.log("Fetched config: VUE_APP_AMP_URL = " + this.config.VUE_APP_AMP_URL)
-        console.log("name = " + name, "config = " + config[name])	
+        console.log("Fetched config: name = " + name + ", config = " + config[name])	
         return config[name] || process.env[name]
       })
     }
     else {
+      console.log("Already populated config: name = " + name + ", config = " + this.config[name])
       return this.config[name] || process.env[name]
     }
 
