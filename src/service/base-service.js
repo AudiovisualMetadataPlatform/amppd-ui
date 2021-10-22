@@ -1,12 +1,8 @@
 import { requestOptions } from "../helpers/request-options";
 import axios from 'axios';
-// import {handleResponse} from "../helpers/handle-response";
 import { accountService } from '@/service/account-service';
 import { env } from "../helpers/env";
 
-// const axiosInstance = axios.create({
-//   });
-  
   
 export default class BaseService{
     constructor(){
