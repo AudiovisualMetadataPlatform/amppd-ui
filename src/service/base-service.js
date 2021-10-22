@@ -6,8 +6,8 @@ import { env } from "../helpers/env";
   
 export default class BaseService{
     constructor() {
-        // this.API_URL = env.getAmpUrl();
-        env.getAmpUrl().then((url) => { this.API_URL = url })
+        this.API_URL = env.getAmpUrl();
+        // env.getAmpUrl().then((url) => { this.API_URL = url })
         console.log("BaseService: this.API_URL = " + this.API_URL);
         this.axiosInstance = axios.create({});
         this.axiosInstance.interceptors.response.use(

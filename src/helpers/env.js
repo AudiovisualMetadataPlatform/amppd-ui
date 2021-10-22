@@ -1,7 +1,4 @@
 class Env {
-  constructor() {
-    this.config = null
-  }
 
   async fetchConfig() {
     if (this.config == null) {
@@ -15,8 +12,8 @@ class Env {
     return this.config
   }
 
-  async getEnv(key) {
-    let config = await this.fetchConfig()
+  getEnv(key) {
+    let config = window.config
     let value = config[key] || process.env[key]
     console.log(`Env.getEnv: config[${key}] = ${config[key]}, return value = ${value}`)
     return value
@@ -45,16 +42,16 @@ class Env {
 	  return process.env.VUE_APP_DISABLE_AUTH
   }
 
-  async getAmpUrl() {
-	  return await this.getEnv('VUE_APP_AMP_URL')
+  getAmpUrl() {
+	  return this.getEnv('VUE_APP_AMP_URL')
   }
 
-  async getAmpUnit() {
-	  return await this.getEnv('VUE_APP_AMP_UNIT')
+  getAmpUnit() {
+	  return this.getEnv('VUE_APP_AMP_UNIT')
   }
 
-  async getGalaxyWorkflowUrl() {
-	  return await this.getEnv('VUE_APP_GALAXY_WORKFLOW_URL')
+  getGalaxyWorkflowUrl() {
+	  return this.getEnv('VUE_APP_GALAXY_WORKFLOW_URL')
   }
 
 }

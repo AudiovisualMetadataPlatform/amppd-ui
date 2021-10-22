@@ -15,7 +15,10 @@
     <style> body {margin:0px} </style>
     <script>window.AG_AdblockGlobalEnabled = true;</script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    
+    <script type="text/javascript">
+      var cachebuster = Math.round(new Date().getTime() / 1000);
+      document.write('<scr' + 'ipt type="text/javascript" src="./config.js?cb=' + cachebuster + '"></scr' + 'ipt>');
+    </script>
   </head>
   <body>
     <noscript>
