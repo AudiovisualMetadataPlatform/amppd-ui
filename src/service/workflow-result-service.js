@@ -25,13 +25,11 @@ export default class WorkflowResultService extends BaseService{
     }
 
     getSourceUrl(primaryfileId) {
-        const BASE_URL = env.getAmpUrl();
-        const url = `${BASE_URL}/primaryfiles/${primaryfileId}/media`;
+        const url = `${this.API_URL}/primaryfiles/${primaryfileId}/media`;
         return url; 
     }
     getOutputUrl(id) {
-        const BASE_URL = env.getAmpUrl();
-        const url = `${BASE_URL}/workflow-results/${id}/output`;
+        const url = `${this.API_URL}/workflow-results/${id}/output`;
         return url; 
     }
 }
