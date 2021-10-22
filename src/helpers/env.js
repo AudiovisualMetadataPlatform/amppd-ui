@@ -17,25 +17,21 @@ class Env {
   }
 
   getEnv(name) {
-    if (this.config == null) {
-      fetch("./config.json")
-      .then((response) => response.json())
-      .then((config) => {
-        this.config = config
-        console.log("Env.getEnv: fetched config from file: name = " + name + ", config = " + config[name])	
-        return config[name] || process.env[name]
-      })
-    }
-    else {
-      console.log("Env.getEnv: already populated config: name = " + name + ", config = " + this.config[name])
-      return this.config[name] || process.env[name]
-    }
-
-    // await this.fetchConfig().then(result=>{
-    //   console.log("name = " + name, "config = " + this.config[name])	
+    // if (this.config == null) {
+    //   fetch("./config.json")
+    //   .then((response) => response.json())
+    //   .then((config) => {
+    //     this.config = config
+    //     console.log("Env.getEnv: fetched config from file: name = " + name + ", config = " + config[name])	
+    //     return config[name] || process.env[name]
+    //   })
+    // }
+    // else {
+    //   console.log("Env.getEnv: already populated config: name = " + name + ", config = " + this.config[name])
     //   return this.config[name] || process.env[name]
-    // })
-	  // return process.env[name]	
+    // }
+    console.log("Env.getEnv: window.config = " + window.config)
+    return window.config[name] || process.env[name]
   }
 
   getDisableAuth() {

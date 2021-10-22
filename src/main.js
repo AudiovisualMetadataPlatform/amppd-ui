@@ -28,11 +28,20 @@ Vue.use(VueFilterDateFormat, {
   ]
 });
 
+window.config = {
+	"VUE_APP_AMP_UNIT": "My Unit",
+	"VUE_APP_AMP_URL": "http://localhost:8000/rest",
+	"VUE_APP_GALAXY_WORKFLOW_URL": "http://localhost:8300/workflow/editor?id="
+}
+console.log("main.js before fetch: window.config: VUE_APP_AMP_URL = " + window.config.VUE_APP_AMP_URL)
+
 fetch("./config.json")
   .then((response) => response.json())
   .then((config) => {
     console.log("main.js: initial fetch of config: VUE_APP_AMP_URL = " + config.VUE_APP_AMP_URL)
     Vue.prototype.$config = config
+    window.config = config
+    console.log("main.js after fetch: window.config: VUE_APP_AMP_URL = " + window.config.VUE_APP_AMP_URL)
     new Vue({
       router,
       store,
