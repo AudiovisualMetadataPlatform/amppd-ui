@@ -27,18 +27,12 @@ Vue.use(VueFilterDateFormat, {
   ]
 });
 
-fetch("./config.json")
-  .then((response) => response.json())
-  .then((config) => {
-    console.log("main.js: initial fetch of config: VUE_APP_AMP_URL = " + config.VUE_APP_AMP_URL)
-    Vue.prototype.$config = config
-    new Vue({
-      router,
-      store,
-      render: h => h(App)
-    }).$mount('#app')
-  })
-  .catch(error => console.error(error));
+
+new Vue({
+  router,
+  store,
+  render: h => h(App)
+}).$mount('#app')
 process.title = "amppd-ui";
 
 
