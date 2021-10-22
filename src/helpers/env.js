@@ -3,19 +3,21 @@ class Env {
     this.config = null
   }
 
-  getEnv(name) {
+  getEnv(key) {
     if (this.config == null) {
       fetch("./config.json")
       .then((response) => response.json())
       .then((config) => {
         this.config = config
-        console.log("Env.getEnv: fetched config from file: name = " + name + ", config = " + config[name])	
-        return config[name] || process.env[name]
+        let value = config[key] || process.env[key]
+        console.log(`Env.getEnv: fetched config from file, config[${key}] = ${config[key]}, return value = ${value}`)	
+        return value
       })
     }
     else {
-      console.log("Env.getEnv: already populated config: name = " + name + ", config = " + this.config[name])
-      return this.config[name] || process.env[name]
+      let value = this.config[key] || process.env[key]
+      console.log(`Env.getEnv: already populated config, key = ${key}, return value = ${value}`)
+      return value
     }
   }
 
