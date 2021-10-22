@@ -1,10 +1,11 @@
 import BaseService from './base-service';
 import {accountService} from './account-service';
+import { env } from "../helpers/env";
 
 const baseService = new BaseService();
 
 async function auth_token_required(auth_string, input_file){
-    if(process.env.VUE_APP_DISABLE_AUTH == 'true'){
+    if(env.getDisableAuth() == 'true'){
         return false;
     }
     var validated = await accountService.validate();
@@ -21,7 +22,7 @@ async function auth_token_required(auth_string, input_file){
 }
 
 async function auth_token_valid(auth_string, input_file, user_token){   
-    if(process.env.VUE_APP_DISABLE_AUTH == 'true'){
+    if(env.getDisableAuth() == 'true'){
         return true;
     } 
     const url = `/hmgm/authorize-editor?authString=${auth_string}&userToken=${user_token}&editorInput=${input_file}`;

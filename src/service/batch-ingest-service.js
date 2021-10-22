@@ -1,6 +1,5 @@
 import BaseService from './base-service';
 
-const BASE_URL = process.env.VUE_APP_AMP_URL;
 const baseService = new BaseService();
 function upload(formData) {
     const url = `/batch/ingest`;
