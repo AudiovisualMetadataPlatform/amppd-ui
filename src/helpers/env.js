@@ -3,19 +3,6 @@ class Env {
     this.config = null
   }
 
-  async fetchConfig() {
-    if (this.config == null) {
-      fetch("./config.json")
-      .then((response) => response.json())
-      .then((config) => {
-        this.config = config
-        console.log("Fetched config: VUE_APP_AMP_URL = " + this.config.VUE_APP_AMP_URL)
-        return this.config
-      })
-    }
-    else return this.config
-  }
-
   getEnv(name) {
     if (this.config == null) {
       fetch("./config.json")
