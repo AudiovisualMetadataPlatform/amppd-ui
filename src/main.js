@@ -4,7 +4,6 @@ import router from './router'
 import store from './store/amp-store'
 import { VuePlugin } from 'vuera'
 import VueFilterDateFormat from '@vuejs-community/vue-filter-date-format';
-// import Env from 'helpers/env.js';
 
 
 Vue.use(VuePlugin)
