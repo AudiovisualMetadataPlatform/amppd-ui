@@ -4,6 +4,7 @@ import Router from "vue-router";
 import Login from "./components/account/Login.vue";
 import Deliverables from "./components/deliverables/Deliverables.vue";
 import Register from "./components/account/Register.vue";
+import WorkflowEditor from "./components/workflow/WorkflowEditor.vue";
 import WorkflowSubmission from "./components/workflow/WorkflowSubmission.vue";
 import WorkflowDashboard from "./components/dashboard/Dashboard.vue";
 import ForgotPassword from "./components/account/ForgotPassword.vue";
@@ -59,6 +60,12 @@ var router = new Router({
       component: ApproveUser,
       meta: { authorize: [] },
     },
+    {
+      path: "/workflow/edit",
+      name: "workflow-editor",
+      component: WorkflowEditor,
+      meta: { authorize: [] },
+    },    
     {
       path: "/workflow/submit",
       name: "workflow-submission",
