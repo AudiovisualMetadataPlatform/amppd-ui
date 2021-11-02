@@ -26,6 +26,7 @@
 import AmpHeader from '@/components/shared/Header.vue'
 import Logout from '@/components/shared/Logout.vue'
 import Modal from '@/components/shared/Modal.vue'
+import { env } from "../../helpers/env";
 
 export default {
   name: 'WorkflowEditor',
@@ -48,7 +49,7 @@ export default {
   },
   methods:{
     getIframeUrl(id) {
-      return process.env.VUE_APP_GALAXY_WORKFLOW_URL + id
+      return env.getGalaxyWorkflowUrl() + id
     },
     async onDone() {
       // validate workflow saved in Galaxy for AMP workflow submission
@@ -57,7 +58,7 @@ export default {
   },
   mounted(){
     this.id = this.$route.query.id
-    this.iframeUrl = this.getIframeUrl(id)
+    this.iframeUrl = this.getIframeUrl(this.id)
     console.log("workflowId = " + this.id + ", iframeUrl = " + this.iframeUrl);
   },
 }
