@@ -1,5 +1,5 @@
 window.config = {
-	"VUE_APP_AMP_UNIT": null,
-	"VUE_APP_AMP_URL": null,
-	"VUE_APP_GALAXY_WORKFLOW_URL": null 
+	"VUE_APP_AMP_UNIT": "AMP Pilot Unit",
+	"VUE_APP_AMP_URL": "http://localhost:8200/rest",
+	"VUE_APP_GALAXY_WORKFLOW_URL": "http://localhost:8300/workflow/editor-amp?id=" 
 }
