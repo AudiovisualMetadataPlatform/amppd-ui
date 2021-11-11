@@ -1,6 +1,5 @@
 
 import BaseService from './base-service.js';
-const baseService = new BaseService();
 export default class WorkflowService extends BaseService{
     async searchFiles(searchWord, media_type){
         return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + encodeURIComponent(searchWord) +'&mediaType=' + media_type).then(response => response.data);

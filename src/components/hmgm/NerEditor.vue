@@ -55,6 +55,7 @@ import Logout from '@/components/shared/Logout.vue'
 import Modal from '@/components/shared/Modal.vue'
 import { completeNer, resetNer } from '@/service/hmgm-service'; 
 import TokenValidator from '@/components/hmgm/TokenValidator'
+import { env } from "../../helpers/env";
 // import Timeliner from '@/components/hmgm/Timeliner.js';
 
 export default {
@@ -185,7 +186,7 @@ export default {
       console.log("Reload Timeliner, iframe src = " + document.getElementById('timeliner').src);
     },
     getFileUrl(resourcePath) {
-      const BASE_URL = process.env.VUE_APP_AMP_URL;
+      const BASE_URL = env.getAmpUrl();
       const url = `${BASE_URL}/hmgm/ner-editor?resourcePath=${resourcePath}`;
       return url; 
     },

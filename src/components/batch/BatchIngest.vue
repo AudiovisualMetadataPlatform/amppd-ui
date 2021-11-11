@@ -71,6 +71,7 @@ import Logout from '@/components/shared/Logout.vue'
 import Modal from '@/components/shared/Modal.vue'
 import Loader from '@/components/shared/Loader.vue';
 import { upload,downloadFile} from '@/service/batch-ingest-service';
+import { env } from "../../helpers/env";
 
 export default {
   name: 'Workflow',
@@ -168,7 +169,7 @@ export default {
 
   },
   mounted(){
-    this.unitName = process.env.VUE_APP_AMP_UNIT;
+    this.unitName = env.getAmpUnit();
     console.log("reached batchingest.vue");
     console.log("unitName = " + this.unitName);
   }

@@ -27,12 +27,12 @@ Vue.use(VueFilterDateFormat, {
   ]
 });
 
+
 new Vue({
   router,
   store,
   render: h => h(App)
 }).$mount('#app')
-
 process.title = "amppd-ui";
 
 

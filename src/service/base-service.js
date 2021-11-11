@@ -1,14 +1,12 @@
 import { requestOptions } from "../helpers/request-options";
 import axios from 'axios';
-import {handleResponse} from "../helpers/handle-response";
 import { accountService } from '@/service/account-service';
-const axiosInstance = axios.create({
-  });
-  
+import { env } from "../helpers/env";
+
   
 export default class BaseService{
-    constructor(){
-        this.API_URL = process.env.VUE_APP_AMP_URL;
+    constructor() {
+        this.API_URL = env.getAmpUrl();
         this.axiosInstance = axios.create({});
         this.axiosInstance.interceptors.response.use(
             (response) => {
@@ -41,22 +39,22 @@ export default class BaseService{
     }   
     
     post(url, body){
-        console.log("sending post via base service");
+        console.log("BaseService: sending post to " + this.API_URL + url);
         return this.axiosInstance.post(this.API_URL + url, body);
     }
 
     post_auth(url, body){
-        console.log("sending post via base service");
+        console.log("BaseService: sending post to " + this.API_URL + url);
         return this.axiosInstance.post(this.API_URL + url, body, requestOptions.post());
     }
 
     post_token_auth(url, body, input_dataset){
-        console.log("sending post via base service");
+        console.log("BaseService: sending post to " + this.API_URL + url);
         return this.axiosInstance.post(this.API_URL + url, body, requestOptions.postToken(input_dataset));
     }
 
     patch_auth(url, body){
-        console.log("sending patch via base service");
+        console.log("BaseService: sending patch to " + this.API_URL + url);
         return this.axiosInstance.patch(this.API_URL + url, body, requestOptions.patch());
     }
 
