@@ -103,7 +103,7 @@ export default {
     async getCollectionDetails() {
       let self = this;
 
-      this.CollectionDetailsService.getCollection(self.selectedCollection).then(
+      this.CollectionDetailsService.getCollection(self.selectedCollection.id).then(
         (response) => {
           self.collectionDetails = response.data;
         }
@@ -113,7 +113,7 @@ export default {
     async getCollectionItems() {
       let self = this;
       this.CollectionDetailsService.getCollectionItems(
-        self.selectedCollection
+        self.selectedCollection.id
       ).then((response) => {
         self.collectionDetails = {
           ...self.collectionDetails,

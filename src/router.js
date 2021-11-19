@@ -16,7 +16,10 @@ import { accountService } from "./service/account-service.js";
 import Collections from "./components/collections/Collections.vue";
 import CollectionDetails from "./components/collections/CollectionDetails.vue";
 import { env } from "./helpers/env.js";
-
+import UnitLandingPage from "./components/units/UnitLandingPage.vue";
+import CollectionsLandingPage from "./components/collections/CollectionsLandingPage.vue";
+import CreateCollection from "./components/collections/CreateCollection.vue";
+import ItemDetails from './components/items/ItemDetails.vue';
 Vue.use(Router);
 
 var router = new Router({
@@ -105,6 +108,31 @@ var router = new Router({
       component: CollectionDetails,
       meta: { authorize: [] },
     },
+    {
+      path: "/landing-page/units",
+      name: "landing-page-units",
+      component: UnitLandingPage,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/landing-page/collections",
+      name: "landing-page-collections",
+      component: CollectionsLandingPage,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collections/items/details",
+      name: "items-details",
+      component: ItemDetails,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collections/create",
+      name: "create-collections",
+      component: CreateCollection,
+      meta: { authorize: [] },
+    },
+
   ],
 });
 
@@ -120,9 +148,11 @@ router.beforeEach(async (to, from, next) => {
     console.log("not current user");
     // not logged in so redirect to login page with the return url
     return next({ path: "/account/login", query: { returnUrl: to.path } });
+    // return next();
   } else {
     var success = await accountService.validate();
     if (!success) {
+      // return next();
       return next({ path: "/account/login", query: { returnUrl: to.path } });
     } else {
       return next();

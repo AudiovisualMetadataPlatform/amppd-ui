@@ -543,7 +543,7 @@ nav ul {
 nav ul li {
   padding: 1rem; }
 
-.workflows .workflows, .collections .collections, .deliverables .deliverables, .batch-ingest .batch-ingest ,.collection .collection{
+.workflows .workflows, .collections .collections, .deliverables .deliverables, .batch-ingest .batch-ingest ,.collection .collection,.units .units{
   background: #22617d; }
 
 .icon-play, .icon-play-audio, .icon-filter {

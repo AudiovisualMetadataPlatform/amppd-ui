@@ -1,4 +1,5 @@
 
+import { result } from 'underscore';
 import BaseService from './base-service.js';
 const baseService = new BaseService();
 export default class CollectionService extends BaseService{
@@ -15,5 +16,14 @@ export default class CollectionService extends BaseService{
            })
            .then(result => result.data)
         // return await super.post_auth(`/collections/${id}/activate?active=${active}`).then(result => result.data)
+    }
+
+    /***********
+     * To get a colleciton list based on Unit Id
+     * @params unitId
+     */
+    
+    async getCollectionByUnitId(unitId) {
+        return await super.get_auth(`/units/${unitId}/collections`).then (result => result.data);
     }
 }
