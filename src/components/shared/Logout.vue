@@ -6,7 +6,9 @@
             </svg></a>
       
       <!-- <div class="right-pane"><button type = "button" v-on:click="signout()">Logout</button></div> -->
+      <br>
   </div>
+  
 </template>
 
 <script>

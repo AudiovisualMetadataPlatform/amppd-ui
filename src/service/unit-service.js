@@ -27,4 +27,15 @@ export default class UnitService extends BaseService{
            })
            .then(result => result.data)
     }
+
+    /***
+     * To update unit details By id
+     * @params id
+     * @method Patch
+     */
+
+     async updateUnitDetails(id, data){        
+        return await super.patch_auth(`/units/${id}`,data)
+           .then(result => result.data)
+    }
 }

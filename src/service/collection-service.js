@@ -26,4 +26,24 @@ export default class CollectionService extends BaseService{
     async getCollectionByUnitId(unitId) {
         return await super.get_auth(`/units/${unitId}/collections`).then (result => result.data);
     }
+
+    /***********
+     * To create a colleciton 
+     * @params Obj
+     * @method post
+     */
+    
+     async createCollection(obj) {
+        return await super.post_auth(`/collections`, obj).then (result => result.data);
+    }
+
+    /***********
+     * To update/save a colleciton 
+     * @params Obj, id
+     * @method patch
+     */
+    
+     async updateCollection(obj) {
+        return await super.patch_auth(`/collections/${obj.id}`, obj).then (result => result.data);
+    }
 }

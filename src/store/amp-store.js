@@ -116,7 +116,8 @@ const state = {
         primaryfiles: []
       },
     },
-    selectedPrimaryFile: {}
+    selectedPrimaryFile: {},
+    selectedUnit: {}
      
 };
 

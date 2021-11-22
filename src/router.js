@@ -13,13 +13,11 @@ import BatchIngest from "./components/batch/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
 import NerEditor from "./components/hmgm/NerEditor.vue";
 import { accountService } from "./service/account-service.js";
-import Collections from "./components/collections/Collections.vue";
 import CollectionDetails from "./components/collections/CollectionDetails.vue";
 import { env } from "./helpers/env.js";
-import UnitLandingPage from "./components/units/UnitLandingPage.vue";
-import CollectionsLandingPage from "./components/collections/CollectionsLandingPage.vue";
-import CreateCollection from "./components/collections/CreateCollection.vue";
-import ItemDetails from './components/items/ItemDetails.vue';
+import CreateEntity from "./components/entity/CreateEntity.vue";
+import ListingPage from "./components/entity/ListingPage.vue";
+import ItemDetails from "./components/entity/ItemDetails.vue";
 Vue.use(Router);
 
 var router = new Router({
@@ -96,12 +94,12 @@ var router = new Router({
       name: "ner-editor",
       component: NerEditor,
     },
-    {
-      path: "/collections",
-      name: "collections",
-      component: Collections,
-      meta: { authorize: [] },
-    },
+    // {
+    //   path: "/collections",
+    //   name: "collections",
+    //   component: Collections,
+    //   meta: { authorize: [] },
+    // },
     {
       path: "/collections/collection-details",
       name: "collection-details",
@@ -109,15 +107,27 @@ var router = new Router({
       meta: { authorize: [] },
     },
     {
-      path: "/landing-page/units",
-      name: "landing-page-units",
-      component: UnitLandingPage,
+      path: "/unit/details",
+      name: "unit-details",
+      component: ListingPage,
       meta: { authorize: [] },
     },
     {
-      path: "/landing-page/collections",
-      name: "landing-page-collections",
-      component: CollectionsLandingPage,
+      path: "/units",
+      name: "units",
+      component: ListingPage,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collections",
+      name: "collections",
+      component: ListingPage,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collection/details",
+      name: "collection-details",
+      component: ListingPage,
       meta: { authorize: [] },
     },
     {
@@ -127,9 +137,9 @@ var router = new Router({
       meta: { authorize: [] },
     },
     {
-      path: "/collections/create",
+      path: "/collection/create",
       name: "create-collections",
-      component: CreateCollection,
+      component: CreateEntity,
       meta: { authorize: [] },
     },
 
