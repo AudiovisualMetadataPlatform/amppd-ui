@@ -167,9 +167,9 @@ export default {
     fill: #153c4d;
   }
 
-  .workflows .workflows, .collections .collections {
+  /* .workflows .workflows, .collections .collections {
     background: #22617d;
-  }
+  } */
 
   svg.icon-user {
     width: 2.5rem;

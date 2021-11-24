@@ -1,110 +1,6 @@
 <template>
-<div class="container col-12 dataTables_wrapper">
-    <div class="row expand-h">
-      <Sidebar />
-      <div class="col-10 bg-light-gray-1">
-        <main class="main-margin-min">
-          <Logout />
-          <div class="pad-all-3">
-            <b-card class="m-3 text-left">
-            <div v-if="!selectedItem">
-                <h2>Add item</h2>
-                <!-- <p v-if="selectedCollection">Adding item to Collection: {{selectedCollection.name}}</p> -->
-            </div>
-            <h2 v-if="selectedItem">Item Details</h2>
-            <form name="itemForm" class="form">
-                <div class="col-12 text-left form-group p-0">
-                    <label>Item Name</label>
-                    <input type="text" class="form-control w-100" v-model="selectedItem.name" />
-                </div>
-
-                <div class="col-12 text-left form-group p-0">
-                    <label>Description</label>
-                    <textarea class="form-control w-100" v-model="selectedItem.description"></textarea>
-                </div>
-
-                <div class="row">
-                    <div class="col-6 p-0">
-                        <div class="col-12 text-left form-group">
-                            <label>Created By</label>
-                            <input
-                                type="text"
-                                class="form-control w-100"
-                                v-model="selectedItem.createdBy"
-                                :disabled="true"
-                            />
-                        </div>
-                        <div class="col-12 text-left form-group">
-                            <label>Modified By</label>
-                            <input
-                                type="text"
-                                class="form-control w-100"
-                                v-model="selectedItem.modifiedBy"
-                                :disabled="true"
-                            />
-                        </div>
-                    </div>
-                    <div class="col-6 p-0">
-                        <div class="col-12 text-left form-group">
-                            <label>Date Created</label>
-                            <input
-                                type="text"
-                                class="form-control w-100"
-                                v-model="selectedItem.createdDate"
-                                :disabled="true"
-                            />
-                        </div>
-                        <div class="col-12 text-left form-group">
-                            <label>Modified Date</label>
-                            <input
-                                type="text"
-                                class="form-control w-100"
-                                v-model="selectedItem.modifiedDate"
-                                :disabled="true"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6 text-left form-group">
-                        <label>External Source</label>
-                        <input
-                            type="text"
-                            class="form-control w-100"
-                            v-model="selectedItem.externalSource"
-                        />
-                    </div>
-                    <div class="col-6 text-left form-group">
-                        <label>External Id</label>
-                        <input
-                            type="text"
-                            class="form-control w-100"
-                            v-model="selectedItem.externalId"
-                        />
-                    </div>
-                </div>
-
-                <div class="w-100 text-right p-0">
-                    <div v-if="!showEdit">
-                        <button
-                            class="btn btn-outline btn-lg btn-edit mr-2"
-                            type="button"
-                            @click="onCancel"
-                        >Cancel</button>
-                        <button class="btn btn-primary btn-lg btn-edit" type="button">Save</button>
-                    </div>
-                    <button
-                        class="btn btn-primary btn-lg btn-edit"
-                        type="button"
-                        @click="showEdit = !showEdit"
-                        v-if="showEdit"
-                    >Edit</button>
-                </div>
-            </form>
-        </b-card>
-
-        <b-card class="m-3 text-left">
+<div class="w-100">
+    <b-card class="text-left" v-if="!isCreatePage">
             <h2 class="mb-3">Files</h2>
             <table
                 class="table"
@@ -137,12 +33,12 @@
                                 href="/collections/file.html"
                                 class="btn btn-primary btn float-right"
                             >View</a>
-                            <button class="btn btn-link add-remove float-right mr-1">Remove file</button>
+                            <button class="btn btn-link add-remove float-right mr-1"><span v-html="removeIcon" class="pr-1"></span>Remove file</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <div class="mt-2 mb-2">
+            <div class="mt-2 mb-2" v-if="false">
                 <small>Upload progress</small>
                 <br />
                 <div class="progress">
@@ -185,11 +81,10 @@
                     <br />
                 </div>
             </div>
-            <div class="d-flex justify-content-between w-100">
-                <div>
-                    <button type="submit" class="btn btn btn-outline btn-lg marg-all-1">Clear</button>
-                </div>
+            <div class="d-flex justify-content-between w-100" v-if="!isCreatePage ">
+                <div></div>
                 <div class="float-right">
+                    <button type="submit" class="btn btn btn-outline btn-lg marg-all-1">Clear</button>
                     <button
                         type="submit"
                         class="btn marg-all-1 btn btn-outline btn-lg"
@@ -199,20 +94,18 @@
                 </div>
             </div>
         </b-card>
-          </div>
-
-          
-        </main>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 import { sync } from 'vuex-pathify';
-import PrimaryFileService from "../../service/primary-file-service";
+import { env } from '../../helpers/env';
 import Sidebar from '@/components/navigation/Sidebar.vue';
 import Logout from '@/components/shared/Logout.vue';
+import ItemService from '../../service/item-service';
+import PrimaryFileService from "../../service/primary-file-service";
+import SharedService from '../../service/shared-service';
+import config from '../../assets/constants/common-contant.js';
 
 export default {
     Name: "ItemDetails",
@@ -224,14 +117,20 @@ export default {
     data() {
         return {
             fileService: new PrimaryFileService(),
-            showEdit: true
+            itemService: new ItemService(),
+            sharedService: new SharedService(),
+            showEdit: true,
+            removeIcon: config.common.icons['remove']
         }
     },
     computed: {
         Items: sync("Items"),
         selectedItem: sync("selectedItem"),
         selectedCollection: sync("selectedCollection"),
-        PrimaryFiles: sync("PrimaryFiles")
+        PrimaryFiles: sync("PrimaryFiles"),
+        isCreatePage() {
+            return (window.location.hash.toLowerCase().indexOf('add-item') > -1)
+        }
     },
     methods: {
         onCancel() {
@@ -240,12 +139,37 @@ export default {
         },
         async getPrimaryFiles() {
             const self = this;
-            self.fileService.getPrimaryFiles(self.selectedItem.id).then(response => {
+            self.fileService.getPrimaryFiles(6079).then(response => {
                 self.PrimaryFiles = response.data;
+                if(self.PrimaryFiles) {
+                    self.PrimaryFiles = self.sharedService.sortByAlphabatical(self.PrimaryFiles);
+                }
             });
         },
         dragFile(e) {
             console.log(e.dataTransfer.files, 'files');
+        },
+        onSaveItem() {
+            const self = this;
+            if(self.isCreatePage){
+                self.selectedItem = {
+                    ...self.selectedItem,
+                    collection: env.getAmpUrl() + `/collections/${self.selectedCollection.id}`
+                }
+                self.itemService.addItemToCollection(self.selectedItem).then(reponse => {
+                    self.$bvToast.toast("Item added successfully", {title: 'Notification',appendToast: true,variant:"success", autoHideDelay:5000});
+                    self.$router.push("/collection/details");
+                }).catch(error => {
+                    self.$bvToast.toast("Failed to add an Item", {title: 'Notification',appendToast: true,variant:"danger", autoHideDelay:5000});
+                });
+            } else {
+                self.itemService.updateItem(self.selectedItem).then(reponse => {
+                    self.$bvToast.toast("Item updated successfully", {title: 'Notification',appendToast: true,variant:"success", autoHideDelay:5000});
+                }).catch(error => {
+                   self.$bvToast.toast("Failed to add an Item", {title: 'Notification',appendToast: true,variant:"danger", autoHideDelay:5000});
+                   
+                });
+            }
         }
     },
     mounted() {
@@ -289,4 +213,13 @@ export default {
     background-color: #007bff;
     transition: width 0.6s ease;
 }
+.btn-primary {
+  background: #F4871E !important;
+  border-color: #F4871E !important;
+  color: #153c4d !important; }
+
+.btn-primary:hover, .btn-secondary:hover, .btn-outline-primary:hover {
+  background: #153c4d !important;
+  border-color: #153c4d v;
+  color: #fff !important; }
 </style>

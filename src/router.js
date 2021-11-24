@@ -15,9 +15,7 @@ import NerEditor from "./components/hmgm/NerEditor.vue";
 import { accountService } from "./service/account-service.js";
 import CollectionDetails from "./components/collections/CollectionDetails.vue";
 import { env } from "./helpers/env.js";
-import CreateEntity from "./components/entity/CreateEntity.vue";
 import ListingPage from "./components/entity/ListingPage.vue";
-import ItemDetails from "./components/entity/ItemDetails.vue";
 Vue.use(Router);
 
 var router = new Router({
@@ -133,13 +131,19 @@ var router = new Router({
     {
       path: "/collections/items/details",
       name: "items-details",
-      component: ItemDetails,
+      component: ListingPage,
       meta: { authorize: [] },
     },
     {
       path: "/collection/create",
       name: "create-collections",
-      component: CreateEntity,
+      component: ListingPage,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collection/add-items",
+      name: "create-items",
+      component: ListingPage,
       meta: { authorize: [] },
     },
 
