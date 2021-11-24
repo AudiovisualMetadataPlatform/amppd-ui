@@ -5,7 +5,7 @@
     >
         <loader :show="showLoader" />
         <div class="row">
-            <Sidebar />
+            <!-- <Sidebar /> -->
             <div class="col-12 bg-light-gray-1">
                 <main class="main-margin-min">
                      <!-- Header - Details page -->
@@ -422,18 +422,4 @@ export default {
 
 <style scoped>
 @import "/amppd-ui/src/styles/style.css";
-
-.btn-primary {
-    background: #f4871e !important;
-    border-color: #f4871e !important;
-    color: #153c4d !important;
-}
-
-.btn-primary:hover,
-.btn-secondary:hover,
-.btn-outline-primary:hover {
-    background: #153c4d !important;
-    border-color: #153c4d v;
-    color: #fff !important;
-}
 </style>

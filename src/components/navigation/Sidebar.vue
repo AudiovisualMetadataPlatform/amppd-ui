@@ -86,7 +86,7 @@
             <div class="navbar-header d-flex">
               <a class="navbar-brand" href="#"></a><span v-html="ampSvg"></span>
             </div>
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" v-if="isAuthenticated">
               <li class="marg-t-2" :class="menu.class" v-for="menu in menuList" :key="menu.url">
                 <a :href="'/#' + menu.url" ><span  v-html="menu.icon"></span><span class="pl-2">{{menu.name}}</span></a>
               </li>
@@ -101,6 +101,8 @@
 <script>
 import config from '../../assets/constants/common-contant.js';
 import Logout from '@/components/shared/Logout.vue';
+import { accountService } from '../../service/account-service.js';
+import { sync } from 'vuex-pathify';
 
 export default {
   components: {
@@ -109,8 +111,12 @@ export default {
   data() {
     return {
       menuList: config.common.menus,
-      ampSvg: config.common.icons['amp']
+      ampSvg: config.common.icons['amp'],
+      accountService: accountService
     }
+  },
+  computed: {
+    isAuthenticated: sync("isAuthenticated")
   },
   methods: {
     convertToSvg(value) {

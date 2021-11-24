@@ -111,18 +111,6 @@ var router = new Router({
       meta: { authorize: [] },
     },
     {
-      path: "/units",
-      name: "units",
-      component: ListingPage,
-      meta: { authorize: [] },
-    },
-    {
-      path: "/collections",
-      name: "collections",
-      component: ListingPage,
-      meta: { authorize: [] },
-    },
-    {
       path: "/collection/details",
       name: "collection-details",
       component: ListingPage,
@@ -167,8 +155,12 @@ router.beforeEach(async (to, from, next) => {
     var success = await accountService.validate();
     if (!success) {
       // return next();
+      router.app.$store.state.isAuthenticated = false;
+      router.app.$store.commit("isAuthenticated");
       return next({ path: "/account/login", query: { returnUrl: to.path } });
     } else {
+      router.app.$store.state.isAuthenticated = true;
+      router.app.$store.commit("Authenticated");
       return next();
     }
   }

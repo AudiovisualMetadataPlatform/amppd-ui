@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <Header/>
+  <div class="col-12">
+    <!-- <Header/> -->
     <main>
       <div class="container">
         <h1 class="text-center">Welcome to the Audiovisual Metadata Platform</h1>
