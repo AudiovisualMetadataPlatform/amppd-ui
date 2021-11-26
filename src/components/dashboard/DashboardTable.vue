@@ -114,6 +114,7 @@ export default {
     filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
     filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
+    filterByUnits: sync("workflowDashboard.searchQuery.filterByUnits"),
     filterByExternalIds: sync("workflowDashboard.searchQuery.filterByExternalIds"),
     filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
     filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
@@ -183,6 +184,10 @@ export default {
       this.refreshData();
     },
     filterByCollections: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByUnits: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },

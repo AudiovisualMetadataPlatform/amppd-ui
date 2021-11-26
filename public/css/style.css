@@ -221,7 +221,7 @@ input[type="file"] {
   fill: #F4871E; }
 
 #btn-search, .btn-outline {
-  border: 1px solid #ced4da; }
+  border: 1px solid #ced4da !important; }
 
 .switch {
   position: relative;

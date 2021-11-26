@@ -51,6 +51,7 @@ const state = {
             filterByDates:[],
             filterBySubmitters:[],
             filterByCollections:[],
+            filterByUnits:[],
             filterByExternalIds:[],
             filterByItems:[],
             filterByFiles:[],
@@ -118,7 +119,8 @@ const state = {
     },
     selectedPrimaryFile: {},
     selectedUnit: {},
-    isAuthenticated: false
+    isAuthenticated: false,
+    selectedFilters: {}
      
 };
 
