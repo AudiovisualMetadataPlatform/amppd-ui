@@ -118,7 +118,8 @@ const state = {
     },
     selectedPrimaryFile: {},
     selectedUnit: {},
-    isAuthenticated: false
+    isAuthenticated: false,
+    selectedFile: {}
      
 };
 

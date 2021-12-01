@@ -190,6 +190,18 @@ var router = new Router({
         ]
       },
     },
+    {
+      path: "/collections/file",
+      name: "file-details",
+      component: ListingPage,
+      meta: { authorize: [],
+        breadCrumb: [ 
+          {text: "Home", href: '#/'}, 
+          {text: "Collection Details", href: '#/collection/details'},
+          {text: "File"}
+        ]
+      },
+    },
 
   ],
 });

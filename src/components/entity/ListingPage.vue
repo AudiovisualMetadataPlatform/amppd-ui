@@ -8,8 +8,8 @@
             <!-- <Sidebar /> -->
             <div class="col-12 bg-light-gray-1">
                 <main class="main-margin-min">
-                     <!-- Header - Details page -->
-                   
+                    <!-- Header - Details page -->
+
                     <b-card class="text-center mt-5">
                         <h2 class="text-left">
                             <span class="text-capitalize">{{ baseUrl }}</span> Details
@@ -46,6 +46,15 @@
                                         >{{ option }}</option>
                                     </select>
                                 </div>
+                            </div>
+                            <div class="col-12 text-left form-group p-0" v-if="baseUrl === 'file'">
+                                <label>Orginal Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control w-100"
+                                    v-model="entity.originalName"
+                                    :disabled="true"
+                                />
                             </div>
                             <div class="col-12 text-left form-group p-0">
                                 <label>Description</label>
@@ -121,6 +130,16 @@
                             </div>
 
                             <div class="w-100 text-right p-0">
+                                <div class="float-left" v-if="baseUrl === 'file'">
+                                    <button
+                                        class="btn btn-lg btn-outline-primary collapsed"
+                                        aria-expanded="false"
+                                        v-b-toggle.mediaInfo
+                                    >
+                                        <span v-html="infoSvg"></span>
+                                        Media Information
+                                    </button>
+                                </div>
                                 <div v-if="!showEdit">
                                     <button
                                         class="btn btn-outline btn-lg btn-edit mr-2"
@@ -140,13 +159,19 @@
                                     v-if="showEdit"
                                 >Edit</button>
                             </div>
+                            <b-collapse id="mediaInfo" class="mt-2">
+                                <textarea v-model="sampleJson" disabled class="textArea mt-2 mb-2"></textarea>
+                            </b-collapse>
                         </form>
                     </b-card>
-                   
+
                     <!-- Header - Details page Ends here-->
                     <div v-if="baseUrl === 'item'">
                         <ItemDetails></ItemDetails>
-                    </div>    
+                    </div>
+                    <div v-else-if="baseUrl === 'file'">
+                        <OutputFile />
+                    </div>
                     <div class v-else>
                         <!-- Title ends here -->
                         <b-card class="text-left m-3">
@@ -265,6 +290,7 @@
 <script>
 
 import { sync } from "vuex-pathify";
+import config from '../../assets/constants/common-contant.js';
 import Sidebar from '@/components/navigation/Sidebar.vue';
 import Logout from '@/components/shared/Logout.vue';
 import Loader from '@/components/shared/Loader.vue';
@@ -273,14 +299,17 @@ import UnitService from '../../service/unit-service';
 import SharedService from '../../service/shared-service';
 import ItemService from "../../service/item-service";
 import ItemDetails from "./ItemDetails.vue";
+import OutputFile from "./OutputFile.vue";
+
 export default {
     name: "ListingPage",
     components: {
-    Logout,
-    Sidebar,
-    Loader,
-    ItemDetails
-},
+        Logout,
+        Sidebar,
+        Loader,
+        ItemDetails,
+        OutputFile
+    },
     props: [],
     data() {
         return {
@@ -291,18 +320,25 @@ export default {
             records: [],
             showLoader: false,
             entity: {},
-            showEdit: true
+            showEdit: true,
+            infoSvg: config.common.icons['info'],
+            sampleJson: JSON.stringify(config.common.sampleJSONData, undefined, 4)
+
         }
     },
     computed: {
         selectedCollection: sync("selectedCollection"),
         selectedUnit: sync("selectedUnit"),
         selectedItem: sync("selectedItem"),
+        selectedFile: sync("selectedFile"),
         baseUrl() {
             const self = this;
             if (window.location.hash.toLowerCase().indexOf('unit') > -1) {
                 return "unit";
-            } else if (window.location.hash.toLowerCase().indexOf('collection') > -1 && window.location.hash.toLowerCase().indexOf('item') === -1) {
+            } else if (window.location.hash.toLowerCase().indexOf('file') > -1) {
+                return "file";
+            }
+            else if (window.location.hash.toLowerCase().indexOf('collection') > -1 && window.location.hash.toLowerCase().indexOf('item') === -1) {
                 return "collection";
             } else if (window.location.hash.toLowerCase().indexOf('item') > -1) {
                 return "item";
@@ -335,13 +371,16 @@ export default {
                     self.showEdit = false;
                 }
 
-            } else if(self.baseUrl === 'item') {
+            } else if (self.baseUrl === 'item') {
                 self.entity = self.selectedItem;
                 self.showLoader = false;
-                if (self.isCreatePage){
+                if (self.isCreatePage) {
                     self.selectedItem = self.entity = {};
                     self.showEdit = false;
                 }
+            } else if (self.baseUrl === 'file') {
+                self.entity = self.selectedFile;
+                self.showLoader = false;
             }
         },
         async getUnitDetails() {
@@ -409,7 +448,7 @@ export default {
             var result = confirm("Are you sure want to cancel!")
             if (result) this.showEdit = !this.showEdit;
         },
-        
+
     },
     mounted() {
         const self = this;
@@ -422,4 +461,12 @@ export default {
 
 <style scoped>
 @import "/amppd-ui/src/styles/style.css";
+
+.textArea {
+  width: 100%;
+  min-height: 30rem;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
 </style>
