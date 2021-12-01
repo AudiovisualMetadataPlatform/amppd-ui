@@ -204,6 +204,7 @@
                                                 <label
                                                     class="switch"
                                                     :title="elem.active ? 'Deactivate' : 'Activate'"
+                                                    v-if="baseUrl == 'unit'"
                                                 >
                                                     <input type="checkbox" v-model="elem.active" />
                                                     <span class="slider round"></span>
