@@ -168,6 +168,7 @@
                                     <button
                                         class="btn btn-primary btn-lg btn-edit"
                                         type="button"
+                                        @click="onSearch('listing-collection')"
                                     >Search Collections</button>
                                 </div>
                             </div>
@@ -185,6 +186,7 @@
                                     <button
                                         class="btn btn-primary btn-lg btn-edit"
                                         type="button"
+                                        @click="onSearch('listing-collection')"
                                     >Search Items</button>
                                 </div>
                             </div>
@@ -259,6 +261,7 @@
                 </main>
             </div>
         </div>
+        <Search :searchType="searchType" :dataSource="masterRecords" @myEvent="onSearchDone" isListingPage="true"/>
     </div>
 </template>
 
@@ -273,13 +276,15 @@ import UnitService from '../../service/unit-service';
 import SharedService from '../../service/shared-service';
 import ItemService from "../../service/item-service";
 import ItemDetails from "./ItemDetails.vue";
+import Search from "@/components/shared/Search.vue";
 export default {
     name: "ListingPage",
     components: {
     Logout,
     Sidebar,
     Loader,
-    ItemDetails
+    ItemDetails,
+    Search
 },
     props: [],
     data() {
@@ -289,9 +294,11 @@ export default {
             sharedService: new SharedService(),
             itemService: new ItemService(),
             records: [],
+            masterRecords: [],
             showLoader: false,
             entity: {},
-            showEdit: true
+            showEdit: true,
+            searchType: ""
         }
     },
     computed: {
@@ -359,6 +366,7 @@ export default {
                 if (response && response && response._embedded) {
                     self.records = response._embedded[Object.keys(response._embedded)[0]];
                     self.records = self.sharedService.sortByAlphabatical(self.records);
+                    self.masterRecords = JSON.parse(JSON.stringify(self.records));
                 }
             });
         },
@@ -369,6 +377,7 @@ export default {
                 if (response && response.data && response.data._embedded) {
                     self.records = response.data._embedded[Object.keys(response.data._embedded)[0]];
                     self.records = self.sharedService.sortByAlphabatical(self.records);
+                    self.masterRecords = JSON.parse(JSON.stringify(self.records));
                 }
             });
         },
@@ -409,6 +418,13 @@ export default {
             var result = confirm("Are you sure want to cancel!")
             if (result) this.showEdit = !this.showEdit;
         },
+        onSearch(type) {
+            this.searchType = type;
+            this.$bvModal.show('modal-lg');
+        },
+        onSearchDone(records) {
+            this.records = records && records.length ? records: this.masterRecords;
+        }
         
     },
     mounted() {

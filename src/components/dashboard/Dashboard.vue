@@ -223,7 +223,7 @@
                   </div>
                 </div>
                 <DashboardTable/>
-                <Search :type="searchType" :dataSource="workflowDashboard.searchResult.rows"/>
+                <Search :searchType="searchType" :dataSource="workflowDashboard.searchResult.rows"/>
               </div>
             </div>
           </div>
@@ -384,7 +384,7 @@ export default {
         break;
       }
 
-      this.$bvModal.show('modal-lg')
+      this.$bvModal.show('modal-lg');
       
     }
     ,

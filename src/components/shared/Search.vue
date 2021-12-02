@@ -1,10 +1,11 @@
 <template>
     <div>
-        <b-modal size="lg" id="modal-lg" centered>
+        <b-modal size="lg" id="modal-lg" centered @show="processModalData()">
             <template #modal-header="{}">
             <!-- Emulate built in modal header close button action -->
             
-            <h5 class="text-capitalize">{{type}}</h5>
+            <h5 class="text-capitalize" v-if="!isListingPage">{{type}}</h5>
+            <h5 class="text-capitalize" v-if="isListingPage">Search</h5>
             </template>
 
             <template #default="{}">
@@ -19,28 +20,45 @@
 							id="colFormLabelSearch" class="col-10 form-control bootstrap-typeahead" placeholder="Search here"/> -->
                             <!-- <button class="btn btn-outline-success my-2 my-sm-0 col-2" type="button">Search</button> -->
                 </form>
+                <h6>Selected: <span v-if="type && selectedFilters[type]">{{selectedFilters[type].length}}</span></h6>
                 <div class="scrollDiv w-100">
                     <table class="w-100 table table-striped">
                     <thead>
                         <th>
                             <label><input class="selectAll" type="checkbox" v-model="selectAll" :value="selectAll" id="selectAll" @change="onSelectAllChange($event)"><span class="selectAll pl-1">Select All</span></label>
                         </th>
-                        <th v-if="type === 'collections' || type === 'units'">Unit</th>
-                        <th v-if="type === 'collections'">Collection</th>
-                        <th v-if="type === 'workflows'">Workflow</th>
-                        <th v-if="type === 'outputs'">Output</th>
-                        <th v-if="type !== 'collections'">Date Created</th>
+                        <template v-if="!isListingPage">
+                            <th v-if="type === 'collections' || type === 'units'">Unit</th>
+                            <th v-if="type === 'collections'">Collection</th>
+                            <th v-if="type === 'workflows'">Workflow</th>
+                            <th v-if="type === 'outputs'">Output</th>
+                            <th v-if="type !== 'collections'">Date Created</th>
+                        </template>
+                        <template v-if="isListingPage">
+                            <th v-if="type === 'listing-collection'">Collection</th>
+                            <th v-if="type === 'listing-item'">item</th>
+                            <th>Description</th>
+                            <th v-if="type === 'listing-item'">External Id</th>
+                        </template>
                     </thead>
                     <tbody>
                         <tr v-for="source in clonedDataSource" :key="source.id">
                             <td>
                                 <input class="selectAll" type="checkbox" v-model="selectedRecords" :value="source.id" @change="onChange($event, source)">
                             </td>
-                            <td v-if="type === 'collections' || type === 'units'">{{ source.unitName }}</td>
-                            <td v-if="type === 'collections'">{{ source.collectionName }}</td>
-                            <td v-if="type === 'workflows'">{{ source.workflowName }}</td>
-                            <td v-if="type === 'outputs'">{{ source.outputName}}</td>
-                            <td v-if="type !== 'collections'">{{source.dateCreated | DDMMYYYY}}</td>
+                            <template v-if="!isListingPage">
+                                <td v-if="type === 'collections' || type === 'units'">{{ source.unitName }}</td>
+                                <td v-if="type === 'collections'">{{ source.collectionName }}</td>
+                                <td v-if="type === 'workflows'">{{ source.workflowName }}</td>
+                                <td v-if="type === 'outputs'">{{ source.outputName}}</td>
+                                <td v-if="type !== 'collections'">{{source.dateCreated | DDMMYYYY}}</td>
+                            </template>
+                            <template v-if="isListingPage">
+                                <th>{{source.name}}</th>
+                                <th>{{source.description}}</th>
+                                <th v-if="type === 'listing-item'">{{source.externalId}}</th>
+                            </template>
+
                         </tr>
                     </tbody>
                 </table>
@@ -68,11 +86,14 @@ import Typeahead from '../shared/TypeAhead.vue';
 
 export default {
     props: {
-        type: {
+        searchType: {
             default: ""
         },
         dataSource: {
             default: []
+        },
+        isListingPage: {
+            default: false
         }
     },
     components:{
@@ -81,6 +102,14 @@ export default {
     computed:{
         modifiedDataSource() {
             return [];
+        },
+        type: {
+            get(){
+             return this.searchType;
+           },
+           set(value){
+             return value;
+           } 
         },
         selectedFilters: sync("selectedFilters"),
         workflowDashboard: sync("workflowDashboard")
@@ -93,7 +122,9 @@ export default {
             searchProps: [],
             clonedDataSource: [],
             selectedRecords: [],
-            selectAll: false
+            selectAll: false,
+            // type: JSON.parse(this.searchType)
+            
         }
         
     },
@@ -102,24 +133,31 @@ export default {
         this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
     },
     watch: {
-        type:function(newValue, oldValue) {
-            if(newValue !== oldValue) 
-                this.getTypeaheadSearchItems(); 
-                this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
-                this.selectedRecords = (this.selectedFilters[newValue] && this.selectedFilters[newValue].length) ? this.selectedFilters[newValue].map(el => el.id) : [];
-                this.selectAll= (this.selectedRecords.length === this.clonedDataSource.length) ? true : false;
-        }
-        
+      type(v) {
+          this.type = v;
+          this.processModalData()
+      }
     },
+    // watch: {
+    //     type:function(newValue, oldValue) {
+    //         if(newValue !== oldValue) 
+    //             this.getTypeaheadSearchItems(); 
+    //             this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
+    //             this.selectedRecords = (this.selectedFilters[newValue] && this.selectedFilters[newValue].length) ? this.selectedFilters[newValue].map(el => el.id) : [];
+    //             this.selectAll= (this.selectedRecords.length === this.clonedDataSource.length) ? true : false;
+    //     }
+        
+    // },
     methods: {
         onSelectAllChange(ev) {
             const self = this;
             if(ev.srcElement.checked) {
                 self.selectedRecords = this.clonedDataSource.map(el=> el.id);
-                self.selectedFilters[self.type] = this.clonedDataSource;
+                self.selectedFilters[self.type] = JSON.parse(JSON.stringify(this.clonedDataSource));
             } else {
                 self.selectedRecords = [];
                 self.selectedFilters[self.type] = [];
+                this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
             }
             return;
         },
@@ -127,7 +165,8 @@ export default {
             const self = this;
             if(ev.srcElement.checked) {
                 self.selectedFilters[self.type] = self.selectedFilters[self.type] || [];
-                self.selectedFilters[self.type].push(this.clonedDataSource.find(el=> el.id === record.id));
+                if(!self.selectedFilters[self.type].find(el => el.id === record.id))
+                    self.selectedFilters[self.type].push(this.clonedDataSource.find(el=> el.id === record.id));
             } else {
                 // self.selectedRecords.splice(this.selectedRecords.indexOf(record.id), 1);
                 self.selectedFilters[self.type].splice(self.selectedFilters[self.type].indexOf(el => el.id === record.id), 1);
@@ -152,6 +191,7 @@ export default {
         populteValues() {
             if(!this.userSearchValue) {
                 this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
+                this.selectAll= (this.selectedRecords.length === this.dataSource.length);
             }
         },
         getTypeaheadSearchItems() {
@@ -169,7 +209,11 @@ export default {
                     break;   
                 case 'outputs':
                     self.searchProps = ["outputName"]
-                    break;        
+                    break;
+                case 'listing-collection':
+                case 'listing-item':
+                    self.searchProps = ["name"]
+                    break            
             }
             console.log(self.searchProps);
             // self.dataSource.map(el=> {
@@ -199,9 +243,24 @@ export default {
                     break; 
                 case 'units':
                     this.workflowDashboard.searchQuery.filterByUnits = this.selectedFilters[this.type].map(el => el.unitName);
-                    break;        
+                    break;
+                case 'listing-collection':
+                case 'listing-item':
+                    this.$emit('myEvent', (this.selectedFilters[this.type] && this.selectedFilters[this.type].length) ? JSON.parse(JSON.stringify(this.selectedFilters[this.type])): []);
+                    break;            
             }
+            this.userSearchValue = "";
+            this.type = "";
+            this.selectAll= (this.selectedRecords.length === this.dataSource.length);
+            this.populteValues();
              
+        },
+        processModalData() {
+            this.populteValues();
+            this.getTypeaheadSearchItems(); 
+            this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
+            this.selectedRecords = (this.selectedFilters[this.type] && this.selectedFilters[this.type].length) ? this.selectedFilters[this.type].map(el => el.id) : [];
+            this.selectAll= (this.selectedRecords.length === this.clonedDataSource.length)
         }
     }
 }
