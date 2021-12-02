@@ -28,6 +28,7 @@
                                         class="form-control w-100"
                                         v-model="entity.name"
                                         :disabled="showEdit"
+                                        :class="{'error-border' : (submitted && !entity.name) }"
                                     />
                                 </div>
                                 <div
@@ -39,6 +40,7 @@
                                         class="select custom-select w-100"
                                         v-model="entity.taskManager"
                                         :disabled="showEdit"
+                                        :class="{'error-border' : (submitted && !entity.taskManager) }"
                                     >
                                         <option
                                             v-for="option in listOfTaskManager"
@@ -229,6 +231,7 @@
                                                 <label
                                                     class="switch"
                                                     :title="elem.active ? 'Deactivate' : 'Activate'"
+                                                    v-if="baseUrl == 'unit'"
                                                 >
                                                     <input type="checkbox" v-model="elem.active" />
                                                     <span class="slider round"></span>
@@ -301,6 +304,7 @@ import ItemService from "../../service/item-service";
 import ItemDetails from "./ItemDetails.vue";
 import OutputFile from "./OutputFile.vue";
 
+import BaseService from "../../service/base-service";
 export default {
     name: "ListingPage",
     components: {
@@ -317,13 +321,13 @@ export default {
             collectionService: new CollectionService(),
             sharedService: new SharedService(),
             itemService: new ItemService(),
+            baseService: new BaseService(),
             records: [],
             showLoader: false,
             entity: {},
             showEdit: true,
             infoSvg: config.common.icons['info'],
-            sampleJson: JSON.stringify(config.common.sampleJSONData, undefined, 4)
-
+            submitted: false
         }
     },
     computed: {
@@ -393,7 +397,7 @@ export default {
         },
         async getUnitCollections() {
             const self = this;
-            self.collectionService.getCollectionByUnitId(33).then(response => {
+            self.collectionService.getCollectionByUnitId(self.selectedUnit.id).then(response => {
                 self.showLoader = false;
                 if (response && response && response._embedded) {
                     self.records = response._embedded[Object.keys(response._embedded)[0]];
@@ -403,7 +407,7 @@ export default {
         },
         async getCollectionItems() {
             const self = this;
-            self.itemService.getCollectionItems(9838).then(response => {
+            self.itemService.getCollectionItems(self.selectedCollection.id).then(response => {
                 self.showLoader = false;
                 if (response && response.data && response.data._embedded) {
                     self.records = response.data._embedded[Object.keys(response.data._embedded)[0]];
@@ -424,6 +428,7 @@ export default {
         },
         onCreateCollection() {
             const self = this;
+
             self.$router.push("/collection/create");
         },
         onCreateItem() {
@@ -435,13 +440,51 @@ export default {
             if (self.baseUrl === 'unit') {
                 const self = this;
                 self.unitService.updateUnitDetails(self.selectedUnit.id, self.entity).then(response => {
-                    self.$bvToast.toast("Unit details updated successfully.", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
+                    self.$bvToast.toast("Unit details updated successfully.", self.sharedService.successToastConfig);
                 });
             } else if (self.baseUrl === 'collection') {
-                self.collectionService.updateCollection(self.entity).then(reponse => {
-                    self.$bvToast.toast("Collection details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
-                    self.showEdit = !self.showEdit;
-                }).catch(error => self.$bvToast.toast("Collection updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 }));
+                self.submitted = true;
+
+                // Collection Validation rules
+                if (!self.entity.name || !self.entity.taskManager) {
+
+                    self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
+                    return false;
+
+                }
+                if (!self.isCreatePage) {
+
+                    self.collectionService.updateCollection(self.entity).then(reponse => {
+                        self.$bvToast.toast("Collection details updated successfully", self.sharedService.successToastConfig);
+                        self.showEdit = !self.showEdit;
+                        self.submitted = false;
+                    }).catch(error => {
+                        self.submitted = false;
+                        if (error.response && error.response.data && error.response.data.validationErrors) {
+                            const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
+                            errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
+                        } else {
+                            self.$bvToast.toast("Collection creation failed!", self.sharedService.erorrToastConfig);
+                        }
+                    });
+                } else {
+
+                    self.entity.unit = self.baseService.API_URL + `/units/${self.selectedUnit.id}`;
+                    self.collectionService.createCollection(self.entity).then(reponse => {
+                        self.$bvToast.toast("Collection created successfully", self.sharedService.successToastConfig);
+                        self.showEdit = !self.showEdit;
+                        self.submitted = false;
+                    }).catch(error => {
+                        self.submitted = false;
+                        if (error.response && error.response.data && error.response.data.validationErrors) {
+                            const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
+                            errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
+                        } else {
+                            self.$bvToast.toast("Collection creation failed!", self.sharedService.erorrToastConfig);
+                        }
+                    });
+                }
+
             }
         },
         onCancel() {
@@ -468,5 +511,8 @@ export default {
   font-family: "Lucida Console", Monaco, monospace;
   font-size: 0.8rem;
   line-height: 1.2;
+}
+.error-border {
+    border: 1px solid red;
 }
 </style>

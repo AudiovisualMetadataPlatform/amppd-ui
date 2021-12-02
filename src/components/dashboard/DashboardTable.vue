@@ -114,6 +114,7 @@ export default {
     filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
     filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
+    filterByUnits: sync("workflowDashboard.searchQuery.filterByUnits"),
     filterByExternalIds: sync("workflowDashboard.searchQuery.filterByExternalIds"),
     filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
     filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
@@ -186,6 +187,10 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
+    filterByUnits: function(){
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
     filterByExternalIds: function(){
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
@@ -239,6 +244,7 @@ export default {
   }
   table {
     font-size: .8em;
+    table-layout: fixed;
   }
   .font-light-gray-1 {
     color: #dee2e6;
@@ -286,5 +292,8 @@ export default {
     border-color: #F4871E !important;
     color: #153c4d !important;
     cursor:auto;
+  }
+  .table thead th {
+    vertical-align: middle !important;
   }
 </style>
