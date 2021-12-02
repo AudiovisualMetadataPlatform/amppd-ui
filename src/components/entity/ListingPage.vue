@@ -54,7 +54,7 @@
                                 <input
                                     type="text"
                                     class="form-control w-100"
-                                    v-model="entity.originalName"
+                                    v-model="entity.originalFilename"
                                     :disabled="true"
                                 />
                             </div>
@@ -162,7 +162,7 @@
                                 >Edit</button>
                             </div>
                             <b-collapse id="mediaInfo" class="mt-2">
-                                <textarea v-model="sampleJson" disabled class="textArea mt-2 mb-2"></textarea>
+                                <textarea v-model="mediaInfo" disabled class="textArea mt-2 mb-2"></textarea>
                             </b-collapse>
                         </form>
                     </b-card>
@@ -303,6 +303,7 @@ import SharedService from '../../service/shared-service';
 import ItemService from "../../service/item-service";
 import ItemDetails from "./ItemDetails.vue";
 import OutputFile from "./OutputFile.vue";
+import PrimaryFileService from "../../service/primary-file-service.js";
 
 import BaseService from "../../service/base-service";
 export default {
@@ -322,6 +323,7 @@ export default {
             sharedService: new SharedService(),
             itemService: new ItemService(),
             baseService: new BaseService(),
+            primaryFileService: new PrimaryFileService(),
             records: [],
             showLoader: false,
             entity: {},
@@ -359,6 +361,9 @@ export default {
             return ["Trello", "Jira"];
 
         },
+        mediaInfo() {
+            return JSON.stringify(JSON.parse(this.selectedFile.mediaInfo), undefined, 4)
+        }
     },
     methods: {
         async getData() {
@@ -483,9 +488,14 @@ export default {
                             self.$bvToast.toast("Collection creation failed!", self.sharedService.erorrToastConfig);
                         }
                     });
-                }
+                } 
 
-            }
+            }else if(self.baseUrl === 'file') {
+                self.primaryFileService.updatePrimaryFile(self.entity).then(reponse => {
+                    self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
+                    self.showEdit = !self.showEdit;
+                }).catch(error => self.$bvToast.toast("File details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 }));
+            } 
         },
         onCancel() {
             var result = confirm("Are you sure want to cancel!")

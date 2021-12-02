@@ -52,74 +52,9 @@ const menus = [
     }
 ];
 
-const sampleJSONData = {
-    "tags": {},
-    "streams": {
-    "audio": [
-    {
-    "@type": "audio",
-    "codec": "aac",
-    "bit_rate": 256001,
-    "channels": 2,
-    "duration": 3742.939,
-    "@position": 1,
-    "user_data": {
-    "language": "und",
-    "handler_name": "SoundHandler"
-    },
-    "sample_rate": 48000,
-    "sample_format": "fltp",
-    "channel_layout": "stereo"
-    }
-    ],
-    "video": [
-    {
-    "@type": "video",
-    "codec": "h264",
-    "bit_rate": 3002142,
-    "duration": 3742.94,
-    "@position": 0,
-    "user_data": {
-    "language": "und",
-    "handler_name": "VideoHandler"
-    },
-    "dimensions": {
-    "width": 720,
-    "height": 486,
-    "sample_aspect_ratio": [ 9, 10 ],
-    "display_aspect_ratio": [ 4, 3 ]
-    },
-    "frame_rate": 29.97,
-    "pixel_format": "yuv420p",
-    "codec_profile": "High",
-    "bits_per_sample": 8
-    }
-    ]
-    },
-    "container": {
-    "name": "P-5592.mp4",
-    "size": 1528486220,
-    "tags": {
-    "encoder": "Lavf57.0.100",
-    "major_brand": "isom",
-    "minor_version": "512",
-    "compatible_brands": "isomiso2avc1mp41"
-    },
-    "time": 1591015939.6040006,
-    "type": "file",
-    "format": "mov,mp4,m4a,3gp,3g2,mj2",
-    "duration": 3742.982,
-    "mime_type": "video/mp4"
-    }
-    }
-
-
-
-
 export default {
     common: {
         menus: menus,
-        icons: icons,
-        sampleJSONData: sampleJSONData
+        icons: icons
     }
 }
