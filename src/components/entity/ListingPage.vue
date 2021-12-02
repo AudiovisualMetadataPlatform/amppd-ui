@@ -28,7 +28,7 @@
                                         class="form-control w-100"
                                         v-model="entity.name"
                                         :disabled="showEdit"
-                                        :class="{'error-border' : (submitted && !entity.name) }"
+                                        :class="{ 'error-border': (submitted && !entity.name) }"
                                     />
                                 </div>
                                 <div
@@ -40,7 +40,7 @@
                                         class="select custom-select w-100"
                                         v-model="entity.taskManager"
                                         :disabled="showEdit"
-                                        :class="{'error-border' : (submitted && !entity.taskManager) }"
+                                        :class="{ 'error-border': (submitted && !entity.taskManager) }"
                                     >
                                         <option
                                             v-for="option in listOfTaskManager"
@@ -133,14 +133,10 @@
 
                             <div class="w-100 text-right p-0">
                                 <div class="float-left" v-if="baseUrl === 'file'">
-                                    <button
-                                        class="btn btn-lg btn-outline-primary collapsed"
-                                        aria-expanded="false"
-                                        v-b-toggle.mediaInfo
-                                    >
+                                    <b-button v-b-toggle.collapse-1 variant="outline-primary" class="btn-lg">
                                         <span v-html="infoSvg"></span>
                                         Media Information
-                                    </button>
+                                    </b-button>
                                 </div>
                                 <div v-if="!showEdit">
                                     <button
@@ -161,7 +157,8 @@
                                     v-if="showEdit"
                                 >Edit</button>
                             </div>
-                            <b-collapse id="mediaInfo" class="mt-2">
+
+                            <b-collapse id="collapse-1" class="mt-2">
                                 <textarea v-model="mediaInfo" disabled class="textArea mt-2 mb-2"></textarea>
                             </b-collapse>
                         </form>
@@ -362,7 +359,7 @@ export default {
 
         },
         mediaInfo() {
-            return JSON.stringify(JSON.parse(this.selectedFile.mediaInfo), undefined, 4)
+            return (this.selectedFile && this.selectedFile.mediaInfo) ? JSON.stringify(JSON.parse(this.selectedFile.mediaInfo), undefined, 4) : "";
         }
     },
     methods: {
@@ -488,14 +485,14 @@ export default {
                             self.$bvToast.toast("Collection creation failed!", self.sharedService.erorrToastConfig);
                         }
                     });
-                } 
+                }
 
-            }else if(self.baseUrl === 'file') {
+            } else if (self.baseUrl === 'file') {
                 self.primaryFileService.updatePrimaryFile(self.entity).then(reponse => {
                     self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
                     self.showEdit = !self.showEdit;
                 }).catch(error => self.$bvToast.toast("File details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 }));
-            } 
+            }
         },
         onCancel() {
             var result = confirm("Are you sure want to cancel!")
@@ -516,11 +513,11 @@ export default {
 @import "/amppd-ui/src/styles/style.css";
 
 .textArea {
-  width: 100%;
-  min-height: 30rem;
-  font-family: "Lucida Console", Monaco, monospace;
-  font-size: 0.8rem;
-  line-height: 1.2;
+    width: 100%;
+    min-height: 30rem;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 0.8rem;
+    line-height: 1.2;
 }
 .error-border {
     border: 1px solid red;
