@@ -66,6 +66,7 @@
                             class="form-control-file btn btn-light btn-lg"
                             id="exampleFormControlFile1"
                             value="Upload batch manifest"
+                            @change="uploadFile"
                         />
                     </div>
                     <!-- /input-group image-preview [TO HERE]-->
@@ -76,7 +77,7 @@
                     <div
                         class="upload-drop-zone"
                         id="drop-zone"
-                        @drop="dragFile"
+                        @drop="uploadFile"
                     >Or drag and drop files here</div>
                     <br />
                 </div>
@@ -120,7 +121,8 @@ export default {
             itemService: new ItemService(),
             sharedService: new SharedService(),
             showEdit: true,
-            removeIcon: config.common.icons['remove']
+            removeIcon: config.common.icons['remove'],
+            files: []
         }
     },
     computed: {
@@ -146,8 +148,18 @@ export default {
                 }
             });
         },
-        dragFile(e) {
-            console.log(e.dataTransfer.files, 'files');
+        uploadFile(e) {
+            const fileList = (e.target.files || e.dataTransfer.files);
+            // const fileList = (e.target.files);
+            const formData = new FormData(); 
+            fileList.forEach(file => {
+                this.files.push(file);
+                formData.append('file', file, file.name);
+            });
+            this.fileService.uploadFile(this.selectedItem.id, formData).then(el => {}).catch(error => {console.log(error, "error")});
+        },
+        getFile(e) {
+            
         },
         onSaveItem() {
             const self = this;

@@ -320,6 +320,9 @@ export default {
             return ["Trello", "Jira"];
 
         },
+        mediaInfo() {
+            return this.selectedFile && this.selectedFile.mediaInfo ? JSON.stringify(JSON.parse(this.selectedFile.mediaInfo), undefined, 4) : ""
+        }
     },
     methods: {
         async getData() {

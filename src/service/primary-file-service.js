@@ -12,5 +12,24 @@ export default class PrimaryFileService extends BaseService{
         return await super.get_auth(`/items/${itemId}/primaryfiles`); 
     }
 
+    /***
+     * To update a  primary file details
+     * @params primaryfileid, postobj
+     */
+
+     async updatePrimaryFile(itemId, postObj){
+        return await super.patch_auth(`/items/${itemId}/primaryfiles/${postObj.id}`); 
+    }
+
+    /***
+     * To upload a file
+     * @params primaryfileid, formData
+     */
+
+     async uploadFile(id, formData){
+        return await super.post_auth(`/primaryfiles/${id}/upload`, formData); 
+    }
+
+
     
 }
