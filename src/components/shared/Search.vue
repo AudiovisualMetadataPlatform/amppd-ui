@@ -35,15 +35,15 @@
                             <th v-if="type !== 'collections'">Date Created</th>
                         </template>
                         <template v-if="isListingPage">
-                            <th v-if="type === 'listing-collection'">Collection</th>
-                            <th v-if="type === 'listing-item'">item</th>
-                            <th>Description</th>
+                            <th colspan="2" v-if="type === 'listing-collection'">Collection</th>
+                            <th colspan="2" v-if="type === 'listing-item'">Item</th>
+                            <th colspan="2">Description</th>
                             <th v-if="type === 'listing-item'">External Id</th>
                         </template>
                     </thead>
                     <tbody>
                         <tr v-for="source in clonedDataSource" :key="source.id">
-                            <td>
+                            <td colspan="1">
                                 <input class="selectAll" type="checkbox" v-model="selectedRecords" :value="source.id" @change="onChange($event, source)">
                             </td>
                             <template v-if="!isListingPage">
@@ -54,8 +54,8 @@
                                 <td v-if="type !== 'collections'">{{source.dateCreated | DDMMYYYY}}</td>
                             </template>
                             <template v-if="isListingPage">
-                                <th>{{source.name}}</th>
-                                <th>{{source.description}}</th>
+                                <th colspan="2">{{source.name}}</th>
+                                <th colspan="2">{{source.description}}</th>
                                 <th v-if="type === 'listing-item'">{{source.externalId}}</th>
                             </template>
 

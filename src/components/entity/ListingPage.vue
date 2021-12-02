@@ -186,7 +186,7 @@
                                     <button
                                         class="btn btn-primary btn-lg btn-edit"
                                         type="button"
-                                        @click="onSearch('listing-collection')"
+                                        @click="onSearch('listing-item')"
                                     >Search Items</button>
                                 </div>
                             </div>
