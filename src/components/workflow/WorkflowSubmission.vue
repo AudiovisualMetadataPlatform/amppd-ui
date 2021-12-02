@@ -1,11 +1,11 @@
 <template>
    <div class="container col-12 workflows">
     <loader :show="workflowSubmission.loading"/>
-   <div class="row expand-h">
-   <Sidebar/>
-   <div class="col-10 bg-light-gray-1">
+   <div class="row">
+   <!-- <Sidebar/> -->
+   <div class="col-12 bg-light-gray-1">
    <main class="main-margin-min">
-      <Logout/>
+      <!-- <Logout/> -->
       <div class="pad-all-3">
       <div class="card">
       <div class="card-body">

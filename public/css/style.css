@@ -174,35 +174,35 @@
   margin: 2.5rem; }
 
 .btn-primary {
-  background: #F4871E;
-  border-color: #F4871E;
-  color: #153c4d; }
+  background: #F4871E !important;
+  border-color: #F4871E !important;
+  color: #153c4d !important; }
 
 .btn-primary:hover, .btn-secondary:hover, .btn-outline-primary:hover {
-  background: #153c4d;
-  border-color: #153c4d;
-  color: #fff; }
+  background: #153c4d !important;
+  border-color: #153c4d !important;
+  color: #fff !important; }
 
 .btn-secondary {
-  background: #f8ae67;
-  border-color: #f6a14f;
-  color: #153c4d; }
+  background: #f8ae67 !important;
+  border-color: #f6a14f !important;
+  color: #153c4d !important; }
 
 .btn-outline-primary {
-  border-color: #F4871E;
-  color: #F4871E; }
+  border-color: #F4871E !important;
+  color: #F4871E !important; }
 
 .btn-blue {
-  background-color: #006de2;
-  border-color: #006de2;
-  color: #fff;
+  background-color: #006de2 !important;
+  border-color: #006de2 !important;
+  color: #fff !important;
 }
 
 .btn-blue:hover,
 .btn-blue:active,
 .btn-blue:visited {
     background-color: #007bff !important;
-    border-color: #007bff;
+    border-color: #007bff !important;
 }
 
 input[type="file"] {
@@ -221,7 +221,7 @@ input[type="file"] {
   fill: #F4871E; }
 
 #btn-search, .btn-outline {
-  border: 1px solid #ced4da; }
+  border: 1px solid #ced4da !important; }
 
 .switch {
   position: relative;

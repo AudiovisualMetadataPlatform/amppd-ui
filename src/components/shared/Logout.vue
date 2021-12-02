@@ -13,13 +13,19 @@
 
 <script>
 import { accountService } from '@/service/account-service';
+import { sync } from 'vuex-pathify';
 export default {
   name: 'logout',
   methods:{
     signout() {  
+      const self = this;
       accountService.logout();
+      self.isAuthenticated = false;
       this.$router.push("/account/login");
     }
+  },
+  computed: {
+    isAuthenticated: sync("isAuthenticated")
   },
   mounted() { 
   }
