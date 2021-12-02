@@ -13,10 +13,9 @@ import BatchIngest from "./components/batch/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
 import NerEditor from "./components/hmgm/NerEditor.vue";
 import { accountService } from "./service/account-service.js";
-import Collections from "./components/collections/Collections.vue";
 import CollectionDetails from "./components/collections/CollectionDetails.vue";
 import { env } from "./helpers/env.js";
-
+import ListingPage from "./components/entity/ListingPage.vue";
 Vue.use(Router);
 
 var router = new Router({
@@ -93,18 +92,61 @@ var router = new Router({
       name: "ner-editor",
       component: NerEditor,
     },
-    {
-      path: "/collections",
-      name: "collections",
-      component: Collections,
-      meta: { authorize: [] },
-    },
+    // {
+    //   path: "/collections",
+    //   name: "collections",
+    //   component: Collections,
+    //   meta: { authorize: [] },
+    // },
     {
       path: "/collections/collection-details",
       name: "collection-details",
       component: CollectionDetails,
       meta: { authorize: [] },
     },
+    {
+      path: "/unit/details",
+      name: "unit-details",
+      component: ListingPage,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/units",
+      name: "units",
+      component: ListingPage,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collections",
+      name: "collections",
+      component: ListingPage,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collection/details",
+      name: "collection-details",
+      component: ListingPage,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collections/items/details",
+      name: "items-details",
+      component: ListingPage,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collection/create",
+      name: "create-collections",
+      component: ListingPage,
+      meta: { authorize: [] },
+    },
+    {
+      path: "/collection/add-items",
+      name: "create-items",
+      component: ListingPage,
+      meta: { authorize: [] },
+    },
+
   ],
 });
 
@@ -120,9 +162,11 @@ router.beforeEach(async (to, from, next) => {
     console.log("not current user");
     // not logged in so redirect to login page with the return url
     return next({ path: "/account/login", query: { returnUrl: to.path } });
+    // return next();
   } else {
     var success = await accountService.validate();
     if (!success) {
+      // return next();
       return next({ path: "/account/login", query: { returnUrl: to.path } });
     } else {
       return next();

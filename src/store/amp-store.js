@@ -93,6 +93,31 @@ const state = {
     collectionDetails:{
       items:{}
     },
+
+    Items: {
+      page: {
+        number:1,
+        size:20,
+        totalElements:0
+      },
+      _embedded: {
+        items: []
+      },
+    },
+    selectedItem: {},
+
+    PrimaryFiles: {
+      page: {
+        number:1,
+        size:20,
+        totalElements:0
+      },
+      _embedded: {
+        primaryfiles: []
+      },
+    },
+    selectedPrimaryFile: {},
+    selectedUnit: {}
      
 };
 
