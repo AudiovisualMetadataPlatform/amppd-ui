@@ -280,6 +280,7 @@ import SharedService from '../../service/shared-service';
 import ItemService from "../../service/item-service";
 import ItemDetails from "./ItemDetails.vue";
 import Search from "@/components/shared/Search.vue";
+import BaseService from "../../service/base-service";
 export default {
     name: "ListingPage",
     components: {
