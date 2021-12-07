@@ -139,7 +139,7 @@ export default {
         },
         async getPrimaryFiles() {
             const self = this;
-            self.fileService.getPrimaryFiles(6079).then(response => {
+            self.fileService.getPrimaryFiles(self.selectedItem.id).then(response => {
                 self.PrimaryFiles = response.data;
                 if(self.PrimaryFiles) {
                     self.PrimaryFiles = self.sharedService.sortByAlphabatical(self.PrimaryFiles);
