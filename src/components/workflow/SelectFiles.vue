@@ -172,7 +172,7 @@ export default {
          if(self.searchWord.length >0){
             self.searchedItems = await self.workflowService.searchFiles(this.searchWord, media_type);
             self.searchResults = true;
-            // we dont need two need conditions needs to be checked for displaying accrodian on result section. so commenting the below part.
+            // we dont require two conditions needs to be checked for displaying accrodian on result section. so commenting the below part.
             // if(self.searchedItems.rows!=null)
             // {
             //    self.searchResults = true;
