@@ -228,7 +228,7 @@ router.beforeEach(async (to, from, next) => {
       return next({ path: "/account/login", query: { returnUrl: to.path } });
     } else {
       router.app.$store.state.isAuthenticated = true;
-      router.app.$store.commit("Authenticated");
+      router.app.$store.commit("isAuthenticated");
       return next();
     }
   }
