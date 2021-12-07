@@ -28,7 +28,7 @@
                                         class="form-control w-100"
                                         v-model="entity.name"
                                         :disabled="showEdit"
-                                        :class="{'error-border' : (submitted && !entity.name) }"
+                                        :class="{ 'error-border': (submitted && !entity.name) }"
                                     />
                                 </div>
                                 <div
@@ -40,7 +40,7 @@
                                         class="select custom-select w-100"
                                         v-model="entity.taskManager"
                                         :disabled="showEdit"
-                                        :class="{'error-border' : (submitted && !entity.taskManager) }"
+                                        :class="{ 'error-border': (submitted && !entity.taskManager) }"
                                     >
                                         <option
                                             v-for="option in listOfTaskManager"
@@ -48,6 +48,15 @@
                                         >{{ option }}</option>
                                     </select>
                                 </div>
+                            </div>
+                            <div class="col-12 text-left form-group p-0" v-if="baseUrl === 'file'">
+                                <label>Orginal Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control w-100"
+                                    v-model="entity.originalFilename"
+                                    :disabled="true"
+                                />
                             </div>
                             <div class="col-12 text-left form-group p-0">
                                 <label>Description</label>
@@ -123,6 +132,12 @@
                             </div>
 
                             <div class="w-100 text-right p-0">
+                                <div class="float-left" v-if="baseUrl === 'file'">
+                                    <b-button v-b-toggle.collapse-1 variant="outline-primary" class="btn-lg">
+                                        <span v-html="infoSvg"></span>
+                                        Media Information
+                                    </b-button>
+                                </div>
                                 <div v-if="!showEdit">
                                     <button
                                         class="btn btn-outline btn-lg btn-edit mr-2"
@@ -142,12 +157,19 @@
                                     v-if="showEdit"
                                 >Edit</button>
                             </div>
+
+                            <b-collapse id="collapse-1" class="mt-2">
+                                <textarea v-model="mediaInfo" disabled class="textArea mt-2 mb-2"></textarea>
+                            </b-collapse>
                         </form>
                     </b-card>
 
                     <!-- Header - Details page Ends here-->
                     <div v-if="baseUrl === 'item'">
                         <ItemDetails></ItemDetails>
+                    </div>
+                    <div v-else-if="baseUrl === 'file'">
+                        <OutputFile />
                     </div>
                     <div class v-else>
                         <!-- Title ends here -->
@@ -271,6 +293,7 @@
 <script>
 
 import { sync } from "vuex-pathify";
+import config from '../../assets/constants/common-contant.js';
 import Sidebar from '@/components/navigation/Sidebar.vue';
 import Logout from '@/components/shared/Logout.vue';
 import Loader from '@/components/shared/Loader.vue';
@@ -279,7 +302,10 @@ import UnitService from '../../service/unit-service';
 import SharedService from '../../service/shared-service';
 import ItemService from "../../service/item-service";
 import ItemDetails from "./ItemDetails.vue";
+import OutputFile from "./OutputFile.vue";
+import PrimaryFileService from "../../service/primary-file-service.js";
 import Search from "@/components/shared/Search.vue";
+import BaseService from "../../service/base-service";
 export default {
     name: "ListingPage",
     components: {
@@ -287,7 +313,8 @@ export default {
     Sidebar,
     Loader,
     ItemDetails,
-    Search
+    Search,
+    OutputFile
 },
     props: [],
     data() {
@@ -297,11 +324,13 @@ export default {
             sharedService: new SharedService(),
             itemService: new ItemService(),
             baseService: new BaseService(),
+            primaryFileService: new PrimaryFileService(),
             records: [],
             masterRecords: [],
             showLoader: false,
             entity: {},
             showEdit: true,
+            infoSvg: config.common.icons['info'],
             searchType: "",
             submitted: false
         }
@@ -310,11 +339,15 @@ export default {
         selectedCollection: sync("selectedCollection"),
         selectedUnit: sync("selectedUnit"),
         selectedItem: sync("selectedItem"),
+        selectedFile: sync("selectedFile"),
         baseUrl() {
             const self = this;
             if (window.location.hash.toLowerCase().indexOf('unit') > -1) {
                 return "unit";
-            } else if (window.location.hash.toLowerCase().indexOf('collection') > -1 && window.location.hash.toLowerCase().indexOf('item') === -1) {
+            } else if (window.location.hash.toLowerCase().indexOf('file') > -1) {
+                return "file";
+            }
+            else if (window.location.hash.toLowerCase().indexOf('collection') > -1 && window.location.hash.toLowerCase().indexOf('item') === -1) {
                 return "collection";
             } else if (window.location.hash.toLowerCase().indexOf('item') > -1) {
                 return "item";
@@ -331,6 +364,9 @@ export default {
             return ["Trello", "Jira"];
 
         },
+        mediaInfo() {
+            return (this.selectedFile && this.selectedFile.mediaInfo) ? JSON.stringify(JSON.parse(this.selectedFile.mediaInfo), undefined, 4) : "";
+        }
     },
     methods: {
         async getData() {
@@ -354,6 +390,9 @@ export default {
                     self.selectedItem = self.entity = {};
                     self.showEdit = false;
                 }
+            } else if (self.baseUrl === 'file') {
+                self.entity = self.selectedFile;
+                self.showLoader = false;
             }
         },
         async getUnitDetails() {
@@ -456,6 +495,11 @@ export default {
                     });
                 }
 
+            } else if (self.baseUrl === 'file') {
+                self.primaryFileService.updatePrimaryFile(self.entity).then(reponse => {
+                    self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
+                    self.showEdit = !self.showEdit;
+                }).catch(error => self.$bvToast.toast("File details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 }));
             }
         },
         onCancel() {
@@ -484,6 +528,13 @@ export default {
 <style scoped>
 @import "/amppd-ui/src/styles/style.css";
 
+.textArea {
+    width: 100%;
+    min-height: 30rem;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 0.8rem;
+    line-height: 1.2;
+}
 .error-border {
     border: 1px solid red;
 }
