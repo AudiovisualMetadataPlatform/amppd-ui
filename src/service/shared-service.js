@@ -1,5 +1,8 @@
 export default class SharedService {
-    constructor() {}
+    constructor() {
+        this.erorrToastConfig = { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 };
+        this.successToastConfig = { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 }; 
+    }
 
     /****Filtering an array
      * @params - arrayObj
@@ -18,5 +21,14 @@ export default class SharedService {
         });
 
         return tempArrayObj;
+    }
+
+    /*****
+     * Extract Error messages from Api Response
+     * @params validationErrors
+     * ****** */
+
+    extractErrorMessage( validationErrors = [] ) {
+        return validationErrors.map(el => el.message);
     }
 }

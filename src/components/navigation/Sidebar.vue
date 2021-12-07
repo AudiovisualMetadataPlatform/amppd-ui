@@ -79,38 +79,53 @@
     </div>
     
           
-      </div> -->
-      <div class="col-12 bg-dark-1">
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-            <div class="navbar-header d-flex">
-              <a class="navbar-brand" href="#"></a><span v-html="ampSvg"></span>
-            </div>
-            <ul class="nav navbar-nav">
-              <li class="marg-t-2" :class="menu.class" v-for="menu in menuList" :key="menu.url">
-                <a :href="'/#' + menu.url" ><span  v-html="menu.icon"></span><span class="pl-2">{{menu.name}}</span></a>
-              </li>
-              <li>
-                 <Logout />
-              </li>
-            </ul>
+  </div>-->
+  <div class="w-100">
+    <div class="col-12 bg-dark-1">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header d-flex">
+            <a class="navbar-brand" href="#"></a>
+            <span v-html="ampSvg"></span>
           </div>
-        </nav>
-      </div>
+          <ul class="nav navbar-nav" v-if="isAuthenticated">
+            <li class="marg-t-2" :class="menu.class" v-for="menu in menuList" :key="menu.url">
+              <a :href="'/#' + menu.url">
+                <span v-html="menu.icon"></span>
+                <span class="pl-2">{{ menu.name }}</span>
+              </a>
+            </li>
+            <li>
+              <Logout />
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <BreadCrumbs />
+  </div>
 </template>
 <script>
 import config from '../../assets/constants/common-contant.js';
 import Logout from '@/components/shared/Logout.vue';
+import BreadCrumbs from '@/components/shared/BreadCrumbs.vue';
+import { accountService } from '../../service/account-service.js';
+import { sync } from 'vuex-pathify';
 
 export default {
   components: {
-    Logout
+    Logout,
+    BreadCrumbs
   },
   data() {
     return {
       menuList: config.common.menus,
-      ampSvg: config.common.icons['amp']
+      ampSvg: config.common.icons['amp'],
+      accountService: accountService
     }
+  },
+  computed: {
+    isAuthenticated: sync("isAuthenticated")
   },
   methods: {
     convertToSvg(value) {
@@ -122,21 +137,22 @@ export default {
 </script>
 
 <style lang="css">
-@import '/amppd-ui/src/styles/style.css';
-  .form-errors {
-    color: red;
-    margin: 0%!important;
-    font-size: 0.9rem; 
-    padding-left:3px; 
-  }
-  nav ul li {
-    list-style: none;
-    font-size:1rem;
-  }
-  .navbar-nav {
-    flex-direction: initial !important;
-  }
-  .icon-dark-1[data-v-0028c4b4], .svg-inline.dwn-arrow[data-v-0028c4b4] {
-    fill: white
-  }
+@import "/amppd-ui/src/styles/style.css";
+.form-errors {
+  color: red;
+  margin: 0% !important;
+  font-size: 0.9rem;
+  padding-left: 3px;
+}
+nav ul li {
+  list-style: none;
+  font-size: 1rem;
+}
+.navbar-nav {
+  flex-direction: initial !important;
+}
+.icon-dark-1[data-v-0028c4b4],
+.svg-inline.dwn-arrow[data-v-0028c4b4] {
+  fill: white;
+}
 </style>

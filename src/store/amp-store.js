@@ -47,10 +47,11 @@ const state = {
               orderByDescending: true
             },
             pageNum: 1,
-            resultsPerPage: 10,
+            // resultsPerPage: 10,
             filterByDates:[],
             filterBySubmitters:[],
             filterByCollections:[],
+            filterByUnits:[],
             filterByExternalIds:[],
             filterByItems:[],
             filterByFiles:[],
@@ -117,7 +118,10 @@ const state = {
       },
     },
     selectedPrimaryFile: {},
-    selectedUnit: {}
+    selectedUnit: {},
+    isAuthenticated: false,
+    selectedFile: {},
+    selectedFilters: {}
      
 };
 

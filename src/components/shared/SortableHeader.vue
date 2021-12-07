@@ -1,10 +1,8 @@
 <template>
-	<th
-		:class="[{'sorting':!isSorted, 'sorting_desc': isSorted && sortRule.orderByDescending, 'sorting_asc': isSorted && !sortRule.orderByDescending}]"
-		@click="sort()"
-	>
-        
-		<slot>{{label||propertyName}}</slot>
+	<th class="pointer" @click="sort()">
+        <div class="d-flex">
+		<slot>{{label||propertyName}}</slot> <div style="width:20px; height:20px" class="ml-2"  :class="[{'sorting':!isSorted, 'sorting_desc': isSorted && sortRule.orderByDescending, 'sorting_asc': isSorted && !sortRule.orderByDescending}]"></div>
+		</div>
 	</th>
 </template>
 
@@ -43,5 +41,8 @@ export default {
 </script>
 
 <style>
+.pointer {
+	cursor: pointer;
+}
 
 </style>
