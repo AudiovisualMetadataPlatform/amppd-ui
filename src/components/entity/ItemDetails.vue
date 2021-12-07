@@ -13,7 +13,7 @@
                     <th></th>
                 </thead>
                 <tbody>
-                    <tr v-for="file in PrimaryFiles._embedded.primaryfiles" :key="file.id">
+                    <tr v-for="(file, index) in PrimaryFiles._embedded.primaryfiles" :key="file.id">
                         <td>
                             <input type="text" class="w-100" v-model="file.name" />
                         </td>
@@ -32,8 +32,13 @@
                             <button
                                 class="btn btn-primary btn float-right"
                                 @click="onView(file)"
-                            >View</button>
-                            <button class="btn btn-link add-remove float-right mr-1"><span v-html="removeIcon" class="pr-1"></span>Remove file</button>
+                            v-if="!file.file">View</button>
+                            <button
+                                class="btn btn-primary btn float-right ml-1 mr-1"
+                                @click="saveFile(file)"
+                                v-if="file.file"
+                            >Save</button>
+                            <button class="btn btn-link add-remove float-right mr-1" @click="removeFile(index)"><span v-html="removeIcon" class="pr-1"></span>Remove file</button>
                         </td>
                     </tr>
                 </tbody>
@@ -60,15 +65,24 @@
                     <strong>Upload files</strong>
                 </div>
                 <div class="panel-body">
-                    <div class="input-group image-preview">
+                    <div class="row w-100">
+                        <div class="input-group image-preview col-11">
+                            <!-- <label for="exampleFormControlFile1" class="form-control-file btn btn-light btn-lg"><button>Browse</button></label> -->
                         <input
                             type="file"
                             class="form-control-file btn btn-light btn-lg"
                             id="exampleFormControlFile1"
-                            value="Upload batch manifest"
-                            @change="uploadFile"
+                            value="Upload" 
+                            ref="fileupload"
+                            @change="getFile"
+
                         />
                     </div>
+                    <div class="col-1">
+                      <button class="btn btn-secondary btn-lg w-100" @click="uploadFile()">Upload</button>
+                    </div>
+                    </div>
+                    
                     <!-- /input-group image-preview [TO HERE]-->
 
                     <br />
@@ -77,21 +91,9 @@
                     <div
                         class="upload-drop-zone"
                         id="drop-zone"
-                        @drop="uploadFile"
+                        @drop="getFile"
                     >Or drag and drop files here</div>
                     <br />
-                </div>
-            </div>
-            <div class="d-flex justify-content-between w-100" v-if="!isCreatePage ">
-                <div></div>
-                <div class="float-right">
-                    <button type="submit" class="btn btn btn-outline btn-lg marg-all-1">Clear</button>
-                    <button
-                        type="submit"
-                        class="btn marg-all-1 btn btn-outline btn-lg"
-                    >Add another item</button>
-
-                    <button type="submit" class="marg-all-1 btn btn-primary btn-lg">Save</button>
                 </div>
             </div>
         </b-card>
@@ -149,18 +151,31 @@ export default {
                 }
             });
         },
+        getFile(e) {
+            const self = this;
+            self.files = (e.target.files || e.dataTransfer.files);
+        },
         uploadFile(e) {
-            const fileList = (e.target.files || e.dataTransfer.files);
-            // const fileList = (e.target.files);
-            const formData = new FormData(); 
-            fileList.forEach(file => {
-                this.files.push(file);
-                formData.append('file', file, file.name);
+            const self = this;
+            self.files.forEach(file => {
+                const primaryFile = {name: "", originalFilename: file.name, description:"", file: file, id: file.filename};
+                self.PrimaryFiles._embedded.primaryfiles.push(primaryFile);
             });
+            self.files = [];
+            this.$refs.fileupload.value = "";
+        },
+        saveFile(data) {
+            const formData = new FormData();
+            formData.append('file', data.file, data.file.name);
+            formData.append('name', data.name);
+            formData.append('originalFiileName', data.originalFilename);
+            formData.append('description', data.description);
             this.fileService.uploadFile(this.selectedItem.id, formData).then(el => {}).catch(error => {console.log(error, "error")});
         },
-        getFile(e) {
-            
+        removeFile(index) {
+            const self = this;
+            if(self.PrimaryFiles._embedded.primaryfiles[index].file)
+                self.PrimaryFiles._embedded.primaryfiles.splice(index, 1);
         },
         onSaveItem() {
             const self = this;
