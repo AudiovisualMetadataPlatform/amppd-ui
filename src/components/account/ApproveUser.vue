@@ -83,11 +83,11 @@ computed:{
     await accountService.sendApproveUserRequest(this.$route.params.id )
     .then(response => {
       self.approve_user = response.success;
-      self.disableAction = true;
+      self.disableAction = false;
       })
     .catch(e => {
       console.log(e);
-      self.disableAction = true;
+      self.disableAction = false;
 		});
 		console.log("approve result is:"+self.approve_user);
 		if(this.errors.length != 0)
@@ -118,11 +118,11 @@ computed:{
       await accountService.sendRejectUserRequest(this.$route.params.id )
       .then(response => {
         self.reject_user = response.success;
-        self.disableAction = true;
+        self.disableAction = false;
       })
       .catch(e => {
         console.log(e);
-        self.disableAction = true;
+        self.disableAction = false;
       });
       console.log("reject result is:"+self.reject_user);
       if(this.errors.length != 0)
