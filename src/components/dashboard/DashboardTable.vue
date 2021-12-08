@@ -86,6 +86,7 @@ import SortableHeader from '../shared/SortableHeader';
 import Pagination from '../shared/Pagination';
 import SearchFilter from './DashboardFilters/SearchFilter';
 import Loader from '@/components/shared/Loader.vue';
+import SharedService from '../../service/shared-service';
 
 export default {
   name: 'DashboardTable',
@@ -111,6 +112,7 @@ export default {
         {label: 'Status', field: 'status'},
       ],
       workflowResultService: new WorkflowResultService(),
+      sharedService: new SharedService(),
       visibleRows: [],
       filteredRows:[],
       resultsPerPage: 10
@@ -300,6 +302,10 @@ export default {
 
       if(!isProcessed) {
         resutlArray = tempArray;
+      }
+
+      if(this.workflowDashboard.searchQuery.sortRule.columnName) {
+        resutlArray = this.sharedService.findDataAndSort(resutlArray, this.workflowDashboard.searchQuery.sortRule.columnName, this.workflowDashboard.searchQuery.sortRule.orderByDescending);
       }
      this.filteredRows = resutlArray;
     }
