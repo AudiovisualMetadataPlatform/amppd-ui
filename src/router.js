@@ -16,6 +16,7 @@ import { accountService } from "./service/account-service.js";
 import CollectionDetails from "./components/collections/CollectionDetails.vue";
 import { env } from "./helpers/env.js";
 import ListingPage from "./components/entity/ListingPage.vue";
+import WorkflowList from './components/workflow/WorkflowList.vue';
 Vue.use(Router);
 
 var router = new Router({
@@ -199,6 +200,17 @@ var router = new Router({
           {text: "Home", href: '#/'}, 
           {text: "Collection Details", href: '#/collection/details'},
           {text: "File"}
+        ]
+      },
+    },
+    {
+      path: "/workflows",
+      name: "workflow-listing",
+      component: WorkflowList,
+      meta: { authorize: [],
+        breadCrumb: [ 
+          {text: "Home", href: '#/'}, 
+          {text: "Workflows"}
         ]
       },
     },
