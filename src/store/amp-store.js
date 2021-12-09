@@ -120,6 +120,7 @@ const state = {
     selectedPrimaryFile: {},
     selectedUnit: {},
     isAuthenticated: false,
+    selectedFile: {},
     selectedFilters: {}
      
 };

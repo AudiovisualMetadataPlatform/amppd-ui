@@ -29,10 +29,10 @@
                             <input type="text" class="w-100" v-model="file.description" />
                         </td>
                         <td>
-                            <a
-                                href="/collections/file.html"
+                            <button
                                 class="btn btn-primary btn float-right"
-                            >View</a>
+                                @click="onView(file)"
+                            >View</button>
                             <button class="btn btn-link add-remove float-right mr-1"><span v-html="removeIcon" class="pr-1"></span>Remove file</button>
                         </td>
                     </tr>
@@ -128,6 +128,7 @@ export default {
         selectedItem: sync("selectedItem"),
         selectedCollection: sync("selectedCollection"),
         PrimaryFiles: sync("PrimaryFiles"),
+        selectedFile: sync("selectedFile"),
         isCreatePage() {
             return (window.location.hash.toLowerCase().indexOf('add-item') > -1)
         }
@@ -139,7 +140,7 @@ export default {
         },
         async getPrimaryFiles() {
             const self = this;
-            self.fileService.getPrimaryFiles(6079).then(response => {
+            self.fileService.getPrimaryFiles(self.selectedItem.id).then(response => {
                 self.PrimaryFiles = response.data;
                 if(self.PrimaryFiles) {
                     self.PrimaryFiles = self.sharedService.sortByAlphabatical(self.PrimaryFiles);
@@ -170,6 +171,10 @@ export default {
                    
                 });
             }
+        },
+        onView(file) {
+            this.selectedFile = file;
+            this.$router.push("/collections/file");
         }
     },
     mounted() {
