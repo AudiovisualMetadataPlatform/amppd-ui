@@ -86,6 +86,7 @@ import SortableHeader from '../shared/SortableHeader';
 import Pagination from '../shared/Pagination';
 import SearchFilter from './DashboardFilters/SearchFilter';
 import Loader from '@/components/shared/Loader.vue';
+import SharedService from '../../service/shared-service';
 
 export default {
   name: 'DashboardTable',
@@ -111,6 +112,7 @@ export default {
         {label: 'Status', field: 'status'},
       ],
       workflowResultService: new WorkflowResultService(),
+      sharedService: new SharedService(),
       visibleRows: [],
       filteredRows:[],
       resultsPerPage: 10
@@ -187,119 +189,123 @@ export default {
       this.workflowDashboard.loading = false;
     },
     applySearchParams() {
-      const tempArray = JSON.parse(JSON.stringify(this.workflowDashboard.searchResult.rows));
-      let resutlArray = [];
-      let isProcessed = false;
+      let resutlArray = JSON.parse(JSON.stringify(this.workflowDashboard.searchResult.rows));
+      // let resutlArray = [];
+      // let isProcessed = false;
       /****Collection Filter* */
       if(this.workflowDashboard.searchQuery.filterByCollections && this.workflowDashboard.searchQuery.filterByCollections.length) {
         this.workflowDashboard.searchQuery.filterByCollections.forEach(el => {
-          const temp = tempArray.filter(data => (data.collectionName && el) ? data.collectionName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
+          resutlArray = resutlArray.filter(data => (data.collectionName && el) ? data.collectionName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
         });
-        isProcessed = true;
+        // // isProcessed = true;
       }
 
       /****ExternalIds Filter* */
       if(this.workflowDashboard.searchQuery.filterByExternalIds && this.workflowDashboard.searchQuery.filterByExternalIds.length) {
         this.workflowDashboard.searchQuery.filterByExternalIds.forEach(el => {
-          const temp = tempArray.filter(data => (data.externalId && el) ? data.externalId.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
+          resutlArray = resutlArray.filter(data => (data.externalId && el) ? data.externalId.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
         });
-        isProcessed = true;
+        // // isProcessed = true;
       }
 
       /****Item Filter* */
       if(this.workflowDashboard.searchQuery.filterByItems && this.workflowDashboard.searchQuery.filterByItems.length) {
         this.workflowDashboard.searchQuery.filterByItems.forEach(el => {
-          const temp = tempArray.filter(data => (data.itemName && el) ? data.itemName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
+          resutlArray = resutlArray.filter(data => (data.itemName && el) ? data.itemName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
         });
-        isProcessed = true;
+        // isProcessed = true;
       }
 
       /****Files Filter* */
       if(this.workflowDashboard.searchQuery.filterByFiles && this.workflowDashboard.searchQuery.filterByFiles.length) {
         this.workflowDashboard.searchQuery.filterByFiles.forEach(el => {
-          const temp = tempArray.filter(data => (data.itemName && el) ? data.itemName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
+          resutlArray = resutlArray.filter(data => (data.itemName && el) ? data.itemName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
         });
-        isProcessed = true;
+        // isProcessed = true;
       }
 
       /****Workflow Filter* */
       if(this.workflowDashboard.searchQuery.filterByWorkflows && this.workflowDashboard.searchQuery.filterByWorkflows.length) {
         this.workflowDashboard.searchQuery.filterByWorkflows.forEach(el => {
-          const temp = tempArray.filter(data => (data.workflowName && el) ? data.workflowName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
+          resutlArray = resutlArray.filter(data => (data.workflowName && el) ? data.workflowName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
         });
-        isProcessed = true;
+        // isProcessed = true;
       }
 
       /****Submitter Filter* */
       if(this.workflowDashboard.searchQuery.filterBySubmitters && this.workflowDashboard.searchQuery.filterBySubmitters.length) {
         this.workflowDashboard.searchQuery.filterBySubmitters.forEach(el => {
-          const temp = tempArray.filter(data => (data.submitter && el) ? data.submitter.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
+          resutlArray = resutlArray.filter(data => (data.submitter && el) ? data.submitter.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
         });
-        isProcessed = true;
+        // isProcessed = true;
       }
 
       /****Outputs Filter* */
       if(this.workflowDashboard.searchQuery.filterByOutputs && this.workflowDashboard.searchQuery.filterByOutputs.length) {
         this.workflowDashboard.searchQuery.filterByOutputs.forEach(el => {
-          const temp = tempArray.filter(data => (data.outputName && el) ? data.outputName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
+          resutlArray = resutlArray.filter(data => (data.outputName && el) ? data.outputName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
         });
-        isProcessed = true;
+        // isProcessed = true;
       }
 
       /****Statuses Filter* */
       if(this.workflowDashboard.searchQuery.filterByStatuses && this.workflowDashboard.searchQuery.filterByStatuses.length) {
         this.workflowDashboard.searchQuery.filterByStatuses.forEach(el => {
-          const temp = tempArray.filter(data => (data.status && el) ? data.status.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
+          resutlArray = resutlArray.filter(data => (data.status && el) ? data.status.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
         });
-        isProcessed = true;
+        // isProcessed = true;
       }
 
       /****Step Filter* */
       if(this.workflowDashboard.searchQuery.filterBySteps && this.workflowDashboard.searchQuery.filterBySteps.length) {
         this.workflowDashboard.searchQuery.filterBySteps.forEach(el => {
-          const temp = tempArray.filter(data => (data.workflowStep && el) ? data.workflowStep.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
+          resutlArray = resutlArray.filter(data => (data.workflowStep && el) ? data.workflowStep.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
         });
-        isProcessed = true;
+        // isProcessed = true;
       }
 
       /****Step Filter* */
       if(this.workflowDashboard.searchQuery.steps && this.workflowDashboard.searchQuery.steps.length) {
         this.workflowDashboard.searchQuery.steps.forEach(el => {
-          const temp = tempArray.filter(data => (data.workflowStep && el) ? data.workflowStep.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
+          resutlArray = resutlArray.filter(data => (data.workflowStep && el) ? data.workflowStep.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
         });
-        isProcessed = true;
+        // isProcessed = true;
       }
 
       /****Date Filter* */
       if(this.workflowDashboard.searchQuery.filterByDates && this.workflowDashboard.searchQuery.filterByDates.length) {
         const fromDate = this.workflowDashboard.searchQuery.filterByDates[0];
         const toDate = this.workflowDashboard.searchQuery.filterByDates[1];
-        const temp = tempArray.filter(data => ( fromDate&& data && toDate) ?  ((new Date(data.dateCreated) >=  fromDate) && (new Date(data.dateCreated) <=  toDate) ) : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        isProcessed = true;
+        resutlArray = resutlArray.filter(data => ( fromDate&& data && toDate) ?  ((new Date(data.dateCreated) >=  fromDate) && (new Date(data.dateCreated) <=  toDate) ) : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
+        // isProcessed = true;
       }
 
       /****Search Term* */
       if(this.workflowDashboard.searchQuery.filterBySearchTerms && this.workflowDashboard.searchQuery.filterBySearchTerms.length) {
         this.workflowDashboard.searchQuery.filterBySearchTerms.forEach(el => {
-          const temp = tempArray.filter(data => (data.primaryfileName && el) ? data.primaryfileName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
+          resutlArray = resutlArray.filter(data => (data.primaryfileName && el) ? data.primaryfileName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
+          // resutlArray = [...new Set(resutlArray.concat(temp))];
         });
-        isProcessed = true;
+        // isProcessed = true;
       }
 
-      if(!isProcessed) {
-        resutlArray = tempArray;
+      // if(!isProcessed) {
+      //   resutlArray = resutlArray;
+      // }
+
+      if(this.workflowDashboard.searchQuery.sortRule.columnName) {
+        resutlArray = this.sharedService.findDataAndSort(resutlArray, this.workflowDashboard.searchQuery.sortRule.columnName, this.workflowDashboard.searchQuery.sortRule.orderByDescending);
       }
      this.filteredRows = resutlArray;
     }
