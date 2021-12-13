@@ -23,6 +23,7 @@ var router = new Router({
     {
       // TODO we may want to have a separate landing/welcome page with some greeting and a brief introduction to AMP
       path: "/",
+      redirect:"/unit/details",
       name: "home",
       component: WorkflowDashboard,
       meta: { authorize: [],
