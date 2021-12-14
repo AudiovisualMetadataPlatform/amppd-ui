@@ -23,6 +23,7 @@ var router = new Router({
     {
       // TODO we may want to have a separate landing/welcome page with some greeting and a brief introduction to AMP
       path: "/",
+      redirect:"/unit/details",
       name: "home",
       component: WorkflowDashboard,
       meta: { authorize: [],
@@ -228,7 +229,7 @@ router.beforeEach(async (to, from, next) => {
       return next({ path: "/account/login", query: { returnUrl: to.path } });
     } else {
       router.app.$store.state.isAuthenticated = true;
-      router.app.$store.commit("isAuthenticated");
+      // router.app.$store.commit("isAuthenticated");
       return next();
     }
   }
