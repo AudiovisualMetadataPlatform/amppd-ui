@@ -6,18 +6,26 @@
             </svg></a>
       
       <!-- <div class="right-pane"><button type = "button" v-on:click="signout()">Logout</button></div> -->
+      <br>
   </div>
+  
 </template>
 
 <script>
 import { accountService } from '@/service/account-service';
+import { sync } from 'vuex-pathify';
 export default {
   name: 'logout',
   methods:{
     signout() {  
+      const self = this;
       accountService.logout();
+      self.isAuthenticated = false;
       this.$router.push("/account/login");
     }
+  },
+  computed: {
+    isAuthenticated: sync("isAuthenticated")
   },
   mounted() { 
   }
@@ -165,9 +173,9 @@ export default {
     fill: #153c4d;
   }
 
-  .workflows .workflows, .collections .collections {
+  /* .workflows .workflows, .collections .collections {
     background: #22617d;
-  }
+  } */
 
   svg.icon-user {
     width: 2.5rem;

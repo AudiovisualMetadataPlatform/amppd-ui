@@ -51,7 +51,8 @@
       </div>
    </form>
    <div v-if="searchResults">
-      <h3>Search Results</h3>
+      <h4>Search Results</h4>
+      <hr class="w-100">
       <div id="accordion" v-if="searchedItems.rows && searchedItems.rows.length>0">
 
          <div class="card" v-for="(item, index) in searchedItems.rows" v-bind:key="index" >
@@ -110,7 +111,7 @@
          </div>
       </div>
       <div v-else>
-         No Results
+           <b-alert show variant="secondary">No results found</b-alert>
       </div>
    </div>
    <SelectBundle/>
@@ -170,14 +171,16 @@ export default {
          else media_type+='0';
          if(self.searchWord.length >0){
             self.searchedItems = await self.workflowService.searchFiles(this.searchWord, media_type);
-            if(self.searchedItems.rows!=null)
-            {
-               self.searchResults = true;
-            }
-            else
-            {
-               self.searchResults = false;
-            }
+            self.searchResults = true;
+            // we dont require two conditions needs to be checked for displaying accrodian on result section. so commenting the below part.
+            // if(self.searchedItems.rows!=null)
+            // {
+            //    self.searchResults = true;
+            // }
+            // else
+            // {
+            //    self.searchResults = false;
+            // }
          }
          else{
             self.errors.search_error = 'Please enter a search keyword';

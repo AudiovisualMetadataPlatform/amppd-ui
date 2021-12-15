@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <Header/>
+  <div class="col-12">
+    <!-- <Header/> -->
     <main>
       <div class="container">
         <h1 class="text-center">Welcome to the Audiovisual Metadata Platform</h1>
@@ -38,6 +38,7 @@
 <script>
 import Header from '@/components/shared/Header.vue';
 import { accountService } from '@/service/account-service';
+import { sync } from 'vuex-pathify';
 export default {
   name: 'LoginComponent',
   components: {
@@ -59,6 +60,10 @@ export default {
     token: null
     };
   },
+  computed:{
+    isAuthenticated: sync("isAuthenticated")
+  },
+
   created() {
     if (this.$route.params.token)
     {
@@ -97,6 +102,7 @@ export default {
         console.log("current user:"+currentUser);
         console.log("AUTH:");
         if(currentUser && currentUser.token){
+          self.isAuthenticated = true;
           if(this.$route.query.returnUrl){
             console.log("going to " + this.$route.query.returnUrl);
             this.$router.push(this.$route.query.returnUrl);
