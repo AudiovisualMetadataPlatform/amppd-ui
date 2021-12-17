@@ -32,7 +32,7 @@
                             <th v-if="type === 'collections'">Collection</th>
                             <th v-if="type === 'workflows'">Workflow</th>
                             <th v-if="type === 'outputs'">Output</th>
-                            <th v-if="type !== 'collections'">Date Created</th>
+                            <th v-if="(type === 'workflows' || type === 'collections')">Date Created</th>
                         </template>
                         <template v-if="isListingPage">
                             <th colspan="2" v-if="type === 'listing-collection'">Collection</th>
@@ -51,7 +51,7 @@
                                 <td v-if="type === 'collections'">{{ source.collectionName }}</td>
                                 <td v-if="type === 'workflows'">{{ source.workflowName }}</td>
                                 <td v-if="type === 'outputs'">{{ source.outputName}}</td>
-                                <td v-if="type !== 'collections'">{{source.dateCreated | DDMMYYYY}}</td>
+                                <td v-if="(type === 'workflows' || type === 'collections')">{{source.dateCreated | DDMMYYYY}}</td>
                             </template>
                             <template v-if="isListingPage">
                                 <th colspan="2">{{source.name}}</th>
