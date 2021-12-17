@@ -24,8 +24,19 @@
       <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
       <span class="slider round"></span>
     </label>
-  </div>     
-  <search-filter/> 
+  </div>  
+  <search-filter/>
+   <br/>
+  <b-pagination
+        class="mt-3 justify-content-left"
+        v-model="workflowDashboard.searchQuery.pageNum"
+        :total-rows="filteredRows.length"
+        :per-page="resultsPerPage"
+        @change="paginate(workflowDashboard.searchQuery.pageNum)"
+        size="lg"
+        first-number
+        last-number
+      ></b-pagination>  
   <div class="table-responsive">
     <table id="myTable" class="table dataTable no-footer">
       <thead>
@@ -68,12 +79,22 @@
         </tr>
       </tbody>
     </table>
-    <pagination v-if="this.workflowDashboard.searchQuery"
+    <!-- <pagination v-if="this.workflowDashboard.searchQuery"
           :pageNum="workflowDashboard.searchQuery.pageNum"
           :resultsPerPage="resultsPerPage"
           :totalResults="filteredRows.length"
           :maxPages="1"
-          @paginate="paginate" />
+          @paginate="paginate" /> -->
+          <b-pagination
+        class="mt-3 justify-content-left"
+        v-model="workflowDashboard.searchQuery.pageNum"
+        :total-rows="filteredRows.length"
+        :per-page="resultsPerPage"
+        @change="paginate(workflowDashboard.searchQuery.pageNum)"
+        size="lg"
+        first-number
+        last-number
+      ></b-pagination>
   </div>
 </div>
 </template>
@@ -178,6 +199,7 @@ export default {
       this.workflowDashboard.loading = true;
       if(!this.workflowDashboard.searchResult.rows || !this.workflowDashboard.searchResult.rows.length) {
         this.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
+        const temp = await this.workflowResultService.getWorkflowFilters();
         self.applySearchParams();
       } else {
         if(!isFromPagination){
@@ -414,7 +436,7 @@ export default {
     justify-content: space-around;
     position: absolute;
     top: 0;
-    left: 170px;
+    /* left: 170px; */
   }  
   .btn-blue:hover, .btn-blue:active, .btn-blue:visited {
     background-color: #006de2 !important;

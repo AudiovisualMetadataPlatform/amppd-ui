@@ -9,6 +9,15 @@ export default class WorkflowResultService extends BaseService{
         });
         return data;
     }
+
+    async getWorkflowFilters(){
+        var data = await super.get_auth('/workflow-filters').
+        then(result=>{
+            return result.data;
+        });
+        return data;
+    }
+
     async exportWorkflowResults(searchQuery){
         var data = await super.post_auth('/workflow-results/export', searchQuery).
         then(result=>{
