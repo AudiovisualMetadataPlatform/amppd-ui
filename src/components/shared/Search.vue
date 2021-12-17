@@ -179,7 +179,8 @@ export default {
             if(!self.userSearchValue) return;
 
             const temp = [];
-            self.dataSource.filter(o =>
+            const tempDataSource = this.searchDataSourceMap.get(self.type);
+            tempDataSource.filter(o =>
                 // Object.keys(o).some(k => o[k] && o[k].toLowerCase().includes(self.userSearchValue.toLowerCase())));
                 self.searchProps.filter(el => {
                     if(o[el] && o[el].toLowerCase().indexOf(self.userSearchValue.toLowerCase()) >-1) {
@@ -191,7 +192,9 @@ export default {
         },
         populteValues() {
             if(!this.userSearchValue) {
-                this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
+                const tempDataSource = this.searchDataSourceMap.get(this.type);
+                if(tempDataSource) 
+                    this.clonedDataSource = JSON.parse(JSON.stringify(tempDataSource));
                 this.selectAll= (this.selectedRecords.length === this.dataSource.length);
             }
         },
