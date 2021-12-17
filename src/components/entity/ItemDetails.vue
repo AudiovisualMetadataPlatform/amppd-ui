@@ -166,11 +166,10 @@ export default {
         },
         saveFile(data) {
             const formData = new FormData();
-            formData.append('file', data.file, data.file.name);
-            formData.append('name', data.name);
-            formData.append('originalFiileName', data.originalFilename);
-            formData.append('description', data.description);
-            this.fileService.uploadFile(this.selectedItem.id, formData).then(el => {}).catch(error => {console.log(error, "error")});
+            formData.append("primaryfile", { name: data.originalFilename, description: data.description});
+            formData.append("mediaFile", data.file);
+            //this.selectedItem.id,
+            this.fileService.uploadFile(15256, formData).then(el => {}).catch(error => {console.log(error, "error")});
         },
         removeFile(index) {
             const self = this;

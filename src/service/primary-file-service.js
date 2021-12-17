@@ -28,7 +28,7 @@ export default class PrimaryFileService extends BaseService{
 
      async uploadFile(id, formData){
         // return await super.post_auth(`/primaryfiles/${id}/upload`, formData);
-        return await super.post_auth(`/items/${id}/addPrimaryFile`, formData); 
+        return await super.post_auth(`/items/${id}/addPrimaryfile`, formData); 
     }
 
 
