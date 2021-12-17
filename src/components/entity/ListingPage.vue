@@ -240,7 +240,7 @@
                                                     <input type="checkbox" v-model="elem.active" />
                                                     <span class="slider round"></span>
                                                 </label>
-                                                <div>
+                                                <div v-if="((elem.active && baseUrl == 'unit') || baseUrl !== 'unit')">
                                                     <button
                                                         class="btn btn-primary btn"
                                                         @click="onView(elem)"
