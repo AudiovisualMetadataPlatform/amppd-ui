@@ -34,7 +34,7 @@
                                 @click="onView(file)"
                             v-if="!file.file">View</button>
                             <button
-                                class="btn btn-primary btn float-right ml-1 mr-1"
+                                class="btn btn-primary btn float-right"
                                 @click="saveFile(file)"
                                 v-if="file.file"
                             >Save</button>
@@ -166,10 +166,13 @@ export default {
         },
         saveFile(data) {
             const formData = new FormData();
-            formData.append("primaryfile", { name: data.originalFilename, description: data.description});
+            formData.append('primaryfile', new Blob([JSON.stringify({ name: data.originalFilename, description: data.description})], {
+                type: "application/json"
+            }));
             formData.append("mediaFile", data.file);
-            //this.selectedItem.id,
-            this.fileService.uploadFile(15256, formData).then(el => {}).catch(error => {console.log(error, "error")});
+            this.fileService.uploadFile(self.selectedItem.id, formData).then(el => {
+                this.getPrimaryFiles();
+            }).catch(error => {console.log(error, "error")});
         },
         removeFile(index) {
             const self = this;
