@@ -47,7 +47,7 @@ const state = {
               orderByDescending: true
             },
             pageNum: 1,
-            // resultsPerPage: 10,
+            resultsPerPage: 10,
             filterByDates:[],
             filterBySubmitters:[],
             filterByCollections:[],

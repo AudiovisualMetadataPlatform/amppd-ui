@@ -1,6 +1,7 @@
 <template>
 
-  <div class="collections">
+  <div class="collections w-100">
+     <loader :show="!isFilterApiLoaded"/>
   <div class="container col-12">
     <div class="row">
       <!-- <Sidebar/> -->
@@ -39,7 +40,7 @@
                         </div>
                       </div>
                     </button>       
-                    <!-- <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(collection,index) in workflowDashboard.searchQuery.filterByCollections" v-bind:workflow="collection" v-bind:index="index" v-bind:key="index"> 
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(collection,index) in workflowDashboard.searchQuery.filterByCollections" v-bind:workflow="collection" v-bind:index="index" v-bind:key="index"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeCollectionFilter(index)">
                           <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
@@ -49,7 +50,7 @@
                           <label class="row no-padding-col">{{collection}}</label>
                         </div>
                       </div>
-                    </button>   -->
+                    </button>  
                       <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(externalId,index) in workflowDashboard.searchQuery.filterByExternalIds" v-bind:externalId="externalId" v-bind:index="index" v-bind:key="index"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeExternalIdFilter(index)">
@@ -83,7 +84,7 @@
                         </div>
                       </div>
                     </button>       
-                    <!-- <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(workflow,index) in workflowDashboard.searchQuery.filterByWorkflows" v-bind:workflow="workflow" v-bind:index="index" v-bind:key="index"> 
+                    <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(workflow,index) in workflowDashboard.searchQuery.filterByWorkflows" v-bind:workflow="workflow" v-bind:index="index" v-bind:key="index"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeWorkflowFilter(index)">
                           <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
@@ -93,7 +94,7 @@
                           <label class="row no-padding-col">{{workflow}}</label>
                         </div>
                       </div>
-                    </button>       -->
+                    </button>      
                     <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(step,index) in workflowDashboard.searchQuery.filterBySteps" v-bind:step="step" v-bind:index="index" v-bind:key="index"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeStepFilter(index)">
@@ -105,7 +106,7 @@
                         </div>
                       </div>
                     </button>
-                     <!-- <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(output,index) in workflowDashboard.searchQuery.filterByOutputs" v-bind:output="output" v-bind:index="index" v-bind:key="index"> 
+                     <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(output,index) in workflowDashboard.searchQuery.filterByOutputs" v-bind:output="output" v-bind:index="index" v-bind:key="index"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeOutputFilter(index)">
                           <path fill="#808080" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"></path>
@@ -115,7 +116,7 @@
                           <label class="row no-padding-col">{{output}}</label>
                         </div>
                       </div>
-                    </button>        -->
+                    </button>       
                     <button class="btn btn-outline col-sm-2 selected-filter-button" v-for = "(status,index) in workflowDashboard.searchQuery.filterByStatuses" v-bind:status="status" v-bind:index="index" v-bind:key="index"> 
                       <div class="row">
                         <svg class="col-auto" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24" @click="removeStatusFilter(index)">
@@ -222,8 +223,8 @@
                   <div class="row spacer">
                   </div>
                 </div>
-                <DashboardTable/>
-                <Search :searchType="searchType" :dataSource="workflowDashboard.searchResult.rows"/>
+                <DashboardTable v-if="isFilterApiLoaded"/>
+                <Search :searchType="searchType" :dataSource="searchSource"/>
               </div>
             </div>
           </div>
@@ -244,6 +245,8 @@ import TextFilter from '@/components/dashboard/DashboardFilters/TextFilter';
 import StatusFilter from '@/components/dashboard/DashboardFilters/StatusFilter';
 import Logout from '@/components/shared/Logout.vue';
 import Search from  '@/components/shared/Search.vue';
+import WorkflowResultService from '../../service/workflow-result-service';
+import Loader from '@/components/shared/Loader.vue';
 
 export default {
   name: 'Dashboard',
@@ -254,7 +257,8 @@ export default {
     TextFilter,
     StatusFilter,
     Logout,
-    Search
+    Search,
+    Loader
   },
   data(){
     return {
@@ -262,7 +266,9 @@ export default {
       bundle: null,
       visible : true,
       searchType: "",
-      searchSource: []
+      searchSource: [],
+      workflowResultService: new WorkflowResultService(),
+      isFilterApiLoaded: false
     }
   },
   computed:{
@@ -283,7 +289,13 @@ export default {
         + this.workflowDashboard.searchQuery.filterByOutputs.length 
         + this.workflowDashboard.searchQuery.filterByStatuses.length
         + this.workflowDashboard.searchQuery.filterBySearchTerms.length;
-    }
+    },
+    
+    filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
+    filterByUnits: sync("workflowDashboard.searchQuery.filterByUnits"),
+    filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
+    filterByOutputs: sync("workflowDashboard.searchQuery.filterByOutputs"),
+    
   },
   props: {
   },
@@ -386,10 +398,21 @@ export default {
 
       this.$bvModal.show('modal-lg');
       
+    },
+
+    async getFilterValues() {
+      const self = this;
+       const filterValues = await this.workflowResultService.getWorkflowFilters();
+       if(filterValues) {
+         self.isFilterApiLoaded = true;
+         self.workflowDashboard.searchResult.filters = filterValues;
+       }
     }
     ,
   },
-
+  mounted() {
+    this.getFilterValues();
+  }
 }
 </script>
 

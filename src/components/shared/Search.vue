@@ -139,16 +139,6 @@ export default {
           this.processModalData()
       }
     },
-    // watch: {
-    //     type:function(newValue, oldValue) {
-    //         if(newValue !== oldValue) 
-    //             this.getTypeaheadSearchItems(); 
-    //             this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
-    //             this.selectedRecords = (this.selectedFilters[newValue] && this.selectedFilters[newValue].length) ? this.selectedFilters[newValue].map(el => el.id) : [];
-    //             this.selectAll= (this.selectedRecords.length === this.clonedDataSource.length) ? true : false;
-    //     }
-        
-    // },
     methods: {
         onSelectAllChange(ev) {
             const self = this;
@@ -267,7 +257,7 @@ export default {
             if(this.searchDataSourceMap.get(this.type)) {
                 this.clonedDataSource = this.searchDataSourceMap.get(this.type);
             } else {
-                this.clonedDataSource = [...new Map(this.clonedDataSource.map(item =>[item[this.searchProps[0]], item])).values()];
+                // this.clonedDataSource = [...new Map(this.clonedDataSource.map(item =>[item[this.searchProps[0]], item])).values()];
                 this.searchDataSourceMap.set(this.type, this.clonedDataSource);
             }
             this.selectedRecords = (this.selectedFilters[this.type] && this.selectedFilters[this.type].length) ? this.selectedFilters[this.type].map(el => el.id) : [];
