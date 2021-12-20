@@ -8,12 +8,11 @@
                 <table id="myTable" data-detail-view="true" class="table dataTable">
                     <thead>
                         <tr>
-                            <th data-sortable="false" data-field="id">Date</th>
-                            <th data-sortable="false" data-field="id">Submitter</th>
-                            <th data-sortable="false" data-field="type">Workflow Name</th>
-                            <th data-sortable="false" data-field="type">Workflow Step</th>
-                            <th data-sortable="false" data-field="type">Output Link</th>
-                            <th data-sortable="false" data-field="type">Name</th>
+                           <sortable-header v-for="column in OUTPUT_FILE_HEADERS" :key="column.field"
+                            :property-name="column.field"
+                            :sort-rule="sortRule"
+                            @sort="sortQuery"
+                            :label="column.label" />
                         </tr>
                         <!-- -->
                     </thead>
@@ -68,7 +67,6 @@
                                 />
                             </td>
 
-                            <td></td>
                         </tr>
 
                         <!-- -->
@@ -81,15 +79,27 @@
 <script>
 import { sync } from 'vuex-pathify';
 import WorkflowResultService from '../../service/workflow-result-service';
+import config from '../../assets/constants/common-contant.js';
+import SharedService from '../../service/shared-service.js';
+import SortableHeader from '../shared/SortableHeader';
 export default {
     name: "OutputFile",
+    components: {
+        SortableHeader
+    },
     computed: {
         selectedFile: sync("selectedFile")
     },
     data() {
         return {
+            sharedService: new SharedService(),
             workflowResultService: new WorkflowResultService(),
-            listOfOutputList: []
+            OUTPUT_FILE_HEADERS: config.OUTPUT_FILE_HEADERS,
+            sortRule: {
+              columnName: 'name',
+              orderByDescending: true
+            },
+            listOfOutputList: [],
         }
     },
     methods: {
@@ -101,6 +111,13 @@ export default {
                 this.listOfOutputList = response.rows;
             }
             
+        },
+        sortQuery(sortRule) {
+            const self = this;
+            this.sortRule = sortRule;
+            if(sortRule.columnName) {
+                self.outputFiles = this.sharedService.findDataAndSort(self.outputFiles, sortRule.columnName, sortRule.orderByDescending);
+            }
         }
     }, 
     mounted() {

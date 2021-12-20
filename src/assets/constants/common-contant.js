@@ -52,9 +52,21 @@ const menus = [
     }
 ];
 
+
+// Primary File - Table - Columns
+const OUTPUT_FILE_HEADERS = [
+    {label: 'Date', field: 'dateCreated'},
+    {label: 'Submitter', field: 'submitter'},
+    {label: 'Workflow Name', field: 'workflowName'},
+    {label: 'Workflow Step', field: 'workflowStep'},
+    {label: 'Output Link', field: 'outputLink'},
+    {label: 'Name', field: 'name'}
+];
+
 export default {
     common: {
         menus: menus,
-        icons: icons
-    }
+        icons: icons,
+    },
+    OUTPUT_FILE_HEADERS: OUTPUT_FILE_HEADERS
 }

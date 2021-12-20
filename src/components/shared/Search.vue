@@ -123,6 +123,7 @@ export default {
             clonedDataSource: [],
             selectedRecords: [],
             selectAll: false,
+            searchDataSourceMap: new Map()
             // type: JSON.parse(this.searchType)
             
         }
@@ -178,7 +179,8 @@ export default {
             if(!self.userSearchValue) return;
 
             const temp = [];
-            self.dataSource.filter(o =>
+            const tempDataSource = this.searchDataSourceMap.get(self.type);
+            tempDataSource.filter(o =>
                 // Object.keys(o).some(k => o[k] && o[k].toLowerCase().includes(self.userSearchValue.toLowerCase())));
                 self.searchProps.filter(el => {
                     if(o[el] && o[el].toLowerCase().indexOf(self.userSearchValue.toLowerCase()) >-1) {
@@ -190,7 +192,9 @@ export default {
         },
         populteValues() {
             if(!this.userSearchValue) {
-                this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
+                const tempDataSource = this.searchDataSourceMap.get(this.type);
+                if(tempDataSource) 
+                    this.clonedDataSource = JSON.parse(JSON.stringify(tempDataSource));
                 this.selectAll= (this.selectedRecords.length === this.dataSource.length);
             }
         },
@@ -259,6 +263,13 @@ export default {
             this.populteValues();
             this.getTypeaheadSearchItems(); 
             this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
+            // To get the distinct values 
+            if(this.searchDataSourceMap.get(this.type)) {
+                this.clonedDataSource = this.searchDataSourceMap.get(this.type);
+            } else {
+                this.clonedDataSource = [...new Map(this.clonedDataSource.map(item =>[item[this.searchProps[0]], item])).values()];
+                this.searchDataSourceMap.set(this.type, this.clonedDataSource);
+            }
             this.selectedRecords = (this.selectedFilters[this.type] && this.selectedFilters[this.type].length) ? this.selectedFilters[this.type].map(el => el.id) : [];
             this.selectAll= (this.selectedRecords.length === this.clonedDataSource.length)
         }
