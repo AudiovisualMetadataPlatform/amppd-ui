@@ -19,47 +19,51 @@
                     </thead>
                     <tbody>
                         <!-- -->
-                        <tr>
+                        <tr v-for="output in listOfOutputList" :key="output.id">
                             <td>
-                                <input type="text" value="12/28/2021" class="form-control" disabled />
+                                <!-- <input type="text" :value="12/28/2021" class="form-control" disabled /> --> <p >{{ new Date(output.dateCreated) | dateFormat('YYYY-MM-DD') }}</p>
                             </td>
                             <td>
-                                <input
+                                <!-- <input
                                     type="text"
-                                    value="Barry Manilow"
+                                    :value="output.submitter"
                                     class="form-control"
                                     disabled
-                                />
+                                /> -->
+                                {{output.submitter}}
                             </td>
                             <td>
-                                <input
+                                <!-- <input
                                     type="text"
-                                    value="Lorem ipsum dolor sit amet, duo ea dicta quidam"
+                                    :value="output.workflowName"
                                     class="form-control"
                                     disabled
-                                />
+                                /> -->
+                                {{output.workflowName}}
                             </td>
 
                             <td>
-                                <input
+                                <!-- <input
                                     type="text"
-                                    value="Ei erant clita doctus usu"
+                                    :value="output.workflowStep"
                                     class="form-control"
                                     disabled
-                                />
+                                /> -->
+                                {{output.workflowStep}}
+                            </td>
+                            <td>
+                                <!-- <input
+                                    type="text"
+                                    :value="output.outputLink"
+                                    class="form-control"
+                                    disabled
+                                /> -->
+                                {{output.outputLink}}
                             </td>
                             <td>
                                 <input
                                     type="text"
-                                    value="filename.ext"
-                                    class="form-control"
-                                    disabled
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    value="Lorem ipsum dolor sit amet, duo ea dicta quidam"
+                                    :value="output.outputName"
                                     class="form-control"
                                 />
                             </td>
@@ -75,8 +79,33 @@
     </div>
 </template>
 <script>
+import { sync } from 'vuex-pathify';
+import WorkflowResultService from '../../service/workflow-result-service';
 export default {
-    name: "OutputFile"
+    name: "OutputFile",
+    computed: {
+        selectedFile: sync("selectedFile")
+    },
+    data() {
+        return {
+            workflowResultService: new WorkflowResultService(),
+            listOfOutputList: []
+        }
+    },
+    methods: {
+        async getOutputFileList() {
+            const self = this;
+            const filters = {filterByFiles: [self.selectedFile.name]};
+            const response = await this.workflowResultService.getWorkflowResults(filters);
+            if(response.rows) {
+                this.listOfOutputList = response.rows;
+            }
+            
+        }
+    }, 
+    mounted() {
+        this.getOutputFileList();
+    }
 
 }
 </script>
@@ -88,5 +117,13 @@ export default {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+.text-box {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+
+td, th {
+    padding: 0.75rem !important;
 }
 </style>
