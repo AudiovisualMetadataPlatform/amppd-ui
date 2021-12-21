@@ -291,7 +291,7 @@
                 </main>
             </div>
         </div>
-        <Search :searchType="searchType" :dataSource="masterRecords" @myEvent="onSearchDone" isListingPage="true"/>
+        <Search :searchType="searchType" :dataSource="masterRecords" @myEvent="onSearchDone" isEntityList="true"/>
     </div>
 </template>
 
@@ -312,7 +312,7 @@ import PrimaryFileService from "../../service/primary-file-service.js";
 import Search from "@/components/shared/Search.vue";
 import BaseService from "../../service/base-service";
 export default {
-    name: "ListingPage",
+    name: "EntityList",
     components: {
     Logout,
     Sidebar,

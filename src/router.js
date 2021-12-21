@@ -15,7 +15,7 @@ import NerEditor from "./components/hmgm/NerEditor.vue";
 import { accountService } from "./service/account-service.js";
 import CollectionDetails from "./components/collections/CollectionDetails.vue";
 import { env } from "./helpers/env.js";
-import ListingPage from "./components/entity/ListingPage.vue";
+import EntityList from "./components/entity/EntityList.vue";
 Vue.use(Router);
 
 var router = new Router({
@@ -134,7 +134,7 @@ var router = new Router({
     {
       path: "/unit/details",
       name: "unit-details",
-      component: ListingPage,
+      component: EntityList,
       meta: { authorize: [], 
         breadCrumb: [
           {text: "Home", href: '#/'}, 
@@ -145,7 +145,7 @@ var router = new Router({
     {
       path: "/collection/details",
       name: "collection-details",
-      component: ListingPage,
+      component: EntityList,
       meta: { authorize: [], 
         breadCrumb: [
           {text: "Home", href: '#/'}, 
@@ -157,11 +157,11 @@ var router = new Router({
     {
       path: "/collections/items/details",
       name: "items-details",
-      component: ListingPage,
+      component: EntityList,
       meta: { authorize: [],
         breadCrumb: [
           {text: "Home", href: '#/'}, 
-          {text: "Unit Details", href: '/unit/details'},
+          {text: "Unit Details", href: '#/unit/details'},
           {text: "Collection Details", href: '#/collection/details'},
           {text: "Item", href: '#/collections/items/details'}
         ]
@@ -170,7 +170,7 @@ var router = new Router({
     {
       path: "/collection/create",
       name: "create-collections",
-      component: ListingPage,
+      component: EntityList,
       meta: { authorize: [], 
         breadCrumb: [
           {text: "Home", href: '#/'}, 
@@ -182,7 +182,7 @@ var router = new Router({
     {
       path: "/collection/add-items",
       name: "create-items",
-      component: ListingPage,
+      component: EntityList,
       meta: { authorize: [],
         breadCrumb: [ 
           {text: "Home", href: '#/'}, 
@@ -194,7 +194,7 @@ var router = new Router({
     {
       path: "/collections/file",
       name: "file-details",
-      component: ListingPage,
+      component: EntityList,
       meta: { authorize: [],
         breadCrumb: [ 
           {text: "Home", href: '#/'}, 
