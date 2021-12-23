@@ -693,6 +693,15 @@ svg.icon-user {
   right: 1rem;
   border-radius: 0.25rem; }
 
+  .page-link {
+    color: #163c4d !important;
+  }
+  
+  .page-item.active .page-link {
+    background: #163c4d !important;
+    color:white !important;
+  }
+
 @media screen and (max-width: 39em) {
   #logo {
     min-width: 100px;
