@@ -138,6 +138,10 @@ export default {
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
+    filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
+    filterByUnits: sync("workflowDashboard.searchQuery.filterByUnits"),
+    filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
+    filterByOutputs: sync("workflowDashboard.searchQuery.filterByOutputs"),
     filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
     filterBySearchTerms: sync("workflowDashboard.searchQuery.filterBySearchTerms"),
     filterByRelevant: sync("workflowDashboard.searchQuery.filterByRelevant"),
