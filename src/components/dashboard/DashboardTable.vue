@@ -5,7 +5,11 @@
     <input id="export-results" type="button" class="btn btn-outline-primary btn-sm" v-on:click="exportResults" value="Export to CSV"/>
   </div>
   <div class="dataTables_length">
-    <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
+    <!-- <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
+      <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
+      Entries
+    </label> -->
+    <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="" @change="refreshData()">
       <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
       Entries
     </label>
@@ -20,8 +24,19 @@
       <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
       <span class="slider round"></span>
     </label>
-  </div>     
-  <search-filter/> 
+  </div>  
+  <search-filter/>
+   <br/>
+  <b-pagination
+        class="mt-3 justify-content-left"
+        v-model="workflowDashboard.searchQuery.pageNum"
+        :total-rows="workflowDashboard.searchResult.totalResults"
+        :per-page="workflowDashboard.searchQuery.resultsPerPage"
+        @change="paginate(workflowDashboard.searchQuery.pageNum)"
+        size="lg"
+        first-number
+        last-number
+      ></b-pagination>  
   <div class="table-responsive">
     <table id="myTable" class="table dataTable no-footer">
       <thead>
@@ -64,12 +79,22 @@
         </tr>
       </tbody>
     </table>
-    <pagination v-if="this.workflowDashboard.searchQuery"
+    <!-- <pagination v-if="this.workflowDashboard.searchQuery"
           :pageNum="workflowDashboard.searchQuery.pageNum"
-          :resultsPerPage="Number.parseInt(workflowDashboard.searchQuery.resultsPerPage)"
-          :totalResults="workflowDashboard.searchResult.totalResults"
+          :resultsPerPage="resultsPerPage"
+          :totalResults="filteredRows.length"
           :maxPages="1"
-          @paginate="paginate" />
+          @paginate="paginate" /> -->
+          <b-pagination
+        class="mt-3 justify-content-left"
+        v-model="workflowDashboard.searchQuery.pageNum"
+        :total-rows="workflowDashboard.searchResult.totalResults"
+        :per-page="workflowDashboard.searchQuery.resultsPerPage"
+        @change="paginate(workflowDashboard.searchQuery.pageNum)"
+        size="lg"
+        first-number
+        last-number
+      ></b-pagination>
   </div>
 </div>
 </template>
@@ -82,6 +107,7 @@ import SortableHeader from '../shared/SortableHeader';
 import Pagination from '../shared/Pagination';
 import SearchFilter from './DashboardFilters/SearchFilter';
 import Loader from '@/components/shared/Loader.vue';
+import SharedService from '../../service/shared-service';
 
 export default {
   name: 'DashboardTable',
@@ -107,23 +133,25 @@ export default {
         {label: 'Status', field: 'status'},
       ],
       workflowResultService: new WorkflowResultService(),
+      sharedService: new SharedService(),
     }
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
-    filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
-    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
     filterByUnits: sync("workflowDashboard.searchQuery.filterByUnits"),
-    filterByExternalIds: sync("workflowDashboard.searchQuery.filterByExternalIds"),
-    filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
-    filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
     filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
-    filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
     filterByOutputs: sync("workflowDashboard.searchQuery.filterByOutputs"),
     filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
     filterBySearchTerms: sync("workflowDashboard.searchQuery.filterBySearchTerms"),
     filterByRelevant: sync("workflowDashboard.searchQuery.filterByRelevant"),
+    filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
+    filterByExternalIds: sync("workflowDashboard.searchQuery.filterByExternalIds"),
+    filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
+    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
+    filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
+    filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
+   
     visibleRows(){
       let self=this;
       var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
@@ -131,6 +159,7 @@ export default {
       if(!this.workflowDashboard.searchResult.rows || this.workflowDashboard.searchResult.rows.length<=0) {
         return this.workflowDashboard.searchResult.rows;
       }
+      
       return this.workflowDashboard.searchResult.rows;
     }
   },
@@ -165,10 +194,15 @@ export default {
       this.refreshData();
     },
     async refreshData(){
-      this.workflowDashboard.loading = true;
-      this.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
-      this.workflowDashboard.loading = false;
-    }
+      const self = this;
+      self.workflowDashboard.loading = true;
+      const response = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
+        if(response.rows) {
+          self.workflowDashboard.searchResult.rows = response.rows;
+          this.workflowDashboard.searchResult.totalResults = response.totalResults;
+        }
+      self.workflowDashboard.loading = false;
+    },
   },
   async mounted(){
     this.refreshData();
@@ -227,6 +261,10 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },    
+  },
+  beforeDestroy() {
+    this.workflowDashboard.searchResult.rows = [];
+    this.workflowDashboard.searchQuery.pageNum = 1;
   }
 }
 </script>
@@ -270,7 +308,7 @@ export default {
     justify-content: space-around;
     position: absolute;
     top: 0;
-    left: 170px;
+    /* left: 170px; */
   }  
   .btn-blue:hover, .btn-blue:active, .btn-blue:visited {
     background-color: #006de2 !important;

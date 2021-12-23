@@ -1,6 +1,6 @@
 <template>
-<div class="w-100">
-    <b-card class="text-left" v-if="!isCreatePage">
+    <div class="w-100">
+        <b-card class="text-left" v-if="!isCreatePage">
             <h2 class="mb-3">Files</h2>
             <table
                 class="table"
@@ -13,7 +13,7 @@
                     <th></th>
                 </thead>
                 <tbody>
-                    <tr v-for="file in PrimaryFiles._embedded.primaryfiles" :key="file.id">
+                    <tr v-for="(file, index) in PrimaryFiles._embedded.primaryfiles" :key="file.id">
                         <td>
                             <input type="text" class="w-100" v-model="file.name" />
                         </td>
@@ -29,11 +29,22 @@
                             <input type="text" class="w-100" v-model="file.description" />
                         </td>
                         <td>
-                            <a
-                                href="/collections/file.html"
+                            <button
                                 class="btn btn-primary btn float-right"
-                            >View</a>
-                            <button class="btn btn-link add-remove float-right mr-1"><span v-html="removeIcon" class="pr-1"></span>Remove file</button>
+                                @click="onView(file)"
+                                v-if="!file.file"
+                            >View</button>
+                            <button
+                                class="btn btn-primary btn float-right"
+                                @click="saveFile(file, index)"
+                                v-if="file.file"
+                            >Save</button>
+                            <button
+                                class="btn btn-link add-remove float-right mr-1"
+                                @click="removeFile(index)"
+                            >
+                                <span v-html="removeIcon" class="pr-1"></span>Remove file
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -60,14 +71,26 @@
                     <strong>Upload files</strong>
                 </div>
                 <div class="panel-body">
-                    <div class="input-group image-preview">
-                        <input
-                            type="file"
-                            class="form-control-file btn btn-light btn-lg"
-                            id="exampleFormControlFile1"
-                            value="Upload batch manifest"
-                        />
+                    <div class="row w-100">
+                        <div class="input-group image-preview col-11">
+                            <!-- <label for="exampleFormControlFile1" class="form-control-file btn btn-light btn-lg"><button>Browse</button></label> -->
+                            <input
+                                type="file"
+                                class="form-control-file btn btn-light btn-lg"
+                                id="exampleFormControlFile1"
+                                value="Upload"
+                                ref="fileupload"
+                                @change="getFile"
+                            />
+                        </div>
+                        <div class="col-1">
+                            <button
+                                class="btn btn-secondary btn-lg w-100"
+                                @click="uploadFile()"
+                            >Upload</button>
+                        </div>
                     </div>
+
                     <!-- /input-group image-preview [TO HERE]-->
 
                     <br />
@@ -76,25 +99,13 @@
                     <div
                         class="upload-drop-zone"
                         id="drop-zone"
-                        @drop="dragFile"
+                        @drop="getFile"
                     >Or drag and drop files here</div>
                     <br />
                 </div>
             </div>
-            <div class="d-flex justify-content-between w-100" v-if="!isCreatePage ">
-                <div></div>
-                <div class="float-right">
-                    <button type="submit" class="btn btn btn-outline btn-lg marg-all-1">Clear</button>
-                    <button
-                        type="submit"
-                        class="btn marg-all-1 btn btn-outline btn-lg"
-                    >Add another item</button>
-
-                    <button type="submit" class="marg-all-1 btn btn-primary btn-lg">Save</button>
-                </div>
-            </div>
         </b-card>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -120,7 +131,8 @@ export default {
             itemService: new ItemService(),
             sharedService: new SharedService(),
             showEdit: true,
-            removeIcon: config.common.icons['remove']
+            removeIcon: config.common.icons['remove'],
+            files: []
         }
     },
     computed: {
@@ -128,6 +140,7 @@ export default {
         selectedItem: sync("selectedItem"),
         selectedCollection: sync("selectedCollection"),
         PrimaryFiles: sync("PrimaryFiles"),
+        selectedFile: sync("selectedFile"),
         isCreatePage() {
             return (window.location.hash.toLowerCase().indexOf('add-item') > -1)
         }
@@ -139,37 +152,74 @@ export default {
         },
         async getPrimaryFiles() {
             const self = this;
-            self.fileService.getPrimaryFiles(6079).then(response => {
+            self.fileService.getPrimaryFiles(self.selectedItem.id).then(response => {
                 self.PrimaryFiles = response.data;
-                if(self.PrimaryFiles) {
+                if (self.PrimaryFiles) {
                     self.PrimaryFiles = self.sharedService.sortByAlphabatical(self.PrimaryFiles);
                 }
             });
         },
-        dragFile(e) {
-            console.log(e.dataTransfer.files, 'files');
+        getFile(e) {
+            const self = this;
+            self.files = (e.target.files || e.dataTransfer.files);
+        },
+        uploadFile(e) {
+            const self = this;
+            self.files.forEach(file => {
+                const primaryFile = { name: "", originalFilename: file.name, description: "", file: file, id: file.filename };
+                self.PrimaryFiles._embedded.primaryfiles.push(primaryFile);
+            });
+            self.files = [];
+            this.$refs.fileupload.value = "";
+        },
+        saveFile(data, index) {
+            const self = this;
+            const formData = new FormData();
+            formData.append('primaryfile', new Blob([JSON.stringify({ name: data.originalFilename, description: data.description })], {
+                type: "application/json"
+            }));
+            formData.append("mediaFile", data.file);
+            this.fileService.uploadFile(self.selectedItem.id, formData).then(el => {
+                this.$set(self.PrimaryFiles._embedded.primaryfiles, index, el);
+            }).catch(error => {
+                if (error.response && error.response.data && error.response.data.validationErrors) {
+                    const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
+                    errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
+                } else {
+                    self.$bvToast.toast("Something went wrong!", self.sharedService.erorrToastConfig);
+                }
+            });
+        },
+        removeFile(index) {
+            const self = this;
+            if (self.PrimaryFiles._embedded.primaryfiles[index].file)
+                self.PrimaryFiles._embedded.primaryfiles.splice(index, 1);
         },
         onSaveItem() {
             const self = this;
-            if(self.isCreatePage){
+            if (self.isCreatePage) {
                 self.selectedItem = {
                     ...self.selectedItem,
                     collection: env.getAmpUrl() + `/collections/${self.selectedCollection.id}`
                 }
                 self.itemService.addItemToCollection(self.selectedItem).then(reponse => {
-                    self.$bvToast.toast("Item added successfully", {title: 'Notification',appendToast: true,variant:"success", autoHideDelay:5000});
+                    self.$bvToast.toast("Item added successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
                     self.$router.push("/collection/details");
                 }).catch(error => {
-                    self.$bvToast.toast("Failed to add an Item", {title: 'Notification',appendToast: true,variant:"danger", autoHideDelay:5000});
+                    self.$bvToast.toast("Failed to add an Item", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 });
                 });
             } else {
                 self.itemService.updateItem(self.selectedItem).then(reponse => {
-                    self.$bvToast.toast("Item updated successfully", {title: 'Notification',appendToast: true,variant:"success", autoHideDelay:5000});
+                    self.$bvToast.toast("Item updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
                 }).catch(error => {
-                   self.$bvToast.toast("Failed to add an Item", {title: 'Notification',appendToast: true,variant:"danger", autoHideDelay:5000});
-                   
+                    self.$bvToast.toast("Failed to add an Item", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 });
+
                 });
             }
+        },
+        onView(file) {
+            this.selectedFile = file;
+            this.$router.push("/collections/file");
         }
     },
     mounted() {
@@ -214,12 +264,16 @@ export default {
     transition: width 0.6s ease;
 }
 .btn-primary {
-  background: #F4871E !important;
-  border-color: #F4871E !important;
-  color: #153c4d !important; }
+    background: #f4871e !important;
+    border-color: #f4871e !important;
+    color: #153c4d !important;
+}
 
-.btn-primary:hover, .btn-secondary:hover, .btn-outline-primary:hover {
-  background: #153c4d !important;
-  border-color: #153c4d v;
-  color: #fff !important; }
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-outline-primary:hover {
+    background: #153c4d !important;
+    border-color: #153c4d v;
+    color: #fff !important;
+}
 </style>

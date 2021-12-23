@@ -15,7 +15,7 @@ import NerEditor from "./components/hmgm/NerEditor.vue";
 import { accountService } from "./service/account-service.js";
 import CollectionDetails from "./components/collections/CollectionDetails.vue";
 import { env } from "./helpers/env.js";
-import ListingPage from "./components/entity/ListingPage.vue";
+import EntityList from "./components/entity/EntityList.vue";
 Vue.use(Router);
 
 var router = new Router({
@@ -23,9 +23,15 @@ var router = new Router({
     {
       // TODO we may want to have a separate landing/welcome page with some greeting and a brief introduction to AMP
       path: "/",
+      redirect:"/unit/details",
       name: "home",
       component: WorkflowDashboard,
-      meta: { authorize: [] },
+      meta: { authorize: [],
+        breadCrumb: [ 
+          {text: "Home", href: '#/'}, 
+          {text: "Dashboard"},
+        ]
+      },
     },
     {
       path: "/account/register",
@@ -62,25 +68,46 @@ var router = new Router({
       path: "/workflow/submit",
       name: "workflow-submission",
       component: WorkflowSubmission,
-      meta: { authorize: [] },
+      meta: { authorize: [],
+        breadCrumb: [ 
+          {text: "Home", href: '#/'}, 
+          {text: "Workflows"},
+        ]
+      },
     },
     {
       path: "/dashboard",
       name: "dashboard",
       component: WorkflowDashboard,
-      meta: { authorize: [] },
+      meta: { authorize: [],
+        breadCrumb: [ 
+          {text: "Home", href: '#/'}, 
+          {text: "Dashboard"},
+        ]
+      },
     },
     {
       path: "/batch/ingest",
       name: "batch-ingest",
       component: BatchIngest,
-      meta: { authorize: [] },
+      meta: { authorize: [] ,
+        breadCrumb: [ 
+          {text: "Home", href: '#/'}, 
+          {text: "Batch Ingest"},
+        ]
+      },
     },
     {
       path: "/deliverables",
       name: "deliverables",
       component: Deliverables,
-      meta: { authorize: [] },
+      meta: { authorize: [],
+        breadCrumb: [ 
+          {text: "Home", href: '#/'}, 
+          {text: "Workflows", href: '#/workflow/submit'},
+          {text: "Itemdeliverables"}
+        ]
+      },
     },
     {
       path: "/hmgm/transcript-editor",
@@ -107,32 +134,74 @@ var router = new Router({
     {
       path: "/unit/details",
       name: "unit-details",
-      component: ListingPage,
-      meta: { authorize: [] },
+      component: EntityList,
+      meta: { authorize: [], 
+        breadCrumb: [
+          {text: "Home", href: '#/'}, 
+          {text: "Unit Details", href: '#/unit/details'}
+        ] 
+      },
     },
     {
       path: "/collection/details",
       name: "collection-details",
-      component: ListingPage,
-      meta: { authorize: [] },
+      component: EntityList,
+      meta: { authorize: [], 
+        breadCrumb: [
+          {text: "Home", href: '#/'}, 
+          {text: "Unit Details", href: '#/unit/details'},
+          {text: "Collection Details", href: '#/collection/details'}
+        ]
+      },
     },
     {
       path: "/collections/items/details",
       name: "items-details",
-      component: ListingPage,
-      meta: { authorize: [] },
+      component: EntityList,
+      meta: { authorize: [],
+        breadCrumb: [
+          {text: "Home", href: '#/'}, 
+          {text: "Unit Details", href: '#/unit/details'},
+          {text: "Collection Details", href: '#/collection/details'},
+          {text: "Item", href: '#/collections/items/details'}
+        ]
+      },
     },
     {
       path: "/collection/create",
       name: "create-collections",
-      component: ListingPage,
-      meta: { authorize: [] },
+      component: EntityList,
+      meta: { authorize: [], 
+        breadCrumb: [
+          {text: "Home", href: '#/'}, 
+          {text: "Unit Details", href: '#/unit/details'},
+          {text: "Collection", href: '#/collection/create'}
+        ]
+      },
     },
     {
       path: "/collection/add-items",
       name: "create-items",
-      component: ListingPage,
-      meta: { authorize: [] },
+      component: EntityList,
+      meta: { authorize: [],
+        breadCrumb: [ 
+          {text: "Home", href: '#/'}, 
+          {text: "Collection Details", href: '#/collection/details'},
+          {text: "Item", href: '#/collection/add-items'}
+        ]
+      },
+    },
+    {
+      path: "/collections/file",
+      name: "file-details",
+      component: EntityList,
+      meta: { authorize: [],
+        breadCrumb: [ 
+          {text: "Home", href: '#/'}, 
+          {text: "Collection Details", href: '#/collection/details'},
+          {text: "File"}
+        ]
+      },
     },
 
   ],
@@ -160,7 +229,7 @@ router.beforeEach(async (to, from, next) => {
       return next({ path: "/account/login", query: { returnUrl: to.path } });
     } else {
       router.app.$store.state.isAuthenticated = true;
-      router.app.$store.commit("Authenticated");
+      // router.app.$store.commit("isAuthenticated");
       return next();
     }
   }

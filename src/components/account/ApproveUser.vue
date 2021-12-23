@@ -26,10 +26,10 @@
             <label>The user has already been approved. </label>
           </div>
           <div class="form-group" v-if="isRequested" >
-            <button class="btn btn-primary marg-bot-4" v-on:click="approveUser()">Approve</button>
+            <button class="btn btn-primary marg-bot-4" v-on:click="approveUser()" :disabled="disableAction">Approve</button>
           </div>
           <div class="form-group" v-if="isRequested">
-            <button class="btn btn-primary marg-bot-4" v-on:click="rejectUser()">Reject</button>
+            <button class="btn btn-primary marg-bot-4" v-on:click="rejectUser()" :disabled="disableAction">Reject</button>
           </div>
           <div class="form-group" v-if="approve_user">
             <label>The user has been approved. </label>
@@ -60,7 +60,8 @@ import {accountService} from '@/service/account-service';
 			approve_user: false,
       reject_user: false,
       approve_user_emailId:null,
-      approve_user_status:null
+      approve_user_status:null,
+      disableAction: false
     }
   },
 computed:{
@@ -78,12 +79,15 @@ computed:{
     this.errors=[];
     self.approve_user = false;
     self.reject_user=false;
+    self.disableAction = true;
     await accountService.sendApproveUserRequest(this.$route.params.id )
     .then(response => {
       self.approve_user = response.success;
+      // self.disableAction = false;
       })
     .catch(e => {
       console.log(e);
+      // self.disableAction = false;
 		});
 		console.log("approve result is:"+self.approve_user);
 		if(this.errors.length != 0)
@@ -110,12 +114,15 @@ computed:{
       this.errors=[];
       self.approve_user = false;
       self.reject_user=false;
+      self.disableAction = true;
       await accountService.sendRejectUserRequest(this.$route.params.id )
       .then(response => {
         self.reject_user = response.success;
+        // self.disableAction = false;
       })
       .catch(e => {
         console.log(e);
+        // self.disableAction = false;
       });
       console.log("reject result is:"+self.reject_user);
       if(this.errors.length != 0)

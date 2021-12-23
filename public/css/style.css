@@ -735,6 +735,14 @@ svg.icon-user {
   .btn-help:hover svg {
       fill: #153c4d;
   }
+  .page-link {
+    color: #163c4d !important;
+  }
+  
+  .page-item.active .page-link {
+    background: #163c4d !important;
+    color:white !important;
+  }
 
 @media screen and (max-width: 39em) {
   #logo {
