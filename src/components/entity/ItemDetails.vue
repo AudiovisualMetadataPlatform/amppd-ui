@@ -1,6 +1,6 @@
 <template>
-<div class="w-100">
-    <b-card class="text-left" v-if="!isCreatePage">
+    <div class="w-100">
+        <b-card class="text-left" v-if="!isCreatePage">
             <h2 class="mb-3">Files</h2>
             <table
                 class="table"
@@ -32,13 +32,19 @@
                             <button
                                 class="btn btn-primary btn float-right"
                                 @click="onView(file)"
-                            v-if="!file.file">View</button>
+                                v-if="!file.file"
+                            >View</button>
                             <button
                                 class="btn btn-primary btn float-right"
-                                @click="saveFile(file)"
+                                @click="saveFile(file, index)"
                                 v-if="file.file"
                             >Save</button>
-                            <button class="btn btn-link add-remove float-right mr-1" @click="removeFile(index)"><span v-html="removeIcon" class="pr-1"></span>Remove file</button>
+                            <button
+                                class="btn btn-link add-remove float-right mr-1"
+                                @click="removeFile(index)"
+                            >
+                                <span v-html="removeIcon" class="pr-1"></span>Remove file
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -68,21 +74,23 @@
                     <div class="row w-100">
                         <div class="input-group image-preview col-11">
                             <!-- <label for="exampleFormControlFile1" class="form-control-file btn btn-light btn-lg"><button>Browse</button></label> -->
-                        <input
-                            type="file"
-                            class="form-control-file btn btn-light btn-lg"
-                            id="exampleFormControlFile1"
-                            value="Upload" 
-                            ref="fileupload"
-                            @change="getFile"
+                            <input
+                                type="file"
+                                class="form-control-file btn btn-light btn-lg"
+                                id="exampleFormControlFile1"
+                                value="Upload"
+                                ref="fileupload"
+                                @change="getFile"
+                            />
+                        </div>
+                        <div class="col-1">
+                            <button
+                                class="btn btn-secondary btn-lg w-100"
+                                @click="uploadFile()"
+                            >Upload</button>
+                        </div>
+                    </div>
 
-                        />
-                    </div>
-                    <div class="col-1">
-                      <button class="btn btn-secondary btn-lg w-100" @click="uploadFile()">Upload</button>
-                    </div>
-                    </div>
-                    
                     <!-- /input-group image-preview [TO HERE]-->
 
                     <br />
@@ -97,7 +105,7 @@
                 </div>
             </div>
         </b-card>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -146,7 +154,7 @@ export default {
             const self = this;
             self.fileService.getPrimaryFiles(self.selectedItem.id).then(response => {
                 self.PrimaryFiles = response.data;
-                if(self.PrimaryFiles) {
+                if (self.PrimaryFiles) {
                     self.PrimaryFiles = self.sharedService.sortByAlphabatical(self.PrimaryFiles);
                 }
             });
@@ -158,46 +166,54 @@ export default {
         uploadFile(e) {
             const self = this;
             self.files.forEach(file => {
-                const primaryFile = {name: "", originalFilename: file.name, description:"", file: file, id: file.filename};
+                const primaryFile = { name: "", originalFilename: file.name, description: "", file: file, id: file.filename };
                 self.PrimaryFiles._embedded.primaryfiles.push(primaryFile);
             });
             self.files = [];
             this.$refs.fileupload.value = "";
         },
-        saveFile(data) {
+        saveFile(data, index) {
+            const self = this;
             const formData = new FormData();
-            formData.append('primaryfile', new Blob([JSON.stringify({ name: data.originalFilename, description: data.description})], {
+            formData.append('primaryfile', new Blob([JSON.stringify({ name: data.originalFilename, description: data.description })], {
                 type: "application/json"
             }));
             formData.append("mediaFile", data.file);
             this.fileService.uploadFile(self.selectedItem.id, formData).then(el => {
-                this.getPrimaryFiles();
-            }).catch(error => {console.log(error, "error")});
+                this.$set(self.PrimaryFiles._embedded.primaryfiles, index, el);
+            }).catch(error => {
+                if (error.response && error.response.data && error.response.data.validationErrors) {
+                    const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
+                    errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
+                } else {
+                    self.$bvToast.toast("Something went wrong!", self.sharedService.erorrToastConfig);
+                }
+            });
         },
         removeFile(index) {
             const self = this;
-            if(self.PrimaryFiles._embedded.primaryfiles[index].file)
+            if (self.PrimaryFiles._embedded.primaryfiles[index].file)
                 self.PrimaryFiles._embedded.primaryfiles.splice(index, 1);
         },
         onSaveItem() {
             const self = this;
-            if(self.isCreatePage){
+            if (self.isCreatePage) {
                 self.selectedItem = {
                     ...self.selectedItem,
                     collection: env.getAmpUrl() + `/collections/${self.selectedCollection.id}`
                 }
                 self.itemService.addItemToCollection(self.selectedItem).then(reponse => {
-                    self.$bvToast.toast("Item added successfully", {title: 'Notification',appendToast: true,variant:"success", autoHideDelay:5000});
+                    self.$bvToast.toast("Item added successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
                     self.$router.push("/collection/details");
                 }).catch(error => {
-                    self.$bvToast.toast("Failed to add an Item", {title: 'Notification',appendToast: true,variant:"danger", autoHideDelay:5000});
+                    self.$bvToast.toast("Failed to add an Item", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 });
                 });
             } else {
                 self.itemService.updateItem(self.selectedItem).then(reponse => {
-                    self.$bvToast.toast("Item updated successfully", {title: 'Notification',appendToast: true,variant:"success", autoHideDelay:5000});
+                    self.$bvToast.toast("Item updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
                 }).catch(error => {
-                   self.$bvToast.toast("Failed to add an Item", {title: 'Notification',appendToast: true,variant:"danger", autoHideDelay:5000});
-                   
+                    self.$bvToast.toast("Failed to add an Item", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 });
+
                 });
             }
         },
@@ -248,12 +264,16 @@ export default {
     transition: width 0.6s ease;
 }
 .btn-primary {
-  background: #F4871E !important;
-  border-color: #F4871E !important;
-  color: #153c4d !important; }
+    background: #f4871e !important;
+    border-color: #f4871e !important;
+    color: #153c4d !important;
+}
 
-.btn-primary:hover, .btn-secondary:hover, .btn-outline-primary:hover {
-  background: #153c4d !important;
-  border-color: #153c4d v;
-  color: #fff !important; }
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-outline-primary:hover {
+    background: #153c4d !important;
+    border-color: #153c4d v;
+    color: #fff !important;
+}
 </style>
