@@ -9,7 +9,7 @@
       <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
       Entries
     </label> -->
-    <label>Show <select name="myTable_length" v-model="resultsPerPage" aria-controls="myTable" class="">
+    <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="" @change="refreshData()">
       <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
       Entries
     </label>
@@ -24,8 +24,19 @@
       <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
       <span class="slider round"></span>
     </label>
-  </div>     
-  <search-filter/> 
+  </div>  
+  <search-filter/>
+   <br/>
+  <b-pagination
+        class="mt-3 justify-content-left"
+        v-model="workflowDashboard.searchQuery.pageNum"
+        :total-rows="workflowDashboard.searchResult.totalResults"
+        :per-page="workflowDashboard.searchQuery.resultsPerPage"
+        @change="paginate(workflowDashboard.searchQuery.pageNum)"
+        size="sm"
+        first-number
+        last-number
+      ></b-pagination>  
   <div class="table-responsive">
     <table id="myTable" class="table dataTable no-footer">
       <thead>
@@ -49,7 +60,7 @@
           <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
           <td>{{ rec.workflowName }}</td>
           <td>{{ rec.workflowStep }}</td>
-          <td v-if="rec.outputPath != null && rec.status =='COMPLETE'"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputName }}</a></td>
+          <td v-if="rec.outputPath != null && rec.status =='COMPLETE'"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank" class="complete-output">{{ rec.outputName }}</a></td>
           <td v-else>{{ rec.outputName }}</td>
           <td> 
             <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
@@ -68,12 +79,22 @@
         </tr>
       </tbody>
     </table>
-    <pagination v-if="this.workflowDashboard.searchQuery"
+    <!-- <pagination v-if="this.workflowDashboard.searchQuery"
           :pageNum="workflowDashboard.searchQuery.pageNum"
           :resultsPerPage="resultsPerPage"
           :totalResults="filteredRows.length"
           :maxPages="1"
-          @paginate="paginate" />
+          @paginate="paginate" /> -->
+          <b-pagination
+        class="mt-3 justify-content-left"
+        v-model="workflowDashboard.searchQuery.pageNum"
+        :total-rows="workflowDashboard.searchResult.totalResults"
+        :per-page="workflowDashboard.searchQuery.resultsPerPage"
+        @change="paginate(workflowDashboard.searchQuery.pageNum)"
+        size="sm"
+        first-number
+        last-number
+      ></b-pagination>
   </div>
 </div>
 </template>
@@ -86,6 +107,7 @@ import SortableHeader from '../shared/SortableHeader';
 import Pagination from '../shared/Pagination';
 import SearchFilter from './DashboardFilters/SearchFilter';
 import Loader from '@/components/shared/Loader.vue';
+import SharedService from '../../service/shared-service';
 
 export default {
   name: 'DashboardTable',
@@ -111,35 +133,35 @@ export default {
         {label: 'Status', field: 'status'},
       ],
       workflowResultService: new WorkflowResultService(),
-      visibleRows: [],
-      filteredRows:[],
-      resultsPerPage: 10
+      sharedService: new SharedService(),
     }
   },
   computed:{
     workflowDashboard: sync("workflowDashboard"),
-    filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
-    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
     filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
     filterByUnits: sync("workflowDashboard.searchQuery.filterByUnits"),
-    filterByExternalIds: sync("workflowDashboard.searchQuery.filterByExternalIds"),
-    filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
-    filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
     filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
-    filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
     filterByOutputs: sync("workflowDashboard.searchQuery.filterByOutputs"),
     filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
     filterBySearchTerms: sync("workflowDashboard.searchQuery.filterBySearchTerms"),
     filterByRelevant: sync("workflowDashboard.searchQuery.filterByRelevant"),
-    // visibleRows(){
-    //   let self=this;
-    //   var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
-    //   var to = this.workflowDashboard.searchQuery.pageNum * this.workflowDashboard.searchQuery.resultsPerPage;
-    //   if(!this.workflowDashboard.searchResult.rows || this.workflowDashboard.searchResult.rows.length<=0) {
-    //     return this.workflowDashboard.searchResult.rows;
-    //   }
-    //   return this.workflowDashboard.searchResult.rows;
-    // }
+    filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
+    filterByExternalIds: sync("workflowDashboard.searchQuery.filterByExternalIds"),
+    filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
+    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
+    filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
+    filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
+   
+    visibleRows(){
+      let self=this;
+      var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
+      var to = this.workflowDashboard.searchQuery.pageNum * this.workflowDashboard.searchQuery.resultsPerPage;
+      if(!this.workflowDashboard.searchResult.rows || this.workflowDashboard.searchResult.rows.length<=0) {
+        return this.workflowDashboard.searchResult.rows;
+      }
+      
+      return this.workflowDashboard.searchResult.rows;
+    }
   },
   props: {},
   methods:{
@@ -169,140 +191,18 @@ export default {
     },
     paginate(page_number) {
       this.workflowDashboard.searchQuery.pageNum = page_number;
-      this.refreshData(true);
+      this.refreshData();
     },
-    async refreshData(isFromPagination = false){
+    async refreshData(){
       const self = this;
-      this.workflowDashboard.loading = true;
-      if(!this.workflowDashboard.searchResult.rows || !this.workflowDashboard.searchResult.rows.length) {
-        this.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
-        self.applySearchParams();
-      } else {
-        if(!isFromPagination){
-          // self.visibleRows = [];
-          self.applySearchParams();
+      self.workflowDashboard.loading = true;
+      const response = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
+        if(response.rows) {
+          self.workflowDashboard.searchResult.rows = response.rows;
+          this.workflowDashboard.searchResult.totalResults = response.totalResults;
         }
-      }
-      self.visibleRows = self.filteredRows.slice(((self.workflowDashboard.searchQuery.pageNum-1) * self.resultsPerPage), (self.workflowDashboard.searchQuery.pageNum * self.resultsPerPage));
-      this.workflowDashboard.loading = false;
+      self.workflowDashboard.loading = false;
     },
-    applySearchParams() {
-      const tempArray = JSON.parse(JSON.stringify(this.workflowDashboard.searchResult.rows));
-      let resutlArray = [];
-      let isProcessed = false;
-      /****Collection Filter* */
-      if(this.workflowDashboard.searchQuery.filterByCollections && this.workflowDashboard.searchQuery.filterByCollections.length) {
-        this.workflowDashboard.searchQuery.filterByCollections.forEach(el => {
-          const temp = tempArray.filter(data => (data.collectionName && el) ? data.collectionName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        });
-        isProcessed = true;
-      }
-
-      /****ExternalIds Filter* */
-      if(this.workflowDashboard.searchQuery.filterByExternalIds && this.workflowDashboard.searchQuery.filterByExternalIds.length) {
-        this.workflowDashboard.searchQuery.filterByExternalIds.forEach(el => {
-          const temp = tempArray.filter(data => (data.externalId && el) ? data.externalId.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        });
-        isProcessed = true;
-      }
-
-      /****Item Filter* */
-      if(this.workflowDashboard.searchQuery.filterByItems && this.workflowDashboard.searchQuery.filterByItems.length) {
-        this.workflowDashboard.searchQuery.filterByItems.forEach(el => {
-          const temp = tempArray.filter(data => (data.itemName && el) ? data.itemName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        });
-        isProcessed = true;
-      }
-
-      /****Files Filter* */
-      if(this.workflowDashboard.searchQuery.filterByFiles && this.workflowDashboard.searchQuery.filterByFiles.length) {
-        this.workflowDashboard.searchQuery.filterByFiles.forEach(el => {
-          const temp = tempArray.filter(data => (data.itemName && el) ? data.itemName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        });
-        isProcessed = true;
-      }
-
-      /****Workflow Filter* */
-      if(this.workflowDashboard.searchQuery.filterByWorkflows && this.workflowDashboard.searchQuery.filterByWorkflows.length) {
-        this.workflowDashboard.searchQuery.filterByWorkflows.forEach(el => {
-          const temp = tempArray.filter(data => (data.workflowName && el) ? data.workflowName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        });
-        isProcessed = true;
-      }
-
-      /****Submitter Filter* */
-      if(this.workflowDashboard.searchQuery.filterBySubmitters && this.workflowDashboard.searchQuery.filterBySubmitters.length) {
-        this.workflowDashboard.searchQuery.filterBySubmitters.forEach(el => {
-          const temp = tempArray.filter(data => (data.submitter && el) ? data.submitter.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        });
-        isProcessed = true;
-      }
-
-      /****Outputs Filter* */
-      if(this.workflowDashboard.searchQuery.filterByOutputs && this.workflowDashboard.searchQuery.filterByOutputs.length) {
-        this.workflowDashboard.searchQuery.filterByOutputs.forEach(el => {
-          const temp = tempArray.filter(data => (data.outputName && el) ? data.outputName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        });
-        isProcessed = true;
-      }
-
-      /****Statuses Filter* */
-      if(this.workflowDashboard.searchQuery.filterByStatuses && this.workflowDashboard.searchQuery.filterByStatuses.length) {
-        this.workflowDashboard.searchQuery.filterByStatuses.forEach(el => {
-          const temp = tempArray.filter(data => (data.status && el) ? data.status.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        });
-        isProcessed = true;
-      }
-
-      /****Step Filter* */
-      if(this.workflowDashboard.searchQuery.filterBySteps && this.workflowDashboard.searchQuery.filterBySteps.length) {
-        this.workflowDashboard.searchQuery.filterBySteps.forEach(el => {
-          const temp = tempArray.filter(data => (data.workflowStep && el) ? data.workflowStep.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        });
-        isProcessed = true;
-      }
-
-      /****Step Filter* */
-      if(this.workflowDashboard.searchQuery.steps && this.workflowDashboard.searchQuery.steps.length) {
-        this.workflowDashboard.searchQuery.steps.forEach(el => {
-          const temp = tempArray.filter(data => (data.workflowStep && el) ? data.workflowStep.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        });
-        isProcessed = true;
-      }
-
-      /****Date Filter* */
-      if(this.workflowDashboard.searchQuery.filterByDates && this.workflowDashboard.searchQuery.filterByDates.length) {
-        const fromDate = this.workflowDashboard.searchQuery.filterByDates[0];
-        const toDate = this.workflowDashboard.searchQuery.filterByDates[1];
-        const temp = tempArray.filter(data => ( fromDate&& data && toDate) ?  ((new Date(data.dateCreated) >=  fromDate) && (new Date(data.dateCreated) <=  toDate) ) : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        isProcessed = true;
-      }
-
-      /****Search Term* */
-      if(this.workflowDashboard.searchQuery.filterBySearchTerms && this.workflowDashboard.searchQuery.filterBySearchTerms.length) {
-        this.workflowDashboard.searchQuery.filterBySearchTerms.forEach(el => {
-          const temp = tempArray.filter(data => (data.primaryfileName && el) ? data.primaryfileName.toLowerCase().indexOf(el.toLowerCase()) > -1 : "");
-          resutlArray = [...new Set(resutlArray.concat(temp))];
-        });
-        isProcessed = true;
-      }
-
-      if(!isProcessed) {
-        resutlArray = tempArray;
-      }
-     this.filteredRows = resutlArray;
-    }
   },
   async mounted(){
     this.refreshData();
@@ -408,7 +308,7 @@ export default {
     justify-content: space-around;
     position: absolute;
     top: 0;
-    left: 170px;
+    /* left: 170px; */
   }  
   .btn-blue:hover, .btn-blue:active, .btn-blue:visited {
     background-color: #006de2 !important;

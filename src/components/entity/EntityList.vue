@@ -28,7 +28,8 @@
                                         class="form-control w-100"
                                         v-model="entity.name"
                                         :disabled="showEdit"
-                                        :class="{ 'error-border': (submitted && !entity.name) }"
+                                        :class="{'error-border' : (submitted && !entity.name) }"
+                                        @change="onInputChange"
                                     />
                                 </div>
                                 <div
@@ -40,7 +41,8 @@
                                         class="select custom-select w-100"
                                         v-model="entity.taskManager"
                                         :disabled="showEdit"
-                                        :class="{ 'error-border': (submitted && !entity.taskManager) }"
+                                        :class="{'error-border' : (submitted && !entity.taskManager) }"
+                                        @change="onInputChange"
                                     >
                                         <option
                                             v-for="option in listOfTaskManager"
@@ -64,6 +66,7 @@
                                     class="form-control w-100"
                                     v-model="entity.description"
                                     :disabled="showEdit"
+                                    @change="onInputChange"
                                 ></textarea>
                             </div>
 
@@ -118,6 +121,7 @@
                                         class="form-control w-100"
                                         v-model="entity.externalSource"
                                         :disabled="showEdit"
+                                        @change="onInputChange"
                                     />
                                 </div>
                                 <div class="col-6 text-left form-group">
@@ -127,6 +131,7 @@
                                         class="form-control w-100"
                                         v-model="entity.externalId"
                                         :disabled="showEdit"
+                                        @change="onInputChange"
                                     />
                                 </div>
                             </div>
@@ -138,24 +143,24 @@
                                         Media Information
                                     </b-button>
                                 </div>
-                                <div v-if="!showEdit">
-                                    <button
+                                <!-- <div v-if="!showEdit"> -->
+                                    <!-- <button
                                         class="btn btn-outline btn-lg btn-edit mr-2"
                                         type="button"
                                         @click="onCancel"
-                                    >Cancel</button>
+                                    >Cancel</button> -->
                                     <button
                                         class="btn btn-primary btn-lg btn-edit"
                                         type="button"
                                         @click="onUpdateEntityDetails"
                                     >Save</button>
-                                </div>
-                                <button
+                                <!-- </div> -->
+                                <!-- <button
                                     class="btn btn-primary btn-lg btn-edit"
                                     type="button"
                                     @click="showEdit = !showEdit"
                                     v-if="showEdit"
-                                >Edit</button>
+                                >Edit</button> -->
                             </div>
 
                             <b-collapse id="collapse-1" class="mt-2">
@@ -235,7 +240,7 @@
                                                     <input type="checkbox" v-model="elem.active" />
                                                     <span class="slider round"></span>
                                                 </label>
-                                                <div>
+                                                <div v-if="((elem.active && baseUrl == 'unit') || baseUrl !== 'unit')">
                                                     <button
                                                         class="btn btn-primary btn"
                                                         @click="onView(elem)"
@@ -286,7 +291,7 @@
                 </main>
             </div>
         </div>
-        <Search :searchType="searchType" :dataSource="masterRecords" @myEvent="onSearchDone" isListingPage="true"/>
+        <Search :searchType="searchType" :dataSource="masterRecords" @myEvent="onSearchDone" isEntityList="true"/>
     </div>
 </template>
 
@@ -307,7 +312,7 @@ import PrimaryFileService from "../../service/primary-file-service.js";
 import Search from "@/components/shared/Search.vue";
 import BaseService from "../../service/base-service";
 export default {
-    name: "ListingPage",
+    name: "EntityList",
     components: {
     Logout,
     Sidebar,
@@ -329,10 +334,11 @@ export default {
             masterRecords: [],
             showLoader: false,
             entity: {},
-            showEdit: true,
+            showEdit: false,
             infoSvg: config.common.icons['info'],
             searchType: "",
-            submitted: false
+            submitted: false,
+            isDataChanged: false
         }
     },
     computed: {
@@ -512,9 +518,36 @@ export default {
         },
         onSearchDone(records) {
             this.records = records && records.length ? records: this.masterRecords;
+        },
+        onInputChange(ev) {
+            this.isDataChanged = true;
         }
         
 
+    },
+    beforeRouteLeave (to, from, next) {
+      if(this.isDataChanged) {
+          this.$bvModal.msgBoxConfirm(`Changes you have made may not be saved.`, {
+          title: 'Notification',
+          size: 'md',
+          buttonSize: 'sm',
+        //   okVariant: 'danger',
+          okTitle: 'Leave',
+          cancelTitle: 'Cancel',
+          footerClass: 'p-2',
+          hideHeaderClose: true,
+          centered: false,
+          noCloseOnBackdrop: true
+        })
+          .then(value => {
+            if(value) next();
+          })
+          .catch(err => {
+            // An error occurred
+          })
+      } else {
+          next();
+      }
     },
     mounted() {
         const self = this;

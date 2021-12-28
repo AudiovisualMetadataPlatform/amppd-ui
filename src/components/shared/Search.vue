@@ -4,8 +4,8 @@
             <template #modal-header="{}">
             <!-- Emulate built in modal header close button action -->
             
-            <h5 class="text-capitalize" v-if="!isListingPage">{{type}}</h5>
-            <h5 class="text-capitalize" v-if="isListingPage">Search</h5>
+            <h5 class="text-capitalize" v-if="!isEntityList">{{type}}</h5>
+            <h5 class="text-capitalize" v-if="isEntityList">Search</h5>
             </template>
 
             <template #default="{}">
@@ -27,14 +27,14 @@
                         <th>
                             <label><input class="selectAll" type="checkbox" v-model="selectAll" :value="selectAll" id="selectAll" @change="onSelectAllChange($event)"><span class="selectAll pl-1">Select All</span></label>
                         </th>
-                        <template v-if="!isListingPage">
+                        <template v-if="!isEntityList">
                             <th v-if="type === 'collections' || type === 'units'">Unit</th>
                             <th v-if="type === 'collections'">Collection</th>
                             <th v-if="type === 'workflows'">Workflow</th>
                             <th v-if="type === 'outputs'">Output</th>
-                            <th v-if="type !== 'collections'">Date Created</th>
+                            <th v-if="(type === 'workflows' || type === 'collections')">Date Created</th>
                         </template>
-                        <template v-if="isListingPage">
+                        <template v-if="isEntityList">
                             <th colspan="2" v-if="type === 'listing-collection'">Collection</th>
                             <th colspan="2" v-if="type === 'listing-item'">Item</th>
                             <th colspan="2">Description</th>
@@ -46,14 +46,14 @@
                             <td colspan="1">
                                 <input class="selectAll" type="checkbox" v-model="selectedRecords" :value="source.id" @change="onChange($event, source)">
                             </td>
-                            <template v-if="!isListingPage">
+                            <template v-if="!isEntityList">
                                 <td v-if="type === 'collections' || type === 'units'">{{ source.unitName }}</td>
                                 <td v-if="type === 'collections'">{{ source.collectionName }}</td>
                                 <td v-if="type === 'workflows'">{{ source.workflowName }}</td>
                                 <td v-if="type === 'outputs'">{{ source.outputName}}</td>
-                                <td v-if="type !== 'collections'">{{source.dateCreated | DDMMYYYY}}</td>
+                                <td v-if="(type === 'workflows' || type === 'collections')">{{source.dateCreated | DDMMYYYY}}</td>
                             </template>
-                            <template v-if="isListingPage">
+                            <template v-if="isEntityList">
                                 <th colspan="2">{{source.name}}</th>
                                 <th colspan="2">{{source.description}}</th>
                                 <th v-if="type === 'listing-item'">{{source.externalId}}</th>
@@ -92,7 +92,7 @@ export default {
         dataSource: {
             default: []
         },
-        isListingPage: {
+        isEntityList: {
             default: false
         }
     },
@@ -123,6 +123,7 @@ export default {
             clonedDataSource: [],
             selectedRecords: [],
             selectAll: false,
+            searchDataSourceMap: new Map()
             // type: JSON.parse(this.searchType)
             
         }
@@ -138,16 +139,6 @@ export default {
           this.processModalData()
       }
     },
-    // watch: {
-    //     type:function(newValue, oldValue) {
-    //         if(newValue !== oldValue) 
-    //             this.getTypeaheadSearchItems(); 
-    //             this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
-    //             this.selectedRecords = (this.selectedFilters[newValue] && this.selectedFilters[newValue].length) ? this.selectedFilters[newValue].map(el => el.id) : [];
-    //             this.selectAll= (this.selectedRecords.length === this.clonedDataSource.length) ? true : false;
-    //     }
-        
-    // },
     methods: {
         onSelectAllChange(ev) {
             const self = this;
@@ -178,7 +169,8 @@ export default {
             if(!self.userSearchValue) return;
 
             const temp = [];
-            self.dataSource.filter(o =>
+            const tempDataSource = this.searchDataSourceMap.get(self.type);
+            tempDataSource.filter(o =>
                 // Object.keys(o).some(k => o[k] && o[k].toLowerCase().includes(self.userSearchValue.toLowerCase())));
                 self.searchProps.filter(el => {
                     if(o[el] && o[el].toLowerCase().indexOf(self.userSearchValue.toLowerCase()) >-1) {
@@ -190,7 +182,9 @@ export default {
         },
         populteValues() {
             if(!this.userSearchValue) {
-                this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
+                const tempDataSource = this.searchDataSourceMap.get(this.type);
+                if(tempDataSource) 
+                    this.clonedDataSource = JSON.parse(JSON.stringify(tempDataSource));
                 this.selectAll= (this.selectedRecords.length === this.dataSource.length);
             }
         },
@@ -259,6 +253,13 @@ export default {
             this.populteValues();
             this.getTypeaheadSearchItems(); 
             this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
+            // To get the distinct values 
+            if(this.searchDataSourceMap.get(this.type)) {
+                this.clonedDataSource = this.searchDataSourceMap.get(this.type);
+            } else {
+                // this.clonedDataSource = [...new Map(this.clonedDataSource.map(item =>[item[this.searchProps[0]], item])).values()];
+                this.searchDataSourceMap.set(this.type, this.clonedDataSource);
+            }
             this.selectedRecords = (this.selectedFilters[this.type] && this.selectedFilters[this.type].length) ? this.selectedFilters[this.type].map(el => el.id) : [];
             this.selectAll= (this.selectedRecords.length === this.clonedDataSource.length)
         }
