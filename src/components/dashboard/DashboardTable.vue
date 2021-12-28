@@ -19,12 +19,12 @@
       <span class="slider round"></span>
     </label> -->
   </div>   
-  <div class="relevant-togggle"><span class="txt-v">Show Relevant Results Only</span>
+  <!-- <div class="relevant-togggle"><span class="txt-v">Show Relevant Results Only</span>
     <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
       <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
       <span class="slider round"></span>
     </label>
-  </div>  
+  </div>   -->
   <search-filter/>
    <br/>
   <b-pagination
