@@ -744,6 +744,13 @@ svg.icon-user {
     color:white !important;
   }
 
+.complete-output {
+  color: #007bff !important;
+  text-decoration: underline;
+}
+.complete-output:visited {
+  color: red !important;
+}
 @media screen and (max-width: 39em) {
   #logo {
     min-width: 100px;
