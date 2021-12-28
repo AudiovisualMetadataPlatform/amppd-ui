@@ -9,7 +9,7 @@
 
       <!-- Contextual Help Button-->
       <div id="help">
-        <a class="icn-help btn-help" href="https://wiki.dlib.indiana.edu/display/AMP/The+Dashboard" rel="external-new-window" target="_blank">
+        <a class="icn-help btn-help" href="#" rel="external-new-window" target="popup" @click="routeToHelp($event);">
       <span class="sr-only"><title>Help, opens a new window for help topics for this page.</title></span>
           <span v-html="helpSvg"></span></a>
       </div>
@@ -26,6 +26,16 @@ export default {
   data() {
     return {
       helpSvg: config.common.icons['help'],
+    }
+  },
+  methods: {
+    routeToHelp(ev) {
+      ev.preventDefault();
+      if(this.$route.meta && this.$route.meta.helpUrl) {
+        window.open(this.$route.meta.helpUrl, 'helpwindow', 'width=800, height=500');
+      }
+      return ;
+      
     }
   }
 }
