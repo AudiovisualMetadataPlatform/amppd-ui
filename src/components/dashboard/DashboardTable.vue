@@ -33,7 +33,7 @@
         :total-rows="workflowDashboard.searchResult.totalResults"
         :per-page="workflowDashboard.searchQuery.resultsPerPage"
         @change="paginate(workflowDashboard.searchQuery.pageNum)"
-        size="lg"
+        size="sm"
         first-number
         last-number
       ></b-pagination>  
@@ -91,7 +91,7 @@
         :total-rows="workflowDashboard.searchResult.totalResults"
         :per-page="workflowDashboard.searchQuery.resultsPerPage"
         @change="paginate(workflowDashboard.searchQuery.pageNum)"
-        size="lg"
+        size="sm"
         first-number
         last-number
       ></b-pagination>
