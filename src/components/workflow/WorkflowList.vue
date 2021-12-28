@@ -1,11 +1,11 @@
 <template>
-    <div class="p-3 w-100">
+    <div class="p-3 w-100 bg-light-gray-1">
         <b-card class="w-100">
             <h2 class>
                 Workflows
                 <button
                     id="btn-search"
-                    class="marg-lr-1 btn btn-primary btn-lg marg-b-4 float-right"
+                    class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
                     data-toggle="modal"
                     data-target=".bd-example-modal-lg-2"
                 >Search Workflows</button>
@@ -20,8 +20,8 @@
             </h2>
             <div class="clearfix"></div>
             <!-- workflow -->
-            <b-card v-for="(workflow, index) in listOfWorkflows" :key="workflow.id">
-                <div class="row">
+            <b-card class="bg-light-gray" v-for="(workflow, index) in listOfWorkflows" :key="workflow.id">
+                <div class="row ">
                     <div class="col-lg-10">
                         <h3 contenteditable="true">{{ workflow.name }}</h3>
                         <p contenteditable="true">{{ workflow.description }}</p>
@@ -79,16 +79,17 @@
                         </div>    <span class="badge badge-secondary">Audio</span>
                     </div>-->
                 </div>
-                <b-card class="mgm-card">
-                    <h3 class="w-100 mgm-h3" @click="getWorkflowDetails(index)">
+                <b-card class="mgm-card bg-light-gray-1">
+                    <h3 class="w-100 mgm-h3 card-title bg-light-gray" @click="getWorkflowDetails(index)">
                         <button
                             class="btn"
                             :class="workflow.visible ? null : 'collapsed'"
                             :aria-expanded="workflow.visible ? 'true' : 'false'"
                             :aria-controls="'mgm' + index"
+                            style="font-size:24px; font-weight:400"
                             @click="workflow.visible = !workflow.visible;"
                         >
-                            <span v-html="rightArrowSvg"></span>
+                            <span v-html="rightArrowSvg" style="font-size:24px"></span>
                             <span class="sr-only">Toggle hidden content</span>
                             <span class="pl-3">MGMs</span>
                         </button>
@@ -203,7 +204,7 @@ export default {
 }
 
 .mgm-content {
-    padding: 0.75rem 1.25rem !important;
+    padding: 1.25rem !important;
 }
 nav.nav-pills {
     justify-content: flex-start !important;
@@ -228,7 +229,7 @@ a {
     color: #153c4d !important;
 }
 
-.nav-pills .nav-link {
+.nav-pills .active {
     border-radius: 0.25rem !important;
 }
 
@@ -238,5 +239,25 @@ a:hover {
 }
 .nav {
     list-style: none !important;
+}
+.bg-light-gray {
+    background-color: rgba(0,0,0,.03) !important;
+}
+h3.card-title .btn {
+    /* font-size: 1.5rem; */
+    line-height: 1rem;
+    text-decoration: none;
+    color: #153c4d;
+}
+
+.nav-pills .nav-link {
+    border-radius: 0.25rem;
+}
+.nav-link:focus, .nav-link:hover {
+    text-decoration: none;
+}
+a:hover {
+    color: #F4871E !important;
+    text-decoration: none;
 }
 </style>
