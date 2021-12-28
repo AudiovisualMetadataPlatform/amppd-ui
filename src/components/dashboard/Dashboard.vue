@@ -230,6 +230,13 @@
                     /> -->
                     <StatusFilter
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.statusFilter)"/>
+
+                      <div class="relevant-togggle"><span class="txt-v">Show Relevant Results Only</span>
+                        <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
+                          <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
+                          <span class="slider round"></span>
+                        </label>
+                      </div> 
                   </div>
                   <div class="row spacer">
                   </div>
@@ -487,5 +494,9 @@ export default {
     color: #fff !important;
     background-color: #17a2b8 !important;
     border-color: #17a2b8 !important;
+}
+.relevant-togggle {
+  margin-left: auto;
+  margin-right:0;
 }
 </style>
