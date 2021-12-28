@@ -1,5 +1,6 @@
 <template>
     <div class="w-100">
+        <loader :show="showLoader"/>
         <b-card class="text-left">
             <div class="col-lg-12">
                 <h2 class="card-title">Output Files</h2>
@@ -57,12 +58,13 @@
                                     class="form-control"
                                     disabled
                                 /> -->
-                                {{output.outputLink}}
+                               <a :href="workflowResultService.getOutputUrl(output.id)" class="complete-output" target="_blank" v-if="output.outputPath != null && output.status =='COMPLETE'"> {{output.outputName}}</a>
+                               <span v-else>{{output.outputName}}</span>
                             </td>
                             <td>
                                 <input
                                     type="text"
-                                    :value="output.outputName"
+                                    :value="output.name"
                                     class="form-control"
                                 />
                             </td>
@@ -78,6 +80,7 @@
 </template>
 <script>
 import { sync } from 'vuex-pathify';
+import Loader from '@/components/shared/Loader.vue';
 import WorkflowResultService from '../../service/workflow-result-service';
 import config from '../../assets/constants/common-contant.js';
 import SharedService from '../../service/shared-service.js';
@@ -85,7 +88,8 @@ import SortableHeader from '../shared/SortableHeader';
 export default {
     name: "OutputFile",
     components: {
-        SortableHeader
+        SortableHeader,
+        Loader,
     },
     computed: {
         selectedFile: sync("selectedFile")
@@ -100,24 +104,24 @@ export default {
               orderByDescending: true
             },
             listOfOutputList: [],
+            showLoader: false
         }
     },
     methods: {
-        async getOutputFileList() {
+        async getOutputFileList(pageNum = 1, sortrule = {columnName: "dateCreated", orderByDescending: false}) {
             const self = this;
-            const filters = {filterByFiles: [self.selectedFile.name]};
+            const filters = {filterByFiles: [self.selectedFile.name], sortrule, pageNum};
+            self.showLoader = true;
             const response = await this.workflowResultService.getWorkflowResults(filters);
+            self.showLoader = false;
             if(response.rows) {
                 this.listOfOutputList = response.rows;
             }
-            
         },
         sortQuery(sortRule) {
             const self = this;
             this.sortRule = sortRule;
-            if(sortRule.columnName) {
-                self.outputFiles = this.sharedService.findDataAndSort(self.outputFiles, sortRule.columnName, sortRule.orderByDescending);
-            }
+            this.getOutputFileList(1, sortRule);
         }
     }, 
     mounted() {

@@ -60,7 +60,7 @@
           <td><a v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)" target="_blank">{{ rec.primaryfileName }}</a></td>
           <td>{{ rec.workflowName }}</td>
           <td>{{ rec.workflowStep }}</td>
-          <td v-if="rec.outputPath != null && rec.status =='COMPLETE'"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank">{{ rec.outputName }}</a></td>
+          <td v-if="rec.outputPath != null && rec.status =='COMPLETE'"><a v-bind:href="workflowResultService.getOutputUrl(rec.id)" target="_blank" class="complete-output">{{ rec.outputName }}</a></td>
           <td v-else>{{ rec.outputName }}</td>
           <td> 
             <button v-if="rec.status==='COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">Complete</button>
