@@ -82,6 +82,7 @@
 
 <script>
 import { sync } from "vuex-pathify";
+import SharedService from "../../service/shared-service";
 import Typeahead from '../shared/TypeAhead.vue';
 
 export default {
@@ -117,6 +118,7 @@ export default {
 
     data() {
         return {
+            sharedService: new SharedService(),
             userSearchValue: "",
             typeaheadSearchItems: [],
             searchProps: [],
@@ -250,9 +252,10 @@ export default {
              
         },
         processModalData() {
+            const self = this;
             this.populteValues();
             this.getTypeaheadSearchItems(); 
-            this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
+            this.clonedDataSource = self.sharedService.sortByAlphabatical(JSON.parse(JSON.stringify(this.dataSource)), self.searchProps[0], false);
             // To get the distinct values 
             if(this.searchDataSourceMap.get(this.type)) {
                 this.clonedDataSource = this.searchDataSourceMap.get(this.type);
