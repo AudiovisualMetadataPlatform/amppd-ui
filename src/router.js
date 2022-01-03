@@ -124,7 +124,7 @@ var router = new Router({
         breadCrumb: [ 
           {text: "Home", href: '#/'}, 
           {text: "Workflows", href: '#/workflow/submit'},
-          {text: "Itemdeliverables"}
+          {text: "Deliverables"}
         ],
         helpUrl: "https://wiki.dlib.indiana.edu/display/AMP/Deliverables"
       }
