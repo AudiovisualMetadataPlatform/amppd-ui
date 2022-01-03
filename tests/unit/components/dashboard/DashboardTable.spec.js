@@ -1,11 +1,10 @@
-import { mount, shallowMount, flushPromises } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
 
-import DashboardTable from '../../src/components/dashboard/DashboardTable.vue'
-import { createLocalVue } from '@vue/test-utils'
+import DashboardTable from '../../../../src/components/dashboard/DashboardTable.vue'
 import BootstrapVue from 'bootstrap-vue'
 import moment from 'moment'
 
-jest.mock('../../src/service/base-service', 
+jest.mock('../../../../src/service/base-service', 
     function(){
         return jest.fn().mockImplementation(
           function() {
@@ -20,7 +19,7 @@ jest.mock('../../src/service/base-service',
         );
     }
 );
-jest.mock('../../src/service/workflow-result-service', 
+jest.mock('../../../../src/service/workflow-result-service', 
 function(){
   return jest.fn().mockImplementation(
     function() {
@@ -31,7 +30,7 @@ function(){
             items: searchParams.filterByItems,
             submitters: searchParams.filterBySubmitters
           }
-          console.log(filters, 'filter request');
+          // console.log(filters, 'filter request');
           return Promise.resolve({ filters: filters, rows: [{collectionId: 2,
             collectionName: "TestCollection",
             dateCreated: "2021-11-17T15:26:17.301+0000",
@@ -142,7 +141,7 @@ describe('DashboardTable.vue', () => {
   };
 
   beforeEach(() => {
-    wrapper = mount(DashboardTable, {
+    wrapper = shallowMount(DashboardTable, {
       localVue,
       mocks: {
         $store
