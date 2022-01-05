@@ -1,73 +1,78 @@
 <template>
-    <div class="p-3 w-100 bg-light-gray-1">
-        <b-card class="w-100">
-            <h2 class>
-                Workflows
-                <button
-                    id="btn-search"
-                    class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
-                    data-toggle="modal"
-                    data-target=".bd-example-modal-lg-2"
-                >Search Workflows</button>
-                <a
-                    class="btn btn-primary btn-lg marg-b-4 float-right"
-                    href="#"
-                    data-toggle="popover"
-                    data-content="Link goes to galaxy"
-                    data-original-title
-                    title
-                >Create new Workflow</a>
-            </h2>
-            <div class="clearfix"></div>
-            <!-- workflow -->
-            <b-card class="bg-light-gray" v-for="(workflow, index) in listOfWorkflows" :key="workflow.id">
-                <div class="row ">
-                    <div class="col-lg-10">
-                        <h3 contenteditable="true">{{ workflow.name }}</h3>
-                        <p contenteditable="true">{{ workflow.description }}</p>
+    <div class="p-3 col-12 bg-light-gray-1">
+        <main>
+            <b-card class="w-100">
+                <h2 class>
+                    Workflows
+                    <button
+                        id="btn-search"
+                        class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
+                        data-toggle="modal"
+                        data-target=".bd-example-modal-lg-2"
+                    >Search Workflows</button>
+                    <a
+                        class="btn btn-primary btn-lg marg-b-4 float-right"
+                        href="#"
+                        data-toggle="popover"
+                        data-content="Link goes to galaxy"
+                        data-original-title
+                        title
+                    >Create new Workflow</a>
+                </h2>
+                <div class="clearfix"></div>
+                <!-- workflow -->
+                <b-card
+                    class="bg-light-gray"
+                    v-for="(workflow, index) in listOfWorkflows"
+                    :key="workflow.id"
+                >
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <h3 contenteditable="true">{{ workflow.name }}</h3>
+                            <p contenteditable="true">{{ workflow.description }}</p>
+                        </div>
+                        <div class="col-lg-2 text-right">
+                            <a
+                                class="btn btn-primary btn marg-t-5"
+                                href="#"
+                                data-toggle="popover"
+                                data-content="Link goes to galaxy"
+                                data-original-title
+                                title
+                            >Edit</a>
+                        </div>
                     </div>
-                    <div class="col-lg-2 text-right">
-                        <a
-                            class="btn btn-primary btn marg-t-5"
-                            href="#"
-                            data-toggle="popover"
-                            data-content="Link goes to galaxy"
-                            data-original-title
-                            title
-                        >Edit</a>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col">
-                        Created By:
-                        <!-- <br />Ella Fitzgerald -->
-                    </div>
-                    <div class="col">
-                        Creator:
-                        <!-- <br />Gregg Allman -->
-                    </div>
-                    <div class="col">
-                        Date Created:
-                        <!-- <br />02/12/2021 -->
-                    </div>
-                    <div class="col">
-                        Last Updated:
-                        <!-- <br />09/25/2021 -->
-                    </div>
-                    <div class="col">
-                        Version:
-                        <!-- <br />2.5 -->
-                    </div>
-                    <div class="col" v-if="workflow.tags && workflow.tags.length">
-                        <p class="mb-0">Tags:</p>
-                        <span
-                            class="badge badge-secondary"
-                            v-for="tag in workflow.tags"
-                            :key="tag"
-                        >{{ tag }}</span>
-                    </div>
-                    <!-- <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            Created By:
+                            <!-- <br />Ella Fitzgerald -->
+                        </div>
+                        <div class="col">
+                            Creator:
+                            <!-- <br />Gregg Allman -->
+                        </div>
+                        <div class="col">
+                            Date Created:
+                            <!-- <br />02/12/2021 -->
+                        </div>
+                        <div class="col">
+                            Last Updated:
+                            <!-- <br />09/25/2021 -->
+                        </div>
+                        <div class="col">
+                            Version:
+                            <!-- <br />2.5 -->
+                        </div>
+                        <div class="col" v-if="workflow.tags && workflow.tags.length">
+                            <p class="mb-0">Tags:</p>
+                            <span
+                                class="badge badge-secondary"
+                                v-for="tag in workflow.tags"
+                                :key="tag"
+                            >{{ tag }}</span>
+                        </div>
+                        <!-- <div class="col">
                             Input File Formats:
                             <br />
                             <span class="badge badge-secondary">Video</span>
@@ -77,58 +82,70 @@
                             <span class="badge badge-secondary">Video</span>
                             <span class="badge badge-secondary">Audio</span>
                         </div>    <span class="badge badge-secondary">Audio</span>
-                    </div>-->
-                </div>
-                <b-card class="mgm-card bg-light-gray-1">
-                    <h3 class="w-100 mgm-h3 card-title bg-light-gray" @click="getWorkflowDetails(index)">
-                        <button
-                            class="btn"
-                            :class="workflow.visible ? null : 'collapsed'"
-                            :aria-expanded="workflow.visible ? 'true' : 'false'"
-                            :aria-controls="'mgm' + index"
-                            style="font-size:24px; font-weight:400"
-                            @click="workflow.visible = !workflow.visible;"
+                        </div>-->
+                    </div>
+                    <b-card class="mgm-card bg-light-gray-1">
+                        <h3
+                            class="w-100 mgm-h3 card-title bg-light-gray"
+                            @click="getWorkflowDetails(index)"
                         >
-                            <span v-html="rightArrowSvg" style="font-size:24px"></span>
-                            <span class="sr-only">Toggle hidden content</span>
-                            <span class="pl-3">MGMs</span>
-                        </button>
-                    </h3>
-                    <b-collapse :id="'mgm' + index" class="mgm-content" v-model="workflow.visible">
-                        <div
-                            :class="{ 'p-2': (!workflow || !workflow.details || !workflow.details.length) }"
-                        >
-                            <b-overlay
-                                :show="(!workflow || !workflow.details)"
-                                rounded="sm"
-                                c
+                            <button
+                                class="btn"
+                                :class="workflow.visible ? null : 'collapsed'"
+                                :aria-expanded="workflow.visible ? 'true' : 'false'"
+                                :aria-controls="'mgm' + index"
+                                style="font-size:24px; font-weight:400"
+                                @click="workflow.visible = !workflow.visible;"
                             >
-                                <b-navbar
-                                    id="pills-tab-1"
-                                    toggleable="lg"
-                                    type="dark"
-                                    class="nav-pills"
-                                >
-                                    <span v-for="(node, i) in workflow.details" :key="i">
-                                        <b-nav-item
-                                            :class="(node && workflow.selectedNode === i) ? 'active' : ''"
-                                            @click="onChangeNode(index, i)"
-                                        >{{ node.nodeName }}</b-nav-item>
-                                    </span>
-                                </b-navbar>
+                                <span v-html="rightArrowSvg" style="font-size:24px"></span>
+                                <span class="sr-only">Toggle hidden content</span>
+                                <span class="pl-3">MGMs</span>
+                            </button>
+                        </h3>
+                        <b-collapse
+                            :id="'mgm' + index"
+                            class="mgm-content"
+                            v-model="workflow.visible"
+                        >
+                            <div
+                                :class="{ 'p-2': (!workflow || !workflow.details || !workflow.details.length) }"
+                            >
+                                <b-overlay :show="(!workflow || !workflow.details)" rounded="sm" c>
+                                    <b-navbar
+                                        id="pills-tab-1"
+                                        toggleable="lg"
+                                        type="dark"
+                                        class="nav-pills"
+                                    >
+                                        <span v-for="(node, i) in workflow.details" :key="i">
+                                            <b-nav-item
+                                                :class="(node && workflow.selectedNode === i) ? 'active' : ''"
+                                                @click="onChangeNode(index, i)"
+                                            >{{ node.nodeName }}</b-nav-item>
+                                        </span>
+                                    </b-navbar>
 
-                                <dl class="d-flex col-12 mt-3" v-if="workflow && workflow.details && workflow.details.length">
-                                    <div class="mr-5 d-flex " v-for="(p, paramIndex) in workflow.details[workflow.selectedNode].params" :key="paramIndex">
-                                        <label class="font-weight-bold">{{ p.name }}:</label> <span class="ml-2">{{ p.value }}</span>
-                                    </div>
-                                </dl>
-                            </b-overlay>
-                        </div>
-                    </b-collapse>
+                                    <dl
+                                        class="d-flex col-12 mt-3"
+                                        v-if="workflow && workflow.details && workflow.details.length"
+                                    >
+                                        <div
+                                            class="mr-5 d-flex"
+                                            v-for="(p, paramIndex) in workflow.details[workflow.selectedNode].params"
+                                            :key="paramIndex"
+                                        >
+                                            <label class="font-weight-bold">{{ p.name }}:</label>
+                                            <span class="ml-2">{{ p.value }}</span>
+                                        </div>
+                                    </dl>
+                                </b-overlay>
+                            </div>
+                        </b-collapse>
+                    </b-card>
                 </b-card>
+                <!-- end workflow // -->
             </b-card>
-            <!-- end workflow // -->
-        </b-card>
+        </main>
     </div>
 </template>
 <script>
@@ -241,7 +258,7 @@ a:hover {
     list-style: none !important;
 }
 .bg-light-gray {
-    background-color: rgba(0,0,0,.03) !important;
+    background-color: rgba(0, 0, 0, 0.03) !important;
 }
 h3.card-title .btn {
     /* font-size: 1.5rem; */
@@ -253,11 +270,12 @@ h3.card-title .btn {
 .nav-pills .nav-link {
     border-radius: 0.25rem;
 }
-.nav-link:focus, .nav-link:hover {
+.nav-link:focus,
+.nav-link:hover {
     text-decoration: none;
 }
 a:hover {
-    color: #F4871E !important;
+    color: #f4871e !important;
     text-decoration: none;
 }
 </style>
