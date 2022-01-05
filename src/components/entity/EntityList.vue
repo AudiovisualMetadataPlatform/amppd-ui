@@ -407,6 +407,9 @@ export default {
                 self.selectedUnit = response;
                 self.entity = response;
                 this.getUnitCollections();
+            }).catch(err => {
+                self.$bvToast.toast("Unable to retrive unit details.Please try again!", self.sharedService.erorrToastConfig);
+                self.showLoader = false;
             });
         },
         async getUnitCollections() {
