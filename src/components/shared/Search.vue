@@ -54,9 +54,9 @@
                                 <td v-if="(type === 'workflows' || type === 'collections')">{{source.dateCreated | DDMMYYYY}}</td>
                             </template>
                             <template v-if="isEntityList">
-                                <th colspan="2">{{source.name}}</th>
-                                <th colspan="2">{{source.description}}</th>
-                                <th v-if="type === 'listing-item'">{{source.externalId}}</th>
+                                <td colspan="1">{{source.name}}</td>
+                                <td colspan="3">{{source.description}}</td>
+                                <td v-if="type === 'listing-item'">{{source.externalId}}</td>
                             </template>
 
                         </tr>

@@ -1,5 +1,6 @@
 <template>
     <div class="w-100">
+        <loader :show="showLoader" />
         <b-card class="text-left" v-if="!isCreatePage">
             <h2 class="mb-3">Files</h2>
             <table
@@ -113,6 +114,7 @@ import { sync } from 'vuex-pathify';
 import { env } from '../../helpers/env';
 import Sidebar from '@/components/navigation/Sidebar.vue';
 import Logout from '@/components/shared/Logout.vue';
+import Loader from '@/components/shared/Loader.vue';
 import ItemService from '../../service/item-service';
 import PrimaryFileService from "../../service/primary-file-service";
 import SharedService from '../../service/shared-service';
@@ -122,7 +124,8 @@ export default {
     Name: "ItemDetails",
     components: {
         Logout,
-        Sidebar
+        Sidebar,
+        Loader
     },
     props: {},
     data() {
@@ -132,7 +135,8 @@ export default {
             sharedService: new SharedService(),
             showEdit: true,
             removeIcon: config.common.icons['remove'],
-            files: []
+            files: [],
+            showLoader: false
         }
     },
     computed: {
@@ -179,14 +183,17 @@ export default {
                 type: "application/json"
             }));
             formData.append("mediaFile", data.file);
+            self.showLoader = true;
             this.fileService.uploadFile(self.selectedItem.id, formData).then(el => {
+                self.showLoader = false;
                 this.$set(self.PrimaryFiles._embedded.primaryfiles, index, el);
             }).catch(error => {
+                self.showLoader = false;
                 if (error.response && error.response.data && error.response.data.validationErrors) {
                     const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
                     errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
                 } else {
-                    self.$bvToast.toast("Something went wrong!", self.sharedService.erorrToastConfig);
+                    self.$bvToast.toast("Something went wrong.Please try again!", self.sharedService.erorrToastConfig);
                 }
             });
         },
