@@ -28,14 +28,18 @@
   <search-filter/>
    <br/>
   <b-pagination
-        class="mt-3 justify-content-left"
+        class="mt-3 justify-content-left w-100"
         v-model="workflowDashboard.searchQuery.pageNum"
         :total-rows="workflowDashboard.searchResult.totalResults"
         :per-page="workflowDashboard.searchQuery.resultsPerPage"
         @change="paginate(workflowDashboard.searchQuery.pageNum)"
         size="sm"
+        align="center"
         first-number
+        limit="8"
         last-number
+        prev-text="Prev"
+        next-text="Next"
       ></b-pagination>  
   <div class="table-responsive">
     <table id="myTable" class="table dataTable no-footer">
@@ -92,8 +96,12 @@
         :per-page="workflowDashboard.searchQuery.resultsPerPage"
         @change="paginate(workflowDashboard.searchQuery.pageNum)"
         size="sm"
+        align="center"
         first-number
+        limit="8"
         last-number
+        prev-text="Prev"
+        next-text="Next"
       ></b-pagination>
   </div>
 </div>
