@@ -108,9 +108,9 @@ export default {
         }
     },
     methods: {
-        async getOutputFileList(pageNum = 1, sortrule = {columnName: "dateCreated", orderByDescending: false}) {
+        async getOutputFileList(pageNum = 1, sortRule = {columnName: "dateCreated", orderByDescending: false}) {
             const self = this;
-            const filters = {filterByFiles: [self.selectedFile.name], sortrule, pageNum};
+            const filters = {filterByFiles: [self.selectedFile.name], sortRule, pageNum};
             self.showLoader = true;
             const response = await this.workflowResultService.getWorkflowResults(filters);
             self.showLoader = false;
