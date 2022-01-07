@@ -36,7 +36,7 @@
         size="sm"
         align="center"
         first-number
-        limit="8"
+        limit="9"
         last-number
         prev-text="Prev"
         next-text="Next"
@@ -98,7 +98,7 @@
         size="sm"
         align="center"
         first-number
-        limit="8"
+        limit="9"
         last-number
         prev-text="Prev"
         next-text="Next"
