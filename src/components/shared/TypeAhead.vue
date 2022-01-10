@@ -4,13 +4,13 @@
             v-model="query"
             type="text" 
             :placeholder="placeholder"
-            class="form-control"
             @input="onChange"
             @keydown.down="onArrowDown"
             @keydown.up="onArrowUp"
             @keydown.enter="onEnter"
+            :class="'form-control ' +customClass"
         >
-        <ul v-show="isOpen" class="autocomplete-results" id="autocomplete-results">
+        <ul v-show="isOpen" class="autocomplete-results w-100" id="autocomplete-results">
             <li class="autocomplete-result"
             
                 v-for="(result, i) in results"
@@ -52,6 +52,10 @@ export default {
             type: String,
             default: ''
         },
+        customClass: {
+            type:String,
+            default: ''
+        }
 
 	},   
 	data() {
@@ -191,5 +195,11 @@ ul{
   }
   .dataTables_wrapper .dataTables_filter input{
     margin-left: 0 !important;
+  }
+
+
+  .customSearchWidth {
+    max-width: 200px !important;
+    float: right !important;
   }
 </style>
