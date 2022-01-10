@@ -15,6 +15,7 @@ import NerEditor from "./components/hmgm/NerEditor.vue";
 import { accountService } from "./service/account-service.js";
 import CollectionDetails from "./components/collections/CollectionDetails.vue";
 import { env } from "./helpers/env.js";
+import WorkflowList from './components/workflow/WorkflowList.vue';
 import EntityList from "./components/entity/EntityList.vue";
 Vue.use(Router);
 
@@ -237,6 +238,17 @@ var router = new Router({
         helpUrl: "https://wiki.dlib.indiana.edu/display/AMP/AMP+User+Guide"
       },
      
+    },
+    {
+      path: "/workflows",
+      name: "workflow-listing",
+      component: WorkflowList,
+      meta: { authorize: [],
+        breadCrumb: [ 
+          {text: "Home", href: '#/'}, 
+          {text: "Workflows"}
+        ]
+      },
     },
 
   ],
