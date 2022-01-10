@@ -10,7 +10,7 @@
             @keydown.enter="onEnter"
             :class="'form-control ' +customClass"
         >
-        <ul v-show="isOpen" class="autocomplete-results" id="autocomplete-results">
+        <ul v-show="isOpen" class="autocomplete-results w-100" id="autocomplete-results">
             <li class="autocomplete-result"
             
                 v-for="(result, i) in results"
