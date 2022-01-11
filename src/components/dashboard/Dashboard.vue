@@ -231,7 +231,7 @@
                     <StatusFilter
                       @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.statusFilter)"/>
 
-                      <div class="relevant-togggle"><span class="txt-v pr-2">Show Relevant Results Only</span>
+                      <div class="relevant-togggle d-flex"><div class="txt-v pr-2 mt-1">Show Relevant Results Only</div>
                         <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
                           <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
                           <span class="slider round"></span>
