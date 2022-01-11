@@ -151,20 +151,31 @@
           :totalResults="filteredRows.length"
           :maxPages="1"
       @paginate="paginate" />-->
-      <b-pagination
-        class="mt-3 justify-content-left"
-        v-model="workflowDashboard.searchQuery.pageNum"
-        :total-rows="workflowDashboard.searchResult.totalResults"
-        :per-page="workflowDashboard.searchQuery.resultsPerPage"
-        @change="paginate(workflowDashboard.searchQuery.pageNum)"
-        size="sm"
-        align="center"
-        first-number
-        limit="9"
-        last-number
-        prev-text="Prev"
-        next-text="Next"
-      ></b-pagination>
+      <div class="row col-12 p-0 m-0">
+        <div class="col-2 col-md-2 col-sm-2 col-xs-12">
+          <div class="dataTables_info"><label>{{totalText}}</label></div>
+        </div>
+        <div class="col-8 col-md-8 col-sm-8 col-xs-12 w-100">
+          <b-pagination
+            class="mt-3 justify-content-left"
+            v-model="workflowDashboard.searchQuery.pageNum"
+            :total-rows="workflowDashboard.searchResult.totalResults"
+            :per-page="workflowDashboard.searchQuery.resultsPerPage"
+            @change="paginate(workflowDashboard.searchQuery.pageNum)"
+            size="sm"
+            align="center"
+            first-number
+            limit="9"
+            last-number
+            prev-text="Prev"
+            next-text="Next"
+          ></b-pagination>
+        </div>
+        <div class="col-2 col-md-2 col-sm-2 col-xs-12">
+          
+        </div>
+      </div>
+      
     </div>
   </div>
 </template>
@@ -231,7 +242,16 @@ export default {
       }
 
       return this.workflowDashboard.searchResult.rows;
-    }
+    }, 
+    totalText() {
+			let total = this.workflowDashboard.searchResult.totalResults;
+			let start = this.workflowDashboard.searchQuery.pageNum > 1
+				? ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage) + 1
+				: 1;
+            let end = this.workflowDashboard.searchQuery.pageNum * this.workflowDashboard.searchQuery.resultsPerPage;
+            end = end > total ? total : end;
+			return `Showing ${start} - ${end} of ${total}`;
+		}
   },
   props: {},
   methods: {
@@ -266,11 +286,7 @@ export default {
     async refreshData() {
       const self = this;
       self.workflowDashboard.loading = true;
-      const response = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
-      if (response.rows) {
-        self.workflowDashboard.searchResult.rows = response.rows;
-        this.workflowDashboard.searchResult.totalResults = response.totalResults;
-      }
+      self.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
       self.workflowDashboard.loading = false;
     },
   },

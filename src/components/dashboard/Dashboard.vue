@@ -1,7 +1,7 @@
 <template>
 
   <div class="collections w-100">
-     <loader :show="!isFilterApiLoaded"/>
+     <!-- <loader :show="!isFilterApiLoaded"/> -->
   <div class="container col-12">
     <div class="row">
       <!-- <Sidebar/> -->
@@ -241,7 +241,7 @@
                   <div class="row spacer">
                   </div>
                 </div>
-                <DashboardTable v-if="isFilterApiLoaded"/>
+                <DashboardTable/>
                 <Search :searchType="searchType" :dataSource="searchSource"/>
               </div>
             </div>
@@ -412,7 +412,7 @@ export default {
       switch(value) {
         case 'collection':
           this.searchType = "collections";
-          this.searchSource = self.workflowDashboard.searchResult.filters.collections;
+          this.searchSource = (self.workflowDashboard.searchResult.filters.collections).map((el, index) => ({id: index+1, "collectionName": el}));
         break;
         case 'unit':
           this.searchType = "units";
@@ -420,30 +420,20 @@ export default {
         break;
         case 'workflow':
           this.searchType = "workflows";
-          this.searchSource = self.workflowDashboard.searchResult.filters.workflows;
+          this.searchSource = self.workflowDashboard.searchResult.filters.workflows.map((el, index) => ({id: index+1, "workflowName": el}));
         break;
         case 'output':
           this.searchType = "outputs";
-          this.searchSource = self.workflowDashboard.searchResult.filters.outputs;
+          this.searchSource = self.workflowDashboard.searchResult.filters.outputs.map((el, index) => ({id: index+1, "outputName": el}));
         break;
       }
 
       this.$bvModal.show('modal-lg');
       
     },
-
-    async getFilterValues() {
-      const self = this;
-       const filterValues = await this.workflowResultService.getWorkflowFilters();
-       if(filterValues) {
-         self.isFilterApiLoaded = true;
-         self.workflowDashboard.searchResult.filters = filterValues;
-       }
-    }
-    ,
   },
   mounted() {
-    this.getFilterValues();
+    // this.getFilterValues();
   }
 }
 </script>
