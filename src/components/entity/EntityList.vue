@@ -533,7 +533,7 @@ export default {
              if(success && success._embedded && success._embedded.units && success._embedded.units.length) {
                  self.defaultUnitId = success._embedded.units[0].id;
                  if(success._embedded.units.length > 1) {
-                     self.$bvToast.toast("Received more than one unit details.Please contant administrator", self.sharedService.warningToastConfig);
+                     self.$bvToast.toast("Received more than one unit details.Please contact administrator", self.sharedService.warningToastConfig);
                  }
                  self.getData();
              } else {
