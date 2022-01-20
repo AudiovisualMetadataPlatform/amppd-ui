@@ -338,7 +338,8 @@ export default {
             infoSvg: config.common.icons['info'],
             searchType: "",
             submitted: false,
-            isDataChanged: false
+            isDataChanged: false,
+            defaultUnitId: ""
         }
     },
     computed: {
@@ -403,12 +404,12 @@ export default {
         },
         async getUnitDetails() {
             const self = this;
-            self.unitService.getUnitById(33).then(response => {
+            self.unitService.getUnitById(self.defaultUnitId).then(response => {
                 self.selectedUnit = response;
                 self.entity = response;
                 this.getUnitCollections();
             }).catch(err => {
-                self.$bvToast.toast("Unable to retrive unit details.Please try again!", self.sharedService.erorrToastConfig);
+                self.$bvToast.toast("Unable to retrive unit details. Please try again!", self.sharedService.erorrToastConfig);
                 self.showLoader = false;
             });
         },
@@ -524,6 +525,24 @@ export default {
         },
         onInputChange(ev) {
             this.isDataChanged = true;
+        },
+        async getDefaultUnit() {
+         const self = this;
+         self.unitService.getDefaultUnit().then(success => {
+             self.showLoader = false;
+             if(success && success._embedded && success._embedded.units && success._embedded.units.length) {
+                 self.defaultUnitId = success._embedded.units[0].id;
+                 if(success._embedded.units.length > 1) {
+                     self.$bvToast.toast("Received more than one unit details. Please contact administrator", self.sharedService.warningToastConfig);
+                 }
+                 self.getData();
+             } else {
+                self.$bvToast.toast("Unable to retrive unit details. Please try again!", self.sharedService.erorrToastConfig);
+             }
+         }).catch(err => {
+                self.$bvToast.toast("Unable to retrive unit details. Please try again!", self.sharedService.erorrToastConfig);
+                self.showLoader = false;
+            });   
         }
         
 
@@ -555,7 +574,7 @@ export default {
     mounted() {
         const self = this;
         self.showLoader = true;
-        self.getData();
+        self.getDefaultUnit();
     }
 
 }

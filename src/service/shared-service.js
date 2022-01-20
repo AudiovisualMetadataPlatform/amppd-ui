@@ -1,7 +1,8 @@
 export default class SharedService {
     constructor() {
         this.erorrToastConfig = { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 };
-        this.successToastConfig = { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 }; 
+        this.successToastConfig = { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 };
+        this.warningToastConfig = { title: 'Notification', appendToast: true, variant: "warning", autoHideDelay: 5000 }; 
     }
 
     /****Filtering an array based on a alphabatical
