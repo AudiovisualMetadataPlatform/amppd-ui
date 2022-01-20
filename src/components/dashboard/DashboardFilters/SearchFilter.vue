@@ -1,9 +1,9 @@
 <template>          
   <div id="myTable_filter" class="dataTables_filter">
-    <label>Search:</label>
+    <!-- <label>Search:</label> -->
     <typeahead :source="getItems" filter-key="searchValue" :start-at="1" @selection="addSearchTerm"
       filter-type="contains"
-      id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder=""/>
+      id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search" :customClass= "'customSearchWidth'"/>
   </div>                 
 </template>
 
@@ -80,6 +80,7 @@ export default {
     width:250px;
   }
   .dataTables_wrapper .dataTables_filter label{
-    margin-right: 5px !important;
+    margin-right: 5px 
+    !important;
   }
 </style>

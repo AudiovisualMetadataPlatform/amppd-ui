@@ -1,4 +1,5 @@
 import BaseService from './base-service.js';
+import { env } from "../helpers/env";
 const baseService = new BaseService();
 
 export default class UnitService extends BaseService{
@@ -36,6 +37,16 @@ export default class UnitService extends BaseService{
 
      async updateUnitDetails(id, data){        
         return await super.patch_auth(`/units/${id}`,data)
+           .then(result => result.data)
+    }
+
+    /***
+     * To get the default unit details
+     *  @method GET
+     */
+
+     async getDefaultUnit(){        
+        return await super.get_auth(`/units/search/findByName?name=${env.getAmpUnit()}`)
            .then(result => result.data)
     }
 }
