@@ -409,7 +409,7 @@ export default {
                 self.entity = response;
                 this.getUnitCollections();
             }).catch(err => {
-                self.$bvToast.toast("Unable to retrive unit details.Please try again!", self.sharedService.erorrToastConfig);
+                self.$bvToast.toast("Unable to retrive unit details. Please try again!", self.sharedService.erorrToastConfig);
                 self.showLoader = false;
             });
         },
@@ -533,14 +533,14 @@ export default {
              if(success && success._embedded && success._embedded.units && success._embedded.units.length) {
                  self.defaultUnitId = success._embedded.units[0].id;
                  if(success._embedded.units.length > 1) {
-                     self.$bvToast.toast("Received more than one unit details.Please contact administrator", self.sharedService.warningToastConfig);
+                     self.$bvToast.toast("Received more than one unit details. Please contact administrator", self.sharedService.warningToastConfig);
                  }
                  self.getData();
              } else {
-                self.$bvToast.toast("Unable to retrive unit details.Please try again!", self.sharedService.erorrToastConfig);
+                self.$bvToast.toast("Unable to retrive unit details. Please try again!", self.sharedService.erorrToastConfig);
              }
          }).catch(err => {
-                self.$bvToast.toast("Unable to retrive unit details.Please try again!", self.sharedService.erorrToastConfig);
+                self.$bvToast.toast("Unable to retrive unit details. Please try again!", self.sharedService.erorrToastConfig);
                 self.showLoader = false;
             });   
         }
