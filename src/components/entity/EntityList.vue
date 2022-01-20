@@ -476,7 +476,7 @@ export default {
 
                     self.collectionService.updateCollection(self.entity).then(reponse => {
                         self.$bvToast.toast("Collection details updated successfully", self.sharedService.successToastConfig);
-                        self.showEdit = !self.showEdit;
+                        // self.showEdit = !self.showEdit;
                         self.submitted = false;
                     }).catch(error => {
                         self.submitted = false;
@@ -492,7 +492,7 @@ export default {
                     self.entity.unit = self.baseService.API_URL + `/units/${self.selectedUnit.id}`;
                     self.collectionService.createCollection(self.entity).then(reponse => {
                         self.$bvToast.toast("Collection created successfully", self.sharedService.successToastConfig);
-                        self.showEdit = !self.showEdit;
+                        // self.showEdit = !self.showEdit;
                         self.submitted = false;
                     }).catch(error => {
                         self.submitted = false;
@@ -506,10 +506,31 @@ export default {
                 }
 
             } else if (self.baseUrl === 'file') {
-                self.primaryFileService.updatePrimaryFile(self.entity).then(reponse => {
+            self.primaryFileService.updatePrimaryFile(self.entity).then(reponse => {
                     self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
-                    self.showEdit = !self.showEdit;
+                    // self.showEdit = !self.showEdit;
                 }).catch(error => self.$bvToast.toast("File details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 }));
+            } else if(self.baseUrl === 'item') {
+                self.submitted = true;
+
+                // Collection Validation rules
+                if (!self.entity.name ) {
+
+                    self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
+                    return false;
+
+                }
+                self.showLoader = true;
+                self.itemService.updateItem(self.entity).then(success => {
+                    self.showLoader = false;
+                    self.$bvToast.toast("Item details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
+                    // self.showEdit = !self.showEdit;
+                    self.submitted = false;
+                }).catch(error => {
+                    self.showLoader = false;
+                    self.submitted = false;
+                    self.$bvToast.toast("Item details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 });
+                    });
             }
         },
         onCancel() {
