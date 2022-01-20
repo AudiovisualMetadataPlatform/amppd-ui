@@ -404,7 +404,7 @@ export default {
         },
         async getUnitDetails() {
             const self = this;
-            self.unitService.getUnitById(33).then(response => {
+            self.unitService.getUnitById(self.defaultUnitId).then(response => {
                 self.selectedUnit = response;
                 self.entity = response;
                 this.getUnitCollections();
