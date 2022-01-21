@@ -507,10 +507,14 @@ export default {
                 }
 
             } else if (self.baseUrl === 'file') {
-            self.primaryFileService.updatePrimaryFile(self.entity).then(reponse => {
+                const payload = {name: self.entity.name,  description: self.entity.description};
+            self.primaryFileService.updatePrimaryFile(self.entity.id, payload).then(reponse => {
                     self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
                     // self.showEdit = !self.showEdit;
-                }).catch(error => self.$bvToast.toast("File details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 }));
+                }).catch(error => 
+                {
+                    self.$bvToast.toast("File details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 })
+                });
             } else if(self.baseUrl === 'item') {
                 self.submitted = true;
 
