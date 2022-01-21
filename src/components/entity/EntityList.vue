@@ -311,6 +311,7 @@ import OutputFile from "./OutputFile.vue";
 import PrimaryFileService from "../../service/primary-file-service.js";
 import Search from "@/components/shared/Search.vue";
 import BaseService from "../../service/base-service";
+import { env } from '../../helpers/env';
 export default {
     name: "EntityList",
     components: {
@@ -506,10 +507,14 @@ export default {
                 }
 
             } else if (self.baseUrl === 'file') {
-            self.primaryFileService.updatePrimaryFile(self.entity).then(reponse => {
+                const payload = {name: self.entity.name,  description: self.entity.description};
+            self.primaryFileService.updatePrimaryFile(self.entity.id, payload).then(reponse => {
                     self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
                     // self.showEdit = !self.showEdit;
-                }).catch(error => self.$bvToast.toast("File details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 }));
+                }).catch(error => 
+                {
+                    self.$bvToast.toast("File details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 })
+                });
             } else if(self.baseUrl === 'item') {
                 self.submitted = true;
 
@@ -520,8 +525,26 @@ export default {
                     return false;
 
                 }
-                self.showLoader = true;
-                self.itemService.updateItem(self.entity).then(success => {
+                 self.showLoader = true;
+                if(self.isCreatePage) {
+                    self.entity = {
+                    ...self.entity,
+                    collection: env.getAmpUrl() + `/collections/${self.selectedCollection.id}`
+                    }
+                    self.itemService.addItemToCollection(self.entity).then(response => {
+                        self.showLoader = false;
+                        self.submitted = false;
+                        self.$bvToast.toast("Item added successfully", self.sharedService.successToastConfig);
+                        self.entity = response; 
+                        self.selectedItem = response;
+                        // self.$router.push("/collection/details");
+                    }).catch(error => {
+                        self.showLoader = false;
+                        self.submitted = false;
+                        self.$bvToast.toast("Failed to add an Item", self.sharedService.erorrToastConfig);
+                    });
+                } else {
+                    self.itemService.updateItem(self.entity).then(success => {
                     self.showLoader = false;
                     self.$bvToast.toast("Item details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
                     // self.showEdit = !self.showEdit;
@@ -531,6 +554,7 @@ export default {
                     self.submitted = false;
                     self.$bvToast.toast("Item details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 });
                     });
+                }
             }
         },
         onCancel() {

@@ -17,8 +17,8 @@ export default class PrimaryFileService extends BaseService{
      * @params primaryfileid, postobj
      */
 
-     async updatePrimaryFile(itemId, postObj){
-        return await super.patch_auth(`/items/${itemId}/primaryfiles/${postObj.id}`); 
+     async updatePrimaryFile(id, postObj){
+        return await super.patch_auth(`/primaryfiles/${id}`, postObj); 
     }
     
 
