@@ -1,7 +1,7 @@
 <template>
     <div class="w-100">
         <loader :show="showLoader" />
-        <b-card class="text-left" v-if="!isCreatePage">
+        <b-card class="text-left">
             <h2 class="mb-3">Files</h2>
             <table
                 class="table"
@@ -178,6 +178,11 @@ export default {
         },
         saveFile(data, index) {
             const self = this;
+            if(!self.selectedItem.id) {
+                self.$bvToast.toast("Item details cannot be found to add primary file", self.sharedService.successToastConfig);
+                return;
+            }
+            
             const formData = new FormData();
             formData.append('primaryfile', new Blob([JSON.stringify({ name: data.originalFilename, description: data.description })], {
                 type: "application/json"
