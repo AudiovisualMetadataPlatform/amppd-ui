@@ -191,7 +191,7 @@ export default {
             self.showLoader = true;
             this.fileService.uploadFile(self.selectedItem.id, formData).then(el => {
                 self.showLoader = false;
-                this.$set(self.PrimaryFiles._embedded.primaryfiles, index, el);
+                this.$set(self.PrimaryFiles._embedded.primaryfiles, index, el.data);
             }).catch(error => {
                 self.showLoader = false;
                 if (error.response && error.response.data && error.response.data.validationErrors) {
