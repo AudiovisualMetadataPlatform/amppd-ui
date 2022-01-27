@@ -1,7 +1,6 @@
 <template>
-<div>
-    <AmpHeader/>
-    <Logout/>
+  <div class="p-3 col-12 bg-light-gray-1">
+  <main>
     <div class="workflow-content">
       <div>
         <div class="header-row">
@@ -19,6 +18,7 @@
         {{validationErrors}}
       </div>
     </modal> -->
+  </main>
   </div>
 </template>
 
