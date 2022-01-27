@@ -508,13 +508,21 @@ export default {
 
             } else if (self.baseUrl === 'file') {
                 const payload = {name: self.entity.name,  description: self.entity.description};
-            self.primaryFileService.updatePrimaryFile(self.entity.id, payload).then(reponse => {
-                    self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
+                self.primaryFileService.updatePrimaryFile(self.entity.id, payload).then(reponse => {
+                self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
                     // self.showEdit = !self.showEdit;
                 }).catch(error => 
                 {
-                    self.$bvToast.toast("File details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 })
-                });
+                    self.showLoader = false;
+                        self.submitted = false;
+                        if (error.response && error.response.data && error.response.data.validationErrors) {
+                            const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
+                            errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
+                        } else {
+                            self.$bvToast.toast("File details update failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 })
+                
+                        }
+                    });
             } else if(self.baseUrl === 'item') {
                 self.submitted = true;
 
@@ -541,7 +549,13 @@ export default {
                     }).catch(error => {
                         self.showLoader = false;
                         self.submitted = false;
-                        self.$bvToast.toast("Failed to add an Item", self.sharedService.erorrToastConfig);
+                        if (error.response && error.response.data && error.response.data.validationErrors) {
+                            const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
+                            errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
+                        } else {
+                            self.$bvToast.toast("Failed to add an Item", self.sharedService.erorrToastConfig);
+                        }
+                        
                     });
                 } else {
                     self.itemService.updateItem(self.entity).then(success => {
@@ -552,7 +566,13 @@ export default {
                 }).catch(error => {
                     self.showLoader = false;
                     self.submitted = false;
-                    self.$bvToast.toast("Item details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 });
+                    if (error.response && error.response.data && error.response.data.validationErrors) {
+                            const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
+                            errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
+                        } else {
+                            self.$bvToast.toast("Item details update failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 });
+                        }
+                    
                     });
                 }
             }
