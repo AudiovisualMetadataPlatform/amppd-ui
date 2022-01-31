@@ -207,7 +207,7 @@ export default {
             if (self.PrimaryFiles._embedded.primaryfiles[index].file)
                 self.PrimaryFiles._embedded.primaryfiles.splice(index, 1);
             else
-                this.onRemovePrimaryFile(self.PrimaryFiles._embedded.primaryfiles[index]);
+                this.onRemovePrimaryFile(self.PrimaryFiles._embedded.primaryfiles[index], index);
         },
         onSaveItem() {
             const self = this;
@@ -235,13 +235,14 @@ export default {
             this.selectedFile = file;
             this.$router.push("/collections/file");
         },
-        async onRemovePrimaryFile(file) {
+        async onRemovePrimaryFile(file, index) {
             const self = this;
             const confirmMessage = await self.sharedService.showConfirmationWindow(self.$bvModal);
             if (confirmMessage) {
                 self.showLoader = true;
-                self.fileService.removePrimaryFile(file.id, success => {
+                self.fileService.removePrimaryFile(file.id).then(success => {
                     self.showLoader = false;
+                    self.PrimaryFiles._embedded.primaryfiles.splice(index, 1);
                     self.$bvToast.toast("Primary file has been removed successfully.", self.sharedService.successToastConfig);
                 }).catch(err => {
                     self.showLoader = false;
