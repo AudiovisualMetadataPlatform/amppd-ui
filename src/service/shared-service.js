@@ -66,4 +66,20 @@ export default class SharedService {
 
          return arrayObj;
      }
+
+     //Confirmation window 
+     showConfirmationWindow(instance, message="Are you sure you want to delete?", title = "Confirmation", variant = "danger", okTitle = "Yes", cancelTitle = "No") {
+        const msgBox = instance.msgBoxConfirm('Are you sure you want to delete?', {
+            title: title,
+            size: 'md',
+            buttonSize: 'sm',
+            okVariant: variant,
+            okTitle: okTitle,
+            cancelTitle: cancelTitle,
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true
+          });
+        return msgBox;
+     }
 }

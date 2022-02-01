@@ -47,7 +47,7 @@
                         </svg>
                         <div class="col-sm-1">
                           <label class="row label-bold no-padding-col">Unit</label>
-                          <label class="row no-padding-col">{{collection}}</label>
+                          <label class="row no-padding-col">{{unit}}</label>
                         </div>
                       </div>
                     </button>       
@@ -416,7 +416,7 @@ export default {
         break;
         case 'unit':
           this.searchType = "units";
-          this.searchSource = self.workflowDashboard.searchResult.filters.units;
+          this.searchSource = self.workflowDashboard.searchResult.filters.units.map((el, index) => ({id: index+1, "unitName": el}));
         break;
         case 'workflow':
           this.searchType = "workflows";

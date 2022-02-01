@@ -178,11 +178,11 @@ export default {
         },
         saveFile(data, index) {
             const self = this;
-            if(!self.selectedItem.id) {
+            if (!self.selectedItem.id) {
                 self.$bvToast.toast("Item details cannot be found to add primary file", self.sharedService.successToastConfig);
                 return;
             }
-            
+
             const formData = new FormData();
             formData.append('primaryfile', new Blob([JSON.stringify({ name: data.originalFilename, description: data.description })], {
                 type: "application/json"
@@ -206,6 +206,8 @@ export default {
             const self = this;
             if (self.PrimaryFiles._embedded.primaryfiles[index].file)
                 self.PrimaryFiles._embedded.primaryfiles.splice(index, 1);
+            else
+                this.onRemovePrimaryFile(self.PrimaryFiles._embedded.primaryfiles[index], index);
         },
         onSaveItem() {
             const self = this;
@@ -232,6 +234,21 @@ export default {
         onView(file) {
             this.selectedFile = file;
             this.$router.push("/collections/file");
+        },
+        async onRemovePrimaryFile(file, index) {
+            const self = this;
+            const confirmMessage = await self.sharedService.showConfirmationWindow(self.$bvModal);
+            if (confirmMessage) {
+                self.showLoader = true;
+                self.fileService.removePrimaryFile(file.id).then(success => {
+                    self.showLoader = false;
+                    self.PrimaryFiles._embedded.primaryfiles.splice(index, 1);
+                    self.$bvToast.toast("Primary file has been removed successfully.", self.sharedService.successToastConfig);
+                }).catch(err => {
+                    self.showLoader = false;
+                    self.$bvToast.toast("Unable to remove a primary file. Please try again later!", self.sharedService.erorrToastConfig);
+                });
+            }
         }
     },
     mounted() {

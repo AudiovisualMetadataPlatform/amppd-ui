@@ -28,7 +28,7 @@
                                         class="form-control w-100"
                                         v-model="entity.name"
                                         :disabled="showEdit"
-                                        :class="{'error-border' : (submitted && !entity.name) }"
+                                        :class="{ 'error-border': (submitted && !entity.name) }"
                                         @change="onInputChange"
                                     />
                                 </div>
@@ -41,7 +41,7 @@
                                         class="select custom-select w-100"
                                         v-model="entity.taskManager"
                                         :disabled="showEdit"
-                                        :class="{'error-border' : (submitted && !entity.taskManager) }"
+                                        :class="{ 'error-border': (submitted && !entity.taskManager) }"
                                         @change="onInputChange"
                                     >
                                         <option
@@ -138,29 +138,33 @@
 
                             <div class="w-100 text-right p-0">
                                 <div class="float-left" v-if="baseUrl === 'file'">
-                                    <b-button v-b-toggle.collapse-1 variant="outline-primary" class="btn-lg">
+                                    <b-button
+                                        v-b-toggle.collapse-1
+                                        variant="outline-primary"
+                                        class="btn-lg"
+                                    >
                                         <span v-html="infoSvg"></span>
                                         Media Information
                                     </b-button>
                                 </div>
                                 <!-- <div v-if="!showEdit"> -->
-                                    <!-- <button
+                                <!-- <button
                                         class="btn btn-outline btn-lg btn-edit mr-2"
                                         type="button"
                                         @click="onCancel"
-                                    >Cancel</button> -->
-                                    <button
-                                        class="btn btn-primary btn-lg btn-edit"
-                                        type="button"
-                                        @click="onUpdateEntityDetails"
-                                    >Save</button>
+                                >Cancel</button>-->
+                                <button
+                                    class="btn btn-primary btn-lg btn-edit"
+                                    type="button"
+                                    @click="onUpdateEntityDetails"
+                                >Save</button>
                                 <!-- </div> -->
                                 <!-- <button
                                     class="btn btn-primary btn-lg btn-edit"
                                     type="button"
                                     @click="showEdit = !showEdit"
                                     v-if="showEdit"
-                                >Edit</button> -->
+                                >Edit</button>-->
                             </div>
 
                             <b-collapse id="collapse-1" class="mt-2">
@@ -240,7 +244,9 @@
                                                     <input type="checkbox" v-model="elem.active" />
                                                     <span class="slider round"></span>
                                                 </label>
-                                                <div v-if="((elem.active && baseUrl == 'unit') || baseUrl !== 'unit')">
+                                                <div
+                                                    v-if="((elem.active && baseUrl == 'unit') || baseUrl !== 'unit')"
+                                                >
                                                     <button
                                                         class="btn btn-primary btn"
                                                         @click="onView(elem)"
@@ -291,7 +297,12 @@
                 </main>
             </div>
         </div>
-        <Search :searchType="searchType" :dataSource="masterRecords" @myEvent="onSearchDone" isEntityList="true"/>
+        <Search
+            :searchType="searchType"
+            :dataSource="masterRecords"
+            @myEvent="onSearchDone"
+            isEntityList="true"
+        />
     </div>
 </template>
 
@@ -315,13 +326,13 @@ import { env } from '../../helpers/env';
 export default {
     name: "EntityList",
     components: {
-    Logout,
-    Sidebar,
-    Loader,
-    ItemDetails,
-    Search,
-    OutputFile
-},
+        Logout,
+        Sidebar,
+        Loader,
+        ItemDetails,
+        Search,
+        OutputFile
+    },
     props: [],
     data() {
         return {
@@ -507,52 +518,83 @@ export default {
                 }
 
             } else if (self.baseUrl === 'file') {
-                const payload = {name: self.entity.name,  description: self.entity.description};
-            self.primaryFileService.updatePrimaryFile(self.entity.id, payload).then(reponse => {
-                    self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
-                    // self.showEdit = !self.showEdit;
-                }).catch(error => 
-                {
-                    self.$bvToast.toast("File details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 })
-                });
-            } else if(self.baseUrl === 'item') {
                 self.submitted = true;
 
                 // Collection Validation rules
-                if (!self.entity.name ) {
+                if (!self.entity.name) {
 
                     self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
                     return false;
 
                 }
-                 self.showLoader = true;
-                if(self.isCreatePage) {
+                self.showLoader = true;
+                const payload = { name: self.entity.name, description: self.entity.description };
+                self.primaryFileService.updatePrimaryFile(self.entity.id, payload).then(reponse => {
+                    self.showLoader = false;
+                    self.submitted = false;
+                    self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
+                    // self.showEdit = !self.showEdit;
+                }).catch(error => {
+                    self.showLoader = false;
+                    self.submitted = false;
+                    if (error.response && error.response.data && error.response.data.validationErrors) {
+                        const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
+                        errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
+                    } else {
+                        self.$bvToast.toast("File details update failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 })
+
+                    }
+                });
+            } else if (self.baseUrl === 'item') {
+                self.submitted = true;
+
+                // Collection Validation rules
+                if (!self.entity.name) {
+
+                    self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
+                    return false;
+
+                }
+                self.showLoader = true;
+                if (self.isCreatePage) {
                     self.entity = {
-                    ...self.entity,
-                    collection: env.getAmpUrl() + `/collections/${self.selectedCollection.id}`
+                        ...self.entity,
+                        collection: env.getAmpUrl() + `/collections/${self.selectedCollection.id}`
                     }
                     self.itemService.addItemToCollection(self.entity).then(response => {
                         self.showLoader = false;
                         self.submitted = false;
                         self.$bvToast.toast("Item added successfully", self.sharedService.successToastConfig);
-                        self.entity = response; 
+                        self.entity = response;
                         self.selectedItem = response;
                         // self.$router.push("/collection/details");
                     }).catch(error => {
                         self.showLoader = false;
                         self.submitted = false;
-                        self.$bvToast.toast("Failed to add an Item", self.sharedService.erorrToastConfig);
+                        if (error.response && error.response.data && error.response.data.validationErrors) {
+                            const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
+                            errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
+                        } else {
+                            self.$bvToast.toast("Failed to add an Item", self.sharedService.erorrToastConfig);
+                        }
+
                     });
                 } else {
                     self.itemService.updateItem(self.entity).then(success => {
-                    self.showLoader = false;
-                    self.$bvToast.toast("Item details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
-                    // self.showEdit = !self.showEdit;
-                    self.submitted = false;
-                }).catch(error => {
-                    self.showLoader = false;
-                    self.submitted = false;
-                    self.$bvToast.toast("Item details updation failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 });
+                        self.showLoader = false;
+                        self.$bvToast.toast("Item details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
+                        // self.showEdit = !self.showEdit;
+                        self.submitted = false;
+                    }).catch(error => {
+                        self.showLoader = false;
+                        self.submitted = false;
+                        if (error.response && error.response.data && error.response.data.validationErrors) {
+                            const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
+                            errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
+                        } else {
+                            self.$bvToast.toast("Item details update failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 });
+                        }
+
                     });
                 }
             }
@@ -566,55 +608,55 @@ export default {
             this.$bvModal.show('modal-lg');
         },
         onSearchDone(records) {
-            this.records = records && records.length ? records: this.masterRecords;
+            this.records = records && records.length ? records : this.masterRecords;
         },
         onInputChange(ev) {
             this.isDataChanged = true;
         },
         async getDefaultUnit() {
-         const self = this;
-         self.unitService.getDefaultUnit().then(success => {
-             self.showLoader = false;
-             if(success && success._embedded && success._embedded.units && success._embedded.units.length) {
-                 self.defaultUnitId = success._embedded.units[0].id;
-                 if(success._embedded.units.length > 1) {
-                     self.$bvToast.toast("Received more than one unit details. Please contact administrator", self.sharedService.warningToastConfig);
-                 }
-                 self.getData();
-             } else {
-                self.$bvToast.toast("Unable to retrive unit details. Please try again!", self.sharedService.erorrToastConfig);
-             }
-         }).catch(err => {
+            const self = this;
+            self.unitService.getDefaultUnit().then(success => {
+                self.showLoader = false;
+                if (success && success._embedded && success._embedded.units && success._embedded.units.length) {
+                    self.defaultUnitId = success._embedded.units[0].id;
+                    if (success._embedded.units.length > 1) {
+                        self.$bvToast.toast("Received more than one unit details. Please contact administrator", self.sharedService.warningToastConfig);
+                    }
+                    self.getData();
+                } else {
+                    self.$bvToast.toast("Unable to retrive unit details. Please try again!", self.sharedService.erorrToastConfig);
+                }
+            }).catch(err => {
                 self.$bvToast.toast("Unable to retrive unit details. Please try again!", self.sharedService.erorrToastConfig);
                 self.showLoader = false;
-            });   
+            });
         }
-        
+
 
     },
-    beforeRouteLeave (to, from, next) {
-      if(this.isDataChanged) {
-          this.$bvModal.msgBoxConfirm(`Changes you have made may not be saved.`, {
-          title: 'Notification',
-          size: 'md',
-          buttonSize: 'sm',
-        //   okVariant: 'danger',
-          okTitle: 'Leave',
-          cancelTitle: 'Cancel',
-          footerClass: 'p-2',
-          hideHeaderClose: true,
-          centered: false,
-          noCloseOnBackdrop: true
-        })
-          .then(value => {
-            if(value) next();
-          })
-          .catch(err => {
-            // An error occurred
-          })
-      } else {
-          next();
-      }
+    beforeRouteLeave(to, from, next) {
+        if (this.isDataChanged) {
+            this.$bvModal.msgBoxConfirm(`Changes you have made may not be saved.`, {
+                title: 'Notification',
+                size: 'md',
+                buttonSize: 'sm',
+                //   okVariant: 'danger',
+                okTitle: 'Leave',
+                cancelTitle: 'Cancel',
+                footerClass: 'p-2',
+                hideHeaderClose: true,
+                centered: false,
+                noCloseOnBackdrop: true
+            })
+                .then(value => {
+                    if (value) next();
+                })
+                .catch(err => {
+                    // An error occurred
+                })
+        } else {
+            next();
+        }
     },
     mounted() {
         const self = this;

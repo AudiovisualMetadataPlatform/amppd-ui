@@ -58,4 +58,9 @@ export default class BaseService{
         return this.axiosInstance.patch(this.API_URL + url, body, requestOptions.patch());
     }
 
+    delete_auth(url, body){
+        console.log("BaseService: sending delete to " + this.API_URL + url);
+        return this.axiosInstance.delete(this.API_URL + url, requestOptions.delete());
+    }
+
 }
