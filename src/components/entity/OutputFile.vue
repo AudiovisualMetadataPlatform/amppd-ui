@@ -21,7 +21,7 @@
                         <!-- -->
                         <tr v-for="output in listOfOutputList" :key="output.id">
                             <td>
-                                <!-- <input type="text" :value="12/28/2021" class="form-control" disabled /> --> <p >{{ new Date(output.dateCreated) | dateFormat('YYYY-MM-DD') }}</p>
+                                <!-- <input type="text" :value="12/28/2021" class="form-control" disabled /> --> <p >{{ new Date(output.dateCreated) | LOCAL_DATE_VALUE }}</p>
                             </td>
                             <td>
                                 <!-- <input
