@@ -23,5 +23,8 @@ export const env = {
 	  return this.getEnv('VUE_APP_GALAXY_WORKFLOW_URL')
   },
 
+  getUserGuideUrl() {
+    return this.getEnv('VUE_APP_USER_GUIDE');
+  }
 }
 
