@@ -97,7 +97,7 @@
                                         <input
                                             type="text"
                                             class="form-control w-100"
-                                            v-model="entity.createdDate"
+                                            :value="entity.createdDate | LOCAL_DATE_VALUE"
                                             :disabled="true"
                                         />
                                     </div>
@@ -106,7 +106,7 @@
                                         <input
                                             type="text"
                                             class="form-control w-100"
-                                            v-model="entity.modifiedDate"
+                                            :value="entity.modifiedDate | LOCAL_DATE_VALUE"
                                             :disabled="true"
                                         />
                                     </div>
@@ -271,7 +271,7 @@
                                             </div>
                                             <div class="col-2">
                                                 <label>Date Created:</label>
-                                                <p>{{ elem.createdDate | DDMMYYYY }}</p>
+                                                <p>{{ elem.createdDate | LOCAL_DATE_VALUE }}</p>
                                             </div>
                                             <div class="col-2">
                                                 <label>Created By</label>
@@ -283,7 +283,7 @@
                                             </div>
                                             <div class="col-2">
                                                 <label>Modified Date</label>
-                                                <p>{{ elem.modifiedDate | DDMMYYYY }}</p>
+                                                <p>{{ elem.modifiedDate | LOCAL_DATE_VALUE }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -631,8 +631,6 @@ export default {
                 self.showLoader = false;
             });
         }
-
-
     },
     beforeRouteLeave(to, from, next) {
         if (this.isDataChanged) {

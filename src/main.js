@@ -31,8 +31,8 @@ Vue.use(VueFilterDateFormat, {
   ]
 });
 
-Vue.filter("DDMMYYYY", (value) => {
-  if(value) return moment(value).format("DD/MM/YYYY");
+Vue.filter("LOCAL_DATE_VALUE", (value) => {
+  if(value) return moment(value).format("YYYY/MM/DD hh:mm:ss a");
 });
 
 
