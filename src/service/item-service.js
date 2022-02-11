@@ -51,7 +51,9 @@ export default class ItemService extends BaseService{
      * @params obj, id
      */
 
-      async getItemsConfig(){        
-        return await super.get_auth(`/config?properties=externalSources,taskManagers`).then(result => result.data);
+      async getItemsConfig(){
+        var data = "";
+        await super.get_auth(`/config?properties=externalSources,taskManagers`).then(result => data = result.data);
+        return data;
     }
 }

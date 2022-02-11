@@ -147,8 +147,9 @@ export default class EntityService {
 
     async getItemsConfig(self) {
         if(!self.itemConfigs.externalSources.length || !self.itemConfigs.taskManagers.length) {
-            self.itemService.getItemsConfig().then(res => {
-                self.itemConfigs = res;
+            await self.itemService.getItemsConfig().then(res => {
+                self.itemConfigs.externalSources = res.externalSources;
+                self.itemConfigs.taskManagers = res.taskManagers;
             }).catch(err => {
                 self.$bvToast.toast("Unable to retrive config details. Please try again!", self.sharedService.erorrToastConfig);
             })
