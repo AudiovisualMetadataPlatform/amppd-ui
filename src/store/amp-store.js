@@ -121,7 +121,11 @@ const state = {
     selectedUnit: {},
     isAuthenticated: false,
     selectedFile: {},
-    selectedFilters: {}
+    selectedFilters: {},
+    itemConfigs: {
+      externalSources: [],
+      taskManagers: []
+    }
      
 };
 

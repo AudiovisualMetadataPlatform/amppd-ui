@@ -45,4 +45,13 @@ export default class ItemService extends BaseService{
      async updateItem(obj){        
         return await super.patch_auth(`/items/${obj.id}`, obj).then(result => result.data)
     }
+
+     /***
+     * To get a list of external resources and task managers
+     * @params obj, id
+     */
+
+      async getItemsConfig(){        
+        return await super.get_auth(`/config?properties=externalSources,taskManagers`).then(result => result.data);
+    }
 }
