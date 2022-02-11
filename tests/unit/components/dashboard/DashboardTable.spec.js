@@ -147,7 +147,7 @@ describe('DashboardTable.vue', () => {
         $store
       },
       filters: {
-        "dateFormat":
+        "LOCAL_DATE_VALUE":
           (value) => {
             if(value) return moment(value).format("DD/MM/YYYY");
           }
