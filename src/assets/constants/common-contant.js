@@ -18,7 +18,7 @@ const icons = {
 
 const menus = [
     {
-        displayId:1,
+        displayId:2,
         name: 'Workflows',
         class: 'workflows, workflows',
         icon: icons['new_workflow'],
@@ -42,7 +42,7 @@ const menus = [
     //     url: "/collections"
     // },
     {
-        displayId:2,
+        displayId:1,
         name: 'Units',
         class: 'units, units',
         icon: icons['unit'],
@@ -56,14 +56,14 @@ const menus = [
         url: "/dashboard"
     },
     {
-        displayId:4,
+        displayId:5,
         name: 'Batch Ingest',
         class: 'batch-ingest, batch-ingest',
         icon: icons['batchIngest'],
         url: "/batch/ingest"
     },
     {
-        displayId:5,
+        displayId:4,
         name: 'Deliverables',
         class: 'deliverables, deliverables',
         icon: icons['deliverables'],
