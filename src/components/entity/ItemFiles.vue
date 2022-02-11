@@ -5,7 +5,7 @@
             <h2 class="mb-3">Files</h2>
             <table
                 class="table"
-                v-if="PrimaryFiles._embedded.primaryfiles && PrimaryFiles._embedded.primaryfiles.length"
+                v-if="primaryFiles._embedded.primaryfiles && primaryFiles._embedded.primaryfiles.length"
             >
                 <thead>
                     <th>File Label</th>
@@ -14,7 +14,7 @@
                     <th></th>
                 </thead>
                 <tbody>
-                    <tr v-for="(file, index) in PrimaryFiles._embedded.primaryfiles" :key="file.id">
+                    <tr v-for="(file, index) in primaryFiles._embedded.primaryfiles" :key="file.id">
                         <td>
                             <input type="text" class="w-100" v-model="file.name" />
                         </td>
@@ -72,8 +72,8 @@
                     <strong>Upload files</strong>
                 </div>
                 <div class="panel-body">
-                    <div class="row w-100">
-                        <div class="input-group image-preview col-11">
+                    <div class="d-flex w-100 mt-3">
+                        <div class="input-group image-preview col-11 p-0 mr-1">
                             <!-- <label for="exampleFormControlFile1" class="form-control-file btn btn-light btn-lg"><button>Browse</button></label> -->
                             <input
                                 type="file"
@@ -84,7 +84,7 @@
                                 @change="getFile"
                             />
                         </div>
-                        <div class="col-1">
+                        <div class="col-1 p-0">
                             <button
                                 class="btn btn-secondary btn-lg w-100"
                                 @click="uploadFile()"
@@ -121,7 +121,7 @@ import SharedService from '../../service/shared-service';
 import config from '../../assets/constants/common-contant.js';
 
 export default {
-    Name: "ItemDetails",
+    Name: "ItemFiles",
     components: {
         Logout,
         Sidebar,
@@ -143,7 +143,7 @@ export default {
         Items: sync("Items"),
         selectedItem: sync("selectedItem"),
         selectedCollection: sync("selectedCollection"),
-        PrimaryFiles: sync("PrimaryFiles"),
+        primaryFiles: sync("primaryFiles"),
         selectedFile: sync("selectedFile"),
         isCreatePage() {
             return (window.location.hash.toLowerCase().indexOf('add-item') > -1)
@@ -157,9 +157,9 @@ export default {
         async getPrimaryFiles() {
             const self = this;
             self.fileService.getPrimaryFiles(self.selectedItem.id).then(response => {
-                self.PrimaryFiles = response.data;
-                if (self.PrimaryFiles) {
-                    self.PrimaryFiles = self.sharedService.sortByAlphabatical(self.PrimaryFiles);
+                self.primaryFiles = response.data;
+                if (self.primaryFiles) {
+                    self.primaryFiles._embedded.primaryfiles = self.sharedService.sortByAlphabatical(self.primaryFiles._embedded.primaryfiles);
                 }
             });
         },
@@ -171,7 +171,7 @@ export default {
             const self = this;
             self.files.forEach(file => {
                 const primaryFile = { name: "", originalFilename: file.name, description: "", file: file, id: file.filename };
-                self.PrimaryFiles._embedded.primaryfiles.push(primaryFile);
+                self.primaryFiles._embedded.primaryfiles.push(primaryFile);
             });
             self.files = [];
             this.$refs.fileupload.value = "";
@@ -184,14 +184,14 @@ export default {
             }
 
             const formData = new FormData();
-            formData.append('primaryfile', new Blob([JSON.stringify({ name: data.originalFilename, description: data.description })], {
+            formData.append('primaryfile', new Blob([JSON.stringify({ name: data.name, originalFilename:data.originalFilename, description: data.description })], {
                 type: "application/json"
             }));
             formData.append("mediaFile", data.file);
             self.showLoader = true;
             this.fileService.uploadFile(self.selectedItem.id, formData).then(el => {
                 self.showLoader = false;
-                this.$set(self.PrimaryFiles._embedded.primaryfiles, index, el.data);
+                this.$set(self.primaryFiles._embedded.primaryfiles, index, el.data);
             }).catch(error => {
                 self.showLoader = false;
                 if (error.response && error.response.data && error.response.data.validationErrors) {
@@ -204,10 +204,10 @@ export default {
         },
         removeFile(index) {
             const self = this;
-            if (self.PrimaryFiles._embedded.primaryfiles[index].file)
-                self.PrimaryFiles._embedded.primaryfiles.splice(index, 1);
+            if (self.primaryFiles._embedded.primaryfiles[index].file)
+                self.primaryFiles._embedded.primaryfiles.splice(index, 1);
             else
-                this.onRemovePrimaryFile(self.PrimaryFiles._embedded.primaryfiles[index], index);
+                this.onRemovePrimaryFile(self.primaryFiles._embedded.primaryfiles[index], index);
         },
         onSaveItem() {
             const self = this;
@@ -242,7 +242,7 @@ export default {
                 self.showLoader = true;
                 self.fileService.removePrimaryFile(file.id).then(success => {
                     self.showLoader = false;
-                    self.PrimaryFiles._embedded.primaryfiles.splice(index, 1);
+                    self.primaryFiles._embedded.primaryfiles.splice(index, 1);
                     self.$bvToast.toast("Primary file has been removed successfully.", self.sharedService.successToastConfig);
                 }).catch(err => {
                     self.showLoader = false;

@@ -186,7 +186,7 @@
 
                     <!-- Header - Details page Ends here-->
                     <div v-if="baseUrl === 'item'">
-                        <ItemDetails></ItemDetails>
+                        <ItemFiles></ItemFiles>
                     </div>
                     <div v-else-if="baseUrl === 'file'">
                         <OutputFile />
@@ -328,7 +328,7 @@ import CollectionService from '../../service/collection-service';
 import UnitService from '../../service/unit-service';
 import SharedService from '../../service/shared-service';
 import ItemService from "../../service/item-service";
-import ItemDetails from "./ItemDetails.vue";
+import ItemFiles from "./ItemFiles.vue";
 import OutputFile from "./OutputFile.vue";
 import PrimaryFileService from "../../service/primary-file-service.js";
 import Search from "@/components/shared/Search.vue";
@@ -341,7 +341,7 @@ export default {
         Logout,
         Sidebar,
         Loader,
-        ItemDetails,
+        ItemFiles,
         Search,
         OutputFile
     },

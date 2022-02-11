@@ -242,7 +242,7 @@
                   </div>
                 </div>
                 <DashboardTable/>
-                <Search :searchType="searchType" :dataSource="searchSource"/>
+                <Search :searchType="searchType" :dataSource="searchSource" :key="searchType + searchSource.length"/>
               </div>
             </div>
           </div>
@@ -332,6 +332,7 @@ export default {
       this.workflowDashboard.filtersEnabled.statusFilter=false;
       this.workflowDashboard.filtersEnabled.searchFilter=false;
       item = !item;
+
     },
     clearAll(){
       this.workflowDashboard.searchQuery.filterByDates = [];
