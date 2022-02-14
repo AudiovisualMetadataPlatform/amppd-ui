@@ -1,7 +1,8 @@
 export default class SharedService {
     constructor() {
         this.erorrToastConfig = { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 };
-        this.successToastConfig = { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 }; 
+        this.successToastConfig = { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 };
+        this.warningToastConfig = { title: 'Notification', appendToast: true, variant: "warning", autoHideDelay: 5000 }; 
     }
 
     /****Filtering an array based on a alphabatical
@@ -54,6 +55,17 @@ export default class SharedService {
           
      }
 
+     /****Filtering an array based on a number
+     * @params - arrayObj = [] || [listOfValue], orderProperty = "" || string value
+     */
+
+      sortByNumber(arrayObj, orderProperty = "id", isDesc = false) {
+        let tempArrayObj = arrayObj.sort(function(a,b){
+            return a[orderProperty]-b[orderProperty];
+          });
+        return tempArrayObj;
+     }
+     
      /****Find the data and sort the array
      * @params - arrayObj = [] || [listOfValue], isDesc = true || false, orderProperty = "" || string value
      */
@@ -64,5 +76,21 @@ export default class SharedService {
          }
 
          return arrayObj;
+     }
+
+     //Confirmation window 
+     showConfirmationWindow(instance, message="Are you sure you want to delete?", title = "Confirmation", variant = "danger", okTitle = "Yes", cancelTitle = "No") {
+        const msgBox = instance.msgBoxConfirm('Are you sure you want to delete?', {
+            title: title,
+            size: 'md',
+            buttonSize: 'sm',
+            okVariant: variant,
+            okTitle: okTitle,
+            cancelTitle: cancelTitle,
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true
+          });
+        return msgBox;
      }
 }

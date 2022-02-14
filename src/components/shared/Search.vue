@@ -205,12 +205,12 @@ export default {
         this.getTypeaheadSearchItems();
         this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
     },
-    watch: {
-        type(v) {
-            this.type = v;
-            this.processModalData()
-        }
-    },
+    // watch: {
+    //   type(v) {
+    //       this.type = v;
+    //       this.processModalData()
+    //   }
+    // },
     methods: {
         onSelectAllChange(ev) {
             const self = this;
@@ -254,11 +254,12 @@ export default {
             self.clonedDataSource = temp;
         },
         populteValues() {
-            if (!this.userSearchValue) {
-                const tempDataSource = this.searchDataSourceMap.get(this.type);
-                if (tempDataSource)
-                    this.clonedDataSource = JSON.parse(JSON.stringify(tempDataSource));
-                this.selectAll = (this.selectedRecords.length === this.dataSource.length);
+            if(!this.userSearchValue) {
+                this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
+                // const tempDataSource = this.searchDataSourceMap.get(this.type);
+                // if(tempDataSource) 
+                //     this.clonedDataSource = JSON.parse(JSON.stringify(tempDataSource));
+                this.selectAll= (this.selectedRecords.length === this.dataSource.length);
             }
         },
         getTypeaheadSearchItems() {
@@ -282,7 +283,6 @@ export default {
                     self.searchProps = ["name"]
                     break
             }
-            console.log(self.searchProps);
             // self.dataSource.map(el=> {
             //     self.searchProps.map(prop => {
             //         if(el[prop]&& self.typeaheadSearchItems.indexOf(el[prop] ===-1)) {
@@ -294,8 +294,7 @@ export default {
         addItem(item) {
             const sefl = this;
             sefl.selectedFilters[self.type] = sefl.selectedFilters[self.type] || [];
-            if (sefl.selectedFilters[self.type].indexOf(item) === -1) sefl.selectedFilters[self.type].push(item);
-            console.log(this.selectedFilters, 'selectedFilters');
+            if(sefl.selectedFilters[self.type].indexOf(item) === -1) sefl.selectedFilters[self.type].push(item); 
         },
         onDone() {
             switch (this.type) {
@@ -328,12 +327,12 @@ export default {
             this.getTypeaheadSearchItems();
             this.clonedDataSource = self.sharedService.sortByAlphabatical(JSON.parse(JSON.stringify(this.dataSource)), self.searchProps[0], false);
             // To get the distinct values 
-            if (this.searchDataSourceMap.get(this.type)) {
-                this.clonedDataSource = this.searchDataSourceMap.get(this.type);
-            } else {
-                // this.clonedDataSource = [...new Map(this.clonedDataSource.map(item =>[item[this.searchProps[0]], item])).values()];
-                this.searchDataSourceMap.set(this.type, this.clonedDataSource);
-            }
+            // if(this.searchDataSourceMap.get(this.type)) {
+            //     this.clonedDataSource = this.searchDataSourceMap.get(this.type);
+            // } else {
+            //     // this.clonedDataSource = [...new Map(this.clonedDataSource.map(item =>[item[this.searchProps[0]], item])).values()];
+            //     this.searchDataSourceMap.set(this.type, this.clonedDataSource);
+            // }
             this.selectedRecords = (this.selectedFilters[this.type] && this.selectedFilters[this.type].length) ? this.selectedFilters[this.type].map(el => el.id) : [];
             this.selectAll = (this.selectedRecords.length === this.clonedDataSource.length)
         }

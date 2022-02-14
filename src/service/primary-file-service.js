@@ -17,11 +17,10 @@ export default class PrimaryFileService extends BaseService{
      * @params primaryfileid, postobj
      */
 
-     async updatePrimaryFile(itemId, postObj){
-        return await super.patch_auth(`/items/${itemId}/primaryfiles/${postObj.id}`); 
+     async updatePrimaryFile(id, postObj){
+        return await super.patch_auth(`/primaryfiles/${id}`, postObj); 
     }
     
-
     /***
      * To upload a file
      * @params primaryfileid, formData
@@ -32,6 +31,12 @@ export default class PrimaryFileService extends BaseService{
         return await super.post_auth(`/items/${id}/addPrimaryfile`, formData); 
     }
 
+    /***
+     * To delete/remove a file
+     * @params primaryfile id
+     */
 
-    
+     async removePrimaryFile(id){
+        return await super.delete_auth(`/primaryfiles/${id}`); 
+    }    
 }

@@ -107,7 +107,7 @@ const state = {
     },
     selectedItem: {},
 
-    PrimaryFiles: {
+    primaryFiles: {
       page: {
         number:1,
         size:20,
