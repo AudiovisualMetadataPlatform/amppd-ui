@@ -12,7 +12,7 @@
 
                     <b-card class="text-center mt-5">
                         <h2 class="text-left">
-                            <span class="text-capitalize">{{ baseUrl }}</span> Details
+                            <span class="text-capitalize">{{ baseUrl=== 'file' ? 'Primary File' : baseUrl }}</span> Details
                         </h2>
                         <form name="unitForm" class="form">
                             <div class="row">
