@@ -12,7 +12,7 @@
 
                     <b-card class="text-center mt-5">
                         <h2 class="text-left">
-                            <span class="text-capitalize">{{ baseUrl }}</span> Details
+                            <span class="text-capitalize">{{ baseUrl=== 'file' ? 'Primary File' : baseUrl }}</span> Details
                         </h2>
                         <form name="unitForm" class="form">
                             <div class="row">
@@ -70,9 +70,9 @@
                                 ></textarea>
                             </div>
 
-                            <div class="row">
-                                <div class="col-6 p-0">
-                                    <div class="col-12 text-left form-group">
+                            <div class="col-12 p-0">
+                                <div class="row">
+                                    <div class="col-3 text-left form-group">
                                         <label>Created By</label>
                                         <input
                                             type="text"
@@ -81,18 +81,7 @@
                                             :disabled="true"
                                         />
                                     </div>
-                                    <div class="col-12 text-left form-group">
-                                        <label>Modified By</label>
-                                        <input
-                                            type="text"
-                                            class="form-control w-100"
-                                            v-model="entity.modifiedBy"
-                                            :disabled="true"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="col-6 p-0">
-                                    <div class="col-12 text-left form-group">
+                                     <div class="col-3 text-left form-group">
                                         <label>Date Created</label>
                                         <input
                                             type="text"
@@ -101,7 +90,17 @@
                                             :disabled="true"
                                         />
                                     </div>
-                                    <div class="col-12 text-left form-group">
+                                    <div class="col-3 text-left form-group">
+                                        <label>Modified By</label>
+                                        <input
+                                            type="text"
+                                            class="form-control w-100"
+                                            v-model="entity.modifiedBy"
+                                            :disabled="true"
+                                        />
+                                    </div>
+                                   
+                                    <div class="col-3 text-left form-group">
                                         <label>Modified Date</label>
                                         <input
                                             type="text"
