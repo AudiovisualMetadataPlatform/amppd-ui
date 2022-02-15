@@ -1,6 +1,6 @@
 <template>
     <div class="p-3 col-12 bg-light-gray-1">
-        <main>
+        <main class="m-0">
             <b-card class="w-100">
                 <h2 class>
                     Workflows
@@ -124,7 +124,7 @@
                                     </b-navbar>
 
                                     <dl
-                                        class="d-flex col-12 mt-3"
+                                        class="d-flex col-12 mt-3 mb-0"
                                         v-if="workflow && workflow.details && workflow.details.length"
                                     >
                                         <div
@@ -132,7 +132,7 @@
                                             v-for="(p, paramIndex) in workflow.details[workflow.selectedNode].params"
                                             :key="paramIndex"
                                         >
-                                            <label class="font-weight-bold">{{ p.name }}:</label>
+                                            <label class="font-weight-bold mb-0">{{ p.name }}:</label>
                                             <span class="ml-2">{{ p.value }}</span>
                                         </div>
                                     </dl>
