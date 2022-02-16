@@ -24,7 +24,7 @@
             v-model="workflowDashboard.searchQuery.resultsPerPage"
             aria-controls="myTable"
             class
-            @change="refreshData()"
+            @change="refreshData();updateUserValues()"
           >
             <option value="10">10</option>
             <option value="25">25</option>
@@ -289,8 +289,14 @@ export default {
       self.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
       self.workflowDashboard.loading = false;
     },
+    updateUserValues() {
+      const self = this;
+      self.sharedService.setUserValues('limit', self.workflowDashboard.searchQuery.resultsPerPage);
+    }
   },
   async mounted() {
+    const limit = this.sharedService.getUserValue('limit');
+    this.workflowDashboard.searchQuery.resultsPerPage = limit ? limit : this.workflowDashboard.searchQuery.resultsPerPage;
     this.refreshData();
   },
   watch: {
