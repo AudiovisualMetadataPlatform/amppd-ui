@@ -12,7 +12,7 @@
     </div>
 
     <div class="row col-12 p-0 m-0">
-      <div class="col-2 col-md-2 col-sm-2 col-xs-12 dataTables_length">
+      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12  dataTables_length mt-1">
         <!-- <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
       <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
       Entries
@@ -40,7 +40,7 @@
         </label>-->
       </div>
       <b-pagination
-      class="col-8 col-md-8 col-sm-8 col-xs-12 w-100"
+      class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100 mt-1"
       v-model="workflowDashboard.searchQuery.pageNum"
       :total-rows="workflowDashboard.searchResult.totalResults"
       :per-page="workflowDashboard.searchQuery.resultsPerPage"
@@ -53,7 +53,7 @@
       prev-text="Prev"
       next-text="Next"
     ></b-pagination>
-      <search-filter class="col-2 col-md-2 col-sm-2 col-xs-12 pr-0 justify-content-right"/>
+      <search-filter class="col-xl-3 col-md-3 col-sm-12 col-xs-12 pr-0 justify-content-right"/>
     </div>
     <!-- <div class="relevant-togggle"><span class="txt-v">Show Relevant Results Only</span>
     <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
@@ -80,7 +80,7 @@
         </thead>
         <tbody v-if="visibleRows && visibleRows.length > 0">
           <tr v-for="rec in visibleRows" :key="rec.id">
-            <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
+            <td>{{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}</td>
             <td>{{ rec.submitter }}</td>
             <td>{{ rec.collectionName }}</td>
             <td>{{ rec.externalSource }}</td>

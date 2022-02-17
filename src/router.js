@@ -240,7 +240,8 @@ var router = new Router({
         breadCrumb: [ 
           {text: "Home", href: '#/'}, 
           {text: "Collection Details", href: '#/collection/details'},
-          {text: "File"}
+          {text: "Item", href: '#/collections/items/details'},
+          {text: "Primary File"}
         ],
         helpUrl: "AMP+User+Guide"
       },

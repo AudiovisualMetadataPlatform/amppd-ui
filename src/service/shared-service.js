@@ -55,6 +55,17 @@ export default class SharedService {
           
      }
 
+     /****Filtering an array based on a number
+     * @params - arrayObj = [] || [listOfValue], orderProperty = "" || string value
+     */
+
+      sortByNumber(arrayObj, orderProperty = "id", isDesc = false) {
+        let tempArrayObj = arrayObj.sort(function(a,b){
+            return a[orderProperty]-b[orderProperty];
+          });
+        return tempArrayObj;
+     }
+     
      /****Find the data and sort the array
      * @params - arrayObj = [] || [listOfValue], isDesc = true || false, orderProperty = "" || string value
      */

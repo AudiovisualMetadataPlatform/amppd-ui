@@ -187,6 +187,13 @@ export default {
   mounted() {
     let self = this;
     self.getWorkflows();
+  },
+  beforeDestroy() {
+   const self = this;
+   this.workflowSubmission = {
+      selectedWorkflow: null,
+      selectedWorkflowParameters: []
+   }
   }
 }
 </script>

@@ -45,7 +45,7 @@
         <b-collapse id="nav-collapse" is-nav>
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto" v-if="isAuthenticated">
-            <span v-for="menu in menuList" :key="menu.name">
+            <span v-for="menu in orderedMenuList" :key="menu.name">
               <b-nav-item :href="'/#' + menu.url" v-if="!menu.children">
                 <span v-html="menu.icon"></span>
                 <span class="pl-2">{{ menu.name }}</span>
@@ -95,6 +95,7 @@ import Logout from '@/components/shared/Logout.vue';
 import BreadCrumbs from '@/components/shared/BreadCrumbs.vue';
 import { accountService } from '../../service/account-service.js';
 import { sync } from 'vuex-pathify';
+import SharedService from '../../service/shared-service.js';
 
 export default {
   components: {
@@ -105,11 +106,16 @@ export default {
     return {
       menuList: config.common.menus,
       ampSvg: config.common.icons['amp'],
-      accountService: accountService
+      accountService: accountService,
+      sharedService: new SharedService()
     }
   },
   computed: {
-    isAuthenticated: sync("isAuthenticated")
+    isAuthenticated: sync("isAuthenticated"),
+    orderedMenuList() {
+      let self = this;
+      return this.sharedService.sortByNumber(self.menuList, "displayId");
+    }
   },
   methods: {
     convertToSvg(value) {
