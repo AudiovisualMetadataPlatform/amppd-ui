@@ -79,7 +79,7 @@ export default class SharedService {
      }
 
      //Confirmation window 
-     showConfirmationWindow(instance, message="Are you sure you want to delete?", title = "Confirmation", variant = "danger", okTitle = "Yes", cancelTitle = "No") {
+     showConfirmationWindow(instance, message="Are you sure you want to delete?", title = "Confirmation", variant = "primary", okTitle = "Yes", cancelTitle = "No") {
         const msgBox = instance.msgBoxConfirm('Are you sure you want to delete?', {
             title: title,
             size: 'md',

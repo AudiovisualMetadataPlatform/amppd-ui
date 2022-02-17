@@ -88,6 +88,7 @@
                             <button
                                 class="btn btn-secondary btn-lg w-100"
                                 @click="uploadFile()"
+                                :disabled="(dropFiles.length) > 0"
                             >Upload</button>
                         </div>
                     </div>
@@ -100,8 +101,10 @@
                     <div
                         class="upload-drop-zone"
                         id="drop-zone"
-                        @drop="getFile"
-                    >Or drag and drop files here</div>
+                        @drop="getDropFile"
+                    >
+                    <span>Or drag and drop files here</span>
+                    </div>
                     <br />
                 </div>
             </div>
@@ -136,7 +139,9 @@ export default {
             showEdit: true,
             removeIcon: config.common.icons['remove'],
             files: [],
-            showLoader: false
+            showLoader: false,
+            dropFiles: [],
+            // dropFileName: ""
         }
     },
     computed: {
@@ -167,14 +172,23 @@ export default {
             const self = this;
             self.files = (e.target.files || e.dataTransfer.files);
         },
-        uploadFile(e) {
+        getDropFile(e) {
+             const self = this;
+             self.dropFiles = e.dataTransfer.files;
+            //  self.dropFileName = self.dropFiles[0].name;
+             this.uploadFile();
+        },
+        uploadFile() {
             const self = this;
-            self.files.forEach(file => {
+            const source =  (self.files && self.files.length) ? self.files :  self.dropFiles;
+            source.forEach(file => {
                 const primaryFile = { name: "", originalFilename: file.name, description: "", file: file, id: file.filename };
                 self.primaryFiles._embedded.primaryfiles.push(primaryFile);
             });
             self.files = [];
+            self.dropFiles = [];
             this.$refs.fileupload.value = "";
+            self.dropFileName = "";
         },
         saveFile(data, index) {
             const self = this;
@@ -305,4 +319,5 @@ export default {
     border-color: #153c4d v;
     color: #fff !important;
 }
+
 </style>

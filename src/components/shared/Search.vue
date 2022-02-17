@@ -58,7 +58,7 @@
                                     <td v-if="type === 'outputs'">{{ source.outputName }}</td>
                                     <td
                                         v-if="(type === 'workflows' || type === 'collections')"
-                                    >{{ source.dateCreated | DDMMYYYY }}</td>
+                                    >{{ source.dateCreated | LOCAL_DATE_VALUE }}</td>
                                 </template>
                                 <template v-if="isEntityList">
                                     <td colspan="1">{{ source.name }}</td>
@@ -127,7 +127,7 @@
                                         <td v-if="type === 'outputs'">{{ source.outputName }}</td>
                                         <td
                                             v-if="(type === 'workflows' || type === 'collections')"
-                                        >{{ source.dateCreated | DDMMYYYY }}</td>
+                                        >{{ source.dateCreated | LOCAL_DATE_VALUE }}</td>
                                     </template>
                                     <template v-if="isEntityList">
                                         <td colspan="1">{{ source.name }}</td>
