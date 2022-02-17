@@ -93,4 +93,25 @@ export default class SharedService {
           });
         return msgBox;
      }
+
+    /***
+     * To store user selected options on session storage
+     * @input-params key - string value-any
+     ****/
+
+    setUserValues(key, value) {
+        let userValues = sessionStorage.getItem('userValues');
+        userValues = userValues ? JSON.parse(userValues) : {};
+        userValues[key] = value;
+        sessionStorage.setItem('userValues', JSON.stringify(userValues));
+    }
+
+    /***
+     * To retrive user selected options on session storage
+     * @input-params key - string
+     ****/
+    getUserValue(key) {
+        const userValues = sessionStorage.getItem('userValues');
+        return userValues ? (JSON.parse(userValues))[key]: null;
+    }
 }
