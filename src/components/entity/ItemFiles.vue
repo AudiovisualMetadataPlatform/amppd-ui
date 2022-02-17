@@ -100,8 +100,15 @@
                     <div
                         class="upload-drop-zone"
                         id="drop-zone"
-                        @drop="getFile"
-                    >Or drag and drop files here</div>
+                        :class="{'droppedFile': dropFiles && dropFiles.length}"
+                        @drop="getDropFile"
+                    >
+                    <span v-if="(!dropFiles || !dropFiles.length)">Or drag and drop files here</span>
+                        <div class="col-12 p-0 m-auto" v-if="(dropFiles && dropFiles.length)">
+
+                            <span class="mr-2 dropFileName">{{dropFileName}}</span>
+                        </div>
+                    </div>
                     <br />
                 </div>
             </div>
@@ -136,7 +143,9 @@ export default {
             showEdit: true,
             removeIcon: config.common.icons['remove'],
             files: [],
-            showLoader: false
+            showLoader: false,
+            dropFiles: [],
+            dropFileName: ""
         }
     },
     computed: {
@@ -167,14 +176,22 @@ export default {
             const self = this;
             self.files = (e.target.files || e.dataTransfer.files);
         },
-        uploadFile(e) {
+        getDropFile(e) {
+             const self = this;
+             self.dropFiles = e.dataTransfer.files;
+             self.dropFileName = self.dropFiles[0].name;
+        },
+        uploadFile() {
             const self = this;
-            self.files.forEach(file => {
+            const source =  (self.files && self.files.length) ? self.files :  self.dropFiles;
+            source.forEach(file => {
                 const primaryFile = { name: "", originalFilename: file.name, description: "", file: file, id: file.filename };
                 self.primaryFiles._embedded.primaryfiles.push(primaryFile);
             });
             self.files = [];
+            self.dropFiles = [];
             this.$refs.fileupload.value = "";
+            self.dropFileName = "";
         },
         saveFile(data, index) {
             const self = this;
@@ -304,5 +321,14 @@ export default {
     background: #153c4d !important;
     border-color: #153c4d v;
     color: #fff !important;
+}
+
+.droppedFile {
+    background-color: antiquewhite;
+}
+
+.dropFileName {
+    color: black;
+    font-size: larger;
 }
 </style>
