@@ -88,6 +88,7 @@
                             <button
                                 class="btn btn-secondary btn-lg w-100"
                                 @click="uploadFile()"
+                                :disabled="(dropFiles.length) > 0"
                             >Upload</button>
                         </div>
                     </div>
@@ -100,14 +101,9 @@
                     <div
                         class="upload-drop-zone"
                         id="drop-zone"
-                        :class="{'droppedFile': dropFiles && dropFiles.length}"
                         @drop="getDropFile"
                     >
-                    <span v-if="(!dropFiles || !dropFiles.length)">Or drag and drop files here</span>
-                        <div class="col-12 p-0 m-auto" v-if="(dropFiles && dropFiles.length)">
-
-                            <span class="mr-2 dropFileName">{{dropFileName}}</span>
-                        </div>
+                    <span>Or drag and drop files here</span>
                     </div>
                     <br />
                 </div>
@@ -145,7 +141,7 @@ export default {
             files: [],
             showLoader: false,
             dropFiles: [],
-            dropFileName: ""
+            // dropFileName: ""
         }
     },
     computed: {
@@ -179,7 +175,8 @@ export default {
         getDropFile(e) {
              const self = this;
              self.dropFiles = e.dataTransfer.files;
-             self.dropFileName = self.dropFiles[0].name;
+            //  self.dropFileName = self.dropFiles[0].name;
+             this.uploadFile();
         },
         uploadFile() {
             const self = this;
@@ -323,12 +320,4 @@ export default {
     color: #fff !important;
 }
 
-.droppedFile {
-    background-color: antiquewhite;
-}
-
-.dropFileName {
-    color: black;
-    font-size: larger;
-}
 </style>
