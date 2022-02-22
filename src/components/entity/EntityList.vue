@@ -21,7 +21,7 @@
                                     :class="baseUrl === 'collection' ? 'col-6' : 'col-12'"
                                 >
                                     <label>
-                                        <span class="text-capitalize">{{ baseUrl }}</span> Name
+                                        <span class="text-capitalize">{{ baseUrl }}</span> Name:
                                     </label>
                                     <input
                                         type="text"
@@ -36,7 +36,7 @@
                                     class="col-6 text-left form-group"
                                     v-if="baseUrl === 'collection'"
                                 >
-                                    <label>Task Manager</label>
+                                    <label>Task Manager:</label>
                                     <select
                                         class="select custom-select w-100"
                                         v-model="entity.taskManager"
@@ -52,7 +52,7 @@
                                 </div>
                             </div>
                             <div class="col-12 text-left form-group p-0" v-if="baseUrl === 'file'">
-                                <label>Orginal Name</label>
+                                <label>Orginal Name:</label>
                                 <input
                                     type="text"
                                     class="form-control w-100"
@@ -61,7 +61,7 @@
                                 />
                             </div>
                             <div class="col-12 text-left form-group p-0">
-                                <label>Description</label>
+                                <label>Description:</label>
                                 <textarea
                                     class="form-control w-100"
                                     v-model="entity.description"
@@ -73,7 +73,7 @@
                             <div class="col-12 p-0">
                                 <div class="row">
                                     <div class="col-3 text-left form-group">
-                                        <label>Created By</label>
+                                        <label>Created By:</label>
                                         <input
                                             type="text"
                                             class="form-control w-100"
@@ -82,7 +82,7 @@
                                         />
                                     </div>
                                      <div class="col-3 text-left form-group">
-                                        <label>Date Created</label>
+                                        <label>Date Created:</label>
                                         <input
                                             type="text"
                                             class="form-control w-100"
@@ -91,7 +91,7 @@
                                         />
                                     </div>
                                     <div class="col-3 text-left form-group">
-                                        <label>Modified By</label>
+                                        <label>Modified By:</label>
                                         <input
                                             type="text"
                                             class="form-control w-100"
@@ -101,7 +101,7 @@
                                     </div>
                                    
                                     <div class="col-3 text-left form-group">
-                                        <label>Modified Date</label>
+                                        <label>Modified Date:</label>
                                         <input
                                             type="text"
                                             class="form-control w-100"
@@ -114,7 +114,7 @@
 
                             <div class="row" v-if="baseUrl === 'item'">
                                 <div class="col-6 text-left form-group">
-                                    <label>External Source</label>
+                                    <label>External Source:</label>
                                     <!-- <input
                                         type="text"
                                         class="form-control w-100"
@@ -135,7 +135,7 @@
                                     </select>
                                 </div>
                                 <div class="col-6 text-left form-group">
-                                    <label>External Id</label>
+                                    <label>External Id:</label>
                                     <input
                                         type="text"
                                         class="form-control w-100"
