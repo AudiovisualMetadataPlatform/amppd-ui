@@ -39,33 +39,35 @@
                     <h5 class="pad-all-2 text-left">Selected</h5>
                     <table class="w-100 table table-striped">
                         <tbody>
-                            <tr v-for="source in selectedFilters[type]" :key="source.id">
-                                <td colspan="1">
-                                    <input
-                                        class="selectAll"
-                                        type="checkbox"
-                                        v-model="selectedRecords"
-                                        :value="source.id"
-                                        @change="onChange($event, source)"
-                                    />
-                                </td>
-                                <template v-if="!isEntityList">
-                                    <td
-                                        v-if="type === 'collections' || type === 'units'"
-                                    >{{ source.unitName }}</td>
-                                    <td v-if="type === 'collections'">{{ source.collectionName }}</td>
-                                    <td v-if="type === 'workflows'">{{ source.workflowName }}</td>
-                                    <td v-if="type === 'outputs'">{{ source.outputName }}</td>
-                                    <td
-                                        v-if="(type === 'workflows' || type === 'collections')"
-                                    >{{ source.dateCreated | LOCAL_DATE_VALUE }}</td>
-                                </template>
-                                <template v-if="isEntityList">
-                                    <td colspan="1">{{ source.name }}</td>
-                                    <td colspan="3">{{ source.description }}</td>
-                                    <td v-if="type === 'listing-item'">{{ source.externalId }}</td>
-                                </template>
-                            </tr>
+                            <template v-for="source in clonedDataSource">
+                                <tr :key="source.id" v-if="selectedRecords.indexOf(source.id) > -1">
+                                    <td colspan="1">
+                                        <input
+                                            class="selectAll"
+                                            type="checkbox"
+                                            v-model="selectedRecords"
+                                            :value="source.id"
+                                            @change="onChange($event, source)"
+                                        />
+                                    </td>
+                                    <template v-if="!isEntityList">
+                                        <td
+                                            v-if="type === 'collections' || type === 'units'"
+                                        >{{ source.unitName }}</td>
+                                        <td v-if="type === 'collections'">{{ source.collectionName }}</td>
+                                        <td v-if="type === 'workflows'">{{ source.workflowName }}</td>
+                                        <td v-if="type === 'outputs'">{{ source.outputName }}</td>
+                                        <td
+                                            v-if="(type === 'workflows' || type === 'collections')"
+                                        >{{ source.dateCreated | LOCAL_DATE_VALUE }}</td>
+                                    </template>
+                                    <template v-if="isEntityList">
+                                        <td colspan="1">{{ source.name }}</td>
+                                        <td colspan="3">{{ source.description }}</td>
+                                        <td v-if="type === 'listing-item'">{{ source.externalId }}</td>
+                                    </template>
+                                </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div>
@@ -205,12 +207,6 @@ export default {
         this.getTypeaheadSearchItems();
         this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
     },
-    // watch: {
-    //   type(v) {
-    //       this.type = v;
-    //       this.processModalData()
-    //   }
-    // },
     methods: {
         onSelectAllChange(ev) {
             const self = this;
@@ -227,6 +223,7 @@ export default {
         },
         onChange(ev, record) {
             const self = this;
+            console.log(self.selectAll);
             if (ev.srcElement.checked) {
                 self.selectedFilters[self.type] = self.selectedFilters[self.type] || [];
                 if (!self.selectedFilters[self.type].find(el => el.id === record.id))
@@ -242,7 +239,7 @@ export default {
             if (!self.userSearchValue) return;
 
             const temp = [];
-            const tempDataSource = this.searchDataSourceMap.get(self.type);
+            const tempDataSource = this.dataSource;
             tempDataSource.filter(o =>
                 // Object.keys(o).some(k => o[k] && o[k].toLowerCase().includes(self.userSearchValue.toLowerCase())));
                 self.searchProps.filter(el => {
@@ -256,9 +253,6 @@ export default {
         populteValues() {
             if(!this.userSearchValue) {
                 this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
-                // const tempDataSource = this.searchDataSourceMap.get(this.type);
-                // if(tempDataSource) 
-                //     this.clonedDataSource = JSON.parse(JSON.stringify(tempDataSource));
                 this.selectAll= (this.selectedRecords.length === this.dataSource.length);
             }
         },
@@ -283,13 +277,6 @@ export default {
                     self.searchProps = ["name"]
                     break
             }
-            // self.dataSource.map(el=> {
-            //     self.searchProps.map(prop => {
-            //         if(el[prop]&& self.typeaheadSearchItems.indexOf(el[prop] ===-1)) {
-            //             self.typeaheadSearchItems.push(el[prop]);
-            //         }
-            //     })
-            // });
         },
         addItem(item) {
             const sefl = this;
