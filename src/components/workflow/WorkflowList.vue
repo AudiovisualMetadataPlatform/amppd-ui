@@ -1,5 +1,5 @@
 <template>
-    <div class="p-3 col-12 bg-light-gray-1">
+    <div class="pt-0 p-3 col-12 bg-light-gray-1">
         <main class="m-0">
             <b-card class="w-100">
                 <h2 class>
@@ -97,7 +97,7 @@
                             >
                                 <span v-html="rightArrowSvg" style="font-size:24px"></span>
                                 <span class="sr-only">Toggle hidden content</span>
-                                <span class="pl-3">MGMs</span>
+                                <span class="pl-3">MGM Parameters Setting</span>
                             </button>
                         </h3>
                         <b-collapse

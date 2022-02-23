@@ -5,7 +5,7 @@
       <div class="row expand-h">        
       <!-- <Sidebar/>     -->
       <div class="col-12 bg-light-gray-1">
-        <main class="main-margin-min">
+        <main class="m-0">
           <!-- <Logout/> -->
           <div class="pad-all-3">
             <div class="card">
