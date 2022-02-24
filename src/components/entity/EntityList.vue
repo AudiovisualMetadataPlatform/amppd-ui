@@ -7,7 +7,7 @@
         <div class="row">
             <!-- <Sidebar /> -->
             <div class="col-12 bg-light-gray-1">
-                <main class="main-margin-min">
+                <main class="m-0">
                     <!-- Header - Details page -->
 
                     <b-card class="text-center mt-5">
