@@ -1,6 +1,6 @@
 <template>
-    <div class="p-3 col-12 bg-light-gray-1">
-        <main>
+    <div class="pt-0 p-3 col-12 bg-light-gray-1">
+        <main class="m-0">
             <b-card class="w-100">
                 <h2 class>
                     Workflows
@@ -46,24 +46,22 @@
                     <div class="row">
                         <div class="col">
                             Created By:
-                            <!-- <br />Ella Fitzgerald -->
+                            <br /> {{workflow.owner}}
                         </div>
-                        <div class="col">
+                        <!-- <div class="col">
                             Creator:
-                            <!-- <br />Gregg Allman -->
-                        </div>
+                        </div> -->
                         <div class="col">
                             Date Created:
-                            <!-- <br />02/12/2021 -->
+                            <br />{{workflow.createTime | LOCAL_DATE_VALUE}}
                         </div>
                         <div class="col">
                             Last Updated:
-                            <!-- <br />09/25/2021 -->
+                            <br />{{workflow.updateTime | LOCAL_DATE_VALUE}}
                         </div>
-                        <div class="col">
+                        <!-- <div class="col">
                             Version:
-                            <!-- <br />2.5 -->
-                        </div>
+                        </div> -->
                         <div class="col" v-if="workflow.tags && workflow.tags.length">
                             <p class="mb-0">Tags:</p>
                             <span
@@ -99,7 +97,7 @@
                             >
                                 <span v-html="rightArrowSvg" style="font-size:24px"></span>
                                 <span class="sr-only">Toggle hidden content</span>
-                                <span class="pl-3">MGMs</span>
+                                <span class="pl-3">MGM Parameters Setting</span>
                             </button>
                         </h3>
                         <b-collapse
@@ -126,7 +124,7 @@
                                     </b-navbar>
 
                                     <dl
-                                        class="d-flex col-12 mt-3"
+                                        class="d-flex col-12 mt-3 mb-0"
                                         v-if="workflow && workflow.details && workflow.details.length"
                                     >
                                         <div
@@ -134,7 +132,7 @@
                                             v-for="(p, paramIndex) in workflow.details[workflow.selectedNode].params"
                                             :key="paramIndex"
                                         >
-                                            <label class="font-weight-bold">{{ p.name }}:</label>
+                                            <label class="font-weight-bold mb-0">{{ p.name }}:</label>
                                             <span class="ml-2">{{ p.value }}</span>
                                         </div>
                                     </dl>

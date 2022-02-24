@@ -854,3 +854,17 @@ svg.icon-user {
     text-align: left;
   }
 }
+
+/* To adjust top header space to remove dead spaces*/
+main .card:first-child {
+  margin-top: 0px !important;
+}
+
+main .pad-all-3 {
+  padding: 0px;
+}
+
+.breadcrumb {
+  margin-bottom: 0px !important;
+  background-color: initial !important;
+}

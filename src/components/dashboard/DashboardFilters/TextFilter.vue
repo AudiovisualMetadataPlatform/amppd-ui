@@ -79,8 +79,6 @@ export default {
   computed:{
 		workflowDashboard: sync("workflowDashboard"),
 		getItems(){
-			// console.log("ITEMS");
-			// console.log(this.items);
 			if(!this.items) return [];
 			return this.items;
 		}

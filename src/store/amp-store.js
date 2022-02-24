@@ -107,7 +107,7 @@ const state = {
     },
     selectedItem: {},
 
-    PrimaryFiles: {
+    primaryFiles: {
       page: {
         number:1,
         size:20,
@@ -121,7 +121,11 @@ const state = {
     selectedUnit: {},
     isAuthenticated: false,
     selectedFile: {},
-    selectedFilters: {}
+    selectedFilters: {},
+    itemConfigs: {
+      externalSources: [],
+      taskManagers: []
+    }
      
 };
 

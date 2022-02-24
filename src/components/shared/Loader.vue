@@ -35,7 +35,7 @@
 		padding: 20px 0 !important;
 		position: fixed !important;
 		top: 50%;
-		left: 50%;
+		left: 43%;
 		margin: -100px 40px;
 		text-align: center;
 		border: none !important;

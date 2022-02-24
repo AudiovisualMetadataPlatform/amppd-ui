@@ -5,7 +5,7 @@
       <div class="row">        
       <!-- <Sidebar/>     -->
       <div class="col-12 bg-light-gray-1">
-        <main class="main-margin-min">
+        <main class="m-0">
           <!-- <Logout/> -->
           <div class="pad-all-3">
             <div class="card">
@@ -46,7 +46,7 @@
                     <tbody v-if="rows && rows.length>0">
                       <tr v-for="rec in rows"
                         :key="rec.id">
-                        <td>{{ new Date(rec.dateCreated) | dateFormat('YYYY-MM-DD') }}</td>
+                        <td>{{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}</td>
                         <td>{{ rec.submitter }}</td>
                         <td>{{ rec.workflowName }}</td>
                         <td>{{ rec.workflowStep }}</td>

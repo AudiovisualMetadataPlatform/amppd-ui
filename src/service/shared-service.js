@@ -55,6 +55,17 @@ export default class SharedService {
           
      }
 
+     /****Filtering an array based on a number
+     * @params - arrayObj = [] || [listOfValue], orderProperty = "" || string value
+     */
+
+      sortByNumber(arrayObj, orderProperty = "id", isDesc = false) {
+        let tempArrayObj = arrayObj.sort(function(a,b){
+            return a[orderProperty]-b[orderProperty];
+          });
+        return tempArrayObj;
+     }
+     
      /****Find the data and sort the array
      * @params - arrayObj = [] || [listOfValue], isDesc = true || false, orderProperty = "" || string value
      */
@@ -66,4 +77,41 @@ export default class SharedService {
 
          return arrayObj;
      }
+
+     //Confirmation window 
+     showConfirmationWindow(instance, message="Are you sure you want to delete?", title = "Confirmation", variant = "primary", okTitle = "Yes", cancelTitle = "No") {
+        const msgBox = instance.msgBoxConfirm('Are you sure you want to delete?', {
+            title: title,
+            size: 'md',
+            buttonSize: 'sm',
+            okVariant: variant,
+            okTitle: okTitle,
+            cancelTitle: cancelTitle,
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true
+          });
+        return msgBox;
+     }
+
+    /***
+     * To store user selected options on session storage
+     * @input-params key - string value-any
+     ****/
+
+    setUserValues(key, value) {
+        let userValues = sessionStorage.getItem('userValues');
+        userValues = userValues ? JSON.parse(userValues) : {};
+        userValues[key] = value;
+        sessionStorage.setItem('userValues', JSON.stringify(userValues));
+    }
+
+    /***
+     * To retrive user selected options on session storage
+     * @input-params key - string
+     ****/
+    getUserValue(key) {
+        const userValues = sessionStorage.getItem('userValues');
+        return userValues ? (JSON.parse(userValues))[key]: null;
+    }
 }

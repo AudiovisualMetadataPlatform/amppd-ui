@@ -238,9 +238,6 @@ h2, h3{
 .action-buttons{
   display: flex;
 }
-.action-buttons{
-  display: flex;
-}
 .primary-button{
     float: right;
     background-color: #E9972D;
