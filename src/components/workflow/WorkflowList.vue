@@ -161,7 +161,7 @@ export default {
     methods: {
         getWorkflowList() {
             const self = this;
-            self.workflowService.getWorkflows().then(response => {
+            self.workflowService.getAllWorkflows().then(response => {
                 self.listOfWorkflows = response.data;
             }).catch(e => {
                 console.log(e, 'error');
