@@ -173,4 +173,8 @@ nav ul li {
 .bg-dark-1 a, .bg-dark-1 a:active, .bg-dark-1 a:visited {
   color: #fff !important;
 }
+
+.navbar-toggler {
+  background-color: #ffffff !important;
+}
 </style>
