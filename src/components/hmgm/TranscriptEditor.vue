@@ -1,7 +1,7 @@
 <template>
 <div>
     <!-- <AmpHeader/> -->
-    <Logout/>
+    <!-- <Logout/> -->
     <div class="transcript-content">
       <div>
         <div class="header-row">
