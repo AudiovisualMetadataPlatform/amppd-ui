@@ -1,6 +1,6 @@
 <template>
 <div>
-    <AmpHeader/>
+    <!-- <AmpHeader/> -->
     <Logout/>
     <div class="transcript-content">
       <div>
