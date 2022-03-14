@@ -97,7 +97,7 @@
                             >
                                 <span v-html="rightArrowSvg" style="font-size:24px"></span>
                                 <span class="sr-only">Toggle hidden content</span>
-                                <span class="pl-3">MGM Parameters Setting</span>
+                                <span class="pl-3">MGM Parameter Settings</span>
                             </button>
                         </h3>
                         <b-collapse
