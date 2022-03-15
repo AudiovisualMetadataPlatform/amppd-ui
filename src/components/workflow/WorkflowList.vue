@@ -28,7 +28,7 @@
                 >
                     <div class="row">
                         <div class="col-lg-10">
-                            <h3 contenteditable="true">{{ workflow.name }}</h3>
+                            <h3 contenteditable="true" class="pointer-events-none">{{ workflow.name }}</h3>
                             <p contenteditable="true">{{ workflow.description }}</p>
                         </div>
                         <div class="col-lg-2 text-right">
@@ -285,5 +285,9 @@ h3.card-title .btn {
 a:hover {
     color: #f4871e !important;
     text-decoration: none;
+}
+
+.pointer-events-none {
+    pointer-events: none;
 }
 </style>
