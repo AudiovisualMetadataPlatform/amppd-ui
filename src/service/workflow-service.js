@@ -113,4 +113,8 @@ export default class WorkflowService extends BaseService{
             return tempParams;
         });
     }
+
+    async getEditorStartStatus(workflowId) {
+        return super.post_auth(`/workflows/editStart`);
+    }
 }
