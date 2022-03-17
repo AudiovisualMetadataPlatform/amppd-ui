@@ -16,18 +16,18 @@
                 <tbody>
                     <tr v-for="(file, index) in primaryFiles._embedded.primaryfiles" :key="file.id">
                         <td>
-                            <input type="text" class="w-100" v-model="file.name" />
+                            <input type="text" class="w-100 form-control" v-model="file.name" />
                         </td>
                         <td>
                             <input
                                 type="text"
-                                class="w-100"
+                                class="w-100 form-control"
                                 v-model="file.originalFilename"
                                 :disabled="true"
                             />
                         </td>
                         <td>
-                            <input type="text" class="w-100" v-model="file.description" />
+                            <input type="text" class="w-100 form-control" v-model="file.description" />
                         </td>
                         <td>
                             <button
