@@ -1,6 +1,6 @@
 <template>
-    <div class="p-3 col-12 bg-light-gray-1">
-        <main>
+    <div class="pt-0 p-3 col-12 bg-light-gray-1">
+        <main class="m-0">
             <b-card class="w-100">
                 <h2 class>
                     Workflows
@@ -97,7 +97,7 @@
                             >
                                 <span v-html="rightArrowSvg" style="font-size:24px"></span>
                                 <span class="sr-only">Toggle hidden content</span>
-                                <span class="pl-3">MGMs</span>
+                                <span class="pl-3">MGM Parameter Settings</span>
                             </button>
                         </h3>
                         <b-collapse
@@ -124,7 +124,7 @@
                                     </b-navbar>
 
                                     <dl
-                                        class="d-flex col-12 mt-3"
+                                        class="d-flex col-12 mt-3 mb-0"
                                         v-if="workflow && workflow.details && workflow.details.length"
                                     >
                                         <div
@@ -132,7 +132,7 @@
                                             v-for="(p, paramIndex) in workflow.details[workflow.selectedNode].params"
                                             :key="paramIndex"
                                         >
-                                            <label class="font-weight-bold">{{ p.name }}:</label>
+                                            <label class="font-weight-bold mb-0">{{ p.name }}:</label>
                                             <span class="ml-2">{{ p.value }}</span>
                                         </div>
                                     </dl>
@@ -161,7 +161,7 @@ export default {
     methods: {
         getWorkflowList() {
             const self = this;
-            self.workflowService.getWorkflows().then(response => {
+            self.workflowService.getAllWorkflows().then(response => {
                 self.listOfWorkflows = response.data;
             }).catch(e => {
                 console.log(e, 'error');

@@ -7,12 +7,12 @@
         <div class="row">
             <!-- <Sidebar /> -->
             <div class="col-12 bg-light-gray-1">
-                <main class="main-margin-min">
+                <main class="m-0">
                     <!-- Header - Details page -->
 
                     <b-card class="text-center mt-5">
                         <h2 class="text-left">
-                            <span class="text-capitalize">{{ baseUrl }}</span> Details
+                            <span class="text-capitalize">{{ baseUrl=== 'file' ? 'Primary File' : baseUrl }}</span> Details
                         </h2>
                         <form name="unitForm" class="form">
                             <div class="row">
@@ -21,7 +21,7 @@
                                     :class="baseUrl === 'collection' ? 'col-6' : 'col-12'"
                                 >
                                     <label>
-                                        <span class="text-capitalize">{{ baseUrl }}</span> Name
+                                        <span class="text-capitalize">{{ baseUrl }}</span> Name:
                                     </label>
                                     <input
                                         type="text"
@@ -36,7 +36,7 @@
                                     class="col-6 text-left form-group"
                                     v-if="baseUrl === 'collection'"
                                 >
-                                    <label>Task Manager</label>
+                                    <label>Task Manager:</label>
                                     <select
                                         class="select custom-select w-100"
                                         v-model="entity.taskManager"
@@ -52,7 +52,7 @@
                                 </div>
                             </div>
                             <div class="col-12 text-left form-group p-0" v-if="baseUrl === 'file'">
-                                <label>Orginal Name</label>
+                                <label>Orginal Name:</label>
                                 <input
                                     type="text"
                                     class="form-control w-100"
@@ -61,7 +61,7 @@
                                 />
                             </div>
                             <div class="col-12 text-left form-group p-0">
-                                <label>Description</label>
+                                <label>Description:</label>
                                 <textarea
                                     class="form-control w-100"
                                     v-model="entity.description"
@@ -73,7 +73,7 @@
                             <div class="col-12 p-0">
                                 <div class="row">
                                     <div class="col-3 text-left form-group">
-                                        <label>Created By</label>
+                                        <label>Created By:</label>
                                         <input
                                             type="text"
                                             class="form-control w-100"
@@ -82,7 +82,7 @@
                                         />
                                     </div>
                                      <div class="col-3 text-left form-group">
-                                        <label>Date Created</label>
+                                        <label>Date Created:</label>
                                         <input
                                             type="text"
                                             class="form-control w-100"
@@ -91,7 +91,7 @@
                                         />
                                     </div>
                                     <div class="col-3 text-left form-group">
-                                        <label>Modified By</label>
+                                        <label>Modified By:</label>
                                         <input
                                             type="text"
                                             class="form-control w-100"
@@ -101,7 +101,7 @@
                                     </div>
                                    
                                     <div class="col-3 text-left form-group">
-                                        <label>Modified Date</label>
+                                        <label>Modified Date:</label>
                                         <input
                                             type="text"
                                             class="form-control w-100"
@@ -114,17 +114,28 @@
 
                             <div class="row" v-if="baseUrl === 'item'">
                                 <div class="col-6 text-left form-group">
-                                    <label>External Source</label>
-                                    <input
+                                    <label>External Source:</label>
+                                    <!-- <input
                                         type="text"
                                         class="form-control w-100"
                                         v-model="entity.externalSource"
                                         :disabled="showEdit"
                                         @change="onInputChange"
-                                    />
+                                    /> -->
+                                    <select
+                                        class="select custom-select w-100"
+                                        v-model="entity.externalSource"
+                                        :class="{ 'error-border': (submitted && !entity.externalSource) }"
+                                        @change="onInputChange"
+                                    >
+                                        <option
+                                            v-for="option in listOfExternalResources"
+                                            :key="option"
+                                        >{{ option }}</option>
+                                    </select>
                                 </div>
                                 <div class="col-6 text-left form-group">
-                                    <label>External Id</label>
+                                    <label>External Id:</label>
                                     <input
                                         type="text"
                                         class="form-control w-100"
@@ -321,6 +332,7 @@ import OutputFile from "./OutputFile.vue";
 import PrimaryFileService from "../../service/primary-file-service.js";
 import Search from "@/components/shared/Search.vue";
 import BaseService from "../../service/base-service";
+import EntityService from "../../service/entity-service";
 import { env } from '../../helpers/env';
 export default {
     name: "EntityList",
@@ -341,6 +353,7 @@ export default {
             itemService: new ItemService(),
             baseService: new BaseService(),
             primaryFileService: new PrimaryFileService(),
+            entityService: new EntityService(),
             records: [],
             masterRecords: [],
             showLoader: false,
@@ -358,6 +371,7 @@ export default {
         selectedUnit: sync("selectedUnit"),
         selectedItem: sync("selectedItem"),
         selectedFile: sync("selectedFile"),
+        itemConfigs: sync("itemConfigs"),
         baseUrl() {
             const self = this;
             if (window.location.hash.toLowerCase().indexOf('unit') > -1) {
@@ -366,6 +380,7 @@ export default {
                 return "file";
             }
             else if (window.location.hash.toLowerCase().indexOf('collection') > -1 && window.location.hash.toLowerCase().indexOf('item') === -1) {
+                this.getItemsConfig();
                 return "collection";
             } else if (window.location.hash.toLowerCase().indexOf('item') > -1) {
                 return "item";
@@ -379,8 +394,11 @@ export default {
             return (window.location.hash.toLowerCase().indexOf('create') > -1 || window.location.hash.toLowerCase().indexOf('add-item') > -1)
         },
         listOfTaskManager() {
-            return ["Trello", "Jira"];
+            return this.itemConfigs.taskManagers;
 
+        },
+        listOfExternalResources() {
+            return this.itemConfigs.externalSources;
         },
         mediaInfo() {
             return (this.selectedFile && this.selectedFile.mediaInfo) ? JSON.stringify(JSON.parse(this.selectedFile.mediaInfo), undefined, 4) : "";
@@ -415,14 +433,14 @@ export default {
         },
         async getUnitDetails() {
             const self = this;
-            self.unitService.getUnitById(self.defaultUnitId).then(response => {
-                self.selectedUnit = response;
-                self.entity = response;
+            const unitDetails = await self.entityService.getUnitDetails(self.defaultUnitId, self);
+            if(unitDetails.response) {
+                self.selectedUnit = unitDetails.response;
+                self.entity = unitDetails.response;
                 this.getUnitCollections();
-            }).catch(err => {
-                self.$bvToast.toast("Unable to retrive unit details. Please try again!", self.sharedService.erorrToastConfig);
+            } else {
                 self.showLoader = false;
-            });
+            }   
         },
         async getUnitCollections() {
             const self = this;
@@ -468,135 +486,7 @@ export default {
         },
         onUpdateEntityDetails() {
             const self = this;
-            if (self.baseUrl === 'unit') {
-                const self = this;
-                self.unitService.updateUnitDetails(self.selectedUnit.id, self.entity).then(response => {
-                    self.$bvToast.toast("Unit details updated successfully.", self.sharedService.successToastConfig);
-                });
-            } else if (self.baseUrl === 'collection') {
-                self.submitted = true;
-
-                // Collection Validation rules
-                if (!self.entity.name || !self.entity.taskManager) {
-
-                    self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
-                    return false;
-
-                }
-                if (!self.isCreatePage) {
-
-                    self.collectionService.updateCollection(self.entity).then(reponse => {
-                        self.$bvToast.toast("Collection details updated successfully", self.sharedService.successToastConfig);
-                        // self.showEdit = !self.showEdit;
-                        self.submitted = false;
-                    }).catch(error => {
-                        self.submitted = false;
-                        if (error.response && error.response.data && error.response.data.validationErrors) {
-                            const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
-                            errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
-                        } else {
-                            self.$bvToast.toast("Collection creation failed!", self.sharedService.erorrToastConfig);
-                        }
-                    });
-                } else {
-
-                    self.entity.unit = self.baseService.API_URL + `/units/${self.selectedUnit.id}`;
-                    self.collectionService.createCollection(self.entity).then(reponse => {
-                        self.$bvToast.toast("Collection created successfully", self.sharedService.successToastConfig);
-                        // self.showEdit = !self.showEdit;
-                        self.submitted = false;
-                    }).catch(error => {
-                        self.submitted = false;
-                        if (error.response && error.response.data && error.response.data.validationErrors) {
-                            const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
-                            errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
-                        } else {
-                            self.$bvToast.toast("Collection creation failed!", self.sharedService.erorrToastConfig);
-                        }
-                    });
-                }
-
-            } else if (self.baseUrl === 'file') {
-                self.submitted = true;
-
-                // Collection Validation rules
-                if (!self.entity.name) {
-
-                    self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
-                    return false;
-
-                }
-                self.showLoader = true;
-                const payload = { name: self.entity.name, description: self.entity.description };
-                self.primaryFileService.updatePrimaryFile(self.entity.id, payload).then(reponse => {
-                    self.showLoader = false;
-                    self.submitted = false;
-                    self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
-                    // self.showEdit = !self.showEdit;
-                }).catch(error => {
-                    self.showLoader = false;
-                    self.submitted = false;
-                    if (error.response && error.response.data && error.response.data.validationErrors) {
-                        const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
-                        errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
-                    } else {
-                        self.$bvToast.toast("File details update failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 })
-
-                    }
-                });
-            } else if (self.baseUrl === 'item') {
-                self.submitted = true;
-
-                // Collection Validation rules
-                if (!self.entity.name) {
-
-                    self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
-                    return false;
-
-                }
-                self.showLoader = true;
-                if (self.isCreatePage) {
-                    self.entity = {
-                        ...self.entity,
-                        collection: env.getAmpUrl() + `/collections/${self.selectedCollection.id}`
-                    }
-                    self.itemService.addItemToCollection(self.entity).then(response => {
-                        self.showLoader = false;
-                        self.submitted = false;
-                        self.$bvToast.toast("Item added successfully", self.sharedService.successToastConfig);
-                        self.entity = response;
-                        self.selectedItem = response;
-                        // self.$router.push("/collection/details");
-                    }).catch(error => {
-                        self.showLoader = false;
-                        self.submitted = false;
-                        if (error.response && error.response.data && error.response.data.validationErrors) {
-                            const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
-                            errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
-                        } else {
-                            self.$bvToast.toast("Failed to add an Item", self.sharedService.erorrToastConfig);
-                        }
-
-                    });
-                } else {
-                    self.itemService.updateItem(self.entity).then(success => {
-                        self.showLoader = false;
-                        self.$bvToast.toast("Item details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
-                        // self.showEdit = !self.showEdit;
-                        self.submitted = false;
-                    }).catch(error => {
-                        self.showLoader = false;
-                        self.submitted = false;
-                        if (error.response && error.response.data && error.response.data.validationErrors) {
-                            const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
-                            errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
-                        } else {
-                            self.$bvToast.toast("Item details update failed!", { title: 'Notification', appendToast: true, variant: "danger", autoHideDelay: 5000 });
-                        }
-
-                    });
-                }
-            }
+            self.entityService.onUpdateEntityDetails(self);
         },
         onCancel() {
             var result = confirm("Are you sure want to cancel!")
@@ -629,6 +519,10 @@ export default {
                 self.$bvToast.toast("Unable to retrive unit details. Please try again!", self.sharedService.erorrToastConfig);
                 self.showLoader = false;
             });
+        },
+        async getItemsConfig() {
+            const self = this;
+            self.entityService.getItemsConfig(self);
         }
     },
     beforeRouteLeave(to, from, next) {

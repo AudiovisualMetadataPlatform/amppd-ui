@@ -1,9 +1,12 @@
 <template>          
   <div id="myTable_filter" class="dataTables_filter">
     <!-- <label>Search:</label> -->
-    <typeahead :source="getItems" filter-key="searchValue" :start-at="1" @selection="addSearchTerm"
+    <!-- <typeahead :source="getItems" filter-key="searchValue" :start-at="1" @selection="addSearchTerm"
       filter-type="contains"
-      id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search" :customClass= "'customSearchWidth'"/>
+      id="colFormLabelSearch" class="form-control bootstrap-typeahead" placeholder="Search" :customClass= "'customSearchWidth'"/> -->
+      <form @submit="$event.preventDefault(); onSearchChange()">
+        <input type="text" placeholder="Search" v-model="userValue" class= "form-control customSearchWidth"> 
+      </form>
   </div>                 
 </template>
 
@@ -20,7 +23,8 @@ export default {
   data(){
     return {
         searchValue: '',
-        filterSuccess:false
+        filterSuccess:false,
+        userValue: ''
     }
   },
   computed:{
@@ -44,6 +48,28 @@ export default {
         }
         else
             this.searchTerms.push(term);
+    },
+
+    onSearchChange(event) {
+      if(this.workflowDashboard.searchQuery.filterBySearchTerms && this.workflowDashboard.searchQuery.filterBySearchTerms.length && this.workflowDashboard.searchQuery.filterBySearchTerms[0] != this.userValue) {
+        this.workflowDashboard.searchQuery.filterBySearchTerms = [this.userValue];
+        if(!this.userValue) {
+          this.workflowDashboard.searchQuery.filterBySearchTerms.splice(0,1);
+        }
+      } else if(!this.workflowDashboard.searchQuery.filterBySearchTerms || !this.workflowDashboard.searchQuery.filterBySearchTerms.length && this.userValue) {
+        this.workflowDashboard.searchQuery.filterBySearchTerms = [this.userValue];
+      } 
+    }
+  },
+  watch: {
+    "$store.state.workflowDashboard.searchQuery.filterBySearchTerms": {
+      deep: true,
+      handler(ev) {
+        if(!ev.length) {
+          const self = this;
+          self.userValue = "";
+        }
+      }
     }
   }
 

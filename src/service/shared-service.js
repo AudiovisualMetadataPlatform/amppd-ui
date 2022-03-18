@@ -79,7 +79,7 @@ export default class SharedService {
      }
 
      //Confirmation window 
-     showConfirmationWindow(instance, message="Are you sure you want to delete?", title = "Confirmation", variant = "danger", okTitle = "Yes", cancelTitle = "No") {
+     showConfirmationWindow(instance, message="Are you sure you want to delete?", title = "Confirmation", variant = "primary", okTitle = "Yes", cancelTitle = "No") {
         const msgBox = instance.msgBoxConfirm('Are you sure you want to delete?', {
             title: title,
             size: 'md',
@@ -93,4 +93,25 @@ export default class SharedService {
           });
         return msgBox;
      }
+
+    /***
+     * To store user selected options on session storage
+     * @input-params key - string value-any
+     ****/
+
+    setUserValues(key, value) {
+        let userValues = sessionStorage.getItem('userValues');
+        userValues = userValues ? JSON.parse(userValues) : {};
+        userValues[key] = value;
+        sessionStorage.setItem('userValues', JSON.stringify(userValues));
+    }
+
+    /***
+     * To retrive user selected options on session storage
+     * @input-params key - string
+     ****/
+    getUserValue(key) {
+        const userValues = sessionStorage.getItem('userValues');
+        return userValues ? (JSON.parse(userValues))[key]: null;
+    }
 }

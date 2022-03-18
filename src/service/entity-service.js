@@ -48,7 +48,7 @@ export default class EntityService {
                         const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
                         errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
                     } else {
-                        self.$bvToast.toast("Collection creation failed!", self.sharedService.erorrToastConfig);
+                        self.$bvToast.toast("Unable to update a collection details. Please try again!!", self.sharedService.erorrToastConfig);
                     }
                 });
             } else {
@@ -64,7 +64,7 @@ export default class EntityService {
                         const errorMessages = self.sharedService.extractErrorMessage(error.response.data.validationErrors);
                         errorMessages.map(el => self.$bvToast.toast(el, self.sharedService.erorrToastConfig));
                     } else {
-                        self.$bvToast.toast("Collection creation failed!", self.sharedService.erorrToastConfig);
+                        self.$bvToast.toast("Unable to create a collection details. Please try again!!", self.sharedService.erorrToastConfig);
                     }
                 });
             }
@@ -80,7 +80,7 @@ export default class EntityService {
             self.primaryFileService.updatePrimaryFile(self.entity.id, payload).then(reponse => {
                 self.showLoader = false;
                 self.submitted = false;
-                self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
+                self.$bvToast.toast("File details has been updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
                 self.isDataChanged = false;
             }).catch(error => {
                 self.showLoader = false;
@@ -112,7 +112,7 @@ export default class EntityService {
                 self.itemService.addItemToCollection(self.entity).then(response => {
                     self.showLoader = false;
                     self.submitted = false;
-                    self.$bvToast.toast("Item added successfully", self.sharedService.successToastConfig);
+                    self.$bvToast.toast("Item has been added successfully", self.sharedService.successToastConfig);
                     self.entity = response;
                     self.selectedItem = response;
                     self.isDataChanged = false;

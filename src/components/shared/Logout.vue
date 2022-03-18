@@ -14,6 +14,7 @@
 <script>
 import { accountService } from '@/service/account-service';
 import { sync } from 'vuex-pathify';
+import defaultState from '../../store/state';
 export default {
   name: 'logout',
   methods:{
@@ -22,6 +23,8 @@ export default {
       accountService.logout();
       self.isAuthenticated = false;
       this.$router.push("/account/login");
+      // After successful logout we need to reset the state to prevent from showing old data
+      this.$store.replaceState(defaultState);
     }
   },
   computed: {
