@@ -24,6 +24,7 @@ export default class EntityService {
     async onUpdateEntityDetails(self) {
         if (self.baseUrl === 'unit') {
             self.unitService.updateUnitDetails(self.selectedUnit.id, self.entity).then(response => {
+                self.isDataChanged = false;
                 self.$bvToast.toast("Unit details updated successfully.", self.sharedService.successToastConfig);
             });
         } else if (self.baseUrl === 'collection') {
@@ -40,6 +41,7 @@ export default class EntityService {
                 self.collectionService.updateCollection(self.entity).then(reponse => {
                     self.$bvToast.toast("Collection details updated successfully", self.sharedService.successToastConfig);
                     self.submitted = false;
+                    self.isDataChanged = false;
                 }).catch(error => {
                     self.submitted = false;
                     if (error.response && error.response.data && error.response.data.validationErrors) {
@@ -55,6 +57,7 @@ export default class EntityService {
                     self.$bvToast.toast("Collection created successfully", self.sharedService.successToastConfig);
                     // self.showEdit = !self.showEdit;
                     self.submitted = false;
+                    self.isDataChanged = false;
                 }).catch(error => {
                     self.submitted = false;
                     if (error.response && error.response.data && error.response.data.validationErrors) {
@@ -78,7 +81,7 @@ export default class EntityService {
                 self.showLoader = false;
                 self.submitted = false;
                 self.$bvToast.toast("File details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
-                // self.showEdit = !self.showEdit;
+                self.isDataChanged = false;
             }).catch(error => {
                 self.showLoader = false;
                 self.submitted = false;
@@ -112,6 +115,7 @@ export default class EntityService {
                     self.$bvToast.toast("Item added successfully", self.sharedService.successToastConfig);
                     self.entity = response;
                     self.selectedItem = response;
+                    self.isDataChanged = false;
                     // self.$router.push("/collection/details");
                 }).catch(error => {
                     self.showLoader = false;
@@ -130,6 +134,7 @@ export default class EntityService {
                     self.$bvToast.toast("Item details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
                     // self.showEdit = !self.showEdit;
                     self.submitted = false;
+                    self.isDataChanged = false;
                 }).catch(error => {
                     self.showLoader = false;
                     self.submitted = false;
