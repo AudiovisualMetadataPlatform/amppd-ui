@@ -56,10 +56,10 @@ def main():
         if args.version is None:
             args.version = buildtime
         basedir = f"amp_ui-{args.version}"
-        pkgfile = Path(destdir, f"{basedir}.tar.gz")
+        pkgfile = Path(destdir, f"{basedir}.tar")
         
 
-        with tarfile.open(pkgfile, "w:gz") as tfile:
+        with tarfile.open(pkgfile, "w") as tfile:
             # create base directory
             base_info = tarfile.TarInfo(name=basedir)
             base_info.mtime = int(time.time())
@@ -73,7 +73,8 @@ def main():
             metafile_data = yaml.safe_dump({
                 'name': 'amp_ui',
                 'version': args.version,
-                'build_date': buildtime
+                'build_date': buildtime,
+                'install_path': 'tomcat/webapps'
             }).encode('utf-8')
             metafile.size = len(metafile_data)
             metafile.mtime = int(time.time())
@@ -93,8 +94,8 @@ def main():
                 dist_dir = Path('./dist')
                 for f in dist_dir.glob("**/*"):
                     if f.is_file():
-                        logging.debug(f"Adding {f!s} -> ROOT/{f.relative_to(dist_dir)!s} to war")
-                        z.write(f, f"ROOT/{str(f.relative_to(dist_dir))}")
+                        logging.debug(f"Adding {f!s} -> {f.relative_to(dist_dir)!s} to war")
+                        z.write(f, f"{str(f.relative_to(dist_dir))}")
                     else:
                         logging.debug(f"Skipping file: {f!s}")
 
