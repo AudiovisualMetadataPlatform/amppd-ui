@@ -28,7 +28,7 @@
                 >
                     <div class="row">
                         <div class="col-lg-10">
-                            <h3 contenteditable="true">{{ workflow.name }}</h3>
+                            <h3 contenteditable="true" class="pointer-events-none">{{ workflow.name }}</h3>
                             <p contenteditable="true">{{ workflow.description }}</p>
                         </div>
                         <div class="col-lg-2 text-right">
@@ -39,6 +39,7 @@
                                 data-content="Link goes to galaxy"
                                 data-original-title
                                 title
+                                @click="routeToEditorPage(workflow.id)"
                             >Edit</a>
                         </div>
                     </div>
@@ -149,12 +150,14 @@
 <script>
 import WorkflowService from '../../service/workflow-service';
 import config from '../../assets/constants/common-contant.js';
+import SharedService from '../../service/shared-service';
 export default {
     name: "WorkflowList",
     data() {
         return {
             listOfWorkflows: [],
             workflowService: new WorkflowService(),
+            sharedService: new SharedService(),
             rightArrowSvg: config.common.icons['right_arrow'],
         }
     },
@@ -186,6 +189,13 @@ export default {
             const self = this;
             self.listOfWorkflows[workflowIndex].selectedNode = nodeIndex;
             this.$set(self.listOfWorkflows, workflowIndex, self.listOfWorkflows[workflowIndex]);
+        },
+        async routeToEditorPage(workflowId) {
+            const self = this;
+            await self.workflowService.getEditorStartStatus(workflowId).then(el => this.$router.push('/workflow/edit')).catch(e => {
+                self.$bvToast.toast("Unable to process your request. Please contact Administrator", self.sharedService.erorrToastConfig);
+            });
+            
         }
     },
     mounted() {
@@ -275,5 +285,9 @@ h3.card-title .btn {
 a:hover {
     color: #f4871e !important;
     text-decoration: none;
+}
+
+.pointer-events-none {
+    pointer-events: none;
 }
 </style>
