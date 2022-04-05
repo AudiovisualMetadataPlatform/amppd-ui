@@ -192,7 +192,7 @@ export default {
         },
         async routeToEditorPage(workflowId) {
             const self = this;
-            await self.workflowService.getEditorStartStatus(workflowId).then(el => this.$router.push('/workflow/edit')).catch(e => {
+            await self.workflowService.getEditorStartStatus(workflowId).then(el => this.$router.push('/workflow/edit?id=${workflowId}')).catch(e => {
                 self.$bvToast.toast("Unable to process your request. Please contact Administrator", self.sharedService.erorrToastConfig);
             });
             
