@@ -3,7 +3,7 @@
     <div class="ner-content">
       <div>
         <div class="header-row">
-          <h2>NER Editor</h2>
+          <h1>NER Editor</h1>
           <div class="action-buttons">
             <input type="button" class="primary-button" v-on:click="onComplete" value="Complete"/>
             <input type="button" class="secondary-button" v-on:click="onReset" value="Reset"/>
