@@ -410,10 +410,11 @@ export default {
     },
     onOpenModal(value) {
       let self = this;
+      const unitName = self.workflowDashboard.searchResult.filters.units[0];
       switch(value) {
         case 'collection':
           this.searchType = "collections";
-          this.searchSource = (self.workflowDashboard.searchResult.filters.collections).map((el, index) => ({id: index+1, "collectionName": el}));
+          this.searchSource = (self.workflowDashboard.searchResult.filters.collections).map((el, index) => ({id: index+1, "collectionName": el, "unitName": unitName }));
         break;
         case 'unit':
           this.searchType = "units";
