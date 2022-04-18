@@ -264,8 +264,7 @@ h2, h3{
   margin-top: 0;
 }
 .transcript-content{
-  padding-top:50px;
-  margin-left:45px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
 }

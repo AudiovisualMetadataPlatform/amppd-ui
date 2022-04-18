@@ -1,17 +1,15 @@
 <template>
-<div>
-    <AmpHeader/>
-    <Logout/>
+<div class="ner-wrapper">
     <div class="ner-content">
       <div>
         <div class="header-row">
-          <h2>NER Editor</h2>
+          <h1>NER Editor</h1>
           <div class="action-buttons">
             <input type="button" class="primary-button" v-on:click="onComplete" value="Complete"/>
             <input type="button" class="secondary-button" v-on:click="onReset" value="Reset"/>
           </div>
         </div>
-        <iframe v-if="!requireAuth && iframeUrl" class="" :src="iframeUrl" id="timeliner" width="1500" height="800" style="border:none;"></iframe>
+        <iframe v-if="!requireAuth && iframeUrl" class="" :src="iframeUrl" id="timeliner" width="100%" height="780" style="border:none;"></iframe>
         <!-- TODO 
           Below code is for importing Timeliner as a React component and it didn't work, 
           possibly need extra code in Timeliner to export Timeliner root component along with its properties.
@@ -225,8 +223,11 @@ h2, h3{
   margin-top: 2px;
   max-height: 50px;
 }
+.ner-wrapper{
+  width: 100%;
+  padding: 10px;
+}
 .ner-content{
-  padding-top:0px;
   display: flex;
   flex-direction: column;
 }
