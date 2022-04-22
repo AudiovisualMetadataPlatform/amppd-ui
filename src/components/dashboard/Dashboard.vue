@@ -12,7 +12,6 @@
             <div class="card">
               <div class="card-body">
                 <h1 class="card-title">AMP Dashboard</h1>
-                <button class="btn-sm btn btn-primary marg-bot-4" v-on:click="startWorkflow">Start a new workflow</button>
                 <div class="container-fluid " v-if="filterCount>0">
                   <div class="row selected-filters-row">
                     <div class="col-sm-2 label-bold">CURRENTLY FILTERED BY</div>
@@ -352,9 +351,6 @@ export default {
       this.selectedFilters["units"] = [];
       this.selectedFilters["workflows"] = [];
       this.selectedFilters["outputs"] = [];
-    },
-    startWorkflow(){
-      this.$router.push('/workflow/submit');
     },
     removeDateFilter() {
       this.workflowDashboard.searchQuery.filterByDates = []
