@@ -82,6 +82,7 @@
           <tr v-for="rec in visibleRows" :key="rec.id">
             <td>{{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}</td>
             <td>{{ rec.submitter }}</td>
+            <td>{{ rec.unitName }}</td>
             <td>{{ rec.collectionName }}</td>
             <td>{{ rec.externalSource }}</td>
             <td>{{ rec.externalId }}</td>
@@ -203,6 +204,7 @@ export default {
       columns: [
         { label: 'Date', field: 'dateCreated' },
         { label: 'Submitter', field: 'submitter' },
+        { label: 'Unit', field: 'unit' },
         { label: 'Collection', field: 'collectionName' },
         { label: 'External Source', field: 'externalSource' },
         { label: 'External ID', field: 'externalId' },
