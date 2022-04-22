@@ -265,6 +265,13 @@ export default {
             }
         }
     },
+    beforeMount() {
+        const self = this;
+        if(self.isCreatePage) {
+            self.selectedItem.id = null;
+            self.primaryFiles._embedded.primaryfiles=[];
+        }
+    },
     mounted() {
         const self = this;
         if (self.selectedItem && self.selectedItem.id)
