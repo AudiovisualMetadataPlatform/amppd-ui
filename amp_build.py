@@ -17,6 +17,7 @@ import tarfile
 import time
 import io
 import zipfile
+import json
 #from amp_bootstrap_utils import run_cmd, build_package
 
 def main():
@@ -54,7 +55,16 @@ def main():
         destdir = Path(args.destdir).resolve()
         buildtime = datetime.now().strftime("%Y%m%d_%H%M%S")
         if args.version is None:
-            args.version = buildtime
+            # look in package.json to see if there's a version string...
+            try:
+                with open("package.json") as f:
+                    jdata = json.load(f)
+                    if 'version' in jdata:
+                        args.version = jdata['version']
+                    else:
+                        args.version = buildtime
+            except:            
+                args.version = buildtime
         basedir = f"amp_ui-{args.version}"
         pkgfile = Path(destdir, f"{basedir}.tar")
         
