@@ -77,12 +77,13 @@
               @sort="sortQuery"
               v-bind:id="column.field"
             >
+              <div v-if="column.field === 'dateCreated'" class="dateColumnHead"/>
               <button
                 class="btn-slim"
                 data-toggle="tooltip"
                 data-placement="top"
                 v-bind:title="'Show/Hide ' + column.label + ' Column'"
-                v-if="column.field === 'unit'"
+                v-if="column.field === 'dateCreated' || column.field === 'submitter' || column.field === 'unit' || column.field === 'collectionName' || column.field === 'externalId' || column.field === 'workflowName'"
                 v-on:click="(event)=>showHideColumn(event, column.field)"
               >
                 <svg
@@ -105,13 +106,17 @@
         </thead>
         <tbody v-if="visibleRows && visibleRows.length > 0">
           <tr v-for="rec in visibleRows" :key="rec.id">
-            <td>{{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}</td>
-            <td>{{ rec.submitter }}</td>
+            <td v-if="!collapsedColumns.dateCreated">{{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}</td>
+            <td v-else class="collapsedColumn"></td>
+            <td v-if="!collapsedColumns.submitter">{{ rec.submitter }}</td>
+            <td v-else class="collapsedColumn"></td>
             <td v-if="!collapsedColumns.unit">{{ rec.unitName }}</td>
             <td v-else class="collapsedColumn"></td>
-            <td>{{ rec.collectionName }}</td>
+            <td v-if="!collapsedColumns.collectionName">{{ rec.collectionName }}</td>
+            <td v-else class="collapsedColumn"></td>
             <td>{{ rec.externalSource }}</td>
-            <td>{{ rec.externalId }}</td>
+            <td v-if="!collapsedColumns.externalId">{{ rec.externalId }}</td>
+            <td v-else class="collapsedColumn"></td>
             <td>{{ rec.itemName }}</td>
             <td>
               <a
@@ -119,7 +124,8 @@
                 target="_blank"
               >{{ rec.primaryfileName }}</a>
             </td>
-            <td>{{ rec.workflowName }}</td>
+            <td v-if="!collapsedColumns.workflowName">{{ rec.workflowName }}</td>
+            <td v-else class="collapsedColumn"></td>
             <td>{{ rec.workflowStep }}</td>
             <td v-if="rec.outputPath != null && rec.status == 'COMPLETE'">
               <a
@@ -244,7 +250,12 @@ export default {
       workflowResultService: new WorkflowResultService(),
       sharedService: new SharedService(),
       collapsedColumns:{
+        dateCreated: false,
+        submitter: false,
         unit: false,
+        collectionName: false,
+        externalId: false,
+        workflowName: false,
       }
     }
   },
@@ -347,6 +358,9 @@ export default {
     const limit = this.sharedService.getUserValue('limit');
     this.workflowDashboard.searchQuery.resultsPerPage = limit ? limit : this.workflowDashboard.searchQuery.resultsPerPage;
     this.refreshData();
+
+    let dateColumnHeadHTML = document.getElementsByClassName("btn-slim")[0]
+    dateColumnHeadHTML.style.left = 0;
   },
   watch: {
     filterByDates: function () {
@@ -533,6 +547,10 @@ th:hover .btn-slim {
 }
 .collapsedColumn, .slim{
   background: #fafafa;
-  width: 0px;
+  width: 15px;
+}
+.dateColumnHead{
+  width: 15px;
+  background: transparent;
 }
 </style>
