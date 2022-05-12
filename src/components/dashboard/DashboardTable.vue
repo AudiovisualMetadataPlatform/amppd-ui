@@ -69,19 +69,46 @@
         <thead>
           <tr>
             <sortable-header
+              class="btn-header"
               v-for="column in columns"
               :key="column.field"
               :property-name="column.field"
               :sort-rule="workflowDashboard.searchQuery.sortRule"
               @sort="sortQuery"
-              :label="column.label"
-            />
+              v-bind:id="column.field"
+            >
+              <button
+                class="btn-slim"
+                data-toggle="tooltip"
+                data-placement="top"
+                v-bind:title="'Show/Hide ' + column.label + ' Column'"
+                v-if="column.field === 'unit'"
+                v-on:click="(event)=>showHideColumn(event, column.field)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-arrows-collapse"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8zm7-8a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 4.293V.5A.5.5 0 0 1 8 0zm-.5 11.707-1.146 1.147a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 11.707V15.5a.5.5 0 0 1-1 0v-3.793z"
+                  />
+                </svg>
+              </button>
+              <span class="col-title">{{ column.label }}</span>
+            </sortable-header>
           </tr>
         </thead>
         <tbody v-if="visibleRows && visibleRows.length > 0">
           <tr v-for="rec in visibleRows" :key="rec.id">
             <td>{{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}</td>
             <td>{{ rec.submitter }}</td>
+            <td v-if="!collapsedColumns.unit">{{ rec.unitName }}</td>
+            <td v-else class="collapsedColumn"></td>
             <td>{{ rec.collectionName }}</td>
             <td>{{ rec.externalSource }}</td>
             <td>{{ rec.externalId }}</td>
@@ -203,6 +230,7 @@ export default {
       columns: [
         { label: 'Date', field: 'dateCreated' },
         { label: 'Submitter', field: 'submitter' },
+        { label: 'Unit', field: 'unit' },
         { label: 'Collection', field: 'collectionName' },
         { label: 'External Source', field: 'externalSource' },
         { label: 'External ID', field: 'externalId' },
@@ -215,6 +243,9 @@ export default {
       ],
       workflowResultService: new WorkflowResultService(),
       sharedService: new SharedService(),
+      collapsedColumns:{
+        unit: false,
+      }
     }
   },
   computed: {
@@ -278,6 +309,24 @@ export default {
       link.download = "AMPDashboardExport_" + this.getDateString() + ".csv";
       link.href = 'data:text/csv,' + uriContent;
       link.click();
+    },
+    showHideColumn(event, field) {
+      event.stopPropagation()
+      let columnHTMLs = document.getElementsByClassName("btn-header");
+      let currentColumnHTML;
+      for (let i = 0; i < columnHTMLs.length; i++) {
+        if(columnHTMLs[i].id === field){
+          currentColumnHTML = columnHTMLs[i]
+        }
+      }
+      let classes = Array.from(currentColumnHTML.classList)
+      let index = classes.indexOf("slim");
+      if(index === -1){
+        currentColumnHTML.classList.add("slim");
+      } else {
+        currentColumnHTML.classList.remove("slim");
+      }
+      this.collapsedColumns[field] = !this.collapsedColumns[field];
     },
     paginate(page_number) {
       this.workflowDashboard.searchQuery.pageNum = page_number;
@@ -434,8 +483,56 @@ th {
 .table thead th {
   vertical-align: middle !important;
 }
-
 .justify-content-right {
   justify-content: right;
+}
+.btn-slim:hover,
+.btn-slim:active,
+.btn-slim:focus {
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+.btn-header{
+  position: relative;
+}
+.btn-slim {
+  position: absolute;
+  left: -15px;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  display: none;
+}
+.slim .btn-slim {
+  left: 10%;
+  right: 10%;
+}
+.slim .btn-slim svg {
+  fill: #153c4d;
+}
+th.slim .btn-slim,
+th:hover .btn-slim {
+  display: block;
+}
+.btn-slim svg {
+  transform: rotate(90deg) scale(1.5, 1.5);
+  fill: #F4871E;
+}
+#myTable td.slim span,
+#myTable .slim .col-title {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  visibility: hidden;
+  display: none;
+}
+.collapsedColumn, .slim{
+  background: #fafafa;
+  width: 0px;
 }
 </style>
