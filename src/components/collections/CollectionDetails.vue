@@ -58,13 +58,12 @@
                 <!-- -->
                 <div
                   v-for="(rec, index) in collectionDetails &&
-                  collectionDetails.items"
+                    collectionDetails.items"
                   :key="rec.id"
                   class="pad-all-3 my-collection"
                 >
                   <!-- collection name/description -->
                   <CollectionDetailsItemCard :index="index" />
-                  
                 </div>
               </div>
             </div>
@@ -103,11 +102,11 @@ export default {
     async getCollectionDetails() {
       let self = this;
 
-      this.CollectionDetailsService.getCollection(self.selectedCollection.id).then(
-        (response) => {
-          self.collectionDetails = response.data;
-        }
-      );
+      this.CollectionDetailsService.getCollection(
+        self.selectedCollection.id
+      ).then((response) => {
+        self.collectionDetails = response.data;
+      });
       self.getCollectionItems();
     },
     async getCollectionItems() {
@@ -125,7 +124,6 @@ export default {
   mounted() {
     let self = this;
     self.getCollectionDetails();
-
   },
 };
 </script>

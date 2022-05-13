@@ -12,7 +12,13 @@
     </div>
 
     <div class="row col-12 p-0 m-0">
-      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12  dataTables_length mt-1">
+      <div
+        class="
+          col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12
+          dataTables_length
+          mt-1
+        "
+      >
         <!-- <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
       <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
       Entries
@@ -24,7 +30,10 @@
             v-model="workflowDashboard.searchQuery.resultsPerPage"
             aria-controls="myTable"
             class
-            @change="refreshData();updateUserValues()"
+            @change="
+              refreshData();
+              updateUserValues();
+            "
           >
             <option value="10">10</option>
             <option value="25">25</option>
@@ -40,20 +49,22 @@
         </label>-->
       </div>
       <b-pagination
-      class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100 mt-1"
-      v-model="workflowDashboard.searchQuery.pageNum"
-      :total-rows="workflowDashboard.searchResult.totalResults"
-      :per-page="workflowDashboard.searchQuery.resultsPerPage"
-      @change="paginate(workflowDashboard.searchQuery.pageNum)"
-      size="sm"
-      align="center"
-      first-number
-      limit="9"
-      last-number
-      prev-text="Prev"
-      next-text="Next"
-    ></b-pagination>
-      <search-filter class="col-xl-3 col-md-3 col-sm-12 col-xs-12 pr-0 justify-content-right"/>
+        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100 mt-1"
+        v-model="workflowDashboard.searchQuery.pageNum"
+        :total-rows="workflowDashboard.searchResult.totalResults"
+        :per-page="workflowDashboard.searchQuery.resultsPerPage"
+        @change="paginate(workflowDashboard.searchQuery.pageNum)"
+        size="sm"
+        align="center"
+        first-number
+        limit="9"
+        last-number
+        prev-text="Prev"
+        next-text="Next"
+      ></b-pagination>
+      <search-filter
+        class="col-xl-3 col-md-3 col-sm-12 col-xs-12 pr-0 justify-content-right"
+      />
     </div>
     <!-- <div class="relevant-togggle"><span class="txt-v">Show Relevant Results Only</span>
     <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
@@ -61,9 +72,9 @@
       <span class="slider round"></span>
     </label>
     </div>-->
-    
+
     <br />
-    
+
     <div class="table-responsive">
       <table id="myTable" class="table dataTable no-footer">
         <thead>
@@ -77,14 +88,24 @@
               @sort="sortQuery"
               v-bind:id="column.field"
             >
-              <div v-if="column.field === 'dateCreated'" class="dateColumnHead"/>
+              <div
+                v-if="column.field === 'dateCreated'"
+                class="dateColumnHead"
+              />
               <button
                 class="btn-slim"
                 data-toggle="tooltip"
                 data-placement="top"
                 v-bind:title="'Show/Hide ' + column.label + ' Column'"
-                v-if="column.field === 'dateCreated' || column.field === 'submitter' || column.field === 'unit' || column.field === 'collectionName' || column.field === 'externalId' || column.field === 'workflowName'"
-                v-on:click="(event)=>showHideColumn(event, column.field)"
+                v-if="
+                  column.field === 'dateCreated' ||
+                    column.field === 'submitter' ||
+                    column.field === 'unit' ||
+                    column.field === 'collectionName' ||
+                    column.field === 'externalId' ||
+                    column.field === 'workflowName'
+                "
+                v-on:click="(event) => showHideColumn(event, column.field)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -106,13 +127,17 @@
         </thead>
         <tbody v-if="visibleRows && visibleRows.length > 0">
           <tr v-for="rec in visibleRows" :key="rec.id">
-            <td v-if="!collapsedColumns.dateCreated">{{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}</td>
+            <td v-if="!collapsedColumns.dateCreated">
+              {{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}
+            </td>
             <td v-else class="collapsedColumn"></td>
             <td v-if="!collapsedColumns.submitter">{{ rec.submitter }}</td>
             <td v-else class="collapsedColumn"></td>
             <td v-if="!collapsedColumns.unit">{{ rec.unitName }}</td>
             <td v-else class="collapsedColumn"></td>
-            <td v-if="!collapsedColumns.collectionName">{{ rec.collectionName }}</td>
+            <td v-if="!collapsedColumns.collectionName">
+              {{ rec.collectionName }}
+            </td>
             <td v-else class="collapsedColumn"></td>
             <td>{{ rec.externalSource }}</td>
             <td v-if="!collapsedColumns.externalId">{{ rec.externalId }}</td>
@@ -120,11 +145,16 @@
             <td>{{ rec.itemName }}</td>
             <td>
               <a
-                v-bind:href="workflowResultService.getSourceUrl(rec.primaryfileId)"
+                v-bind:href="
+                  workflowResultService.getSourceUrl(rec.primaryfileId)
+                "
                 target="_blank"
-              >{{ rec.primaryfileName }}</a>
+                >{{ rec.primaryfileName }}</a
+              >
             </td>
-            <td v-if="!collapsedColumns.workflowName">{{ rec.workflowName }}</td>
+            <td v-if="!collapsedColumns.workflowName">
+              {{ rec.workflowName }}
+            </td>
             <td v-else class="collapsedColumn"></td>
             <td>{{ rec.workflowStep }}</td>
             <td v-if="rec.outputPath != null && rec.status == 'COMPLETE'">
@@ -132,7 +162,8 @@
                 v-bind:href="workflowResultService.getOutputUrl(rec.id)"
                 target="_blank"
                 class="complete-output"
-              >{{ rec.outputName }}</a>
+                >{{ rec.outputName }}</a
+              >
             </td>
             <td v-else>{{ rec.outputName }}</td>
             <td>
@@ -140,32 +171,44 @@
                 v-if="rec.status === 'COMPLETE'"
                 type="button"
                 class="btn-sm btn btn-success eq-width"
-              >Complete</button>
+              >
+                Complete
+              </button>
               <button
                 v-else-if="rec.status === 'IN_PROGRESS'"
                 type="button"
                 class="btn-sm btn btn-warning eq-width"
-              >In Progress</button>
+              >
+                In Progress
+              </button>
               <button
                 v-else-if="rec.status === 'PAUSED'"
                 type="button"
                 class="btn-sm btn btn-primary eq-width"
-              >Paused</button>
+              >
+                Paused
+              </button>
               <button
                 v-else-if="rec.status === 'ERROR'"
                 type="button"
                 class="btn-sm btn btn-danger eq-width"
-              >Error</button>
+              >
+                Error
+              </button>
               <button
                 v-else-if="rec.status === 'SCHEDULED'"
                 type="button"
                 class="btn-sm btn btn-blue eq-width"
-              >Scheduled</button>
+              >
+                Scheduled
+              </button>
               <button
                 v-else-if="rec.status === 'DELETED'"
                 type="button"
                 class="btn-sm btn eq-width"
-              >Deleted</button>
+              >
+                Deleted
+              </button>
             </td>
           </tr>
         </tbody>
@@ -186,7 +229,9 @@
       @paginate="paginate" />-->
       <div class="row col-12 p-0 m-0">
         <div class="col-2 col-md-2 col-sm-2 col-xs-12">
-          <div class="dataTables_info"><label>{{totalText}}</label></div>
+          <div class="dataTables_info">
+            <label>{{ totalText }}</label>
+          </div>
         </div>
         <div class="col-8 col-md-8 col-sm-8 col-xs-12 w-100">
           <b-pagination
@@ -204,96 +249,112 @@
             next-text="Next"
           ></b-pagination>
         </div>
-        <div class="col-2 col-md-2 col-sm-2 col-xs-12">
-          
-        </div>
+        <div class="col-2 col-md-2 col-sm-2 col-xs-12"></div>
       </div>
-      
     </div>
   </div>
 </template>
 
 <script>
-
-import { sync } from 'vuex-pathify';
-import WorkflowResultService from '../../service/workflow-result-service';
-import SortableHeader from '../shared/SortableHeader';
-import Pagination from '../shared/Pagination';
-import SearchFilter from './DashboardFilters/SearchFilter';
-import Loader from '@/components/shared/Loader.vue';
-import SharedService from '../../service/shared-service';
+import { sync } from "vuex-pathify";
+import WorkflowResultService from "../../service/workflow-result-service";
+import SortableHeader from "../shared/SortableHeader";
+import Pagination from "../shared/Pagination";
+import SearchFilter from "./DashboardFilters/SearchFilter";
+import Loader from "@/components/shared/Loader.vue";
+import SharedService from "../../service/shared-service";
 
 export default {
-  name: 'DashboardTable',
+  name: "DashboardTable",
   components: {
     SortableHeader,
     Pagination,
     Loader,
-    SearchFilter
+    SearchFilter,
   },
   data() {
     return {
       columns: [
-        { label: 'Date', field: 'dateCreated' },
-        { label: 'Submitter', field: 'submitter' },
-        { label: 'Unit', field: 'unit' },
-        { label: 'Collection', field: 'collectionName' },
-        { label: 'External Source', field: 'externalSource' },
-        { label: 'External ID', field: 'externalId' },
-        { label: 'Item', field: 'itemName' },
-        { label: 'Primaryfile', field: 'primaryfileName' },
-        { label: 'Workflow', field: 'workflowName' },
-        { label: 'Step', field: 'workflowStep' },
-        { label: 'Output', field: 'outputName' },
-        { label: 'Status', field: 'status' },
+        { label: "Date", field: "dateCreated" },
+        { label: "Submitter", field: "submitter" },
+        { label: "Unit", field: "unit" },
+        { label: "Collection", field: "collectionName" },
+        { label: "External Source", field: "externalSource" },
+        { label: "External ID", field: "externalId" },
+        { label: "Item", field: "itemName" },
+        { label: "Primaryfile", field: "primaryfileName" },
+        { label: "Workflow", field: "workflowName" },
+        { label: "Step", field: "workflowStep" },
+        { label: "Output", field: "outputName" },
+        { label: "Status", field: "status" },
       ],
       workflowResultService: new WorkflowResultService(),
       sharedService: new SharedService(),
-      collapsedColumns:{
+      collapsedColumns: {
         dateCreated: false,
         submitter: false,
         unit: false,
         collectionName: false,
         externalId: false,
         workflowName: false,
-      }
-    }
+      },
+    };
   },
   computed: {
     workflowDashboard: sync("workflowDashboard"),
-    filterByCollections: sync("workflowDashboard.searchQuery.filterByCollections"),
+    filterByCollections: sync(
+      "workflowDashboard.searchQuery.filterByCollections"
+    ),
     filterByUnits: sync("workflowDashboard.searchQuery.filterByUnits"),
     filterByWorkflows: sync("workflowDashboard.searchQuery.filterByWorkflows"),
     filterByOutputs: sync("workflowDashboard.searchQuery.filterByOutputs"),
     filterByStatuses: sync("workflowDashboard.searchQuery.filterByStatuses"),
-    filterBySearchTerms: sync("workflowDashboard.searchQuery.filterBySearchTerms"),
+    filterBySearchTerms: sync(
+      "workflowDashboard.searchQuery.filterBySearchTerms"
+    ),
     filterByRelevant: sync("workflowDashboard.searchQuery.filterByRelevant"),
     filterBySteps: sync("workflowDashboard.searchQuery.filterBySteps"),
-    filterByExternalIds: sync("workflowDashboard.searchQuery.filterByExternalIds"),
+    filterByExternalIds: sync(
+      "workflowDashboard.searchQuery.filterByExternalIds"
+    ),
     filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
-    filterBySubmitters: sync("workflowDashboard.searchQuery.filterBySubmitters"),
+    filterBySubmitters: sync(
+      "workflowDashboard.searchQuery.filterBySubmitters"
+    ),
     filterByItems: sync("workflowDashboard.searchQuery.filterByItems"),
     filterByFiles: sync("workflowDashboard.searchQuery.filterByFiles"),
 
     visibleRows() {
       let self = this;
-      var from = ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage);
-      var to = this.workflowDashboard.searchQuery.pageNum * this.workflowDashboard.searchQuery.resultsPerPage;
-      if (!this.workflowDashboard.searchResult.rows || this.workflowDashboard.searchResult.rows.length <= 0) {
+      var from =
+        (this.workflowDashboard.searchQuery.pageNum - 1) *
+        this.workflowDashboard.searchQuery.resultsPerPage;
+      var to =
+        this.workflowDashboard.searchQuery.pageNum *
+        this.workflowDashboard.searchQuery.resultsPerPage;
+      if (
+        !this.workflowDashboard.searchResult.rows ||
+        this.workflowDashboard.searchResult.rows.length <= 0
+      ) {
         return this.workflowDashboard.searchResult.rows;
       }
 
       return this.workflowDashboard.searchResult.rows;
-    }, 
+    },
     totalText() {
-			let total = this.workflowDashboard.searchResult.totalResults;
-			let start = this.workflowDashboard.searchQuery.pageNum > 1
-				? ((this.workflowDashboard.searchQuery.pageNum - 1) * this.workflowDashboard.searchQuery.resultsPerPage) + 1
-				: 1;
-            let end = this.workflowDashboard.searchQuery.pageNum * this.workflowDashboard.searchQuery.resultsPerPage;
-            end = end > total ? total : end;
-			return `Showing ${start} - ${end} of ${total}`;
-		}
+      let total = this.workflowDashboard.searchResult.totalResults;
+      let start =
+        this.workflowDashboard.searchQuery.pageNum > 1
+          ? (this.workflowDashboard.searchQuery.pageNum - 1) *
+              this.workflowDashboard.searchQuery.resultsPerPage +
+            1
+          : 1;
+      let end =
+        this.workflowDashboard.searchQuery.pageNum *
+        this.workflowDashboard.searchQuery.resultsPerPage;
+      end = end > total ? total : end;
+      return `Showing ${start} - ${end} of ${total}`;
+    },
   },
   props: {},
   methods: {
@@ -305,34 +366,36 @@ export default {
     getDateString() {
       const date = new Date();
       const year = date.getFullYear();
-      const month = `${date.getMonth() + 1}`.padStart(2, '0');
-      const day = `${date.getDate()}`.padStart(2, '0');
-      return `${year}${month}${day}`
+      const month = `${date.getMonth() + 1}`.padStart(2, "0");
+      const day = `${date.getDate()}`.padStart(2, "0");
+      return `${year}${month}${day}`;
     },
     async exportResults() {
       console.log("export results");
       console.log(event.target);
-      var content = await this.workflowResultService.exportWorkflowResults(this.workflowDashboard.searchQuery);
+      var content = await this.workflowResultService.exportWorkflowResults(
+        this.workflowDashboard.searchQuery
+      );
       var uriContent = encodeURIComponent(content);
 
-      var link = document.createElement('a');
-      var dateString
+      var link = document.createElement("a");
+      var dateString;
       link.download = "AMPDashboardExport_" + this.getDateString() + ".csv";
-      link.href = 'data:text/csv,' + uriContent;
+      link.href = "data:text/csv," + uriContent;
       link.click();
     },
     showHideColumn(event, field) {
-      event.stopPropagation()
+      event.stopPropagation();
       let columnHTMLs = document.getElementsByClassName("btn-header");
       let currentColumnHTML;
       for (let i = 0; i < columnHTMLs.length; i++) {
-        if(columnHTMLs[i].id === field){
-          currentColumnHTML = columnHTMLs[i]
+        if (columnHTMLs[i].id === field) {
+          currentColumnHTML = columnHTMLs[i];
         }
       }
-      let classes = Array.from(currentColumnHTML.classList)
+      let classes = Array.from(currentColumnHTML.classList);
       let index = classes.indexOf("slim");
-      if(index === -1){
+      if (index === -1) {
         currentColumnHTML.classList.add("slim");
       } else {
         currentColumnHTML.classList.remove("slim");
@@ -346,73 +409,80 @@ export default {
     async refreshData() {
       const self = this;
       self.workflowDashboard.loading = true;
-      self.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(this.workflowDashboard.searchQuery);
+      self.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(
+        this.workflowDashboard.searchQuery
+      );
       self.workflowDashboard.loading = false;
     },
     updateUserValues() {
       const self = this;
-      self.sharedService.setUserValues('limit', self.workflowDashboard.searchQuery.resultsPerPage);
-    }
+      self.sharedService.setUserValues(
+        "limit",
+        self.workflowDashboard.searchQuery.resultsPerPage
+      );
+    },
   },
   async mounted() {
-    const limit = this.sharedService.getUserValue('limit');
-    this.workflowDashboard.searchQuery.resultsPerPage = limit ? limit : this.workflowDashboard.searchQuery.resultsPerPage;
+    const limit = this.sharedService.getUserValue("limit");
+    this.workflowDashboard.searchQuery.resultsPerPage = limit
+      ? limit
+      : this.workflowDashboard.searchQuery.resultsPerPage;
     this.refreshData();
 
-    let dateColumnHeadHTML = document.getElementsByClassName("btn-slim")[0]
+    let dateColumnHeadHTML = document.getElementsByClassName("btn-slim")[0];
     dateColumnHeadHTML.style.left = 0;
   },
   watch: {
-    filterByDates: function () {
+    filterByDates: function() {
       // console.log("inside watcher for filterByDates",this.filterByDates[0]," ",this.filterByDates[1]);
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterBySubmitters: function () {
+    filterBySubmitters: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterByCollections: function () {
+    filterByCollections: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterByUnits: function () {
+    filterByUnits: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterByExternalIds: function () {
+    filterByExternalIds: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterByItems: function () {
+    filterByItems: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterByFiles: function () {
+    filterByFiles: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterByWorkflows: function () {
+    filterByWorkflows: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterBySteps: function () {
+    filterBySteps: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterByOutputs: function () {
+    filterByOutputs: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterByStatuses: function () {
+    filterByStatuses: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterBySearchTerms: function () {
+    filterBySearchTerms: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
-    filterByRelevant: function () {
+    filterByRelevant: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
@@ -420,8 +490,8 @@ export default {
   beforeDestroy() {
     this.workflowDashboard.searchResult.rows = [];
     this.workflowDashboard.searchQuery.pageNum = 1;
-  }
-}
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -507,7 +577,7 @@ th {
   border: none;
   outline: none;
 }
-.btn-header{
+.btn-header {
   position: relative;
 }
 .btn-slim {
@@ -531,7 +601,7 @@ th:hover .btn-slim {
 }
 .btn-slim svg {
   transform: rotate(90deg) scale(1.5, 1.5);
-  fill: #F4871E;
+  fill: #f4871e;
 }
 #myTable td.slim span,
 #myTable .slim .col-title {
@@ -545,11 +615,12 @@ th:hover .btn-slim {
   visibility: hidden;
   display: none;
 }
-.collapsedColumn, .slim{
+.collapsedColumn,
+.slim {
   background: #fafafa;
   width: 15px;
 }
-.dateColumnHead{
+.dateColumnHead {
   width: 15px;
   background: transparent;
 }

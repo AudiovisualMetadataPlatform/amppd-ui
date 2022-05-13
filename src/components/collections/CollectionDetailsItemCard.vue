@@ -7,13 +7,12 @@
             <a
               class="expand"
               data-toggle="collapse"
-            
               role="button"
               v-on:click="handleClick()"
-              :aria-expanded="Show?'true':'false'"
+              :aria-expanded="Show ? 'true' : 'false'"
               aria-controls="collapseExample"
             >
-              {{collectionDetails.items[index].name}}
+              {{ collectionDetails.items[index].name }}
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -29,7 +28,7 @@
             ></a>
           </h3>
           <p>
-            {{collectionDetails.items[index].description}}
+            {{ collectionDetails.items[index].description }}
           </p>
 
           <div class="row">
@@ -37,9 +36,7 @@
               <dl class="row">
                 <dt class="col-sm-4 text-right">Source Name:</dt>
                 <dd class="col-sm-8 text-left">
-                  {{
-                   collectionDetails.items[index].externalSource
-                  }}
+                  {{ collectionDetails.items[index].externalSource }}
                 </dd>
                 <dt class="col-sm-4 text-right">Source ID:</dt>
                 <dd class="col-sm-8 text-left">
@@ -82,9 +79,17 @@
           >
         </div>
       </div>
-      <div id="collapseExample" v-if="Show===true && loading===false" class="container" >
-        <ul class="list-unstyled file-list marg-t-5"  v-for="(rec) in collectionDetails.items[index] && collectionDetails.items[index].primaryFiles"
-                  :key="rec.id" >
+      <div
+        id="collapseExample"
+        v-if="Show === true && loading === false"
+        class="container"
+      >
+        <ul
+          class="list-unstyled file-list marg-t-5"
+          v-for="rec in collectionDetails.items[index] &&
+            collectionDetails.items[index].primaryFiles"
+          :key="rec.id"
+        >
           <li>
             <button
               class="btn btn-light btn-sm"
@@ -100,7 +105,7 @@
                   d="M24.3 11.2v26.1c0 0.4-0.2 0.8-0.5 1.1 -0.3 0.3-0.7 0.5-1.1 0.5s-0.8-0.2-1.1-0.5l-8-8H7.4c-0.4 0-0.8-0.2-1.1-0.5 -0.3-0.3-0.5-0.7-0.5-1.1v-9.2c0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.5 1.1-0.5h6.3l8-8c0.3-0.3 0.7-0.5 1.1-0.5s0.8 0.2 1.1 0.5C24.2 10.4 24.3 10.8 24.3 11.2zM32.5 20.9c0.7 1.1 1 2.2 1 3.4s-0.3 2.3-1 3.4 -1.6 1.8-2.7 2.2C29.6 30 29.4 30 29.2 30c-0.4 0-0.8-0.1-1.1-0.4s-0.5-0.7-0.5-1.1c0-0.3 0.1-0.6 0.3-0.9 0.2-0.2 0.4-0.4 0.7-0.6 0.3-0.2 0.5-0.4 0.8-0.6s0.5-0.5 0.7-0.9c0.2-0.4 0.3-0.8 0.3-1.4 0-0.5-0.1-1-0.3-1.4 -0.2-0.4-0.4-0.7-0.7-0.9 -0.3-0.2-0.5-0.4-0.8-0.6 -0.3-0.2-0.5-0.4-0.7-0.6s-0.3-0.5-0.3-0.9c0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.4 1.1-0.4 0.2 0 0.4 0 0.6 0.1C30.9 19.1 31.8 19.8 32.5 20.9zM37.6 17.5c1.4 2.1 2 4.3 2 6.8 0 2.4-0.7 4.7-2 6.8 -1.4 2.1-3.2 3.6-5.4 4.5 -0.2 0.1-0.4 0.1-0.6 0.1 -0.4 0-0.8-0.2-1.1-0.5 -0.3-0.3-0.5-0.7-0.5-1.1 0-0.6 0.3-1.1 0.9-1.4 0.9-0.5 1.5-0.8 1.8-1.1 1.2-0.9 2.1-1.9 2.8-3.3s1-2.7 1-4.2 -0.3-2.9-1-4.2c-0.7-1.3-1.6-2.4-2.8-3.3 -0.3-0.2-0.9-0.6-1.8-1.1 -0.6-0.3-0.9-0.8-0.9-1.4 0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.5 1.1-0.5 0.2 0 0.4 0 0.6 0.1C34.5 13.9 36.3 15.4 37.6 17.5zM42.8 14.1c2 3.1 3 6.5 3 10.1 0 3.7-1 7.1-3 10.1 -2 3.1-4.7 5.3-8.1 6.8 -0.2 0.1-0.4 0.1-0.6 0.1 -0.4 0-0.8-0.2-1.1-0.5 -0.3-0.3-0.5-0.7-0.5-1.1 0-0.6 0.3-1 0.9-1.4 0.1-0.1 0.3-0.1 0.5-0.3 0.2-0.1 0.4-0.2 0.5-0.3 0.7-0.4 1.4-0.8 2-1.2 2-1.5 3.5-3.3 4.6-5.4 1.1-2.2 1.7-4.5 1.7-6.9 0-2.4-0.6-4.8-1.7-6.9 -1.1-2.2-2.6-4-4.6-5.4 -0.6-0.4-1.2-0.8-2-1.2 -0.1-0.1-0.3-0.1-0.5-0.3s-0.4-0.2-0.5-0.3c-0.6-0.4-0.9-0.8-0.9-1.4 0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.5 1.1-0.5 0.2 0 0.4 0 0.6 0.1C38 8.8 40.7 11 42.8 14.1z"
                 ></path>
               </svg>
-              {{rec.originalFilename}}
+              {{ rec.originalFilename }}
             </button>
             <button class="btn btn-link add-remove float-right">
               <svg
@@ -132,9 +137,9 @@
               Remove file
             </button>
           </li>
-          </ul>
+        </ul>
       </div>
-      <div  v-else id="collapseExample" class="container collapse "></div>
+      <div v-else id="collapseExample" class="container collapse"></div>
     </div>
   </div>
 </template>
@@ -146,45 +151,39 @@ import CollectionDetailsService from "../../service/collection-detail-service";
 export default {
   name: "CollectionDetailsItemCard",
   props: {
-    index:Number,
+    index: Number,
   },
   data() {
     return {
-       CollectionDetailsService: new CollectionDetailsService(),
-             Show:false,
-             loading: true
-       
+      CollectionDetailsService: new CollectionDetailsService(),
+      Show: false,
+      loading: true,
     };
   },
   computed: {
-   
     collectionDetails: sync("collectionDetails"),
-
   },
   methods: {
-  async handleClick() {
-       let self = this;
-            self.Show=!self.Show;
-  self.Show &&  self.getPrimaryFiles()
-  
-      
+    async handleClick() {
+      let self = this;
+      self.Show = !self.Show;
+      self.Show && self.getPrimaryFiles();
     },
     async getPrimaryFiles() {
       let self = this;
 
-      this.CollectionDetailsService.getItemsPrimaryFiles(self.collectionDetails.items[self.index].id).then(
-        (response) => {
-          self.collectionDetails.items[self.index].primaryFiles=response.data._embedded.primaryfiles;
+      this.CollectionDetailsService.getItemsPrimaryFiles(
+        self.collectionDetails.items[self.index].id
+      ).then((response) => {
+        self.collectionDetails.items[self.index].primaryFiles =
+          response.data._embedded.primaryfiles;
 
-        self.loading=false;
-        }
-      )
+        self.loading = false;
+      });
     },
   },
   mounted() {
     let self = this;
-
-
   },
 };
 </script>

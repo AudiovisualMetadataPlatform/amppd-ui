@@ -10,20 +10,22 @@
 
 <script>
 export default {
-  name: 'sample-api',
-  data () {
+  name: "sample-api",
+  data() {
     return {
-      values: []
-    }
+      values: [],
+    };
   },
-  created () {
+  created() {
     // Send request to the ASP.NET Core application.
     // Either send request to https://localhost:5001/api/values or setup vue dev proxy and send it to /api/values
-    return fetch('https://localhost:5001/api/values')
-      .then(res => res.json())
-      .then(data => { this.values = data })
-  }
-}
+    return fetch("https://localhost:5001/api/values")
+      .then((res) => res.json())
+      .then((data) => {
+        this.values = data;
+      });
+  },
+};
 </script>
 
 <style scoped>

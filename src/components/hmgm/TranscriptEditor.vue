@@ -1,5 +1,5 @@
 <template>
-<div>
+  <div>
     <!-- <AmpHeader/> -->
     <!-- <Logout/> -->
     <div class="transcript-content">
@@ -7,12 +7,28 @@
         <div class="header-row">
           <h1>Transcript Editor</h1>
           <div class="action-buttons">
-            <input type="button" class="primary-button" v-on:click="showCompleteModal = true" value="Complete"/>
-            <input type="button" class="secondary-button" v-on:click="showResetModal = true" value="Reset"/>
-            <input type="button" class="secondary-button" v-on:click="showSaveModal = true" value="Save and Close"/>
+            <input
+              type="button"
+              class="primary-button"
+              v-on:click="showCompleteModal = true"
+              value="Complete"
+            />
+            <input
+              type="button"
+              class="secondary-button"
+              v-on:click="showResetModal = true"
+              value="Reset"
+            />
+            <input
+              type="button"
+              class="secondary-button"
+              v-on:click="showSaveModal = true"
+              value="Save and Close"
+            />
           </div>
         </div>
-        <BBCTranscriptEditor :key="key"
+        <BBCTranscriptEditor
+          :key="key"
           v-if="transcriptDataValue && sttType"
           :transcriptData="transcriptDataValue"
           :mediaUrl="mediaUrl"
@@ -26,119 +42,160 @@
         </BBCTranscriptEditor>
       </div>
     </div>
-  <modal v-if="showModal" @close="modalDismiss" class="my-modal">
-    <h5  slot="header">{{modalHeader}}</h5>
-    <div slot="body">
-       {{modalBody}}
-    </div>
-  </modal>
-  <modal v-if="showSaveModal" @close="saveModalCancel" class="my-modal">
-    <h5  slot="header">Save and close?</h5>
-    <div slot="body">
-       Are you sure you want to save the transcript and exit this page?
-    </div>
-    <div slot="footer">
-          <input type="button" class="secondary-button" v-on:click="saveModalCancel" value="Cancel"/>
-          <input type="button" class="primary-button" v-on:click="saveModal" value="Yes"/>
-    </div>
-  </modal>
-  <modal v-if="showResetModal" @close="resetModalCancel" class="my-modal">
-    <h5  slot="header">Reset the transcript?</h5>
-    <div slot="body">
-       Are you sure you want to reset the transcript to the original text?
-    </div>
-    <div slot="footer">
-          <input type="button" class="secondary-button" v-on:click="resetModalCancel" value="Cancel"/>
-          <input type="button" class="primary-button" v-on:click="resetModalYes" value="Yes"/>
-    </div>
-  </modal>
-  <modal v-if="showCompleteModal" @close="completeModalCancel" class="my-modal">
-    <h5  slot="header">Complete?</h5>
-    <div slot="body">
-       Are you sure you want to complete the transcript and exit the page?
-    </div>
-    <div slot="footer">
-          <input type="button" class="secondary-button" v-on:click="completeModalCancel" value="Cancel"/>
-          <input type="button" class="primary-button" v-on:click="completeModalYes" value="Yes"/>
-    </div>
-  </modal>
-  <token-validator v-if="showTokenModal" @validAuth="authValidated" :datasetUrl="datasetUrl" :authString="authString"/>
+    <modal v-if="showModal" @close="modalDismiss" class="my-modal">
+      <h5 slot="header">{{ modalHeader }}</h5>
+      <div slot="body">
+        {{ modalBody }}
+      </div>
+    </modal>
+    <modal v-if="showSaveModal" @close="saveModalCancel" class="my-modal">
+      <h5 slot="header">Save and close?</h5>
+      <div slot="body">
+        Are you sure you want to save the transcript and exit this page?
+      </div>
+      <div slot="footer">
+        <input
+          type="button"
+          class="secondary-button"
+          v-on:click="saveModalCancel"
+          value="Cancel"
+        />
+        <input
+          type="button"
+          class="primary-button"
+          v-on:click="saveModal"
+          value="Yes"
+        />
+      </div>
+    </modal>
+    <modal v-if="showResetModal" @close="resetModalCancel" class="my-modal">
+      <h5 slot="header">Reset the transcript?</h5>
+      <div slot="body">
+        Are you sure you want to reset the transcript to the original text?
+      </div>
+      <div slot="footer">
+        <input
+          type="button"
+          class="secondary-button"
+          v-on:click="resetModalCancel"
+          value="Cancel"
+        />
+        <input
+          type="button"
+          class="primary-button"
+          v-on:click="resetModalYes"
+          value="Yes"
+        />
+      </div>
+    </modal>
+    <modal
+      v-if="showCompleteModal"
+      @close="completeModalCancel"
+      class="my-modal"
+    >
+      <h5 slot="header">Complete?</h5>
+      <div slot="body">
+        Are you sure you want to complete the transcript and exit the page?
+      </div>
+      <div slot="footer">
+        <input
+          type="button"
+          class="secondary-button"
+          v-on:click="completeModalCancel"
+          value="Cancel"
+        />
+        <input
+          type="button"
+          class="primary-button"
+          v-on:click="completeModalYes"
+          value="Yes"
+        />
+      </div>
+    </modal>
+    <token-validator
+      v-if="showTokenModal"
+      @validAuth="authValidated"
+      :datasetUrl="datasetUrl"
+      :authString="authString"
+    />
   </div>
 </template>
 
 <script>
-import AmpHeader from '@/components/shared/Header.vue'
-import Logout from '@/components/shared/Logout.vue'
-import TokenValidator from '@/components/hmgm/TokenValidator'
+import AmpHeader from "@/components/shared/Header.vue";
+import Logout from "@/components/shared/Logout.vue";
+import TokenValidator from "@/components/hmgm/TokenValidator";
 import BBCTranscriptEditor from "@bbc/react-transcript-editor/dist";
-import Modal from '@/components/shared/Modal.vue'
-import { getTranscript, saveTranscript, completeTranscript } from '@/service/hmgm-service';
+import Modal from "@/components/shared/Modal.vue";
+import {
+  getTranscript,
+  saveTranscript,
+  completeTranscript,
+} from "@/service/hmgm-service";
 
 export default {
-  name: 'TranscriptEditor',
-  components:{
+  name: "TranscriptEditor",
+  components: {
     AmpHeader,
     Logout,
     BBCTranscriptEditor,
     TokenValidator,
-    Modal
+    Modal,
   },
-  data(){
+  data() {
     return {
       requireAuth: true,
       datasetUrl: null,
       authString: null,
-      transcriptDataValue:null, 
+      transcriptDataValue: null,
       fileCount: 0,
       mediaUrl: "",
       sttType: null,
-      fileName:"",
-      originalFileName:"",
-      player:null,
+      fileName: "",
+      originalFileName: "",
+      player: null,
       key: 1,
-      modalHeader:"",
-      modalBody:"",
+      modalHeader: "",
+      modalBody: "",
       showModal: false,
       showSaveModal: false,
       showResetModal: false,
       showCompleteModal: false,
       modalDismiss: null,
-      transcriptType: 1
-    }
+      transcriptType: 1,
+    };
   },
-  computed:{
-    showTokenModal(){
-      if(!this.datasetUrl || this.datasetUrl.length == 0) return false;
-      if(!this.authString) return false;
+  computed: {
+    showTokenModal() {
+      if (!this.datasetUrl || this.datasetUrl.length == 0) return false;
+      if (!this.authString) return false;
       return this.requireAuth;
-    }
+    },
   },
-  methods:{
+  methods: {
     // This method is required by the token validator to load data on success callback
-    authValidated(){
+    authValidated() {
       this.requireAuth = false;
       this.getFile(this.datasetUrl);
     },
     // Set data for editor
-    setData(content, temporaryFile){
-      if(temporaryFile===true || !this.transcriptType){
+    setData(content, temporaryFile) {
+      if (temporaryFile === true || !this.transcriptType) {
         this.sttType = "draftjs";
         this.transcriptDataValue = JSON.parse(content);
-      }
-      else {
-        if(this.transcriptType==1){
+      } else {
+        if (this.transcriptType == 1) {
           this.sttType = "amazontranscribe";
           this.transcriptDataValue = JSON.parse(content);
-        }
-        else {
+        } else {
           this.sttType = "bbckaldi";
           var tempData = JSON.parse(content);
-          for(var w = 0; w < tempData.words.length; w++){
+          for (var w = 0; w < tempData.words.length; w++) {
             var thisWord = tempData.words[w];
             tempData.words[w].punct = thisWord.word;
             tempData.words[w].start = thisWord.time;
             tempData.words[w].end = thisWord.time + thisWord.duration;
-            if(w==tempData.words.length-1){
+            if (w == tempData.words.length - 1) {
               tempData.words[w].punct = thisWord.punct + ".";
             }
           }
@@ -146,41 +203,41 @@ export default {
         }
       }
     },
-    handleAlreadyComplete(){
+    handleAlreadyComplete() {
       let self = this;
-      self.modalHeader = "File Already Complete"
+      self.modalHeader = "File Already Complete";
       self.modalBody = "This file has already been completed.";
       self.showModal = true;
-      self.modalDismiss = function(){
-        self.$router.push({ path: '/' });
-      }
+      self.modalDismiss = function() {
+        self.$router.push({ path: "/" });
+      };
     },
-    handleComplete(){
+    handleComplete() {
       let self = this;
-      self.modalHeader = "Success"
+      self.modalHeader = "Success";
       self.modalBody = "The transcript edits have been successfully saved.";
       self.showModal = true;
-      self.modalDismiss = function(){
-        self.$router.push({ path: '/' });
-      }
+      self.modalDismiss = function() {
+        self.$router.push({ path: "/" });
+      };
     },
-    handleError(){
+    handleError() {
       let self = this;
-      self.modalHeader = "Error"
+      self.modalHeader = "Error";
       self.modalBody = "There was an error saving the transcript.";
       self.showModal = true;
-      self.modalDismiss = function(){
-        self.$router.push({ path: '/' });
-      }
+      self.modalDismiss = function() {
+        self.$router.push({ path: "/" });
+      };
     },
-    handleGetTranscriptError(){
+    handleGetTranscriptError() {
       let self = this;
-      self.modalHeader = "Error"
+      self.modalHeader = "Error";
       self.modalBody = "There was an error getting the transcript.";
       self.showModal = true;
-      self.modalDismiss = function(){
-        self.$router.push({ path: '/' });
-      }
+      self.modalDismiss = function() {
+        self.$router.push({ path: "/" });
+      };
     },
     // Get the transcript
     async getFile(datasetPath) {
@@ -188,129 +245,136 @@ export default {
       this.originalFileName = datasetPath;
       this.fileName = datasetPath + ".tmp";
       var response = await getTranscript(datasetPath, false);
-      if(response.complete){
+      if (response.complete) {
         self.handleAlreadyComplete();
         return;
       }
-      if(!response.success){
+      if (!response.success) {
         self.handleGetTranscriptError();
         return;
       }
       this.setData(response.content, response.temporaryFile);
     },
     // Complete the edits
-    async complete(){
-      var response = await completeTranscript(this.fileName, this.originalFileName);
-      if(response===true){
+    async complete() {
+      var response = await completeTranscript(
+        this.fileName,
+        this.originalFileName
+      );
+      if (response === true) {
         this.handleComplete();
-      }
-      else {
+      } else {
         this.handleError();
       }
     },
     // Reset to original
-    async reset(){
+    async reset() {
       var response = await getTranscript(this.originalFileName, true);
       this.setData(response.content, response.temporaryFile);
       this.forceRender();
     },
-    async saveModal(){
+    async saveModal() {
       this.showSaveModal = false;
-      this.$router.push({ path: '/' });
+      this.$router.push({ path: "/" });
     },
-    async saveModalCancel(){
+    async saveModalCancel() {
       this.showSaveModal = false;
     },
-    async resetModalYes(){
+    async resetModalYes() {
       this.reset();
       this.showResetModal = false;
     },
-    async resetModalCancel(){
+    async resetModalCancel() {
       this.showResetModal = false;
     },
-    async completeModalYes(){
+    async completeModalYes() {
       this.complete();
       this.showCompleteModal = false;
     },
-    async completeModalCancel(){
+    async completeModalCancel() {
       this.showCompleteModal = false;
     },
     // Save temporary changes
-    async saveTemporary(request){
-      saveTranscript(JSON.stringify(request.data), this.fileName, this.originalFileName);
+    async saveTemporary(request) {
+      saveTranscript(
+        JSON.stringify(request.data),
+        this.fileName,
+        this.originalFileName
+      );
     },
     // Force re-render of the editor when we reset.  Use key to do this.
-    forceRender(){
-      this.key+=1;
-    }
+    forceRender() {
+      this.key += 1;
+    },
   },
-  async mounted(){
+  async mounted() {
     this.transcriptType = this.$route.query.type;
     this.authString = this.$route.query.auth;
     this.datasetUrl = this.$route.query.datasetUrl;
-    this.mediaUrl = this.$route.query.mediaUrl;    
+    this.mediaUrl = this.$route.query.mediaUrl;
   },
-  setData(data){
-      this.transcriptDataValue = data;
-  }
-}
+  setData(data) {
+    this.transcriptDataValue = data;
+  },
+};
 </script>
 
 <style scoped>
 .my-modal {
   backdrop-filter: brightness(60%);
 }
-h2, h3{
+h2,
+h3 {
   margin-top: 0;
 }
-.transcript-content{
+.transcript-content {
   padding: 10px;
   display: flex;
   flex-direction: column;
 }
-.header-row{
-  display:flex;
+.header-row {
+  display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
 }
-.action-buttons{
-  display:flex;
+.action-buttons {
+  display: flex;
   justify-content: flex-end;
 }
-.primary-button{
-    float: right;
-    background-color: #E9972D;
-    color: #2C5B7F;
-    font: bolder;
-    padding: 10px 20px;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 15px;
-    font-size: 12px;
-    width:150px;
+.primary-button {
+  float: right;
+  background-color: #e9972d;
+  color: #2c5b7f;
+  font: bolder;
+  padding: 10px 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 15px;
+  font-size: 12px;
+  width: 150px;
 }
-.secondary-button{
-    float: right;
-    background-color: #ffffff;
-    color: #2C5B7F;
-    font: bolder;
-    padding: 10px 20px;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #E9972D;
-    cursor: pointer;
-    border-radius: 15px;
-    font-size: 12px;
-    width:150px;
+.secondary-button {
+  float: right;
+  background-color: #ffffff;
+  color: #2c5b7f;
+  font: bolder;
+  padding: 10px 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #e9972d;
+  cursor: pointer;
+  border-radius: 15px;
+  font-size: 12px;
+  width: 150px;
 }
 .modal-body .my-modal-body {
-  height:auto !important;
-  overflow:auto;
+  height: auto !important;
+  overflow: auto;
 }
 </style>
