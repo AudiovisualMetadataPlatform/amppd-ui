@@ -42,6 +42,9 @@ export default {
   }
 }
 </script>
+<style lang="css">
+/* @import '/amppd-ui/src/styles/style.css'; */
+</style>
 
 
 

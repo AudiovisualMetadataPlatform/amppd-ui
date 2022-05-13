@@ -41,7 +41,7 @@ export default {
 </script>
 
 <style lang="css">
-@import '/amppd-ui/src/styles/style.css';
+@import '../../styles/style.css';
 
 .my-modal-header{
   padding: 0.3rem 0.7rem;

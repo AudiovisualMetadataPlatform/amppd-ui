@@ -178,7 +178,7 @@ export default {
 
 
 <style lang="css">
-@import '/amppd-ui/src/styles/style.css';
+@import '../../styles/style.css';
   .main-margin-min {
     margin: 0.5em!important;
   }

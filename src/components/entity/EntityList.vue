@@ -559,7 +559,7 @@ export default {
 </script>
 
 <style scoped>
-@import "/amppd-ui/src/styles/style.css";
+@import '../../styles/style.css';
 
 .textArea {
     width: 100%;

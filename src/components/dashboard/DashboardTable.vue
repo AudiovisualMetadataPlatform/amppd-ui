@@ -426,7 +426,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import "/amppd-ui/src/styles/style.css";
+@import '../../styles/style.css';
 .no-results {
   text-align: center;
   font-weight: 700;

@@ -12,7 +12,7 @@
             <input type="button" class="secondary-button" v-on:click="showSaveModal = true" value="Save and Close"/>
           </div>
         </div>
-        <BBCTranscriptEditor :key="key"
+        <!-- <BBCTranscriptEditor :key="key"
           v-if="transcriptDataValue && sttType"
           :transcriptData="transcriptDataValue"
           :mediaUrl="mediaUrl"
@@ -23,7 +23,7 @@
           :autoSaveContentType="'draftjs'"
           :ref="player"
         >
-        </BBCTranscriptEditor>
+        </BBCTranscriptEditor> -->
       </div>
     </div>
   <modal v-if="showModal" @close="modalDismiss" class="my-modal">
@@ -70,7 +70,7 @@
 import AmpHeader from '@/components/shared/Header.vue'
 import Logout from '@/components/shared/Logout.vue'
 import TokenValidator from '@/components/hmgm/TokenValidator'
-import BBCTranscriptEditor from "@bbc/react-transcript-editor/dist";
+// import BBCTranscriptEditor from "@bbc/react-transcript-editor/dist";
 import Modal from '@/components/shared/Modal.vue'
 import { getTranscript, saveTranscript, completeTranscript } from '@/service/hmgm-service';
 
@@ -79,7 +79,7 @@ export default {
   components:{
     AmpHeader,
     Logout,
-    BBCTranscriptEditor,
+    // BBCTranscriptEditor,
     TokenValidator,
     Modal
   },
