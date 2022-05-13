@@ -18,249 +18,255 @@ import CollectionDetails from "./components/collections/CollectionDetails.vue";
 import { env } from "./helpers/env.js";
 import WorkflowList from './components/workflow/WorkflowList.vue';
 import EntityList from "./components/entity/EntityList.vue";
-Vue.use(Router);
-
-var router = new Router({
+import {createRouter, createWebHistory} from 'vue-router';
+import { createApp } from 'vue';
+import App from "./App.vue";
+// Vue.use(Router);
+const router = createRouter({ history: createWebHistory(process.env.BASE_URL),   
   routes: [
-    {
-      // TODO we may want to have a separate landing/welcome page with some greeting and a brief introduction to AMP
-      path: "/",
-      redirect:"/unit/details",
-      name: "home",
-      component: WorkflowDashboard,
-      meta: { authorize: [],
-        breadCrumb: [ 
-          {text: "Home", href: '#/'}, 
-          {text: "Dashboard"},
-        ],
-        helpUrl: "AMP+User+Guide"
-      },
+  {
+    // TODO we may want to have a separate landing/welcome page with some greeting and a brief introduction to AMP
+    path: "/",
+    redirect:"/unit/details",
+    name: "home",
+    component: WorkflowDashboard,
+    meta: { authorize: [],
+      breadCrumb: [ 
+        {text: "Home", href: '#/'}, 
+        {text: "Dashboard"},
+      ],
+      helpUrl: "AMP+User+Guide"
     },
-    {
-      path: "/account/register",
-      name: "register",
-      component: Register,
-      meta: {
-        helpUrl: "AMP+User+Guide"
-      }
+  },
+  {
+    path: "/account/register",
+    name: "register",
+    component: Register,
+    meta: {
+      helpUrl: "AMP+User+Guide"
+    }
+  },
+  {
+    path: "/account/login",
+    name: "login",
+    component: Login,
+    meta: {
+      helpUrl: "AMP+User+Guide"
+    }
+  },
+  {
+    path: "/account/forgot-password",
+    name: "forgot-password",
+    component: ForgotPassword,
+    meta: {
+      helpUrl: "AMP+User+Guide"
+    }
+  },
+  {
+    path: "/account/reset-password/:token",
+    name: "reset-password",
+    component: ResetPassword,
+    meta: {
+      helpUrl: "AMP+User+Guide"
+    }
+  },
+  {
+    path: "/account/activate/:token",
+    name: "activate-account",
+    component: Login,
+    meta: {
+      helpUrl: "AMP+User+Guide"
+    }
+  },
+  {
+    path: "/account/approve/:id",
+    name: "approve-user",
+    component: ApproveUser,
+    meta: { authorize: [], helpUrl: "AMP+User+Guide" },
+  },
+  {
+    path: "/workflow/edit",
+    name: "workflow-editor",
+    component: WorkflowEditor,
+    meta: { authorize: [] },
+  },    
+  {
+    path: "/workflow/submit",
+    name: "workflow-submission",
+    component: WorkflowSubmission,
+    meta: { authorize: [],
+      breadCrumb: [ 
+        {text: "Home", href: '#/'}, 
+        {text: "Workflows"},
+      ],
+      helpUrl: "Workflow+Submissions"
+    }
+  },
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    component: WorkflowDashboard,
+    meta: { authorize: [],
+      breadCrumb: [ 
+        {text: "Home", href: '#/'}, 
+        {text: "Dashboard"},
+      ],
+      helpUrl: "The+Dashboard"
     },
-    {
-      path: "/account/login",
-      name: "login",
-      component: Login,
-      meta: {
-        helpUrl: "AMP+User+Guide"
-      }
+  },
+  {
+    path: "/batch/ingest",
+    name: "batch-ingest",
+    component: BatchIngest,
+    meta: { authorize: [] ,
+      breadCrumb: [ 
+        {text: "Home", href: '#/'}, 
+        {text: "Batch Ingest"},
+      ],
+      helpUrl: "Uploading+Files+via+Batch+Ingest"
     },
-    {
-      path: "/account/forgot-password",
-      name: "forgot-password",
-      component: ForgotPassword,
-      meta: {
-        helpUrl: "AMP+User+Guide"
-      }
+  },
+  {
+    path: "/deliverables",
+    name: "deliverables",
+    component: Deliverables,
+    meta: { authorize: [],
+      breadCrumb: [ 
+        {text: "Home", href: '#/'}, 
+        {text: "Workflows", href: '#/workflow/submit'},
+        {text: "Deliverables"}
+      ],
+      helpUrl: "Deliverables"
+    }
+  },
+  {
+    path: "/hmgm/transcript-editor",
+    name: "transcript-editor",
+    component: TranscriptEditor,
+    meta: { authorize: [], helpUrl: "AMP+User+Guide" },
+  },
+  {
+    path: "/hmgm/ner-editor",
+    name: "ner-editor",
+    component: NerEditor,
+    meta: { authorize: [], helpUrl: "AMP+User+Guide" },
+  },
+  // {
+  //   path: "/collections",
+  //   name: "collections",
+  //   component: Collections,
+  //   meta: { authorize: [] },
+  // },
+  {
+    path: "/collections/collection-details",
+    name: "collection-details",
+    component: CollectionDetails,
+    meta: { authorize: [], helpUrl: "AMP+User+Guide" },
+    
+  },
+  {
+    path: "/unit/details",
+    name: "unit-details",
+    component: EntityList,
+    meta: { authorize: [], 
+      breadCrumb: [
+        {text: "Home", href: '#/'}, 
+        {text: "Unit Details", href: '#/unit/details'}
+      ],
+      helpUrl: "AMP+User+Guide"
     },
-    {
-      path: "/account/reset-password/:token",
-      name: "reset-password",
-      component: ResetPassword,
-      meta: {
-        helpUrl: "AMP+User+Guide"
-      }
+    
+  },
+  {
+    path: "/collection/details",
+    name: "collection-details",
+    component: EntityList,
+    meta: { authorize: [], 
+      breadCrumb: [
+        {text: "Home", href: '#/'}, 
+        {text: "Unit Details", href: '#/unit/details'},
+        {text: "Collection Details", href: '#/collection/details'}
+      ],
+      helpUrl: "AMP+User+Guide"
     },
-    {
-      path: "/account/activate/:token",
-      name: "activate-account",
-      component: Login,
-      meta: {
-        helpUrl: "AMP+User+Guide"
-      }
+    
+  },
+  {
+    path: "/collections/items/details",
+    name: "items-details",
+    component: EntityList,
+    meta: { authorize: [],
+      breadCrumb: [
+        {text: "Home", href: '#/'}, 
+        {text: "Unit Details", href: '#/unit/details'},
+        {text: "Collection Details", href: '#/collection/details'},
+        {text: "Item", href: '#/collections/items/details'}
+      ],
+      helpUrl: "AMP+User+Guide"
     },
-    {
-      path: "/account/approve/:id",
-      name: "approve-user",
-      component: ApproveUser,
-      meta: { authorize: [], helpUrl: "AMP+User+Guide" },
+    
+  },
+  {
+    path: "/collection/create",
+    name: "create-collections",
+    component: EntityList,
+    meta: { authorize: [], 
+      breadCrumb: [
+        {text: "Home", href: '#/'}, 
+        {text: "Unit Details", href: '#/unit/details'},
+        {text: "Collection", href: '#/collection/create'}
+      ],
+      helpUrl: "AMP+User+Guide"
     },
-    {
-      path: "/workflow/edit",
-      name: "workflow-editor",
-      component: WorkflowEditor,
-      meta: { authorize: [] },
-    },    
-    {
-      path: "/workflow/submit",
-      name: "workflow-submission",
-      component: WorkflowSubmission,
-      meta: { authorize: [],
-        breadCrumb: [ 
-          {text: "Home", href: '#/'}, 
-          {text: "Workflows"},
-        ],
-        helpUrl: "Workflow+Submissions"
-      }
+    
+  },
+  {
+    path: "/collection/add-items",
+    name: "create-items",
+    component: EntityList,
+    meta: { authorize: [],
+      breadCrumb: [ 
+        {text: "Home", href: '#/'}, 
+        {text: "Collection Details", href: '#/collection/details'},
+        {text: "Item", href: '#/collection/add-items'}
+      ],
+      helpUrl: "AMP+User+Guide"
     },
-    {
-      path: "/dashboard",
-      name: "dashboard",
-      component: WorkflowDashboard,
-      meta: { authorize: [],
-        breadCrumb: [ 
-          {text: "Home", href: '#/'}, 
-          {text: "Dashboard"},
-        ],
-        helpUrl: "The+Dashboard"
-      },
+    
+  },
+  {
+    path: "/collections/file",
+    name: "file-details",
+    component: EntityList,
+    meta: { authorize: [],
+      breadCrumb: [ 
+        {text: "Home", href: '#/'}, 
+        {text: "Collection Details", href: '#/collection/details'},
+        {text: "Item", href: '#/collections/items/details'},
+        {text: "Primary File"}
+      ],
+      helpUrl: "AMP+User+Guide"
     },
-    {
-      path: "/batch/ingest",
-      name: "batch-ingest",
-      component: BatchIngest,
-      meta: { authorize: [] ,
-        breadCrumb: [ 
-          {text: "Home", href: '#/'}, 
-          {text: "Batch Ingest"},
-        ],
-        helpUrl: "Uploading+Files+via+Batch+Ingest"
-      },
+   
+  },
+  {
+    path: "/workflows",
+    name: "workflow-listing",
+    component: WorkflowList,
+    meta: { authorize: [],
+      breadCrumb: [ 
+        {text: "Home", href: '#/'}, 
+        {text: "Workflows"}
+      ]
     },
-    {
-      path: "/deliverables",
-      name: "deliverables",
-      component: Deliverables,
-      meta: { authorize: [],
-        breadCrumb: [ 
-          {text: "Home", href: '#/'}, 
-          {text: "Workflows", href: '#/workflow/submit'},
-          {text: "Deliverables"}
-        ],
-        helpUrl: "Deliverables"
-      }
-    },
-    {
-      path: "/hmgm/transcript-editor",
-      name: "transcript-editor",
-      component: TranscriptEditor,
-      meta: { authorize: [], helpUrl: "AMP+User+Guide" },
-    },
-    {
-      path: "/hmgm/ner-editor",
-      name: "ner-editor",
-      component: NerEditor,
-      meta: { authorize: [], helpUrl: "AMP+User+Guide" },
-    },
-    // {
-    //   path: "/collections",
-    //   name: "collections",
-    //   component: Collections,
-    //   meta: { authorize: [] },
-    // },
-    {
-      path: "/collections/collection-details",
-      name: "collection-details",
-      component: CollectionDetails,
-      meta: { authorize: [], helpUrl: "AMP+User+Guide" },
-      
-    },
-    {
-      path: "/unit/details",
-      name: "unit-details",
-      component: EntityList,
-      meta: { authorize: [], 
-        breadCrumb: [
-          {text: "Home", href: '#/'}, 
-          {text: "Unit Details", href: '#/unit/details'}
-        ],
-        helpUrl: "AMP+User+Guide"
-      },
-      
-    },
-    {
-      path: "/collection/details",
-      name: "collection-details",
-      component: EntityList,
-      meta: { authorize: [], 
-        breadCrumb: [
-          {text: "Home", href: '#/'}, 
-          {text: "Unit Details", href: '#/unit/details'},
-          {text: "Collection Details", href: '#/collection/details'}
-        ],
-        helpUrl: "AMP+User+Guide"
-      },
-      
-    },
-    {
-      path: "/collections/items/details",
-      name: "items-details",
-      component: EntityList,
-      meta: { authorize: [],
-        breadCrumb: [
-          {text: "Home", href: '#/'}, 
-          {text: "Unit Details", href: '#/unit/details'},
-          {text: "Collection Details", href: '#/collection/details'},
-          {text: "Item", href: '#/collections/items/details'}
-        ],
-        helpUrl: "AMP+User+Guide"
-      },
-      
-    },
-    {
-      path: "/collection/create",
-      name: "create-collections",
-      component: EntityList,
-      meta: { authorize: [], 
-        breadCrumb: [
-          {text: "Home", href: '#/'}, 
-          {text: "Unit Details", href: '#/unit/details'},
-          {text: "Collection", href: '#/collection/create'}
-        ],
-        helpUrl: "AMP+User+Guide"
-      },
-      
-    },
-    {
-      path: "/collection/add-items",
-      name: "create-items",
-      component: EntityList,
-      meta: { authorize: [],
-        breadCrumb: [ 
-          {text: "Home", href: '#/'}, 
-          {text: "Collection Details", href: '#/collection/details'},
-          {text: "Item", href: '#/collection/add-items'}
-        ],
-        helpUrl: "AMP+User+Guide"
-      },
-      
-    },
-    {
-      path: "/collections/file",
-      name: "file-details",
-      component: EntityList,
-      meta: { authorize: [],
-        breadCrumb: [ 
-          {text: "Home", href: '#/'}, 
-          {text: "Collection Details", href: '#/collection/details'},
-          {text: "Item", href: '#/collections/items/details'},
-          {text: "Primary File"}
-        ],
-        helpUrl: "AMP+User+Guide"
-      },
-     
-    },
-    {
-      path: "/workflows",
-      name: "workflow-listing",
-      component: WorkflowList,
-      meta: { authorize: [],
-        breadCrumb: [ 
-          {text: "Home", href: '#/'}, 
-          {text: "Workflows"}
-        ]
-      },
-    },
+  },
 
-  ],
-});
+], })
+createApp(App).use(router).mount('#app') 
+
+/* var router = new Router({
+
+}); */
 
 export default router;
 router.beforeEach(async (to, from, next) => {

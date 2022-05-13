@@ -160,7 +160,7 @@ export default {
 
 </style>
 <style lang="css">
-@import '/amppd-ui/src/styles/style.css';
+/* @import '/amppd-ui/src/styles/style.css'; */
 .bundles{
   width: 100%;
 }

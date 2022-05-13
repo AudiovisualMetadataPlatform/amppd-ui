@@ -92,19 +92,19 @@ export default {
 		addItem(item) {
 			if (this.selectedItems.length >0) {
 				if (this.selectedItems.indexOf(item) == -1) {
-					this.selectedItems.push(item);
+					// this.selectedItems.push(item);
 				}
 				else {
 					console.log(this.title + " already exists: " + this.selectedItems);
 				}
 			}
 			else {
-				this.selectedItems.push(item);
+				// this.selectedItems.push(item);
 			}
 		},
 		removeItem(index) {
 			console.log("removing item at:" + index);
-			var removed = this.selectedItems.splice(index,1);
+			var removed = []; //= this.selectedItems.splice(index,1);
 			console.log("selected item are: " + this.selectedItems + ", and removed element is: " + removed);
 		},
 		closeFilter(){

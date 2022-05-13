@@ -6,11 +6,11 @@
 		</button>
 		<div v-click-outside="closeFilter" class="dropdown-menu compact-form" :class="{ 'show' : displayFilter === true }" aria-labelledby="dropdownMenuButton" 
 			x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
-      <b-form-checkbox-group
+      <!-- <b-form-checkbox-group
         v-model="workflowDashboard.searchQuery.filterByStatuses"
         :options="getStatuses"
         stacked
-      />
+      /> -->
 			<!-- <multiselect
 				v-model="selectedStatuses"
 				:multiple="true"
@@ -26,14 +26,14 @@
 <script>
 import { sync } from 'vuex-pathify'
 import _ from 'underscore';
-import { BFormCheckboxGroup } from 'bootstrap-vue';
+// import { BFormCheckboxGroup } from 'bootstrap-vue';
 import ClickOutside from 'vue-click-outside'
 // import Multiselect from 'vue-multiselect';
 
 export default {
   name: 'StatusFilter',
   components:{
-		BFormCheckboxGroup,
+		// BFormCheckboxGroup,
 		// Multiselect,
   },
   data(){

@@ -362,7 +362,7 @@ export default {
 
 
 <style scoped>
-@import '/amppd-ui/src/styles/style.css';
+/* @import '/amppd-ui/src/styles/style.css'; */
   .sub-title {
     font-size: 1.2em;
     float: left;

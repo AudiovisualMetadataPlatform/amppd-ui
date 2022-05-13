@@ -138,7 +138,7 @@ computed:{
 </script>
 
 <style lang="css">
-@import '/amppd-ui/src/styles/style.css';
+/* @import '/amppd-ui/src/styles/style.css'; */
   .form-errors {
     color: red;
     margin: 0%!important;
