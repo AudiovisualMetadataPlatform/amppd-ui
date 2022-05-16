@@ -22,7 +22,7 @@
           <div class="form-group">
             <label for="email">Email: {{approve_user_emailId}}</label>
           </div>
-           <div class="form-group" v-if="isUserApproved">
+          <div class="form-group" v-if="isUserApproved">
             <label>The user has already been approved. </label>
           </div>
           <div class="form-group" v-if="isRequested" >
@@ -46,104 +46,107 @@
 </template>  
 
 <script>
-import Header from '@/components/shared/Header.vue';
-import {accountService} from '@/service/account-service';
-  export default {
-    name: 'ApproveUser',
-    components: {
-      Header
-      },
-    data: function() { 
-		return {
-			errors: [],
-			id: null,
-			approve_user: false,
+import Header from "@/components/shared/Header.vue";
+import { accountService } from "@/service/account-service";
+export default {
+  name: "ApproveUser",
+  components: {
+    Header,
+  },
+  data: function () {
+    return {
+      errors: [],
+      id: null,
+      approve_user: false,
       reject_user: false,
-      approve_user_emailId:null,
-      approve_user_status:null,
-      disableAction: false
-    }
+      approve_user_emailId: null,
+      approve_user_status: null,
+      disableAction: false,
+    };
   },
-computed:{
-    isRequested: function(){
-      return this.approve_user_status=='REQUESTED';
+  computed: {
+    isRequested: function () {
+      return this.approve_user_status == "REQUESTED";
     },
-    isUserApproved: function(){
-      return this.approve_user_status == 'ACTIVATED' || this.approve_user_status == 'ACCEPTED';
-    }
+    isUserApproved: function () {
+      return (
+        this.approve_user_status == "ACTIVATED" ||
+        this.approve_user_status == "ACCEPTED"
+      );
+    },
   },
-  methods:{
-	async approveUser() {
-    event.preventDefault();
-    let self = this;
-    this.errors=[];
-    self.approve_user = false;
-    self.reject_user=false;
-    self.disableAction = true;
-    await accountService.sendApproveUserRequest(this.$route.params.id )
-    .then(response => {
-      self.approve_user = response.success;
-      // self.disableAction = false;
-      })
-    .catch(e => {
-      console.log(e);
-      // self.disableAction = false;
-		});
-		console.log("approve result is:"+self.approve_user);
-		if(this.errors.length != 0)
-    {
-      this.errors.push('User was not approved');
-    }
+  methods: {
+    async approveUser() {
+      event.preventDefault();
+      let self = this;
+      this.errors = [];
+      self.approve_user = false;
+      self.reject_user = false;
+      self.disableAction = true;
+      await accountService
+        .sendApproveUserRequest(this.$route.params.id)
+        .then((response) => {
+          self.approve_user = response.success;
+          // self.disableAction = false;
+        })
+        .catch((e) => {
+          console.log(e);
+          // self.disableAction = false;
+        });
+      console.log("approve result is:" + self.approve_user);
+      if (this.errors.length != 0) {
+        this.errors.push("User was not approved");
+      }
     },
 
-    async loadUser(){
+    async loadUser() {
       event.preventDefault();
-      let self= this;
-     await accountService.getUser(this.$route.params.id)
-     .then(response => {
-       self.approve_user_emailId = response.email;
-       self.approve_user_status = response.status;
-     })
-     .catch(e => {
-      console.log(e);
-		});
+      let self = this;
+      await accountService
+        .getUser(this.$route.params.id)
+        .then((response) => {
+          self.approve_user_emailId = response.email;
+          self.approve_user_status = response.status;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
     async rejectUser() {
       event.preventDefault();
       let self = this;
-      this.errors=[];
+      this.errors = [];
       self.approve_user = false;
-      self.reject_user=false;
+      self.reject_user = false;
       self.disableAction = true;
-      await accountService.sendRejectUserRequest(this.$route.params.id )
-      .then(response => {
-        self.reject_user = response.success;
-        // self.disableAction = false;
-      })
-      .catch(e => {
-        console.log(e);
-        // self.disableAction = false;
-      });
-      console.log("reject result is:"+self.reject_user);
-      if(this.errors.length != 0)
-      {
-        this.errors.push('User was not rejected successfully');
+      await accountService
+        .sendRejectUserRequest(this.$route.params.id)
+        .then((response) => {
+          self.reject_user = response.success;
+          // self.disableAction = false;
+        })
+        .catch((e) => {
+          console.log(e);
+          // self.disableAction = false;
+        });
+      console.log("reject result is:" + self.reject_user);
+      if (this.errors.length != 0) {
+        this.errors.push("User was not rejected successfully");
       }
-    }
+    },
   },
   beforeMount() {
     this.loadUser();
-  }
+  },
 };
 </script>
 
 <style lang="css">
-@import '/amppd-ui/src/styles/style.css';
-  .form-errors {
-    color: red;
-    margin: 0%!important;
-    font-size: 0.9rem; 
-    padding-left:3px; 
-  }
-
+@import "/amppd-ui/src/styles/style.css";
+.form-errors {
+  color: red;
+  margin: 0% !important;
+  font-size: 0.9rem;
+  padding-left: 3px;
+}
 </style>
