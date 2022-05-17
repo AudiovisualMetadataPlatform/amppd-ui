@@ -55,6 +55,10 @@ export default class WorkflowService extends BaseService{
     getWorkflows(){
         return super.get_auth('/workflows?showPublished=true');
     }
+
+    getAllWorkflows(){
+        return super.get_auth('/workflows');
+    }
     async getWorkflowDetails(id){
         var tempParams = [];
         return await super.get_auth('/workflows/' + id).then(response=>
@@ -75,7 +79,8 @@ export default class WorkflowService extends BaseService{
                 // Create a new node object
                 var newNode = {
                     nodeId: nodeKey,
-                    nodeName: this.cleanParameterName(thisNode.toolId),
+                    // nodeName: this.cleanParameterName(thisNode.toolId),
+                    nodeName: this.cleanParameterName(thisNode.toolName),
                     annotation: thisNode.annotation,
                     params:[]
                 };
@@ -107,5 +112,9 @@ export default class WorkflowService extends BaseService{
             }
             return tempParams;
         });
+    }
+
+    async getEditorStartStatus(workflowId) {
+        return super.post_auth(`/workflows/${workflowId}/editStart`);
     }
 }

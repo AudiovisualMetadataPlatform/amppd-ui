@@ -7,8 +7,7 @@ node_modules
 /public/config.json
 
 # local env files
-.env.*.local
-.env.local
+.env.*
 
 
 # Log files

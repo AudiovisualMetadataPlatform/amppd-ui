@@ -43,8 +43,15 @@
                           </p>
                         </div>
                         <div class="col-md-2 text-right">
-                          <label class="switch" :title="rec.active ? 'Deactivate' : 'Activate'">
-                            <input type="checkbox" v-model="rec.active"  v-on:click="toggleCollectionActive(rec)">
+                          <label
+                            class="switch"
+                            :title="rec.active ? 'Deactivate' : 'Activate'"
+                          >
+                            <input
+                              type="checkbox"
+                              v-model="rec.active"
+                              v-on:click="toggleCollectionActive(rec)"
+                            />
                             <span class="slider round"></span>
                           </label>
                           <button
@@ -108,12 +115,15 @@ export default {
   },
   methods: {
     async toggleCollectionActive(collection) {
-      collection.active = !collection.active
-      this.collectionService.activateCollection(collection.id, collection.active)
+      collection.active = !collection.active;
+      this.collectionService.activateCollection(
+        collection.id,
+        collection.active
+      );
     },
     onClickHandler(id) {
       let self = this;
-      self.selectedCollection=id;
+      self.selectedCollection = id;
       self.$router.push("/collections/collection-details");
     },
     async getCollections(a, b) {

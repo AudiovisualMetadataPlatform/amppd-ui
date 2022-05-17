@@ -35,7 +35,7 @@
           </ul>
         </div>
       </nav>-->
-      <b-navbar toggleable="lg" >
+      <b-navbar toggleable="lg">
         <b-navbar-brand href="#">
           <span v-html="ampSvg"></span>
         </b-navbar-brand>
@@ -90,32 +90,32 @@
   </div>
 </template>
 <script>
-import config from '../../assets/constants/common-contant.js';
-import Logout from '@/components/shared/Logout.vue';
-import BreadCrumbs from '@/components/shared/BreadCrumbs.vue';
-import { accountService } from '../../service/account-service.js';
-import { sync } from 'vuex-pathify';
-import SharedService from '../../service/shared-service.js';
+import config from "../../assets/constants/common-contant.js";
+import Logout from "@/components/shared/Logout.vue";
+import BreadCrumbs from "@/components/shared/BreadCrumbs.vue";
+import { accountService } from "../../service/account-service.js";
+import { sync } from "vuex-pathify";
+import SharedService from "../../service/shared-service.js";
 
 export default {
   components: {
     Logout,
-    BreadCrumbs
+    BreadCrumbs,
   },
   data() {
     return {
       menuList: config.common.menus,
-      ampSvg: config.common.icons['amp'],
+      ampSvg: config.common.icons["amp"],
       accountService: accountService,
-      sharedService: new SharedService()
-    }
+      sharedService: new SharedService(),
+    };
   },
   computed: {
     isAuthenticated: sync("isAuthenticated"),
     orderedMenuList() {
       let self = this;
       return this.sharedService.sortByNumber(self.menuList, "displayId");
-    }
+    },
   },
   methods: {
     convertToSvg(value) {
@@ -124,9 +124,9 @@ export default {
     },
     showDropdown(menu) {
       menu.show = !menu.show;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="css">
@@ -170,7 +170,13 @@ nav ul li {
 .dropdown-item:active {
   background: #f4871e !important;
 }
-.bg-dark-1 a, .bg-dark-1 a:active, .bg-dark-1 a:visited {
+.bg-dark-1 a,
+.bg-dark-1 a:active,
+.bg-dark-1 a:visited {
   color: #fff !important;
+}
+
+.navbar-toggler {
+  background-color: #ffffff !important;
 }
 </style>

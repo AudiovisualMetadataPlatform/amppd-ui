@@ -43,7 +43,7 @@ const menus = [
     // },
     {
         displayId:1,
-        name: 'Units',
+        name: 'Content',
         class: 'units, units',
         icon: icons['unit'],
         url: "/unit/details"
