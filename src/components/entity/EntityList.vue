@@ -10,7 +10,14 @@
         <main class="m-0">
           <!-- Header - Details page -->
 
-          <b-card class="text-center mt-5">
+          <b-card
+            class="text-center mt-5"
+            :class="
+              baseUrl === 'file' && entity.mediaType === 'video'
+                ? 'extra-padding'
+                : ''
+            "
+          >
             <h2 class="text-left">
               <span class="text-capitalize">{{
                 baseUrl === "file" ? "Primary File" : baseUrl
@@ -35,13 +42,13 @@
                   <b-button
                     v-b-toggle.collapse-1
                     variant="outline-primary"
-                    class="btn-lg"
+                    class="btn-lg media-info-btn"
                   >
                     <span v-html="infoSvg"></span>
                     Media Information
                   </b-button>
                 </div>
-                <b-collapse id="collapse-1" class="mt-2">
+                <b-collapse id="collapse-1" class="mt-2 media-details">
                   <textarea
                     v-model="mediaInfo"
                     disabled
@@ -751,8 +758,18 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+.extra-padding {
+  padding-bottom: 40px;
+}
 .float-left {
+  position: relative;
   margin-top: 10px;
+}
+.media-info-btn {
+  position: absolute;
+}
+.media-details {
+  margin-top: 60px !important;
 }
 .primary-file {
   display: flex;
