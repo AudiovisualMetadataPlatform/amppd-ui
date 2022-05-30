@@ -19,7 +19,7 @@
             class=""
             :src="iframeUrl"
             id="workflow-editor"
-            width="1500"
+            width="100%"
             height="800"
             style="border:none;"
           ></iframe>
