@@ -117,4 +117,8 @@ export default class WorkflowService extends BaseService{
     async getEditorStartStatus(workflowId) {
         return super.post_auth(`/workflows/${workflowId}/editStart`);
     }
+
+    async getEditorEndStatus(workflowId) {
+        return super.post_auth(`/workflows/${workflowId}/editEnd`);
+    }
 }

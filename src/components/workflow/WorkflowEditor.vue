@@ -40,6 +40,8 @@ import AmpHeader from "@/components/shared/Header.vue";
 import Logout from "@/components/shared/Logout.vue";
 import Modal from "@/components/shared/Modal.vue";
 import { env } from "../../helpers/env";
+import WorkflowService from "../../service/workflow-service";
+import SharedService from "../../service/shared-service";
 
 export default {
   name: "WorkflowEditor",
@@ -50,6 +52,8 @@ export default {
   },
   data() {
     return {
+      workflowService: new WorkflowService(),
+      sharedService: new SharedService(),
       id: "",
       iframeUrl: "",
       responseHeader: "",
@@ -64,8 +68,19 @@ export default {
       return env.getGalaxyWorkflowUrl() + id;
     },
     async onDone() {
-      // validate workflow saved in Galaxy for AMP workflow submission
-      console.log("Validating workflow after saved to Galaxy: " + this.id);
+      const self = this;
+      await self.workflowService
+        .getEditorEndStatus(self.id)
+        .then((el) => {
+          localStorage.removeItem("activeWorkflowSession");
+          this.$router.push(`/workflows`);
+        })
+        .catch((e) => {
+          self.$bvToast.toast(
+            "Unable to process your request. Please contact Administrator",
+            self.sharedService.erorrToastConfig
+          );
+        });
     },
   },
   mounted() {
