@@ -229,7 +229,6 @@ export default {
         .getEditorStartStatus(workflowId)
         .then((el) => {
           this.$router.push(`/workflow/edit?id=${workflowId}`);
-          localStorage.setItem("activeWorkflowSession", workflowId);
         })
         .catch((e) => {
           self.$bvToast.toast(

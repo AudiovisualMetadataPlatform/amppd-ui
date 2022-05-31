@@ -87,6 +87,38 @@ export default {
     this.id = this.$route.query.id;
     this.iframeUrl = this.getIframeUrl(this.id);
     console.log("workflowId = " + this.id + ", iframeUrl = " + this.iframeUrl);
+
+    //Setting activeWorkflowId
+    localStorage.setItem("activeWorkflowSession", this.id);
+
+    //Prevent page closing
+    let confirm = true;
+    let cancel = true;
+    window.onbeforeunload = function() {
+      return confirmCancel();
+    };
+    window.onunload = function() {
+      return confirmLeave();
+    };
+    function confirmCancel() {
+      if (cancel === true) {
+        return "WARNING! You have unsaved changes that may be lost!";
+      }
+    }
+    function confirmLeave() {
+      if (confirm === true) {
+        localStorage.removeItem("activeWorkflowSession");
+      }
+    }
+  },
+  destroyed() {
+    //Removing activeWorkflowId
+    localStorage.removeItem("activeWorkflowSession");
+
+    //Removing prevention of page closing
+    if (window.onbeforeunload != null) {
+      window.onbeforeunload = null;
+    }
   },
 };
 </script>
