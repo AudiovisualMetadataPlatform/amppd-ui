@@ -74,7 +74,7 @@
                       />
                     </div>
                     <div style="width: 48%">
-                      <label>Orginal Name:</label>
+                      <label>Original Name:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -178,7 +178,7 @@
                     class="col-12 text-left form-group p-0"
                     v-if="baseUrl === 'file'"
                   >
-                    <label>Orginal Name:</label>
+                    <label>Original Name:</label>
                     <input
                       type="text"
                       class="form-control w-100"
