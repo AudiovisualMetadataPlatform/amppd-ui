@@ -37,7 +37,7 @@
               <p contenteditable="true">{{ workflow.description }}</p>
             </div>
             <div class="col-lg-2 text-right">
-              <a
+              <button
                 class="btn btn-primary btn marg-t-5"
                 href="#"
                 data-toggle="popover"
@@ -45,8 +45,10 @@
                 data-original-title
                 title
                 @click="routeToEditorPage(workflow.id)"
-                >Edit</a
+                :disabled="activeWorkflowSession"
               >
+                Edit
+              </button>
             </div>
           </div>
 
@@ -181,6 +183,7 @@ export default {
       workflowService: new WorkflowService(),
       sharedService: new SharedService(),
       rightArrowSvg: config.common.icons["right_arrow"],
+      activeWorkflowSession: "",
     };
   },
   methods: {
@@ -224,7 +227,9 @@ export default {
       const self = this;
       await self.workflowService
         .getEditorStartStatus(workflowId)
-        .then((el) => this.$router.push(`/workflow/edit?id=${workflowId}`))
+        .then((el) => {
+          this.$router.push(`/workflow/edit?id=${workflowId}`);
+        })
         .catch((e) => {
           self.$bvToast.toast(
             "Unable to process your request. Please contact Administrator",
@@ -234,6 +239,8 @@ export default {
     },
   },
   mounted() {
+    const self = this;
+    self.activeWorkflowSession = localStorage.getItem("activeWorkflowSession");
     this.getWorkflowList();
   },
 };

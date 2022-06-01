@@ -29,11 +29,20 @@ export default {
   methods: {
     signout() {
       const self = this;
-      accountService.logout();
-      self.isAuthenticated = false;
-      this.$router.push("/account/login");
-      // After successful logout we need to reset the state to prevent from showing old data
-      this.$store.replaceState(defaultState);
+      if (
+        self.$route.path === "/workflow/edit" &&
+        localStorage.getItem("activeWorkflowSession")
+      ) {
+        alert(
+          "Workflow editor session is active. Please click on done button before leaving the page."
+        );
+      } else {
+        accountService.logout();
+        self.isAuthenticated = false;
+        this.$router.push("/account/login");
+        // After successful logout we need to reset the state to prevent from showing old data
+        this.$store.replaceState(defaultState);
+      }
     },
   },
   computed: {
