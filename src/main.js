@@ -8,11 +8,9 @@ import BootstrapVue from "bootstrap-vue";
 import moment from "moment";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
-import { Mediaelement } from "vue-mediaelement/src";
 
 Vue.use(VuePlugin);
 Vue.use(BootstrapVue);
-Vue.component("mediaelement", Mediaelement);
 
 Vue.use(VueFilterDateFormat, {
   dayOfWeekNames: [

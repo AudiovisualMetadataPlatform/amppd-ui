@@ -11,6 +11,7 @@
 
 <script>
 import "mediaelement";
+import { Mediaelement } from "vue-mediaelement/src";
 export default {
   name: "Mediaelement",
   props: {
