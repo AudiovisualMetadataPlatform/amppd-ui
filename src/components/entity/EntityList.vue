@@ -10,194 +10,296 @@
         <main class="m-0">
           <!-- Header - Details page -->
 
-          <b-card class="text-center mt-5">
+          <b-card
+            class="text-center mt-5"
+            :class="
+              baseUrl === 'file' && entity.mediaType === 'video'
+                ? 'extra-padding'
+                : ''
+            "
+          >
             <h2 class="text-left">
               <span class="text-capitalize">{{
                 baseUrl === "file" ? "Primary File" : baseUrl
               }}</span>
               Details
             </h2>
-            <form name="unitForm" class="form">
-              <div class="row">
-                <div
-                  class="text-left form-group"
-                  :class="baseUrl === 'collection' ? 'col-6' : 'col-12'"
-                >
-                  <label>
-                    <span class="text-capitalize">{{ baseUrl }}</span> Name:
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control w-100"
-                    v-model="entity.name"
-                    :disabled="showEdit"
-                    :class="{ 'error-border': submitted && !entity.name }"
-                    @change="onInputChange"
-                  />
+            <div class="primary-file">
+              <div class="media-player" v-if="baseUrl === 'file'">
+                <div v-if="entity.mediaSource">
+                  <mediaelement
+                    ref="vPlay"
+                    :type="entity.mediaType"
+                    :autoplay="false"
+                    :forceLive="false"
+                    preload="auto"
+                    :source="entity.mediaSource"
+                    width="100%"
+                    height="495.4px"
+                  ></mediaelement>
                 </div>
-                <div
-                  class="col-6 text-left form-group"
-                  v-if="baseUrl === 'collection'"
-                >
-                  <label>Task Manager:</label>
-                  <select
-                    class="select custom-select w-100"
-                    v-model="entity.taskManager"
-                    :disabled="showEdit"
-                    :class="{
-                      'error-border': submitted && !entity.taskManager,
-                    }"
-                    @change="onInputChange"
-                  >
-                    <option v-for="option in listOfTaskManager" :key="option">
-                      {{ option }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <div
-                class="col-12 text-left form-group p-0"
-                v-if="baseUrl === 'file'"
-              >
-                <label>Orginal Name:</label>
-                <input
-                  type="text"
-                  class="form-control w-100"
-                  v-model="entity.originalFilename"
-                  :disabled="true"
-                />
-              </div>
-              <div class="col-12 text-left form-group p-0">
-                <label>Description:</label>
-                <textarea
-                  class="form-control w-100"
-                  v-model="entity.description"
-                  :disabled="showEdit"
-                  @change="onInputChange"
-                ></textarea>
-              </div>
-
-              <div class="col-12 p-0">
-                <div class="row">
-                  <div class="col-3 text-left form-group">
-                    <label>Created By:</label>
-                    <input
-                      type="text"
-                      class="form-control w-100"
-                      v-model="entity.createdBy"
-                      :disabled="true"
-                    />
-                  </div>
-                  <div class="col-3 text-left form-group">
-                    <label>Date Created:</label>
-                    <input
-                      type="text"
-                      class="form-control w-100"
-                      :value="entity.createdDate | LOCAL_DATE_VALUE"
-                      :disabled="true"
-                    />
-                  </div>
-                  <div class="col-3 text-left form-group">
-                    <label>Modified By:</label>
-                    <input
-                      type="text"
-                      class="form-control w-100"
-                      v-model="entity.modifiedBy"
-                      :disabled="true"
-                    />
-                  </div>
-
-                  <div class="col-3 text-left form-group">
-                    <label>Modified Date:</label>
-                    <input
-                      type="text"
-                      class="form-control w-100"
-                      :value="entity.modifiedDate | LOCAL_DATE_VALUE"
-                      :disabled="true"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div class="row" v-if="baseUrl === 'item'">
-                <div class="col-6 text-left form-group">
-                  <label>External Source:</label>
-                  <!-- <input
-                                        type="text"
-                                        class="form-control w-100"
-                                        v-model="entity.externalSource"
-                                        :disabled="showEdit"
-                                        @change="onInputChange"
-                                    /> -->
-                  <select
-                    class="select custom-select w-100"
-                    v-model="entity.externalSource"
-                    :class="{
-                      'error-border': submitted && !entity.externalSource,
-                    }"
-                    @change="onInputChange"
-                  >
-                    <option
-                      v-for="option in listOfExternalResources"
-                      :key="option"
-                    >
-                      {{ option }}
-                    </option>
-                  </select>
-                </div>
-                <div class="col-6 text-left form-group">
-                  <label>External Id:</label>
-                  <input
-                    type="text"
-                    class="form-control w-100"
-                    v-model="entity.externalId"
-                    :disabled="showEdit"
-                    @change="onInputChange"
-                  />
-                </div>
-              </div>
-
-              <div class="w-100 text-right p-0">
                 <div class="float-left" v-if="baseUrl === 'file'">
                   <b-button
                     v-b-toggle.collapse-1
                     variant="outline-primary"
-                    class="btn-lg"
+                    class="btn-lg media-info-btn"
                   >
                     <span v-html="infoSvg"></span>
                     Media Information
                   </b-button>
                 </div>
-                <!-- <div v-if="!showEdit"> -->
-                <!-- <button
-                                        class="btn btn-outline btn-lg btn-edit mr-2"
-                                        type="button"
-                                        @click="onCancel"
-                                >Cancel</button>-->
-                <button
-                  class="btn btn-primary btn-lg btn-edit"
-                  type="button"
-                  @click="onUpdateEntityDetails"
-                >
-                  Save
-                </button>
-                <!-- </div> -->
-                <!-- <button
-                                    class="btn btn-primary btn-lg btn-edit"
-                                    type="button"
-                                    @click="showEdit = !showEdit"
-                                    v-if="showEdit"
-                                >Edit</button>-->
+                <b-collapse id="collapse-1" class="mt-2 media-details">
+                  <textarea
+                    v-model="mediaInfo"
+                    disabled
+                    class="textArea mt-2 mb-2"
+                  ></textarea>
+                </b-collapse>
               </div>
+              <form name="unitForm" class="form">
+                <div v-if="baseUrl === 'file'">
+                  <div class="col-12 text-left form-group p-0 flex-div">
+                    <div style="width: 48%">
+                      <label>
+                        <span class="text-capitalize">{{ baseUrl }}</span>
+                        Name:
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        v-model="entity.name"
+                        :disabled="showEdit"
+                        :class="{ 'error-border': submitted && !entity.name }"
+                        @change="onInputChange"
+                      />
+                    </div>
+                    <div style="width: 48%">
+                      <label>Original Name:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        v-model="entity.originalFilename"
+                        :disabled="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12 text-left form-group p-0">
+                    <label>Description:</label>
+                    <textarea
+                      class="form-control w-100"
+                      v-model="entity.description"
+                      :disabled="showEdit"
+                      @change="onInputChange"
+                    ></textarea>
+                  </div>
+                  <div class="col-12 text-left form-group p-0 flex-div">
+                    <div style="width: 48%">
+                      <label>Created By:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        v-model="entity.createdBy"
+                        :disabled="true"
+                      />
+                    </div>
+                    <div style="width: 48%">
+                      <label>Date Created:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        :value="entity.createdDate | LOCAL_DATE_VALUE"
+                        :disabled="true"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12 text-left form-group p-0 flex-div">
+                    <div style="width: 48%">
+                      <label>Modified By:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        v-model="entity.modifiedBy"
+                        :disabled="true"
+                      />
+                    </div>
+                    <div style="width: 48%">
+                      <label>Modified Date:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        :value="entity.modifiedDate | LOCAL_DATE_VALUE"
+                        :disabled="true"
+                      />
+                    </div>
+                  </div>
+                </div>
 
-              <b-collapse id="collapse-1" class="mt-2">
-                <textarea
-                  v-model="mediaInfo"
-                  disabled
-                  class="textArea mt-2 mb-2"
-                ></textarea>
-              </b-collapse>
-            </form>
+                <div v-else>
+                  <div class="row">
+                    <div
+                      class="text-left form-group"
+                      :class="baseUrl === 'collection' ? 'col-6' : 'col-12'"
+                    >
+                      <label>
+                        <span class="text-capitalize">{{ baseUrl }}</span> Name:
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        v-model="entity.name"
+                        :disabled="showEdit"
+                        :class="{ 'error-border': submitted && !entity.name }"
+                        @change="onInputChange"
+                      />
+                    </div>
+                    <div
+                      class="col-6 text-left form-group"
+                      v-if="baseUrl === 'collection'"
+                    >
+                      <label>Task Manager:</label>
+                      <select
+                        class="select custom-select w-100"
+                        v-model="entity.taskManager"
+                        :disabled="showEdit"
+                        :class="{
+                          'error-border': submitted && !entity.taskManager,
+                        }"
+                        @change="onInputChange"
+                      >
+                        <option
+                          v-for="option in listOfTaskManager"
+                          :key="option"
+                          >{{ option }}</option
+                        >
+                      </select>
+                    </div>
+                  </div>
+                  <div
+                    class="col-12 text-left form-group p-0"
+                    v-if="baseUrl === 'file'"
+                  >
+                    <label>Original Name:</label>
+                    <input
+                      type="text"
+                      class="form-control w-100"
+                      v-model="entity.originalFilename"
+                      :disabled="true"
+                    />
+                  </div>
+                  <div class="col-12 text-left form-group p-0">
+                    <label>Description:</label>
+                    <textarea
+                      class="form-control w-100"
+                      v-model="entity.description"
+                      :disabled="showEdit"
+                      @change="onInputChange"
+                    ></textarea>
+                  </div>
+
+                  <div class="col-12 p-0">
+                    <div class="row">
+                      <div class="col-3 text-left form-group">
+                        <label>Created By:</label>
+                        <input
+                          type="text"
+                          class="form-control w-100"
+                          v-model="entity.createdBy"
+                          :disabled="true"
+                        />
+                      </div>
+                      <div class="col-3 text-left form-group">
+                        <label>Date Created:</label>
+                        <input
+                          type="text"
+                          class="form-control w-100"
+                          :value="entity.createdDate | LOCAL_DATE_VALUE"
+                          :disabled="true"
+                        />
+                      </div>
+                      <div class="col-3 text-left form-group">
+                        <label>Modified By:</label>
+                        <input
+                          type="text"
+                          class="form-control w-100"
+                          v-model="entity.modifiedBy"
+                          :disabled="true"
+                        />
+                      </div>
+
+                      <div class="col-3 text-left form-group">
+                        <label>Modified Date:</label>
+                        <input
+                          type="text"
+                          class="form-control w-100"
+                          :value="entity.modifiedDate | LOCAL_DATE_VALUE"
+                          :disabled="true"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" v-if="baseUrl === 'item'">
+                    <div class="col-6 text-left form-group">
+                      <label>External Source:</label>
+                      <!-- <input
+                        type="text"
+                        class="form-control w-100"
+                        v-model="entity.externalSource"
+                        :disabled="showEdit"
+                        @change="onInputChange"
+                    /> -->
+                      <select
+                        class="select custom-select w-100"
+                        v-model="entity.externalSource"
+                        :class="{
+                          'error-border': submitted && !entity.externalSource,
+                        }"
+                        @change="onInputChange"
+                      >
+                        <option
+                          v-for="option in listOfExternalResources"
+                          :key="option"
+                          >{{ option }}</option
+                        >
+                      </select>
+                    </div>
+                    <div class="col-6 text-left form-group">
+                      <label>External Id:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        v-model="entity.externalId"
+                        :disabled="showEdit"
+                        @change="onInputChange"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="w-100 text-right p-0">
+                  <!-- <div v-if="!showEdit"> -->
+                  <!-- <button
+                    class="btn btn-outline btn-lg btn-edit mr-2"
+                    type="button"
+                    @click="onCancel"
+                  >Cancel</button>-->
+                  <button
+                    class="btn btn-primary btn-lg btn-edit"
+                    type="button"
+                    @click="onUpdateEntityDetails"
+                  >
+                    Save
+                  </button>
+                  <!-- </div> -->
+                  <!-- <button
+                    class="btn btn-primary btn-lg btn-edit"
+                    type="button"
+                    @click="showEdit = !showEdit"
+                    v-if="showEdit"
+                  >Edit</button>-->
+                </div>
+              </form>
+            </div>
           </b-card>
 
           <!-- Header - Details page Ends here-->
@@ -363,6 +465,9 @@ import Search from "@/components/shared/Search.vue";
 import BaseService from "../../service/base-service";
 import EntityService from "../../service/entity-service";
 import { env } from "../../helpers/env";
+import Mediaelement from "./Mediaelement.vue";
+import WorkflowResultService from "../../service/workflow-result-service";
+
 export default {
   name: "EntityList",
   components: {
@@ -372,6 +477,7 @@ export default {
     ItemFiles,
     Search,
     OutputFile,
+    mediaelement: Mediaelement,
   },
   props: [],
   data() {
@@ -383,6 +489,7 @@ export default {
       baseService: new BaseService(),
       primaryFileService: new PrimaryFileService(),
       entityService: new EntityService(),
+      workflowResultService: new WorkflowResultService(),
       records: [],
       masterRecords: [],
       showLoader: false,
@@ -463,7 +570,15 @@ export default {
           self.showEdit = false;
         }
       } else if (self.baseUrl === "file") {
+        let mediaSourceUrl = self.workflowResultService.getSourceUrl(
+          self.selectedFile.id
+        );
+        let mediaSourceType = await self.primaryFileService.getPrimaryFile(
+          self.selectedFile.id
+        );
         self.entity = self.selectedFile;
+        self.entity["mediaSource"] = mediaSourceUrl;
+        self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
         self.showLoader = false;
       }
     },
@@ -615,6 +730,13 @@ export default {
     const self = this;
     self.showLoader = true;
     self.getDefaultUnit();
+
+    let formHTML = document.getElementsByClassName("form")[0];
+    if (this.baseUrl === "file") {
+      formHTML.style.width = "50%";
+    } else {
+      formHTML.style.width = "100%";
+    }
   },
 };
 </script>
@@ -631,5 +753,33 @@ export default {
 }
 .error-border {
   border: 1px solid red;
+}
+.flex-div {
+  display: flex;
+  justify-content: space-between;
+}
+.extra-padding {
+  padding-bottom: 40px;
+}
+.float-left {
+  position: relative;
+  margin-top: 10px;
+}
+.media-info-btn {
+  position: absolute;
+}
+.media-details {
+  margin-top: 60px !important;
+}
+.primary-file {
+  display: flex;
+}
+.media-player {
+  width: 50%;
+  margin-right: 15px;
+}
+video {
+  margin-top: 0px;
+  width: 100% !important;
 }
 </style>
