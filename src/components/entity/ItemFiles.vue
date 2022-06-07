@@ -102,7 +102,7 @@
                 @change="getFile"
               />
             </div>
-            <div class="col-1 p-0 u-btn">
+            <div class="col-1 p-0" style="padding: 5px !important;">
               <button
                 class="btn btn-primary btn-lg float-right"
                 @click="uploadFile()"
@@ -421,8 +421,5 @@ export default {
   background: #153c4d !important;
   border-color: #153c4d v;
   color: #fff !important;
-}
-.u-btn {
-  padding: 5px !important;
 }
 </style>
