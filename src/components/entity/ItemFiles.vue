@@ -102,9 +102,9 @@
                 @change="getFile"
               />
             </div>
-            <div class="col-1 p-0">
+            <div class="col-1 p-0" style="padding: 5px !important;">
               <button
-                class="btn btn-secondary btn-lg w-100"
+                class="btn btn-primary btn-lg float-right"
                 @click="uploadFile()"
                 :disabled="dropFiles.length > 0"
               >
@@ -200,8 +200,9 @@ export default {
     },
     uploadFile() {
       const self = this;
-      const source =
+      const sourceFiles =
         self.files && self.files.length ? self.files : self.dropFiles;
+      const source = Object.keys(sourceFiles).map((key) => sourceFiles[key]);
       source.forEach((file) => {
         const primaryFile = {
           name: "",
