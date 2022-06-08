@@ -164,7 +164,7 @@ var router = new Router({
           { text: "Home", href: "#/" },
           { text: "Unit Details", href: "#/unit/details" },
         ],
-        helpUrl: "AMP+User+Guide",
+        helpUrl: "Units",
       },
     },
     {
@@ -178,7 +178,7 @@ var router = new Router({
           { text: "Unit Details", href: "#/unit/details" },
           { text: "Collection Details", href: "#/collection/details" },
         ],
-        helpUrl: "AMP+User+Guide",
+        helpUrl: "Collections",
       },
     },
     {
@@ -193,7 +193,7 @@ var router = new Router({
           { text: "Collection Details", href: "#/collection/details" },
           { text: "Item", href: "#/collections/items/details" },
         ],
-        helpUrl: "AMP+User+Guide",
+        helpUrl: "Items",
       },
     },
     {
@@ -207,7 +207,7 @@ var router = new Router({
           { text: "Unit Details", href: "#/unit/details" },
           { text: "Collection", href: "#/collection/create" },
         ],
-        helpUrl: "AMP+User+Guide",
+        helpUrl: "Collections",
       },
     },
     {
@@ -221,7 +221,7 @@ var router = new Router({
           { text: "Collection Details", href: "#/collection/details" },
           { text: "Item", href: "#/collection/add-items" },
         ],
-        helpUrl: "AMP+User+Guide",
+        helpUrl: "Items",
       },
     },
     {
@@ -236,7 +236,7 @@ var router = new Router({
           { text: "Item", href: "#/collections/items/details" },
           { text: "Primary File" },
         ],
-        helpUrl: "AMP+User+Guide",
+        helpUrl: "Primary+File",
       },
     },
     {
