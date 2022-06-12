@@ -31,7 +31,7 @@ var router = new Router({
       meta: {
         authorize: [],
         breadCrumb: [{ text: "Home", href: "#/" }, { text: "Dashboard" }],
-        helpUrl: "AMP+User+Guide",
+        helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE"),
       },
     },
     {
@@ -39,7 +39,7 @@ var router = new Router({
       name: "register",
       component: Register,
       meta: {
-        helpUrl: "AMP+User+Guide",
+        helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE"),
       },
     },
     {
@@ -47,7 +47,7 @@ var router = new Router({
       name: "login",
       component: Login,
       meta: {
-        helpUrl: "AMP+User+Guide",
+        helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE"),
       },
     },
     {
@@ -55,7 +55,7 @@ var router = new Router({
       name: "forgot-password",
       component: ForgotPassword,
       meta: {
-        helpUrl: "AMP+User+Guide",
+        helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE"),
       },
     },
     {
@@ -63,7 +63,7 @@ var router = new Router({
       name: "reset-password",
       component: ResetPassword,
       meta: {
-        helpUrl: "AMP+User+Guide",
+        helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE"),
       },
     },
     {
@@ -71,14 +71,14 @@ var router = new Router({
       name: "activate-account",
       component: Login,
       meta: {
-        helpUrl: "AMP+User+Guide",
+        helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE"),
       },
     },
     {
       path: "/account/approve/:id",
       name: "approve-user",
       component: ApproveUser,
-      meta: { authorize: [], helpUrl: "AMP+User+Guide" },
+      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE") },
     },
     {
       path: "/workflow/edit",
@@ -93,7 +93,7 @@ var router = new Router({
       meta: {
         authorize: [],
         breadCrumb: [{ text: "Home", href: "#/" }, { text: "Workflows" }],
-        helpUrl: "Workflow+Submissions",
+        helpUrl: env.getEnv("VUE_APP_WORKFLOW_SUBMISSIONS"),
       },
     },
     {
@@ -103,7 +103,7 @@ var router = new Router({
       meta: {
         authorize: [],
         breadCrumb: [{ text: "Home", href: "#/" }, { text: "Dashboard" }],
-        helpUrl: "The+Dashboard",
+        helpUrl: env.getEnv("VUE_APP_THE_DASHBOARD"),
       },
     },
     {
@@ -113,7 +113,7 @@ var router = new Router({
       meta: {
         authorize: [],
         breadCrumb: [{ text: "Home", href: "#/" }, { text: "Batch Ingest" }],
-        helpUrl: "Uploading+Files+via+Batch+Ingest",
+        helpUrl: env.getEnv("VUE_APP_UPLOADING_FILES_VIA_BATCH_INGEST"),
       },
     },
     {
@@ -127,20 +127,20 @@ var router = new Router({
           { text: "Workflows", href: "#/workflow/submit" },
           { text: "Deliverables" },
         ],
-        helpUrl: "Deliverables",
+        helpUrl: env.getEnv("VUE_APP_DELIVERABLES"),
       },
     },
     {
       path: "/hmgm/transcript-editor",
       name: "transcript-editor",
       component: TranscriptEditor,
-      meta: { authorize: [], helpUrl: "AMP+User+Guide" },
+      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE") },
     },
     {
       path: "/hmgm/ner-editor",
       name: "ner-editor",
       component: NerEditor,
-      meta: { authorize: [], helpUrl: "AMP+User+Guide" },
+      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE") },
     },
     // {
     //   path: "/collections",
@@ -152,7 +152,7 @@ var router = new Router({
       path: "/collections/collection-details",
       name: "collection-details",
       component: CollectionDetails,
-      meta: { authorize: [], helpUrl: "AMP+User+Guide" },
+      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE") },
     },
     {
       path: "/unit/details",
@@ -164,7 +164,7 @@ var router = new Router({
           { text: "Home", href: "#/" },
           { text: "Unit Details", href: "#/unit/details" },
         ],
-        helpUrl: "Units",
+        helpUrl: env.getEnv("VUE_APP_UNITS"),
       },
     },
     {
@@ -178,7 +178,7 @@ var router = new Router({
           { text: "Unit Details", href: "#/unit/details" },
           { text: "Collection Details", href: "#/collection/details" },
         ],
-        helpUrl: "Collections",
+        helpUrl: env.getEnv("VUE_APP_COLLECTIONS"),
       },
     },
     {
@@ -193,7 +193,7 @@ var router = new Router({
           { text: "Collection Details", href: "#/collection/details" },
           { text: "Item", href: "#/collections/items/details" },
         ],
-        helpUrl: "Items",
+        helpUrl: env.getEnv("VUE_APP_ITEMS"),
       },
     },
     {
@@ -207,7 +207,7 @@ var router = new Router({
           { text: "Unit Details", href: "#/unit/details" },
           { text: "Collection", href: "#/collection/create" },
         ],
-        helpUrl: "Collections",
+        helpUrl: env.getEnv("VUE_APP_COLLECTIONS"),
       },
     },
     {
@@ -221,7 +221,7 @@ var router = new Router({
           { text: "Collection Details", href: "#/collection/details" },
           { text: "Item", href: "#/collection/add-items" },
         ],
-        helpUrl: "Items",
+        helpUrl: env.getEnv("VUE_APP_ITEMS"),
       },
     },
     {
@@ -236,7 +236,7 @@ var router = new Router({
           { text: "Item", href: "#/collections/items/details" },
           { text: "Primary File" },
         ],
-        helpUrl: "Primary+File",
+        helpUrl: env.getEnv("VUE_APP_PRIMARY_FILE"),
       },
     },
     {
@@ -246,6 +246,20 @@ var router = new Router({
       meta: {
         authorize: [],
         breadCrumb: [{ text: "Home", href: "#/" }, { text: "Workflows" }],
+        helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE"),
+        workflowToolUrl: {
+          mgms: env.getEnv("VUE_APP_MGMS"),
+          extract_audio: env.getEnv("VUE_APP_MGM_SPEECH_TO_TEXT"),
+          applause_detection: env.getEnv("VUE_APP_MGM_APPLAUSE_DETECTION"),
+          aws_transcribe: env.getEnv("VUE_APP_MGM_SPEECH_TO_TEXT"),
+          aws_comprehend: env.getEnv("VUE_APP_MGM_ENTITY_EXTRACTION"),
+          tesseract_video_ocr: env.getEnv("VUE_APP_MGM_VIDEO_OCR"),
+          azure_video_indexer: env.getEnv("VUE_APP_MGM_SHOT_DETECTION"),
+          pyscenedetect: env.getEnv("VUE_APP_MGM_SHOT_DETECTION"),
+          dlib_face_recoginition: env.getEnv("VUE_APP_MGM_FACIAL_RECOGNITION"),
+          azure_video_ocr: env.getEnv("VUE_APP_MGM_VIDEO_OCR"),
+          contact_sheets: env.getEnv("VUE_APP_MGM_CONTACT_SHEET_GENERATION"),
+        },
       },
     },
   ],
