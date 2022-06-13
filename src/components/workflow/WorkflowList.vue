@@ -214,7 +214,7 @@ export default {
       rightArrowSvg: config.common.icons["right_arrow"],
       activeWorkflowSession: "",
       userGuideUrl: env.getUserGuideUrl(),
-      workflowToolList: {
+      mgmList: {
         extract_audio: "Extract Audio",
         applause_detection: "Applause Detection",
         aws_transcribe: "AWS Transcribe",
@@ -281,19 +281,17 @@ export default {
     },
     getWorkflowNodeUrl(nodeName) {
       const self = this;
-      for (const ele in self.workflowToolList) {
-        if (self.workflowToolList[ele] === nodeName)
-          return this.$route.meta.workflowToolUrl[ele];
+      for (const ele in self.mgmList) {
+        if (self.mgmList[ele] === nodeName)
+          return this.$route.meta.mgmListUrl[ele];
       }
-      return this.$route.meta.workflowToolUrl["mgms"];
+      return this.$route.meta.mgmListUrl["mgms"];
     },
     routeToHelp(ev, nodeName) {
       ev.preventDefault();
-      const workflowToolUrl = this.getWorkflowNodeUrl(nodeName);
-      const directUrl = workflowToolUrl && workflowToolUrl.includes("https://");
-      const url = directUrl
-        ? workflowToolUrl
-        : this.userGuideUrl + workflowToolUrl;
+      const mgmListUrl = this.getWorkflowNodeUrl(nodeName);
+      const directUrl = mgmListUrl && mgmListUrl.includes("https://");
+      const url = directUrl ? mgmListUrl : this.userGuideUrl + mgmListUrl;
       if (url) {
         window.open(url, "helpwindow", "width=800, height=500");
       }

@@ -247,7 +247,7 @@ var router = new Router({
         authorize: [],
         breadCrumb: [{ text: "Home", href: "#/" }, { text: "Workflows" }],
         helpUrl: env.getEnv("VUE_APP_AMP_USER_GUIDE"),
-        workflowToolUrl: {
+        mgmListUrl: {
           mgms: env.getEnv("VUE_APP_MGMS"),
           extract_audio: env.getEnv("VUE_APP_MGM_SPEECH_TO_TEXT"),
           applause_detection: env.getEnv("VUE_APP_MGM_APPLAUSE_DETECTION"),
