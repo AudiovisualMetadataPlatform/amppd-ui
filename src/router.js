@@ -251,12 +251,14 @@ var router = new Router({
           mgms: env.getEnv("VUE_APP_MGMS"),
           extract_audio: env.getEnv("VUE_APP_MGM_SPEECH_TO_TEXT"),
           applause_detection: env.getEnv("VUE_APP_MGM_APPLAUSE_DETECTION"),
-          aws_transcribe: env.getEnv("VUE_APP_MGM_SPEECH_TO_TEXT"),
-          aws_comprehend: env.getEnv("VUE_APP_MGM_ENTITY_EXTRACTION"),
+          aws_transcribe_stt: env.getEnv("VUE_APP_MGM_SPEECH_TO_TEXT"),
+          aws_comprehend_ner: env.getEnv("VUE_APP_MGM_ENTITY_EXTRACTION"),
           tesseract_video_ocr: env.getEnv("VUE_APP_MGM_VIDEO_OCR"),
           azure_video_indexer: env.getEnv("VUE_APP_MGM_SHOT_DETECTION"),
-          pyscenedetect: env.getEnv("VUE_APP_MGM_SHOT_DETECTION"),
-          dlib_face_recoginition: env.getEnv("VUE_APP_MGM_FACIAL_RECOGNITION"),
+          pyscenedetect_shot_detection: env.getEnv(
+            "VUE_APP_MGM_SHOT_DETECTION"
+          ),
+          dlib_face_recognition: env.getEnv("VUE_APP_MGM_FACIAL_RECOGNITION"),
           azure_video_ocr: env.getEnv("VUE_APP_MGM_VIDEO_OCR"),
           contact_sheets: env.getEnv("VUE_APP_MGM_CONTACT_SHEET_GENERATION"),
         },

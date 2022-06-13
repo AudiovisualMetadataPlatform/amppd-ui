@@ -79,7 +79,7 @@ export default class WorkflowService extends BaseService{
                 // Create a new node object
                 var newNode = {
                     nodeId: nodeKey,
-                    // nodeName: this.cleanParameterName(thisNode.toolId),
+                    node_id: thisNode.toolId,
                     nodeName: this.cleanParameterName(thisNode.toolName),
                     annotation: thisNode.annotation,
                     params:[]

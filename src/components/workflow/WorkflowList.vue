@@ -167,7 +167,7 @@
                       @click="
                         routeToHelp(
                           $event,
-                          workflow.details[workflow.selectedNode].nodeName
+                          workflow.details[workflow.selectedNode].node_id
                         )
                       "
                     >
@@ -214,18 +214,6 @@ export default {
       rightArrowSvg: config.common.icons["right_arrow"],
       activeWorkflowSession: "",
       userGuideUrl: env.getUserGuideUrl(),
-      mgmList: {
-        extract_audio: "Extract Audio",
-        applause_detection: "Applause Detection",
-        aws_transcribe: "AWS Transcribe",
-        aws_comprehend: "AWS Comprehend",
-        tesseract_video_ocr: "Tesseract Video OCR",
-        azure_video_indexer: "Azure Video Indexer",
-        pyscenedetect: "PySceneDetect",
-        dlib_face_recoginition: "Dlib Face Recoginition",
-        azure_video_ocr: "Azure Video OCR",
-        contact_sheets: "Contact Sheets",
-      },
     };
   },
   methods: {
@@ -279,17 +267,16 @@ export default {
           );
         });
     },
-    getWorkflowNodeUrl(nodeName) {
+    getWorkflowNodeUrl(node_id) {
       const self = this;
-      for (const ele in self.mgmList) {
-        if (self.mgmList[ele] === nodeName)
-          return this.$route.meta.mgmListUrl[ele];
+      for (const ele in self.$route.meta.mgmListUrl) {
+        if (node_id === ele) return this.$route.meta.mgmListUrl[ele];
       }
       return this.$route.meta.mgmListUrl["mgms"];
     },
-    routeToHelp(ev, nodeName) {
+    routeToHelp(ev, node_id) {
       ev.preventDefault();
-      const mgmListUrl = this.getWorkflowNodeUrl(nodeName);
+      const mgmListUrl = this.getWorkflowNodeUrl(node_id);
       const directUrl = mgmListUrl && mgmListUrl.includes("https://");
       const url = directUrl ? mgmListUrl : this.userGuideUrl + mgmListUrl;
       if (url) {
