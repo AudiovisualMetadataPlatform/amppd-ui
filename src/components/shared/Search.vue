@@ -269,6 +269,7 @@ export default {
     },
     onFilterUserInput() {
       const self = this;
+      self.getTypeaheadSearchItems();
       if (!self.userSearchValue) return;
 
       const temp = [];
