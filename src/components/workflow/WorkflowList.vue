@@ -213,7 +213,6 @@ export default {
       sharedService: new SharedService(),
       rightArrowSvg: config.common.icons["right_arrow"],
       activeWorkflowSession: "",
-      userGuideUrl: env.getUserGuideUrl(),
     };
   },
   methods: {
@@ -267,22 +266,18 @@ export default {
           );
         });
     },
-    getWorkflowNodeUrl(node_id) {
+    getMgmNodeUrl(node_id) {
       const self = this;
-      for (const ele in self.$route.meta.mgmListUrl) {
-        if (node_id === ele) return this.$route.meta.mgmListUrl[ele];
-      }
-      return this.$route.meta.mgmListUrl["mgms"];
+      const baseStr = "VUE_APP_DOC_MGM_";
+      const endStr = node_id.toUpperCase();
+      const envKey = baseStr.concat(endStr);
+      const mgmNodeUrl = env.getEnv(envKey);
+      return mgmNodeUrl ? mgmNodeUrl : env.getEnv("VUE_APP_DOC_MGM_USER_GUIDE");
     },
     routeToHelp(ev, node_id) {
       ev.preventDefault();
-      const mgmListUrl = this.getWorkflowNodeUrl(node_id);
-      const directUrl = mgmListUrl && mgmListUrl.includes("https://");
-      const url = directUrl ? mgmListUrl : this.userGuideUrl + mgmListUrl;
-      if (url) {
-        window.open(url, "helpwindow", "width=800, height=500");
-      }
-      return;
+      const url = this.getMgmNodeUrl(node_id);
+      window.open(url, "helpwindow", "width=800, height=500");
     },
   },
   mounted() {
