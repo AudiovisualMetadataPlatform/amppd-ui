@@ -31,7 +31,7 @@ var router = new Router({
       meta: {
         authorize: [],
         breadCrumb: [{ text: "Home", href: "#/" }, { text: "Dashboard" }],
-        helpUrl: env.getEnv("VUE_APP_DOC_USER_GUIDE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
     {
@@ -39,7 +39,7 @@ var router = new Router({
       name: "register",
       component: Register,
       meta: {
-        helpUrl: env.getEnv("VUE_APP_DOC_USER_GUIDE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
     {
@@ -47,7 +47,7 @@ var router = new Router({
       name: "login",
       component: Login,
       meta: {
-        helpUrl: env.getEnv("VUE_APP_DOC_USER_GUIDE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
     {
@@ -55,7 +55,7 @@ var router = new Router({
       name: "forgot-password",
       component: ForgotPassword,
       meta: {
-        helpUrl: env.getEnv("VUE_APP_DOC_USER_GUIDE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
     {
@@ -63,7 +63,7 @@ var router = new Router({
       name: "reset-password",
       component: ResetPassword,
       meta: {
-        helpUrl: env.getEnv("VUE_APP_DOC_USER_GUIDE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
     {
@@ -71,14 +71,14 @@ var router = new Router({
       name: "activate-account",
       component: Login,
       meta: {
-        helpUrl: env.getEnv("VUE_APP_DOC_USER_GUIDE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
     {
       path: "/account/approve/:id",
       name: "approve-user",
       component: ApproveUser,
-      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_DOC_USER_GUIDE") },
+      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE") },
     },
     {
       path: "/workflow/edit",
@@ -134,13 +134,13 @@ var router = new Router({
       path: "/hmgm/transcript-editor",
       name: "transcript-editor",
       component: TranscriptEditor,
-      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_DOC_USER_GUIDE") },
+      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE") },
     },
     {
       path: "/hmgm/ner-editor",
       name: "ner-editor",
       component: NerEditor,
-      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_DOC_USER_GUIDE") },
+      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE") },
     },
     // {
     //   path: "/collections",
@@ -152,7 +152,7 @@ var router = new Router({
       path: "/collections/collection-details",
       name: "collection-details",
       component: CollectionDetails,
-      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_DOC_USER_GUIDE") },
+      meta: { authorize: [], helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE") },
     },
     {
       path: "/unit/details",
@@ -246,7 +246,7 @@ var router = new Router({
       meta: {
         authorize: [],
         breadCrumb: [{ text: "Home", href: "#/" }, { text: "Workflows" }],
-        helpUrl: env.getEnv("VUE_APP_DOC_USER_GUIDE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
   ],
