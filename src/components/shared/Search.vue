@@ -36,18 +36,16 @@
                     <span v-if="type && selectedFilters[type]">{{ selectedFilters[type].length }}</span>
                 </h6> -->
 
-        <!-- <template v-if="type === 'statuses'">
-          <button v-for="status in clonedDataSource" :key="status.id" class="btn btn-lg btn-outline-primary status-btn">
-            {{ status.statusName }}
-          </button>
-        </template> -->
         <template v-if="type === 'statuses'">
           <b-form-group v-slot="{ ariaDescribedby }">
             <b-form-checkbox-group
               id="checkbox-group-2"
               v-model="selectedRecords"
               :aria-describedby="ariaDescribedby"
-              name="flavour-2"
+              buttons
+              button-variant="btn btn-lg btn-outline-primary status-btn"
+              size="lg"
+              name="buttons-2"
             >
               <b-form-checkbox
                 v-for="source in clonedDataSource"
@@ -574,6 +572,10 @@ table tbody tr:nth-of-type(odd) {
   padding: 0rem 0rem;
 }
 .status-btn {
-  margin: 5px;
+  margin: 0.3rem !important;
+  border-radius: 0.3rem !important;
+}
+#checkbox-group-2 {
+  flex-wrap: wrap;
 }
 </style>
