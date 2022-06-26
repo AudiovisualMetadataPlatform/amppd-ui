@@ -675,14 +675,15 @@ export default {
       );
     },
     removeSubmitterFilter(index) {
-      this.selectedFilters["submitters"].splice(
-        this.selectedFilters["submitters"].indexOf(
-          (el) =>
-            el.submitterName ===
-            this.workflowDashboard.searchQuery.filterBySubmitters[index]
-        ),
-        1
-      );
+      let indx;
+      this.selectedFilters["submitters"].map((el, i) => {
+        if (
+          el.submitterName ===
+          this.workflowDashboard.searchQuery.filterBySubmitters[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["submitters"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterBySubmitters.splice(
         index,
         1
@@ -769,14 +770,15 @@ export default {
       );
     },
     removeWorkflowFilter(index) {
-      this.selectedFilters["workflows"].splice(
-        this.selectedFilters["workflows"].indexOf(
-          (el) =>
-            el.workflowName ===
-            this.workflowDashboard.searchQuery.filterByWorkflows[index]
-        ),
-        1
-      );
+      let indx;
+      this.selectedFilters["workflows"].map((el, i) => {
+        if (
+          el.workflowName ===
+          this.workflowDashboard.searchQuery.filterByWorkflows[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["workflows"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterByWorkflows.splice(
         index,
         1
@@ -789,14 +791,15 @@ export default {
       );
     },
     removeStepFilter(index) {
-      this.selectedFilters["steps"].splice(
-        this.selectedFilters["steps"].indexOf(
-          (el) =>
-            el.stepName ===
-            this.workflowDashboard.searchQuery.filterBySteps[index]
-        ),
-        1
-      );
+      let indx;
+      this.selectedFilters["steps"].map((el, i) => {
+        if (
+          el.stepName ===
+          this.workflowDashboard.searchQuery.filterBySteps[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["steps"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterBySteps.splice(
         index,
         1
@@ -809,14 +812,15 @@ export default {
       );
     },
     removeOutputFilter(index) {
-      this.selectedFilters["outputs"].splice(
-        this.selectedFilters["outputs"].indexOf(
-          (el) =>
-            el.outputName ===
-            this.workflowDashboard.searchQuery.filterByOutputs[index]
-        ),
-        1
-      );
+      let indx;
+      this.selectedFilters["outputs"].map((el, i) => {
+        if (
+          el.outputName ===
+          this.workflowDashboard.searchQuery.filterByOutputs[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["outputs"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterByOutputs.splice(
         index,
         1
@@ -829,14 +833,17 @@ export default {
       );
     },
     removeStatusFilter(index) {
-      this.selectedFilters["statuses"].splice(
-        this.selectedFilters["statuses"].indexOf(
-          (el) =>
-            el.statusName ===
-            this.workflowDashboard.searchQuery.filterByStatuses[index]
-        ),
-        1
-      );
+      let indx;
+      this.selectedFilters["statuses"].map((el, i) => {
+        console.log(this.selectedFilters["statuses"]);
+        console.log(this.workflowDashboard.searchQuery.filterByStatuses[index]);
+        if (
+          el.statusName ===
+          this.workflowDashboard.searchQuery.filterByStatuses[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["statuses"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterByStatuses.splice(
         index,
         1
