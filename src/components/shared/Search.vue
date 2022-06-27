@@ -5,7 +5,7 @@
         <!-- Emulate built in modal header close button action -->
 
         <h5 class="text-capitalize" v-if="!isEntityList">
-          {{ type === "primaryfiles" ? "Primary Files" : type }}
+          {{ type === "item-search" ? "Items" : type === "primaryfiles" ? "Primary Files" : type }}
         </h5>
         <h5 class="text-capitalize" v-if="isEntityList">Search</h5>
       </template>
@@ -140,7 +140,7 @@
         <div v-if="type !== 'statuses'" class="scrollDiv w-100">
           <table class="w-100 table table-striped">
             <thead>
-              <th>
+              <th v-if="type !== 'item-search'">
                 <label>
                   <input
                     class="selectAll"
@@ -154,7 +154,7 @@
                 </label>
               </th>
               <template v-if="!isEntityList">
-                <th v-if="type === 'items' || type === 'primaryfiles'">
+                <th v-if="type === 'items' || type === 'primaryfiles' || type === 'item-search'">
                   Item
                 </th>
                 <th v-if="type === 'primaryfiles'">
@@ -164,12 +164,12 @@
                   v-if="
                     type === 'collections' ||
                       type === 'units' ||
-                      type === 'items'
+                      type === 'items' || type === 'item-search'
                   "
                 >
                   Unit
                 </th>
-                <th v-if="type === 'collections' || type === 'items'">
+                <th v-if="type === 'collections' || type === 'items' || type === 'item-search'">
                   Collection
                 </th>
                 <th v-if="type === 'workflows'">Workflow</th>
@@ -178,7 +178,7 @@
                   Date Created
                 </th> -->
                 <th v-if="type === 'primaryfiles'">External Source</th>
-                <th v-if="type === 'primaryfiles'">External ID</th>
+                <th v-if="type === 'primaryfiles' || type === 'item-search'">External ID</th>
                 <th v-if="type === 'submitters'">
                   Submitter
                 </th>
@@ -201,7 +201,7 @@
                   :key="source.id"
                   v-if="selectedRecords.indexOf(source.id) === -1"
                 >
-                  <td colspan="1">
+                  <td v-if="type !== 'item-search'" colspan="1">
                     <input
                       class="selectAll"
                       type="checkbox"
@@ -211,7 +211,7 @@
                     />
                   </td>
                   <template v-if="!isEntityList">
-                    <td v-if="type === 'items' || type === 'primaryfiles'">
+                    <td v-if="type === 'items' || type === 'primaryfiles' || type === 'item-search'">
                       {{ source.itemName }}
                     </td>
                     <td v-if="type === 'primaryfiles'">
@@ -221,12 +221,12 @@
                       v-if="
                         type === 'collections' ||
                           type === 'units' ||
-                          type === 'items'
+                          type === 'items' || type === 'item-search'
                       "
                     >
                       {{ source.unitName }}
                     </td>
-                    <td v-if="type === 'collections' || type === 'items'">
+                    <td v-if="type === 'collections' || type === 'items' || type === 'item-search'">
                       {{ source.collectionName }}
                     </td>
                     <td v-if="type === 'workflows'">
@@ -239,7 +239,7 @@
                     <td v-if="type === 'primaryfiles'">
                       {{ source.externalSource }}
                     </td>
-                    <td v-if="type === 'primaryfiles'">
+                    <td v-if="type === 'primaryfiles' || type === 'item-search'">
                       {{ source.externalId }}
                     </td>
                     <td v-if="type === 'submitters'">
@@ -280,7 +280,7 @@
             onDone();
           "
         >
-          {{ type !== "statuses" ? "Done" : "Search" }}
+          {{ type === "item-search" ? "Select Item" : type !== "statuses" ? "Done" : "Search" }}
         </button>
       </template>
     </b-modal>
@@ -445,6 +445,9 @@ export default {
         case "listing-collection":
         case "listing-item":
           self.searchProps = ["name"];
+          break;
+        case "item-search":
+          self.searchProps = ["itemName"];
           break;
       }
     },

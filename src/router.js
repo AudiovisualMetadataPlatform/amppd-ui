@@ -18,6 +18,7 @@ import CollectionDetails from "./components/collections/CollectionDetails.vue";
 import { env } from "./helpers/env.js";
 import WorkflowList from "./components/workflow/WorkflowList.vue";
 import EntityList from "./components/entity/EntityList.vue";
+import ItemSearch from "./components/entity/ItemSearch.vue"
 Vue.use(Router);
 
 var router = new Router({
@@ -165,6 +166,20 @@ var router = new Router({
           { text: "Unit Details", href: "#/unit/details" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_UNITS"),
+      },
+    },
+    {
+      path: "/unit/item-search",
+      name: "item-search",
+      component: ItemSearch,
+      meta: {
+        authorize: [],
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Collections", href: "#/unit/details" }, 
+          { text: "Item Search" }
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
       },
     },
     {

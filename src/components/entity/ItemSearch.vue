@@ -1,0 +1,84 @@
+<template>
+  <div class="item-search">
+    <div class="container col-12">
+      <div class="row expand-h">
+        <div class="col-12 bg-light-gray-1">
+          <main class="m-0">
+            <div class="pad-all-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <h1 class="col-lg-12">
+                      Item Search
+                      <button
+                        class="btn btn-primary btn-lg btn-edit float-right"
+                        type="button"
+                        @click="onSearch()"
+                      >
+                        Search Item
+                      </button>
+                    </h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <Search
+      v-if="searchSource.length"
+      searchType="item-search"
+      :dataSource="searchSource"
+      @myEvent="onSearchDone"
+    />
+  </div>
+</template>
+
+<script>
+import Search from "@/components/shared/Search.vue";
+import WorkflowResultService from "../../service/workflow-result-service";
+export default {
+  name: "ItemSearch",
+  components: {
+    Search
+  },
+  data() {
+    return {
+      searchType: "",
+      searchSource: [],
+      workflowResultService: new WorkflowResultService(),
+    };
+  },
+  computed: {},
+  props: {},
+  methods: {
+    onSearch() {
+      this.$bvModal.show("modal-lg");
+    },
+    onSearchDone() {
+      console.log("Clicked on search button.")
+    },
+    async refreshData() {
+      const self = this;
+      self.itemSource = await this.workflowResultService.getWorkflowResults(
+        {filterOnly: true, filterByRelevant: true}
+      );
+      self.searchSource = await self.itemSource.filters['items']
+    },
+  },
+  mounted(){
+    const self = this;
+    self.refreshData()
+    self.onSearch()
+  }
+};
+</script>
+
+<style lang="css">
+@import "/amppd-ui/src/styles/style.css";
+.item-search{
+  width: 100%;
+}
+</style>
