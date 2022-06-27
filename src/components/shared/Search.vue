@@ -4,7 +4,9 @@
       <template #modal-header="{}">
         <!-- Emulate built in modal header close button action -->
 
-        <h5 class="text-capitalize" v-if="!isEntityList">{{ type }}</h5>
+        <h5 class="text-capitalize" v-if="!isEntityList">
+          {{ type === "primaryfiles" ? "Primary Files" : type }}
+        </h5>
         <h5 class="text-capitalize" v-if="isEntityList">Search</h5>
       </template>
 
@@ -33,11 +35,39 @@
                     Selected:
                     <span v-if="type && selectedFilters[type]">{{ selectedFilters[type].length }}</span>
                 </h6> -->
+
+        <template v-if="type === 'statuses'">
+          <b-form-group v-slot="{ ariaDescribedby }">
+            <b-form-checkbox-group
+              id="checkbox-group-2"
+              v-model="selectedRecords"
+              :aria-describedby="ariaDescribedby"
+              buttons
+              button-variant="btn btn-lg btn-outline-primary status-btn"
+              size="lg"
+              name="buttons-2"
+            >
+              <b-form-checkbox
+                v-for="source in clonedDataSource"
+                :key="source.id"
+                :value="source.id"
+                @change="onChange($event.target, source)"
+              >
+                {{ source.statusName }}
+              </b-form-checkbox>
+            </b-form-checkbox-group>
+          </b-form-group>
+        </template>
+
         <div
           id="toProcess"
           class="card"
           role="alert"
-          v-if="selectedFilters[type] && selectedFilters[type].length"
+          v-if="
+            type !== 'statuses' &&
+              selectedFilters[type] &&
+              selectedFilters[type].length
+          "
         >
           <h5 class="pad-all-2 text-left">Selected</h5>
           <table class="w-100 table table-striped">
@@ -57,18 +87,42 @@
                     />
                   </td>
                   <template v-if="!isEntityList">
-                    <td v-if="type === 'collections' || type === 'units'">
+                    <td v-if="type === 'items' || type === 'primaryfiles'">
+                      {{ source.itemName }}
+                    </td>
+                    <td v-if="type === 'primaryfiles'">
+                      {{ source.primaryfileName }}
+                    </td>
+                    <td
+                      v-if="
+                        type === 'collections' ||
+                          type === 'units' ||
+                          type === 'items'
+                      "
+                    >
                       {{ source.unitName }}
                     </td>
-                    <td v-if="type === 'collections'">
+                    <td v-if="type === 'collections' || type === 'items'">
                       {{ source.collectionName }}
                     </td>
                     <td v-if="type === 'workflows'">
                       {{ source.workflowName }}
                     </td>
                     <td v-if="type === 'outputs'">{{ source.outputName }}</td>
-                    <td v-if="type === 'workflows' || type === 'collections'">
+                    <!-- <td v-if="type === 'workflows' || type === 'collections'">
                       {{ source.dateCreated | LOCAL_DATE_VALUE }}
+                    </td> -->
+                    <td v-if="type === 'primaryfiles'">
+                      {{ source.externalSource }}
+                    </td>
+                    <td v-if="type === 'primaryfiles'">
+                      {{ source.externalId }}
+                    </td>
+                    <td v-if="type === 'submitters'">
+                      {{ source.submitterName }}
+                    </td>
+                    <td v-if="type === 'steps'">
+                      {{ source.stepName }}
                     </td>
                   </template>
                   <template v-if="isEntityList">
@@ -83,7 +137,7 @@
             </tbody>
           </table>
         </div>
-        <div class="scrollDiv w-100">
+        <div v-if="type !== 'statuses'" class="scrollDiv w-100">
           <table class="w-100 table table-striped">
             <thead>
               <th>
@@ -100,12 +154,36 @@
                 </label>
               </th>
               <template v-if="!isEntityList">
-                <th v-if="type === 'collections' || type === 'units'">Unit</th>
-                <th v-if="type === 'collections'">Collection</th>
+                <th v-if="type === 'items' || type === 'primaryfiles'">
+                  Item
+                </th>
+                <th v-if="type === 'primaryfiles'">
+                  Primary File
+                </th>
+                <th
+                  v-if="
+                    type === 'collections' ||
+                      type === 'units' ||
+                      type === 'items'
+                  "
+                >
+                  Unit
+                </th>
+                <th v-if="type === 'collections' || type === 'items'">
+                  Collection
+                </th>
                 <th v-if="type === 'workflows'">Workflow</th>
                 <th v-if="type === 'outputs'">Output</th>
-                <th v-if="type === 'workflows' || type === 'collections'">
+                <!-- <th v-if="type === 'workflows' || type === 'collections'">
                   Date Created
+                </th> -->
+                <th v-if="type === 'primaryfiles'">External Source</th>
+                <th v-if="type === 'primaryfiles'">External ID</th>
+                <th v-if="type === 'submitters'">
+                  Submitter
+                </th>
+                <th v-if="type === 'steps'">
+                  Step
                 </th>
               </template>
               <template v-if="isEntityList">
@@ -133,18 +211,42 @@
                     />
                   </td>
                   <template v-if="!isEntityList">
-                    <td v-if="type === 'collections' || type === 'units'">
+                    <td v-if="type === 'items' || type === 'primaryfiles'">
+                      {{ source.itemName }}
+                    </td>
+                    <td v-if="type === 'primaryfiles'">
+                      {{ source.primaryfileName }}
+                    </td>
+                    <td
+                      v-if="
+                        type === 'collections' ||
+                          type === 'units' ||
+                          type === 'items'
+                      "
+                    >
                       {{ source.unitName }}
                     </td>
-                    <td v-if="type === 'collections'">
+                    <td v-if="type === 'collections' || type === 'items'">
                       {{ source.collectionName }}
                     </td>
                     <td v-if="type === 'workflows'">
                       {{ source.workflowName }}
                     </td>
                     <td v-if="type === 'outputs'">{{ source.outputName }}</td>
-                    <td v-if="type === 'workflows' || type === 'collections'">
+                    <!-- <td v-if="type === 'workflows' || type === 'collections'">
                       {{ source.dateCreated | LOCAL_DATE_VALUE }}
+                    </td> -->
+                    <td v-if="type === 'primaryfiles'">
+                      {{ source.externalSource }}
+                    </td>
+                    <td v-if="type === 'primaryfiles'">
+                      {{ source.externalId }}
+                    </td>
+                    <td v-if="type === 'submitters'">
+                      {{ source.submitterName }}
+                    </td>
+                    <td v-if="type === 'steps'">
+                      {{ source.stepName }}
                     </td>
                   </template>
                   <template v-if="isEntityList">
@@ -163,7 +265,13 @@
 
       <template #modal-footer="{ ok, hide }">
         <!-- Emulate built in modal footer ok and cancel button actions -->
-        <button class="btn btn-outline" @click="hide()">Cancel</button>
+        <button
+          v-if="type !== 'statuses'"
+          class="btn btn-outline"
+          @click="hide()"
+        >
+          Cancel
+        </button>
         <button
           size="sm"
           class="btn btn-primary"
@@ -172,7 +280,7 @@
             onDone();
           "
         >
-          Done
+          {{ type !== "statuses" ? "Done" : "Search" }}
         </button>
       </template>
     </b-modal>
@@ -251,12 +359,21 @@ export default {
     onChange(ev, record) {
       const self = this;
       console.log(self.selectAll);
-      if (ev.srcElement.checked) {
+      const isStatusChecked = self.selectedRecords.indexOf(record.id);
+      const checkedStatus = self.type === "statuses" && isStatusChecked !== -1;
+      const isChecked = ev && ev.srcElement && ev.srcElement.checked;
+      if (checkedStatus || isChecked) {
         self.selectedFilters[self.type] = self.selectedFilters[self.type] || [];
         if (!self.selectedFilters[self.type].find((el) => el.id === record.id))
           self.selectedFilters[self.type].push(
             this.clonedDataSource.find((el) => el.id === record.id)
           );
+      } else if (!checkedStatus) {
+        let index;
+        self.selectedFilters[self.type].map((el, i) => {
+          if (el.id === record.id) index = i;
+        });
+        self.selectedFilters[self.type].splice(index, 1);
       } else {
         // self.selectedRecords.splice(this.selectedRecords.indexOf(record.id), 1);
         self.selectedFilters[self.type].splice(
@@ -298,6 +415,12 @@ export default {
       const self = this;
       self.searchProps = [];
       switch (self.type) {
+        case "items":
+          self.searchProps = ["itemName"];
+          break;
+        case "primaryfiles":
+          self.searchProps = ["primaryfileName"];
+          break;
         case "collections":
           self.searchProps = ["collectionName", "unitName"];
           break;
@@ -309,6 +432,15 @@ export default {
           break;
         case "outputs":
           self.searchProps = ["outputName"];
+          break;
+        case "submitters":
+          self.searchProps = ["submitterName"];
+          break;
+        case "steps":
+          self.searchProps = ["stepName"];
+          break;
+        case "statuses":
+          self.searchProps = ["statusName"];
           break;
         case "listing-collection":
         case "listing-item":
@@ -324,10 +456,20 @@ export default {
     },
     onDone() {
       switch (this.type) {
+        case "items":
+          this.workflowDashboard.searchQuery.filterByItems = this.selectedFilters[
+            this.type
+          ].map((el) => el.itemId);
+          break;
+        case "primaryfiles":
+          this.workflowDashboard.searchQuery.filterByFiles = this.selectedFilters[
+            this.type
+          ].map((el) => el.primaryfileId);
+          break;
         case "collections":
           this.workflowDashboard.searchQuery.filterByCollections = this.selectedFilters[
             this.type
-          ].map((el) => el.collectionName);
+          ].map((el) => el.collectionId);
           break;
         case "workflows":
           this.workflowDashboard.searchQuery.filterByWorkflows = this.selectedFilters[
@@ -342,7 +484,22 @@ export default {
         case "units":
           this.workflowDashboard.searchQuery.filterByUnits = this.selectedFilters[
             this.type
-          ].map((el) => el.unitName);
+          ].map((el) => el.unitId);
+          break;
+        case "submitters":
+          this.workflowDashboard.searchQuery.filterBySubmitters = this.selectedFilters[
+            this.type
+          ].map((el) => el.submitterName);
+          break;
+        case "steps":
+          this.workflowDashboard.searchQuery.filterBySteps = this.selectedFilters[
+            this.type
+          ].map((el) => el.stepName);
+          break;
+        case "statuses":
+          this.workflowDashboard.searchQuery.filterByStatuses = this.selectedFilters[
+            this.type
+          ].map((el) => el.statusName);
           break;
         case "listing-collection":
         case "listing-item":
@@ -413,5 +570,12 @@ table tbody tr:nth-of-type(odd) {
 .bootstrap-typeahead {
   height: calc(2.25rem + 1px);
   padding: 0rem 0rem;
+}
+.status-btn {
+  margin: 0.3rem !important;
+  border-radius: 0.3rem !important;
+}
+#checkbox-group-2 {
+  flex-wrap: wrap;
 }
 </style>
