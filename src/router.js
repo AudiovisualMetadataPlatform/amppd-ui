@@ -188,7 +188,7 @@ var router = new Router({
         authorize: [],
         breadCrumb: [
           { text: "Home", href: "#/" },
-          { text: "Collections", href: "#/unit/details" },
+          { text: "Unit Details", href: "#/unit/details" },
           { text: "Item Search" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
@@ -202,7 +202,8 @@ var router = new Router({
         authorize: [],
         breadCrumb: [
           { text: "Home", href: "#/" },
-          { text: "Collections", href: "#/unit/details" },
+          { text: "Unit Details", href: "#/unit/details" },
+          { text: "Collections", href: "#/collection/details" },
           { text: "Item Details" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
@@ -216,7 +217,8 @@ var router = new Router({
         authorize: [],
         breadCrumb: [
           { text: "Home", href: "#/" },
-          { text: "Collections", href: "#/unit/details" },
+          { text: "Unit Details", href: "#/unit/details" },
+          { text: "Collections", href: "#/collection/details" },
           {
             text: "Item Details",
             href: "#/collections/items/item-search/details",
@@ -277,6 +279,7 @@ var router = new Router({
         authorize: [],
         breadCrumb: [
           { text: "Home", href: "#/" },
+          { text: "Unit Details", href: "#/unit/details" },
           { text: "Collection Details", href: "#/collection/details" },
           { text: "Item", href: "#/collection/add-items" },
         ],
@@ -291,6 +294,7 @@ var router = new Router({
         authorize: [],
         breadCrumb: [
           { text: "Home", href: "#/" },
+          { text: "Unit Details", href: "#/unit/details" },
           { text: "Collection Details", href: "#/collection/details" },
           { text: "Item", href: "#/collections/items/details" },
           { text: "Primary File" },
