@@ -31,7 +31,6 @@
       v-if="searchSource.length"
       searchType="item-search"
       :dataSource="searchSource"
-      @myEvent="onSearchDone"
     />
   </div>
 </template>
@@ -57,9 +56,6 @@ export default {
     onSearch() {
       this.$bvModal.show("modal-lg");
     },
-    onSearchDone() {
-      console.log("Clicked on search button.")
-    },
     async refreshData() {
       const self = this;
       self.itemSource = await this.workflowResultService.getWorkflowResults(
@@ -68,10 +64,11 @@ export default {
       self.searchSource = await self.itemSource.filters['items']
     },
   },
+  updated(){
+    this.onSearch();
+  },
   mounted(){
-    const self = this;
-    self.refreshData()
-    self.onSearch()
+    this.refreshData()
   }
 };
 </script>
