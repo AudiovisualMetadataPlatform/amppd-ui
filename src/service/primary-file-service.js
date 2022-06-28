@@ -1,42 +1,51 @@
-import BaseService from './base-service.js';
+import BaseService from "./base-service.js";
 const baseService = new BaseService();
 
-export default class PrimaryFileService extends BaseService{
+export default class PrimaryFileService extends BaseService {
+  /***
+   * To get a primary file details
+   * @params primaryfileid
+   */
 
-    /***
-     * To get all primary file details
-     * @params itemId
-     */
+  async getPrimaryFile(id) {
+    let response = await super.get_auth(`/primaryfiles/${id}`);
+    return response.data;
+  }
 
-    async getPrimaryFiles(itemId){
-        return await super.get_auth(`/items/${itemId}/primaryfiles`); 
-    }
+  /***
+   * To get all primary file details
+   * @params itemId
+   */
 
-    /***
-     * To update a  primary file details
-     * @params primaryfileid, postobj
-     */
+  async getPrimaryFiles(itemId) {
+    return await super.get_auth(`/items/${itemId}/primaryfiles`);
+  }
 
-     async updatePrimaryFile(id, postObj){
-        return await super.patch_auth(`/primaryfiles/${id}`, postObj); 
-    }
-    
-    /***
-     * To upload a file
-     * @params primaryfileid, formData
-     */
+  /***
+   * To update a  primary file details
+   * @params primaryfileid, postobj
+   */
 
-     async uploadFile(id, formData){
-        // return await super.post_auth(`/primaryfiles/${id}/upload`, formData);
-        return await super.post_auth(`/items/${id}/addPrimaryfile`, formData); 
-    }
+  async updatePrimaryFile(id, postObj) {
+    return await super.patch_auth(`/primaryfiles/${id}`, postObj);
+  }
 
-    /***
-     * To delete/remove a file
-     * @params primaryfile id
-     */
+  /***
+   * To upload a file
+   * @params primaryfileid, formData
+   */
 
-     async removePrimaryFile(id){
-        return await super.delete_auth(`/primaryfiles/${id}`); 
-    }    
+  async uploadFile(id, formData) {
+    // return await super.post_auth(`/primaryfiles/${id}/upload`, formData);
+    return await super.post_auth(`/items/${id}/addPrimaryfile`, formData);
+  }
+
+  /***
+   * To delete/remove a file
+   * @params primaryfile id
+   */
+
+  async removePrimaryFile(id) {
+    return await super.delete_auth(`/primaryfiles/${id}`);
+  }
 }

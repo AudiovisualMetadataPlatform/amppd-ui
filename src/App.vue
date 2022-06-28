@@ -30,7 +30,6 @@
 <script>
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import config from "./assets/constants/common-contant.js";
-import { env } from "./helpers/env.js";
 export default {
   components: {
     Sidebar,
@@ -38,7 +37,6 @@ export default {
   data() {
     return {
       helpSvg: config.common.icons["help"],
-      userGuideUrl: env.getUserGuideUrl(),
     };
   },
   methods: {
@@ -46,7 +44,7 @@ export default {
       ev.preventDefault();
       if (this.$route.meta && this.$route.meta.helpUrl) {
         window.open(
-          this.userGuideUrl + this.$route.meta.helpUrl,
+          this.$route.meta.helpUrl,
           "helpwindow",
           "width=800, height=500"
         );

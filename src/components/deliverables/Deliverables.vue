@@ -30,10 +30,10 @@
                       Item: <span>{{ pfile.itemName }}</span>
                     </h2>
                     <h2 class="sub-title">
-                      Extneral Source: <span>{{ pfile.externalSource }}</span>
+                      External Source: <span>{{ pfile.externalSource }}</span>
                     </h2>
                     <h2 class="sub-title">
-                      Extneral ID: <span>{{ pfile.externalId }}</span>
+                      External ID: <span>{{ pfile.externalId }}</span>
                     </h2>
                     <h2 class="sub-title">
                       Primaryfile: <span>{{ pfile.primaryfileName }}</span>

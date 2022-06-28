@@ -4,7 +4,15 @@
       <template #modal-header="{}">
         <!-- Emulate built in modal header close button action -->
 
-        <h5 class="text-capitalize" v-if="!isEntityList">{{ type }}</h5>
+        <h5 class="text-capitalize" v-if="!isEntityList">
+          {{
+            type === "item-search"
+              ? "Items"
+              : type === "primaryfiles"
+              ? "Primary Files"
+              : type
+          }}
+        </h5>
         <h5 class="text-capitalize" v-if="isEntityList">Search</h5>
       </template>
 
@@ -33,11 +41,39 @@
                     Selected:
                     <span v-if="type && selectedFilters[type]">{{ selectedFilters[type].length }}</span>
                 </h6> -->
+
+        <template v-if="type === 'statuses'">
+          <b-form-group v-slot="{ ariaDescribedby }">
+            <b-form-checkbox-group
+              id="checkbox-group-2"
+              v-model="selectedRecords"
+              :aria-describedby="ariaDescribedby"
+              buttons
+              button-variant="btn btn-lg btn-outline-primary status-btn"
+              size="lg"
+              name="buttons-2"
+            >
+              <b-form-checkbox
+                v-for="source in clonedDataSource"
+                :key="source.id"
+                :value="source.id"
+                @change="onChange($event.target, source)"
+              >
+                {{ source.statusName }}
+              </b-form-checkbox>
+            </b-form-checkbox-group>
+          </b-form-group>
+        </template>
+
         <div
           id="toProcess"
           class="card"
           role="alert"
-          v-if="selectedFilters[type] && selectedFilters[type].length"
+          v-if="
+            type !== 'statuses' &&
+              selectedFilters[type] &&
+              selectedFilters[type].length
+          "
         >
           <h5 class="pad-all-2 text-left">Selected</h5>
           <table class="w-100 table table-striped">
@@ -57,18 +93,42 @@
                     />
                   </td>
                   <template v-if="!isEntityList">
-                    <td v-if="type === 'collections' || type === 'units'">
+                    <td v-if="type === 'items' || type === 'primaryfiles'">
+                      {{ source.itemName }}
+                    </td>
+                    <td v-if="type === 'primaryfiles'">
+                      {{ source.primaryfileName }}
+                    </td>
+                    <td
+                      v-if="
+                        type === 'collections' ||
+                          type === 'units' ||
+                          type === 'items'
+                      "
+                    >
                       {{ source.unitName }}
                     </td>
-                    <td v-if="type === 'collections'">
+                    <td v-if="type === 'collections' || type === 'items'">
                       {{ source.collectionName }}
                     </td>
                     <td v-if="type === 'workflows'">
                       {{ source.workflowName }}
                     </td>
                     <td v-if="type === 'outputs'">{{ source.outputName }}</td>
-                    <td v-if="type === 'workflows' || type === 'collections'">
+                    <!-- <td v-if="type === 'workflows' || type === 'collections'">
                       {{ source.dateCreated | LOCAL_DATE_VALUE }}
+                    </td> -->
+                    <td v-if="type === 'primaryfiles'">
+                      {{ source.externalSource }}
+                    </td>
+                    <td v-if="type === 'primaryfiles'">
+                      {{ source.externalId }}
+                    </td>
+                    <td v-if="type === 'submitters'">
+                      {{ source.submitterName }}
+                    </td>
+                    <td v-if="type === 'steps'">
+                      {{ source.stepName }}
                     </td>
                   </template>
                   <template v-if="isEntityList">
@@ -83,10 +143,14 @@
             </tbody>
           </table>
         </div>
-        <div class="scrollDiv w-100">
+        <div
+          v-if="type !== 'statuses'"
+          class="scrollDiv w-100"
+          :class="type === 'item-search' && 'items-area'"
+        >
           <table class="w-100 table table-striped">
             <thead>
-              <th>
+              <th v-if="type !== 'item-search'">
                 <label>
                   <input
                     class="selectAll"
@@ -100,12 +164,51 @@
                 </label>
               </th>
               <template v-if="!isEntityList">
-                <th v-if="type === 'collections' || type === 'units'">Unit</th>
-                <th v-if="type === 'collections'">Collection</th>
+                <th
+                  v-if="
+                    type === 'items' ||
+                      type === 'primaryfiles' ||
+                      type === 'item-search'
+                  "
+                >
+                  Item
+                </th>
+                <th v-if="type === 'primaryfiles'">
+                  Primary File
+                </th>
+                <th
+                  v-if="
+                    type === 'collections' ||
+                      type === 'units' ||
+                      type === 'items' ||
+                      type === 'item-search'
+                  "
+                >
+                  Unit
+                </th>
+                <th
+                  v-if="
+                    type === 'collections' ||
+                      type === 'items' ||
+                      type === 'item-search'
+                  "
+                >
+                  Collection
+                </th>
                 <th v-if="type === 'workflows'">Workflow</th>
                 <th v-if="type === 'outputs'">Output</th>
-                <th v-if="type === 'workflows' || type === 'collections'">
+                <!-- <th v-if="type === 'workflows' || type === 'collections'">
                   Date Created
+                </th> -->
+                <th v-if="type === 'primaryfiles'">External Source</th>
+                <th v-if="type === 'primaryfiles' || type === 'item-search'">
+                  External ID
+                </th>
+                <th v-if="type === 'submitters'">
+                  Submitter
+                </th>
+                <th v-if="type === 'steps'">
+                  Step
                 </th>
               </template>
               <template v-if="isEntityList">
@@ -122,8 +225,17 @@
                 <tr
                   :key="source.id"
                   v-if="selectedRecords.indexOf(source.id) === -1"
+                  @click="onChange($event, source)"
+                  class=""
+                  :class="
+                    type === 'item-search'
+                      ? source.itemId === selectedItemId
+                        ? 'item-cls trActive'
+                        : 'item-cls'
+                      : ''
+                  "
                 >
-                  <td colspan="1">
+                  <td v-if="type !== 'item-search'" colspan="1">
                     <input
                       class="selectAll"
                       type="checkbox"
@@ -133,18 +245,57 @@
                     />
                   </td>
                   <template v-if="!isEntityList">
-                    <td v-if="type === 'collections' || type === 'units'">
+                    <td
+                      v-if="
+                        type === 'items' ||
+                          type === 'primaryfiles' ||
+                          type === 'item-search'
+                      "
+                    >
+                      {{ source.itemName }}
+                    </td>
+                    <td v-if="type === 'primaryfiles'">
+                      {{ source.primaryfileName }}
+                    </td>
+                    <td
+                      v-if="
+                        type === 'collections' ||
+                          type === 'units' ||
+                          type === 'items' ||
+                          type === 'item-search'
+                      "
+                    >
                       {{ source.unitName }}
                     </td>
-                    <td v-if="type === 'collections'">
+                    <td
+                      v-if="
+                        type === 'collections' ||
+                          type === 'items' ||
+                          type === 'item-search'
+                      "
+                    >
                       {{ source.collectionName }}
                     </td>
                     <td v-if="type === 'workflows'">
                       {{ source.workflowName }}
                     </td>
                     <td v-if="type === 'outputs'">{{ source.outputName }}</td>
-                    <td v-if="type === 'workflows' || type === 'collections'">
+                    <!-- <td v-if="type === 'workflows' || type === 'collections'">
                       {{ source.dateCreated | LOCAL_DATE_VALUE }}
+                    </td> -->
+                    <td v-if="type === 'primaryfiles'">
+                      {{ source.externalSource }}
+                    </td>
+                    <td
+                      v-if="type === 'primaryfiles' || type === 'item-search'"
+                    >
+                      {{ source.externalId }}
+                    </td>
+                    <td v-if="type === 'submitters'">
+                      {{ source.submitterName }}
+                    </td>
+                    <td v-if="type === 'steps'">
+                      {{ source.stepName }}
                     </td>
                   </template>
                   <template v-if="isEntityList">
@@ -163,16 +314,29 @@
 
       <template #modal-footer="{ ok, hide }">
         <!-- Emulate built in modal footer ok and cancel button actions -->
-        <button class="btn btn-outline" @click="hide()">Cancel</button>
+        <button
+          v-if="type !== 'statuses'"
+          class="btn btn-outline"
+          @click="hide()"
+        >
+          Cancel
+        </button>
         <button
           size="sm"
           class="btn btn-primary"
+          :disabled="type === 'item-search' ? !selectedItemId : false"
           @click="
             ok();
             onDone();
           "
         >
-          Done
+          {{
+            type === "item-search"
+              ? "Select Item"
+              : type !== "statuses"
+              ? "Done"
+              : "Search"
+          }}
         </button>
       </template>
     </b-modal>
@@ -183,6 +347,7 @@
 import { sync } from "vuex-pathify";
 import SharedService from "../../service/shared-service";
 import Typeahead from "../shared/TypeAhead.vue";
+import ItemService from "../../service/item-service";
 
 export default {
   props: {
@@ -213,11 +378,13 @@ export default {
     },
     selectedFilters: sync("selectedFilters"),
     workflowDashboard: sync("workflowDashboard"),
+    selectedItem: sync("selectedItem"),
   },
 
   data() {
     return {
       sharedService: new SharedService(),
+      itemService: new ItemService(),
       userSearchValue: "",
       typeaheadSearchItems: [],
       searchProps: [],
@@ -225,6 +392,7 @@ export default {
       selectedRecords: [],
       selectAll: false,
       searchDataSourceMap: new Map(),
+      selectedItemId: null,
       // type: JSON.parse(this.searchType)
     };
   },
@@ -250,13 +418,28 @@ export default {
     },
     onChange(ev, record) {
       const self = this;
+      if (self.type === "item-search") {
+        self.selectedItemId = record.itemId;
+        self.selectedCollectionId = record.collectionId;
+        self.selectedUnit = record.unitName;
+        self.selectedCollection = record.collectionName;
+      }
       console.log(self.selectAll);
-      if (ev.srcElement.checked) {
+      const isStatusChecked = self.selectedRecords.indexOf(record.id);
+      const checkedStatus = self.type === "statuses" && isStatusChecked !== -1;
+      const isChecked = ev && ev.srcElement && ev.srcElement.checked;
+      if (checkedStatus || isChecked) {
         self.selectedFilters[self.type] = self.selectedFilters[self.type] || [];
         if (!self.selectedFilters[self.type].find((el) => el.id === record.id))
           self.selectedFilters[self.type].push(
             this.clonedDataSource.find((el) => el.id === record.id)
           );
+      } else if (!checkedStatus) {
+        let index;
+        self.selectedFilters[self.type].map((el, i) => {
+          if (el.id === record.id) index = i;
+        });
+        self.selectedFilters[self.type].splice(index, 1);
       } else {
         // self.selectedRecords.splice(this.selectedRecords.indexOf(record.id), 1);
         self.selectedFilters[self.type].splice(
@@ -269,6 +452,7 @@ export default {
     },
     onFilterUserInput() {
       const self = this;
+      self.getTypeaheadSearchItems();
       if (!self.userSearchValue) return;
 
       const temp = [];
@@ -297,6 +481,12 @@ export default {
       const self = this;
       self.searchProps = [];
       switch (self.type) {
+        case "items":
+          self.searchProps = ["itemName"];
+          break;
+        case "primaryfiles":
+          self.searchProps = ["primaryfileName"];
+          break;
         case "collections":
           self.searchProps = ["collectionName", "unitName"];
           break;
@@ -309,9 +499,21 @@ export default {
         case "outputs":
           self.searchProps = ["outputName"];
           break;
+        case "submitters":
+          self.searchProps = ["submitterName"];
+          break;
+        case "steps":
+          self.searchProps = ["stepName"];
+          break;
+        case "statuses":
+          self.searchProps = ["statusName"];
+          break;
         case "listing-collection":
         case "listing-item":
           self.searchProps = ["name"];
+          break;
+        case "item-search":
+          self.searchProps = ["itemName"];
           break;
       }
     },
@@ -323,10 +525,20 @@ export default {
     },
     onDone() {
       switch (this.type) {
+        case "items":
+          this.workflowDashboard.searchQuery.filterByItems = this.selectedFilters[
+            this.type
+          ].map((el) => el.itemId);
+          break;
+        case "primaryfiles":
+          this.workflowDashboard.searchQuery.filterByFiles = this.selectedFilters[
+            this.type
+          ].map((el) => el.primaryfileId);
+          break;
         case "collections":
           this.workflowDashboard.searchQuery.filterByCollections = this.selectedFilters[
             this.type
-          ].map((el) => el.collectionName);
+          ].map((el) => el.collectionId);
           break;
         case "workflows":
           this.workflowDashboard.searchQuery.filterByWorkflows = this.selectedFilters[
@@ -341,7 +553,22 @@ export default {
         case "units":
           this.workflowDashboard.searchQuery.filterByUnits = this.selectedFilters[
             this.type
-          ].map((el) => el.unitName);
+          ].map((el) => el.unitId);
+          break;
+        case "submitters":
+          this.workflowDashboard.searchQuery.filterBySubmitters = this.selectedFilters[
+            this.type
+          ].map((el) => el.submitterName);
+          break;
+        case "steps":
+          this.workflowDashboard.searchQuery.filterBySteps = this.selectedFilters[
+            this.type
+          ].map((el) => el.stepName);
+          break;
+        case "statuses":
+          this.workflowDashboard.searchQuery.filterByStatuses = this.selectedFilters[
+            this.type
+          ].map((el) => el.statusName);
           break;
         case "listing-collection":
         case "listing-item":
@@ -352,6 +579,27 @@ export default {
               ? JSON.parse(JSON.stringify(this.selectedFilters[this.type]))
               : []
           );
+          break;
+        case "item-search":
+          this.itemService
+            .getItemById(this.selectedCollectionId, this.selectedItemId)
+            .then((response) => {
+              const self = this;
+              const res = JSON.parse(JSON.stringify(response));
+              self.selectedItem = res;
+              self.selectedItem.parentType = self.type;
+              self.selectedItem.unitName = self.selectedUnit;
+              self.selectedItem.collectionName = self.selectedCollection;
+              self.$router.push("/collections/items/item-search/details");
+            })
+            .catch((error) => {
+              this.$bvToast.toast("Failed to show the item", {
+                title: "Notification",
+                appendToast: true,
+                variant: "danger",
+                autoHideDelay: 5000,
+              });
+            });
           break;
       }
       this.userSearchValue = "";
@@ -412,5 +660,43 @@ table tbody tr:nth-of-type(odd) {
 .bootstrap-typeahead {
   height: calc(2.25rem + 1px);
   padding: 0rem 0rem;
+}
+.status-btn {
+  margin: 0.3rem !important;
+  border-radius: 0.3rem !important;
+}
+#checkbox-group-2 {
+  flex-wrap: wrap;
+}
+.items-area {
+  overflow-x: clip;
+}
+.item-cls {
+  cursor: pointer;
+}
+.trActive {
+  background-color: #153c4d !important;
+  color: #fff;
+}
+.trActive {
+  animation-name: expandOpen;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  visibility: visible !important;
+  max-width: 100%;
+}
+@keyframes expandOpen {
+  from {
+    transform: scale3d(1, 1, 1);
+    opacity: 0;
+  }
+  50% {
+    transform: scale3d(1.03, 1.03, 1.03);
+    opacity: 0.25;
+  }
+  to {
+    transform: scale3d(1, 1, 1);
+    opacity: 1;
+  }
 }
 </style>

@@ -101,9 +101,8 @@
                       </button>
                       <button
                         class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(unit, index) in workflowDashboard.searchQuery
-                          .filterByUnits"
-                        v-bind:workflow="unit"
+                        v-for="(unit, index) in selectedFilters.units"
+                        v-bind:workflow="unit.unitName"
                         v-bind:index="index"
                         v-bind:key="index"
                       >
@@ -127,15 +126,17 @@
                             <label class="row label-bold no-padding-col"
                               >Unit</label
                             >
-                            <label class="row no-padding-col">{{ unit }}</label>
+                            <label class="row no-padding-col">{{
+                              unit.unitName
+                            }}</label>
                           </div>
                         </div>
                       </button>
                       <button
                         class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(collection, index) in workflowDashboard
-                          .searchQuery.filterByCollections"
-                        v-bind:workflow="collection"
+                        v-for="(collection,
+                        index) in selectedFilters.collections"
+                        v-bind:workflow="collection.collectionName"
                         v-bind:index="index"
                         v-bind:key="index"
                       >
@@ -160,7 +161,7 @@
                               >Collection</label
                             >
                             <label class="row no-padding-col">{{
-                              collection
+                              collection.collectionName
                             }}</label>
                           </div>
                         </div>
@@ -201,9 +202,8 @@
                       </button>
                       <button
                         class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(item, index) in workflowDashboard.searchQuery
-                          .filterByItems"
-                        v-bind:item="item"
+                        v-for="(item, index) in selectedFilters.items"
+                        v-bind:item="item.itemName"
                         v-bind:index="index"
                         v-bind:key="index"
                       >
@@ -227,15 +227,16 @@
                             <label class="row label-bold no-padding-col"
                               >Item</label
                             >
-                            <label class="row no-padding-col">{{ item }}</label>
+                            <label class="row no-padding-col">{{
+                              item.itemName
+                            }}</label>
                           </div>
                         </div>
                       </button>
                       <button
                         class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(file, index) in workflowDashboard.searchQuery
-                          .filterByFiles"
-                        v-bind:file="file"
+                        v-for="(file, index) in selectedFilters.primaryfiles"
+                        v-bind:file="file.primaryfileName"
                         v-bind:index="index"
                         v-bind:key="index"
                       >
@@ -259,7 +260,9 @@
                             <label class="row label-bold no-padding-col"
                               >Primaryfile</label
                             >
-                            <label class="row no-padding-col">{{ file }}</label>
+                            <label class="row no-padding-col">{{
+                              file.primaryfileName
+                            }}</label>
                           </div>
                         </div>
                       </button>
@@ -487,7 +490,6 @@
                         @click="onOpenModal('output')"
                         >Output</b-button
                       >
-
                       <DateFilter
                         @displayChanged="
                           changeDisplayedFilter(
@@ -495,103 +497,36 @@
                           )
                         "
                       />
-                      <TextFilter
-                        name="Submitter Filter"
-                        title="Submitter"
-                        :items="
-                          workflowDashboard.searchResult.filters.submitters
-                        "
-                        :selectedItems="
-                          workflowDashboard.searchQuery.filterBySubmitters
-                        "
-                        @displayChanged="
-                          changeDisplayedFilter(
-                            workflowDashboard.filtersEnabled.submitterFilter
-                          )
-                        "
-                      />
-                      <!-- <TextFilter                      
-                      name="Collection Filter"
-                      title="Collection"
-                      :items="workflowDashboard.searchResult.filters.collections"
-                      :selectedItems="workflowDashboard.searchQuery.filterByCollections"
-                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.collectionFilter)"
-                    /> -->
-                      <TextFilter
-                        name="External ID Filter"
-                        title="External ID"
-                        :items="
-                          workflowDashboard.searchResult.filters.externalIds
-                        "
-                        :selectedItems="
-                          workflowDashboard.searchQuery.filterByExternalIds
-                        "
-                        @displayChanged="
-                          changeDisplayedFilter(
-                            workflowDashboard.filtersEnabled.externalIdFilter
-                          )
-                        "
-                      />
-                      <TextFilter
-                        name="Item Filter"
-                        title="Item"
-                        :items="workflowDashboard.searchResult.filters.items"
-                        :selectedItems="
-                          workflowDashboard.searchQuery.filterByItems
-                        "
-                        @displayChanged="
-                          changeDisplayedFilter(
-                            workflowDashboard.filtersEnabled.itemFilter
-                          )
-                        "
-                      />
-                      <TextFilter
-                        name="Primaryfile Filter"
-                        title="Primaryfile"
-                        :items="workflowDashboard.searchResult.filters.files"
-                        :selectedItems="
-                          workflowDashboard.searchQuery.filterByFiles
-                        "
-                        @displayChanged="
-                          changeDisplayedFilter(
-                            workflowDashboard.filtersEnabled.fileFilter
-                          )
-                        "
-                      />
-                      <!-- <TextFilter                      
-                      name="Workflow Filter"
-                      title="Workflow"
-                      :items="workflowDashboard.searchResult.filters.workflows"
-                      :selectedItems="workflowDashboard.searchQuery.filterByWorkflows"
-                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.workflowFilter)"
-                    /> -->
-                      <TextFilter
-                        name="Workflow Step Filter"
-                        title="Step"
-                        :items="workflowDashboard.searchResult.filters.steps"
-                        :selectedItems="
-                          workflowDashboard.searchQuery.filterBySteps
-                        "
-                        @displayChanged="
-                          changeDisplayedFilter(
-                            workflowDashboard.filtersEnabled.stepFilter
-                          )
-                        "
-                      />
-                      <!-- <TextFilter                      
-                      name="Output Filter"
-                      title="Output"
-                      :items="workflowDashboard.searchResult.filters.outputs"
-                      :selectedItems="workflowDashboard.searchQuery.filterByOutputs"
-                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.outputFilter)"
-                    /> -->
-                      <StatusFilter
-                        @displayChanged="
-                          changeDisplayedFilter(
-                            workflowDashboard.filtersEnabled.statusFilter
-                          )
-                        "
-                      />
+                      <b-button
+                        class="btn btn-info dropdown"
+                        v-b-modal.modal-lg
+                        @click="onOpenModal('submitter')"
+                        >Submitter</b-button
+                      >
+                      <b-button
+                        class="btn btn-info dropdown"
+                        v-b-modal.modal-lg
+                        @click="onOpenModal('item')"
+                        >Item</b-button
+                      >
+                      <b-button
+                        class="btn btn-info dropdown"
+                        v-b-modal.modal-lg
+                        @click="onOpenModal('primaryfile')"
+                        >Primary File</b-button
+                      >
+                      <b-button
+                        class="btn btn-info dropdown"
+                        v-b-modal.modal-lg
+                        @click="onOpenModal('step')"
+                        >Step</b-button
+                      >
+                      <b-button
+                        class="btn btn-info dropdown"
+                        v-b-modal.modal-lg
+                        @click="onOpenModal('status')"
+                        >Status</b-button
+                      >
 
                       <div class="relevant-togggle">
                         <span class="txt-v pr-2"
@@ -722,10 +657,15 @@ export default {
       this.workflowDashboard.searchQuery.filterByStatuses = [];
       this.workflowDashboard.searchQuery.filterBySearchTerms = [];
       // Clear selected search on popup
+      this.selectedFilters["items"] = [];
+      this.selectedFilters["primaryfiles"] = [];
       this.selectedFilters["collections"] = [];
       this.selectedFilters["units"] = [];
       this.selectedFilters["workflows"] = [];
       this.selectedFilters["outputs"] = [];
+      this.selectedFilters["submitters"] = [];
+      this.selectedFilters["steps"] = [];
+      this.selectedFilters["statuses"] = [];
     },
     removeDateFilter() {
       this.workflowDashboard.searchQuery.filterByDates = [];
@@ -735,6 +675,15 @@ export default {
       );
     },
     removeSubmitterFilter(index) {
+      let indx;
+      this.selectedFilters["submitters"].map((el, i) => {
+        if (
+          el.submitterName ===
+          this.workflowDashboard.searchQuery.filterBySubmitters[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["submitters"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterBySubmitters.splice(
         index,
         1
@@ -747,14 +696,15 @@ export default {
       );
     },
     removeCollectionFilter(index) {
-      this.selectedFilters["collections"].splice(
-        this.selectedFilters["collections"].indexOf(
-          (el) =>
-            el.collectionName ===
-            this.workflowDashboard.searchQuery.filterByCollections[index]
-        ),
-        1
-      );
+      let indx;
+      this.selectedFilters["collections"].map((el, i) => {
+        if (
+          el.collectionId ===
+          this.workflowDashboard.searchQuery.filterByCollections[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["collections"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterByCollections.splice(
         index,
         1
@@ -779,6 +729,14 @@ export default {
       );
     },
     removeItemFilter(index) {
+      let indx;
+      this.selectedFilters["items"].map((el, i) => {
+        if (
+          el.itemId === this.workflowDashboard.searchQuery.filterByItems[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["items"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterByItems.splice(
         index,
         1
@@ -791,6 +749,15 @@ export default {
       );
     },
     removeFileFilter(index) {
+      let indx;
+      this.selectedFilters["primaryfiles"].map((el, i) => {
+        if (
+          el.primaryfileId ===
+          this.workflowDashboard.searchQuery.filterByFiles[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["primaryfiles"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterByFiles.splice(
         index,
         1
@@ -803,14 +770,15 @@ export default {
       );
     },
     removeWorkflowFilter(index) {
-      this.selectedFilters["workflows"].splice(
-        this.selectedFilters["workflows"].indexOf(
-          (el) =>
-            el.workflowName ===
-            this.workflowDashboard.searchQuery.filterByWorkflows[index]
-        ),
-        1
-      );
+      let indx;
+      this.selectedFilters["workflows"].map((el, i) => {
+        if (
+          el.workflowName ===
+          this.workflowDashboard.searchQuery.filterByWorkflows[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["workflows"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterByWorkflows.splice(
         index,
         1
@@ -823,6 +791,15 @@ export default {
       );
     },
     removeStepFilter(index) {
+      let indx;
+      this.selectedFilters["steps"].map((el, i) => {
+        if (
+          el.stepName ===
+          this.workflowDashboard.searchQuery.filterBySteps[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["steps"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterBySteps.splice(
         index,
         1
@@ -835,14 +812,15 @@ export default {
       );
     },
     removeOutputFilter(index) {
-      this.selectedFilters["outputs"].splice(
-        this.selectedFilters["outputs"].indexOf(
-          (el) =>
-            el.outputNamea ===
-            this.workflowDashboard.searchQuery.filterByOutputs[index]
-        ),
-        1
-      );
+      let indx;
+      this.selectedFilters["outputs"].map((el, i) => {
+        if (
+          el.outputName ===
+          this.workflowDashboard.searchQuery.filterByOutputs[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["outputs"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterByOutputs.splice(
         index,
         1
@@ -855,6 +833,17 @@ export default {
       );
     },
     removeStatusFilter(index) {
+      let indx;
+      this.selectedFilters["statuses"].map((el, i) => {
+        console.log(this.selectedFilters["statuses"]);
+        console.log(this.workflowDashboard.searchQuery.filterByStatuses[index]);
+        if (
+          el.statusName ===
+          this.workflowDashboard.searchQuery.filterByStatuses[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["statuses"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterByStatuses.splice(
         index,
         1
@@ -879,14 +868,14 @@ export default {
       );
     },
     removeUnitFilter(index) {
-      this.selectedFilters["units"].splice(
-        this.selectedFilters["units"].indexOf(
-          (el) =>
-            el.unitName ===
-            this.workflowDashboard.searchQuery.filterByUnits[index]
-        ),
-        1
-      );
+      let indx;
+      this.selectedFilters["units"].map((el, i) => {
+        if (
+          el.unitId === this.workflowDashboard.searchQuery.filterByUnits[index]
+        )
+          indx = i;
+      });
+      this.selectedFilters["units"].splice(indx, 1);
       var removed = this.workflowDashboard.searchQuery.filterByUnits.splice(
         index,
         1
@@ -900,22 +889,51 @@ export default {
     },
     onOpenModal(value) {
       let self = this;
-      const unitName = self.workflowDashboard.searchResult.filters.units[0];
       switch (value) {
+        case "item":
+          this.searchType = "items";
+          this.searchSource = self.workflowDashboard.searchResult.filters.items.map(
+            (el, index) => ({
+              id: index + 1,
+              itemName: el.itemName,
+              itemId: el.itemId,
+              collectionName: el.collectionName,
+              unitName: el.unitName,
+            })
+          );
+          break;
+        case "primaryfile":
+          this.searchType = "primaryfiles";
+          this.searchSource = self.workflowDashboard.searchResult.filters.files.map(
+            (el, index) => ({
+              id: index + 1,
+              primaryfileName: el.primaryfileName,
+              primaryfileId: el.primaryfileId,
+              itemName: el.itemName,
+              externalSource: el.externalSource,
+              externalId: el.externalId,
+            })
+          );
+          break;
         case "collection":
           this.searchType = "collections";
           this.searchSource = self.workflowDashboard.searchResult.filters.collections.map(
             (el, index) => ({
               id: index + 1,
-              collectionName: el,
-              unitName: unitName,
+              collectionName: el.collectionName,
+              collectionId: el.collectionId,
+              unitName: el.unitName,
             })
           );
           break;
         case "unit":
           this.searchType = "units";
           this.searchSource = self.workflowDashboard.searchResult.filters.units.map(
-            (el, index) => ({ id: index + 1, unitName: el })
+            (el, index) => ({
+              id: index + 1,
+              unitName: el.unitName,
+              unitId: el.unitId,
+            })
           );
           break;
         case "workflow":
@@ -928,6 +946,24 @@ export default {
           this.searchType = "outputs";
           this.searchSource = self.workflowDashboard.searchResult.filters.outputs.map(
             (el, index) => ({ id: index + 1, outputName: el })
+          );
+          break;
+        case "submitter":
+          this.searchType = "submitters";
+          this.searchSource = self.workflowDashboard.searchResult.filters.submitters.map(
+            (el, index) => ({ id: index + 1, submitterName: el })
+          );
+          break;
+        case "step":
+          this.searchType = "steps";
+          this.searchSource = self.workflowDashboard.searchResult.filters.steps.map(
+            (el, index) => ({ id: index + 1, stepName: el })
+          );
+          break;
+        case "status":
+          this.searchType = "statuses";
+          this.searchSource = self.workflowDashboard.searchResult.filters.statuses.map(
+            (el, index) => ({ id: index + 1, statusName: el })
           );
           break;
       }

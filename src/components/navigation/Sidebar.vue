@@ -46,7 +46,7 @@
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto" v-if="isAuthenticated">
             <span v-for="menu in orderedMenuList" :key="menu.name">
-              <b-nav-item :href="'/#' + menu.url" v-if="!menu.children">
+              <b-nav-item @click="routeTo(menu)" v-if="!menu.children">
                 <span v-html="menu.icon"></span>
                 <span class="pl-2">{{ menu.name }}</span>
               </b-nav-item>
@@ -54,12 +54,13 @@
                 <template #button-content>
                   <span v-html="menu.icon"></span>
                   <span class="pl-2">{{ menu.name }}</span>
+                  <span v-if="menu.dropdownIcon" v-html="menu.dropdownIcon"></span>
                 </template>
                 <b-dropdown-item
                   class="p-0"
-                  :href="'/#' + submenu.url"
                   v-for="submenu in menu.children"
                   :key="submenu.name"
+                  @click="routeTo(submenu)"
                 >
                   <span class="submenu">{{ submenu.name }}</span>
                 </b-dropdown-item>
@@ -118,6 +119,19 @@ export default {
     },
   },
   methods: {
+    routeTo(menu) {
+      const self = this;
+      if (
+        self.$route.path === "/workflow/edit" &&
+        localStorage.getItem("activeWorkflowSession")
+      ) {
+        alert(
+          "Workflow editor session is active. Please click on done button before leaving the page."
+        );
+      } else {
+        self.$router.push(`${menu.url}`);
+      }
+    },
     convertToSvg(value) {
       var parser = new DOMParser();
       return parser.parseFromString(value, "image/svg+xml");
