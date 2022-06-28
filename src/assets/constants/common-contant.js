@@ -63,7 +63,7 @@ const menus = [
             {
                 name: 'Item Search',
                 class: 'units, units',
-                url: "/unit/item-search",
+                url: "/collections/items/item-search",
             },
         ]
     },

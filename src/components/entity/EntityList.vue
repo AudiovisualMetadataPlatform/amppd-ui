@@ -709,7 +709,7 @@ export default {
       self.entityService.getItemsConfig(self);
     },
     handleSearchItem() {
-      this.$router.push("/unit/item-search");
+      this.$router.push("/collections/items/item-search");
     },
   },
   beforeRouteLeave(to, from, next) {

@@ -169,7 +169,7 @@ var router = new Router({
       },
     },
     {
-      path: "/unit/item-search",
+      path: "/collections/items/item-search",
       name: "item-search",
       component: ItemSearch,
       meta: {
