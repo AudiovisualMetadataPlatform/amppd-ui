@@ -1,5 +1,6 @@
 <template>
   <div class="item-search">
+    <loader :show="loading" />
     <div class="container col-12">
       <div class="row expand-h">
         <div class="col-12 bg-light-gray-1">
@@ -38,13 +39,17 @@
 <script>
 import Search from "@/components/shared/Search.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
+import Loader from "@/components/shared/Loader.vue";
+
 export default {
   name: "ItemSearch",
   components: {
-    Search
+    Search,
+    Loader,
   },
   data() {
     return {
+      loading: false,
       searchType: "",
       searchSource: [],
       workflowResultService: new WorkflowResultService(),
@@ -58,10 +63,12 @@ export default {
     },
     async refreshData() {
       const self = this;
+      self.loading= true;
       self.itemSource = await this.workflowResultService.getWorkflowResults(
         {filterOnly: true, filterByRelevant: true}
       );
       self.searchSource = await self.itemSource.filters['items']
+      self.loading=false;
     },
   },
   updated(){
