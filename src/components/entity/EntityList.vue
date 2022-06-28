@@ -18,12 +18,20 @@
                 : ''
             "
           >
-            <h2 class="text-left">
+            <h1 class="text-left">
               <span class="text-capitalize">{{
                 baseUrl === "file" ? "Primary File" : baseUrl
               }}</span>
               Details
-            </h2>
+              <button
+                v-if="baseUrl === 'item' && entity.parentType === 'item-search'"
+                class="btn btn-primary btn-lg float-right"
+                type="button"
+                @click="handleSearchItem()"
+              >
+                Search Item
+              </button>
+            </h1>
             <div class="primary-file">
               <div class="media-player" v-if="baseUrl === 'file'">
                 <div v-if="entity.mediaSource">
@@ -699,6 +707,9 @@ export default {
     async getItemsConfig() {
       const self = this;
       self.entityService.getItemsConfig(self);
+    },
+    handleSearchItem() {
+      this.$router.push("/unit/item-search");
     },
   },
   beforeRouteLeave(to, from, next) {
