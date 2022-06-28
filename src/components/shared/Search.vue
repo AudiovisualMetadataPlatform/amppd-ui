@@ -421,6 +421,8 @@ export default {
       if (self.type === "item-search") {
         self.selectedItemId = record.itemId;
         self.selectedCollectionId = record.collectionId;
+        self.selectedUnit = record.unitName;
+        self.selectedCollection = record.collectionName;
       }
       console.log(self.selectAll);
       const isStatusChecked = self.selectedRecords.indexOf(record.id);
@@ -585,7 +587,9 @@ export default {
               const self = this;
               const res = JSON.parse(JSON.stringify(response));
               self.selectedItem = res;
-              self.selectedItem.parentType = this.type;
+              self.selectedItem.parentType = self.type;
+              self.selectedItem.unitName = self.selectedUnit;
+              self.selectedItem.collectionName = self.selectedCollection;
               self.$router.push("/collections/items/item-search/details");
             })
             .catch((error) => {

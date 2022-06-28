@@ -204,7 +204,70 @@
                     ></textarea>
                   </div>
 
-                  <div class="col-12 p-0">
+                  <div class="row" v-if="baseUrl === 'item' && entity.parentType === 'item-search'">
+                    <div class="col-6 text-left form-group">
+                        <label>Unit:</label>
+                        <input
+                          type="text"
+                          class="form-control w-100"
+                          v-model="entity.unitName"
+                          :disabled="true"
+                        />
+                      </div>
+                      <div class="col-6 text-left form-group">
+                        <label>Collection:</label>
+                        <input
+                          type="text"
+                          class="form-control w-100"
+                          :value="entity.collectionName"
+                          :disabled="true"
+                        />
+                      </div>
+                  </div>
+
+                  <div class="row" v-if="baseUrl === 'item' && entity.parentType === 'item-search'">
+                    <div class="col-6 text-left form-group">
+                        <label>Created By:</label>
+                        <input
+                          type="text"
+                          class="form-control w-100"
+                          v-model="entity.createdBy"
+                          :disabled="true"
+                        />
+                      </div>
+                      <div class="col-6 text-left form-group">
+                        <label>Date Created:</label>
+                        <input
+                          type="text"
+                          class="form-control w-100"
+                          :value="entity.createdDate | LOCAL_DATE_VALUE"
+                          :disabled="true"
+                        />
+                      </div>
+                  </div>
+
+                  <div class="row" v-if="baseUrl === 'item' && entity.parentType === 'item-search'">
+                    <div class="col-6 text-left form-group">
+                        <label>Modified By:</label>
+                        <input
+                          type="text"
+                          class="form-control w-100"
+                          v-model="entity.modifiedBy"
+                          :disabled="true"
+                        />
+                      </div>
+                      <div class="col-6 text-left form-group">
+                        <label>Modified Date:</label>
+                        <input
+                          type="text"
+                          class="form-control w-100"
+                          :value="entity.modifiedDate | LOCAL_DATE_VALUE"
+                          :disabled="true"
+                        />
+                      </div>
+                  </div>
+
+                  <div class="col-12 p-0" v-if="entity.parentType !== 'item-search'">
                     <div class="row">
                       <div class="col-3 text-left form-group">
                         <label>Created By:</label>
