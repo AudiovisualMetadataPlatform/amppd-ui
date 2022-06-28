@@ -586,7 +586,7 @@ export default {
               const res = JSON.parse(JSON.stringify(response));
               self.selectedItem = res;
               self.selectedItem.parentType = this.type;
-              self.$router.push("/collections/items/details");
+              self.$router.push("/collections/items/item-search/details");
             })
             .catch((error) => {
               this.$bvToast.toast("Failed to show the item", {

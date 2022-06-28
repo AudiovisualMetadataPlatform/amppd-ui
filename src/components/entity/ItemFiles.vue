@@ -333,7 +333,11 @@ export default {
     },
     onView(file) {
       this.selectedFile = file;
-      this.$router.push("/collections/file");
+      if (this.selectedItem.parentType === "item-search") {
+        this.$router.push("/collections/items/item-search/details/file");
+      } else {
+        this.$router.push("/collections/file");
+      }
     },
     async onRemovePrimaryFile(file, index) {
       const self = this;
