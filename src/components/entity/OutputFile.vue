@@ -122,7 +122,7 @@ export default {
     ) {
       const self = this;
       const filters = {
-        filterByFiles: [self.selectedFile.name],
+        filterByFiles: [self.selectedFile.id],
         sortRule,
         pageNum,
       };

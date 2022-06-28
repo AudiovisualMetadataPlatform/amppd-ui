@@ -54,6 +54,7 @@
                 <template #button-content>
                   <span v-html="menu.icon"></span>
                   <span class="pl-2">{{ menu.name }}</span>
+                  <span v-if="menu.dropdownIcon" v-html="menu.dropdownIcon"></span>
                 </template>
                 <b-dropdown-item
                   class="p-0"
