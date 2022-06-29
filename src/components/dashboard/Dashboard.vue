@@ -567,8 +567,6 @@ import { sync } from "vuex-pathify";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import DashboardTable from "@/components/dashboard/DashboardTable.vue";
 import DateFilter from "@/components/dashboard/DashboardFilters/DateFilter";
-import TextFilter from "@/components/dashboard/DashboardFilters/TextFilter";
-import StatusFilter from "@/components/dashboard/DashboardFilters/StatusFilter";
 import Logout from "@/components/shared/Logout.vue";
 import Search from "@/components/shared/Search.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
@@ -580,8 +578,6 @@ export default {
     Sidebar,
     DashboardTable,
     DateFilter,
-    TextFilter,
-    StatusFilter,
     Logout,
     Search,
     Loader,
