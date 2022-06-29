@@ -9,18 +9,18 @@
             class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
             data-toggle="modal"
             data-target=".bd-example-modal-lg-2"
+            disabled
           >
             Search Workflows
           </button>
-          <a
-            class="btn btn-primary btn-lg marg-b-4 float-right"
-            href="#"
-            data-toggle="popover"
-            data-content="Link goes to galaxy"
-            data-original-title
-            title
-            >Create new Workflow</a
+          <button
+            id="btn-workflow-create"
+            class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
+            @click="handleWorkflowCreation()"
+            :disabled="activeWorkflowSession"
           >
+            Create New Workflow
+          </button>
         </h2>
         <div class="clearfix"></div>
         <!-- workflow -->
@@ -251,6 +251,21 @@ export default {
         workflowIndex,
         self.listOfWorkflows[workflowIndex]
       );
+    },
+    async handleWorkflowCreation() {
+      const self = this;
+      await self.workflowService
+        .createNewWorkflow()
+        .then((res) => {
+          const workflowId = res.data;
+          self.routeToEditorPage(workflowId);
+        })
+        .catch((e) => {
+          self.$bvToast.toast(
+            "Unable to process your request. Please contact Administrator",
+            self.sharedService.erorrToastConfig
+          );
+        });
     },
     async routeToEditorPage(workflowId) {
       const self = this;
