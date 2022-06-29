@@ -58,6 +58,7 @@
                 </template>
                 <b-dropdown-item
                   class="p-0"
+                  :disabled="!submenu.url"
                   v-for="submenu in menu.children"
                   :key="submenu.name"
                   @click="routeTo(submenu)"

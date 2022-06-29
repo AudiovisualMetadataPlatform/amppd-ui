@@ -95,7 +95,7 @@
 <script>
 import { sync } from "vuex-pathify";
 import _ from "underscore";
-import Typeahead from "../../shared/TypeAhead.vue";
+import Typeahead from "../shared/TypeAhead.vue";
 import ClickOutside from "vue-click-outside";
 
 export default {

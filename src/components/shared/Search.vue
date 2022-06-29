@@ -348,6 +348,7 @@ import { sync } from "vuex-pathify";
 import SharedService from "../../service/shared-service";
 import Typeahead from "../shared/TypeAhead.vue";
 import ItemService from "../../service/item-service";
+import CollectionDetailsService from "../../service/collection-detail-service";
 
 export default {
   props: {
@@ -379,12 +380,14 @@ export default {
     selectedFilters: sync("selectedFilters"),
     workflowDashboard: sync("workflowDashboard"),
     selectedItem: sync("selectedItem"),
+    selectedCollection: sync("selectedCollection"),
   },
 
   data() {
     return {
       sharedService: new SharedService(),
       itemService: new ItemService(),
+      collectionDetailsService: new CollectionDetailsService(),
       userSearchValue: "",
       typeaheadSearchItems: [],
       searchProps: [],
@@ -585,6 +588,12 @@ export default {
             .getItemById(this.selectedCollectionId, this.selectedItemId)
             .then((response) => {
               const self = this;
+              self.collectionDetailsService.getCollection(
+                  self.selectedCollectionId
+                ).then((response) => {
+                  self.selectedCollection = response.data;
+                });
+              
               const res = JSON.parse(JSON.stringify(response));
               self.selectedItem = res;
               self.selectedItem.parentType = self.type;
