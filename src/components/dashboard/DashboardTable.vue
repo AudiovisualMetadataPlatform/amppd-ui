@@ -348,6 +348,8 @@ export default {
           ? (this.workflowDashboard.searchQuery.pageNum - 1) *
               this.workflowDashboard.searchQuery.resultsPerPage +
             1
+          : total === 0
+          ? 0
           : 1;
       let end =
         this.workflowDashboard.searchQuery.pageNum *
