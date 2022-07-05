@@ -99,6 +99,8 @@ export default {
     },
     filterByDate() {
       let self = this;
+      self.fromDate.setHours(0, 0, 0, 0);
+      self.toDate.setHours(23, 59, 59, 999);
       self.workflowDashboard.searchQuery.filterByDates = [];
       self.workflowDashboard.searchQuery.filterByDates.push(
         new Date(self.fromDate)
