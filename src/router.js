@@ -138,19 +138,11 @@ var router = new Router({
       path: "/hmgm/transcript-editor",
       name: "transcript-editor",
       component: TranscriptEditor,
-      meta: {
-        authorize: [],
-        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
-      },
     },
     {
       path: "/hmgm/ner-editor",
       name: "ner-editor",
       component: NerEditor,
-      meta: {
-        authorize: [],
-        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
-      },
     },
     // {
     //   path: "/collections",
