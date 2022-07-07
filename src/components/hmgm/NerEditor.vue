@@ -72,10 +72,11 @@
       </div>
     </modal>
     <token-validator
-      v-if="showTokenModal"
+      v-if="showTokenValidator"
       @validAuth="authValidated"
       :datasetUrl="resourcePath"
       :authString="authString"
+      showTokenValidator
     />
   </div>
 </template>
@@ -84,7 +85,11 @@
 import AmpHeader from "@/components/shared/Header.vue";
 import Logout from "@/components/shared/Logout.vue";
 import Modal from "@/components/shared/Modal.vue";
-import { completeNer, resetNer } from "@/service/hmgm-service";
+import {
+  completeNer,
+  resetNer,
+  auth_token_required,
+} from "@/service/hmgm-service";
 import TokenValidator from "@/components/hmgm/TokenValidator";
 import { env } from "../../helpers/env";
 // import Timeliner from '@/components/hmgm/Timeliner.js';
@@ -101,6 +106,7 @@ export default {
   data() {
     return {
       requireAuth: true,
+      showTokenValidator: false,
       authString: null,
       iframeUrl: "",
       resourcePath: "",
@@ -116,17 +122,18 @@ export default {
       showConfirm: false,
     };
   },
-  computed: {
-    showTokenModal() {
-      if (!this.resourcePath || !this.resourcePath.length > 0) return false;
-      if (!this.authString) return false;
-      return this.requireAuth;
-    },
-  },
+  // computed: {
+  //   showTokenModal() {
+  //     if (!this.resourcePath || !this.resourcePath.length > 0) return false;
+  //     if (!this.authString) return false;
+  //     return this.requireAuth;
+  //   },
+  // },
   methods: {
     // This method is required by the token validator to load data on success callback
     authValidated() {
       this.requireAuth = false;
+      this.showTokenValidator = false;
       this.iframeUrl = this.getIframeUrl(this.resource, this.callback);
       console.log("iframeUrl = " + this.iframeUrl);
     },
@@ -258,7 +265,7 @@ export default {
       return button && button.disabled;
     },
   },
-  mounted() {
+  async mounted() {
     this.resourcePath = this.$route.query.resourcePath;
     this.resource = this.getFileUrl(this.resourcePath);
     this.callback = this.resource;
@@ -266,6 +273,16 @@ export default {
     console.log("resourcePath = " + this.resourcePath);
     console.log("resource = " + this.resource);
     console.log("callback = " + this.callback);
+
+    let requires_auth_token = await auth_token_required(
+      this.authString,
+      this.resourcePath
+    );
+    if (requires_auth_token === false) {
+      this.authValidated();
+    } else {
+      this.showTokenValidator = true;
+    }
   },
 };
 </script>
