@@ -171,13 +171,6 @@ export default {
       transcriptType: 1,
     };
   },
-  // computed: {
-  //   showTokenModal() {
-  //     if (!this.datasetUrl || this.datasetUrl.length == 0) return false;
-  //     if (!this.authString) return false;
-  //     return this.requireAuth;
-  //   },
-  // },
   methods: {
     // This method is required by the token validator to load data on success callback
     authValidated() {

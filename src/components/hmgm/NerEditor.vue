@@ -122,13 +122,6 @@ export default {
       showConfirm: false,
     };
   },
-  // computed: {
-  //   showTokenModal() {
-  //     if (!this.resourcePath || !this.resourcePath.length > 0) return false;
-  //     if (!this.authString) return false;
-  //     return this.requireAuth;
-  //   },
-  // },
   methods: {
     // This method is required by the token validator to load data on success callback
     authValidated() {

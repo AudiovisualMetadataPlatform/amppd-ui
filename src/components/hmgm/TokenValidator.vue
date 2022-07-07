@@ -71,18 +71,6 @@ export default {
       }
     },
   },
-  // async mounted() {
-  //   var requires_auth_token = await auth_token_required(
-  //     this.authString,
-  //     this.datasetUrl
-  //   );
-  //   console.log("Auth token required: " + requires_auth_token);
-
-  //   if (requires_auth_token === false) {
-  //     console.log("Emitting auth");
-  //     this.$emit("validAuth");
-  //   }
-  // },
 };
 </script>
 
