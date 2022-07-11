@@ -630,11 +630,11 @@ export default {
       const self = this;
       this.populteValues();
       this.getTypeaheadSearchItems();
-      this.clonedDataSource = self.sharedService.sortByAlphabatical(
-        JSON.parse(JSON.stringify(this.dataSource)),
-        self.searchProps[0],
-        false
-      );
+      // this.clonedDataSource = self.sharedService.sortByAlphabatical(
+      //   JSON.parse(JSON.stringify(this.dataSource)),
+      //   self.searchProps[0],
+      //   false
+      // );
       // To get the distinct values
       // if(this.searchDataSourceMap.get(this.type)) {
       //     this.clonedDataSource = this.searchDataSourceMap.get(this.type);
