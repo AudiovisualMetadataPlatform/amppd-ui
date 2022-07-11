@@ -328,7 +328,13 @@
         <button
           size="sm"
           class="btn btn-primary"
-          :disabled="type === 'item-search' ? !selectedItemId : false"
+          :disabled="
+            type === 'item-search'
+              ? !selectedItemId
+              : selectedRecords.length <= 0
+              ? true
+              : false
+          "
           @click="
             ok();
             onDone();
