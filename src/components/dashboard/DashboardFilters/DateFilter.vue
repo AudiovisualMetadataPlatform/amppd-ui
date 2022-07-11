@@ -51,7 +51,10 @@
         </div>
         <div class="form-group row">
           <div class="col-sm-12">
-            <button class="btn btn-info float-right" @click="filterByDate">
+            <button
+              class="btn btn-info float-right"
+              @click="filterByDate($event)"
+            >
               Filter
             </button>
           </div>
@@ -97,7 +100,8 @@ export default {
       this.displayFilter = false;
       this.$emit("displayChanged", this.displayFilter);
     },
-    filterByDate() {
+    filterByDate(e) {
+      e.preventDefault();
       let self = this;
       self.fromDate.setHours(0, 0, 0, 0);
       self.toDate.setHours(23, 59, 59, 999);
