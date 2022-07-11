@@ -146,7 +146,11 @@
         <div
           v-if="type !== 'statuses'"
           class="scrollDiv w-100"
-          :class="type === 'item-search' && 'items-area'"
+          :class="
+            type === 'item-search' || type === 'primaryfiles'
+              ? 'items-area'
+              : ''
+          "
         >
           <table class="w-100 table table-striped">
             <thead>
@@ -588,9 +592,9 @@ export default {
             .getItemById(this.selectedCollectionId, this.selectedItemId)
             .then((response) => {
               const self = this;
-              self.collectionDetailsService.getCollection(
-                  self.selectedCollectionId
-                ).then((response) => {
+              self.collectionDetailsService
+                .getCollection(self.selectedCollectionId)
+                .then((response) => {
                   self.selectedCollection = response.data;
                 });
               
