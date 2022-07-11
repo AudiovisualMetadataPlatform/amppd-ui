@@ -889,8 +889,8 @@ export default {
         case "item":
           this.searchType = "items";
           this.searchSource = self.workflowDashboard.searchResult.filters.items.map(
-            (el, index) => ({
-              id: index + 1,
+            (el) => ({
+              id: el.itemId,
               itemName: el.itemName,
               itemId: el.itemId,
               collectionName: el.collectionName,
@@ -901,8 +901,8 @@ export default {
         case "primaryfile":
           this.searchType = "primaryfiles";
           this.searchSource = self.workflowDashboard.searchResult.filters.files.map(
-            (el, index) => ({
-              id: index + 1,
+            (el) => ({
+              id: el.primaryfileId,
               primaryfileName: el.primaryfileName,
               primaryfileId: el.primaryfileId,
               itemName: el.itemName,
@@ -914,8 +914,8 @@ export default {
         case "collection":
           this.searchType = "collections";
           this.searchSource = self.workflowDashboard.searchResult.filters.collections.map(
-            (el, index) => ({
-              id: index + 1,
+            (el) => ({
+              id: el.collectionId,
               collectionName: el.collectionName,
               collectionId: el.collectionId,
               unitName: el.unitName,
@@ -925,8 +925,8 @@ export default {
         case "unit":
           this.searchType = "units";
           this.searchSource = self.workflowDashboard.searchResult.filters.units.map(
-            (el, index) => ({
-              id: index + 1,
+            (el) => ({
+              id: el.unitId,
               unitName: el.unitName,
               unitId: el.unitId,
             })
@@ -935,31 +935,31 @@ export default {
         case "workflow":
           this.searchType = "workflows";
           this.searchSource = self.workflowDashboard.searchResult.filters.workflows.map(
-            (el, index) => ({ id: index + 1, workflowName: el })
+            (el) => ({ id: el, workflowName: el })
           );
           break;
         case "output":
           this.searchType = "outputs";
           this.searchSource = self.workflowDashboard.searchResult.filters.outputs.map(
-            (el, index) => ({ id: index + 1, outputName: el })
+            (el) => ({ id: el, outputName: el })
           );
           break;
         case "submitter":
           this.searchType = "submitters";
           this.searchSource = self.workflowDashboard.searchResult.filters.submitters.map(
-            (el, index) => ({ id: index + 1, submitterName: el })
+            (el) => ({ id: el, submitterName: el })
           );
           break;
         case "step":
           this.searchType = "steps";
           this.searchSource = self.workflowDashboard.searchResult.filters.steps.map(
-            (el, index) => ({ id: index + 1, stepName: el })
+            (el) => ({ id: el, stepName: el })
           );
           break;
         case "status":
           this.searchType = "statuses";
           this.searchSource = self.workflowDashboard.searchResult.filters.statuses.map(
-            (el, index) => ({ id: index + 1, statusName: el })
+            (el) => ({ id: el, statusName: el })
           );
           break;
       }
