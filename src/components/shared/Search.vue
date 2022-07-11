@@ -501,7 +501,7 @@ export default {
           self.searchProps = ["primaryfileName"];
           break;
         case "collections":
-          self.searchProps = ["collectionName", "unitName"];
+          self.searchProps = ["collectionName"];
           break;
         case "units":
           self.searchProps = ["unitName"];
