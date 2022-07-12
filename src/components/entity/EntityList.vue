@@ -204,70 +204,88 @@
                     ></textarea>
                   </div>
 
-                  <div class="row" v-if="baseUrl === 'item' && entity.parentType === 'item-search'">
+                  <div
+                    class="row"
+                    v-if="
+                      baseUrl === 'item' && entity.parentType === 'item-search'
+                    "
+                  >
                     <div class="col-6 text-left form-group">
-                        <label>Unit:</label>
-                        <input
-                          type="text"
-                          class="form-control w-100"
-                          v-model="entity.unitName"
-                          :disabled="true"
-                        />
-                      </div>
-                      <div class="col-6 text-left form-group">
-                        <label>Collection:</label>
-                        <input
-                          type="text"
-                          class="form-control w-100"
-                          :value="entity.collectionName"
-                          :disabled="true"
-                        />
-                      </div>
+                      <label>Unit:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        v-model="entity.unitName"
+                        :disabled="true"
+                      />
+                    </div>
+                    <div class="col-6 text-left form-group">
+                      <label>Collection:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        :value="entity.collectionName"
+                        :disabled="true"
+                      />
+                    </div>
                   </div>
 
-                  <div class="row" v-if="baseUrl === 'item' && entity.parentType === 'item-search'">
+                  <div
+                    class="row"
+                    v-if="
+                      baseUrl === 'item' && entity.parentType === 'item-search'
+                    "
+                  >
                     <div class="col-6 text-left form-group">
-                        <label>Created By:</label>
-                        <input
-                          type="text"
-                          class="form-control w-100"
-                          v-model="entity.createdBy"
-                          :disabled="true"
-                        />
-                      </div>
-                      <div class="col-6 text-left form-group">
-                        <label>Date Created:</label>
-                        <input
-                          type="text"
-                          class="form-control w-100"
-                          :value="entity.createdDate | LOCAL_DATE_VALUE"
-                          :disabled="true"
-                        />
-                      </div>
+                      <label>Created By:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        v-model="entity.createdBy"
+                        :disabled="true"
+                      />
+                    </div>
+                    <div class="col-6 text-left form-group">
+                      <label>Date Created:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        :value="entity.createdDate | LOCAL_DATE_VALUE"
+                        :disabled="true"
+                      />
+                    </div>
                   </div>
 
-                  <div class="row" v-if="baseUrl === 'item' && entity.parentType === 'item-search'">
+                  <div
+                    class="row"
+                    v-if="
+                      baseUrl === 'item' && entity.parentType === 'item-search'
+                    "
+                  >
                     <div class="col-6 text-left form-group">
-                        <label>Modified By:</label>
-                        <input
-                          type="text"
-                          class="form-control w-100"
-                          v-model="entity.modifiedBy"
-                          :disabled="true"
-                        />
-                      </div>
-                      <div class="col-6 text-left form-group">
-                        <label>Modified Date:</label>
-                        <input
-                          type="text"
-                          class="form-control w-100"
-                          :value="entity.modifiedDate | LOCAL_DATE_VALUE"
-                          :disabled="true"
-                        />
-                      </div>
+                      <label>Modified By:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        v-model="entity.modifiedBy"
+                        :disabled="true"
+                      />
+                    </div>
+                    <div class="col-6 text-left form-group">
+                      <label>Modified Date:</label>
+                      <input
+                        type="text"
+                        class="form-control w-100"
+                        :value="entity.modifiedDate | LOCAL_DATE_VALUE"
+                        :disabled="true"
+                      />
+                    </div>
                   </div>
 
-                  <div class="col-12 p-0" v-if="entity.parentType !== 'item-search'">
+                  <div
+                    class="col-12 p-0"
+                    v-if="entity.parentType !== 'item-search'"
+                  >
                     <div class="row">
                       <div class="col-3 text-left form-group">
                         <label>Created By:</label>
@@ -392,7 +410,7 @@
                 <div class="col-3 text-left">
                   <h2>Unit Collections</h2>
                 </div>
-                <div class="col-9 text-right p0">
+                <div class="col-9 text-right p0 btn-grp">
                   <button
                     class="btn btn-primary btn-lg btn-edit mr-2"
                     type="button"
@@ -410,11 +428,11 @@
                 </div>
               </div>
               <!-- Title - Collection Details page  -->
-              <div class="row w-100" v-if="baseUrl == 'collection'">
+              <div class="d-flex w-100" v-if="baseUrl == 'collection'">
                 <div class="col-3 text-left">
                   <h2>Collection Items</h2>
                 </div>
-                <div class="col-9 text-right p-0">
+                <div class="col-9 text-right p-0 btn-grp">
                   <button
                     class="btn btn-primary btn-lg btn-edit mr-2"
                     type="button"
@@ -855,5 +873,9 @@ export default {
 video {
   margin-top: 0px;
   width: 100% !important;
+}
+.btn-grp {
+  margin-bottom: 10px;
+  padding-right: 0px;
 }
 </style>

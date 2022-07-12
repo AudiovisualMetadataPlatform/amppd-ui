@@ -146,7 +146,11 @@
         <div
           v-if="type !== 'statuses'"
           class="scrollDiv w-100"
-          :class="type === 'item-search' && 'items-area'"
+          :class="
+            type === 'item-search' || type === 'primaryfiles'
+              ? 'items-area'
+              : ''
+          "
         >
           <table class="w-100 table table-striped">
             <thead>
@@ -324,7 +328,13 @@
         <button
           size="sm"
           class="btn btn-primary"
-          :disabled="type === 'item-search' ? !selectedItemId : false"
+          :disabled="
+            type === 'item-search'
+              ? !selectedItemId
+              : selectedRecords.length <= 0
+              ? true
+              : false
+          "
           @click="
             ok();
             onDone();
@@ -348,6 +358,7 @@ import { sync } from "vuex-pathify";
 import SharedService from "../../service/shared-service";
 import Typeahead from "../shared/TypeAhead.vue";
 import ItemService from "../../service/item-service";
+import CollectionDetailsService from "../../service/collection-detail-service";
 
 export default {
   props: {
@@ -379,12 +390,14 @@ export default {
     selectedFilters: sync("selectedFilters"),
     workflowDashboard: sync("workflowDashboard"),
     selectedItem: sync("selectedItem"),
+    selectedCollection: sync("selectedCollection"),
   },
 
   data() {
     return {
       sharedService: new SharedService(),
       itemService: new ItemService(),
+      collectionDetailsService: new CollectionDetailsService(),
       userSearchValue: "",
       typeaheadSearchItems: [],
       searchProps: [],
@@ -488,7 +501,7 @@ export default {
           self.searchProps = ["primaryfileName"];
           break;
         case "collections":
-          self.searchProps = ["collectionName", "unitName"];
+          self.searchProps = ["collectionName"];
           break;
         case "units":
           self.searchProps = ["unitName"];
@@ -585,6 +598,12 @@ export default {
             .getItemById(this.selectedCollectionId, this.selectedItemId)
             .then((response) => {
               const self = this;
+              self.collectionDetailsService
+                .getCollection(self.selectedCollectionId)
+                .then((response) => {
+                  self.selectedCollection = response.data;
+                });
+              
               const res = JSON.parse(JSON.stringify(response));
               self.selectedItem = res;
               self.selectedItem.parentType = self.type;
@@ -611,11 +630,11 @@ export default {
       const self = this;
       this.populteValues();
       this.getTypeaheadSearchItems();
-      this.clonedDataSource = self.sharedService.sortByAlphabatical(
-        JSON.parse(JSON.stringify(this.dataSource)),
-        self.searchProps[0],
-        false
-      );
+      // this.clonedDataSource = self.sharedService.sortByAlphabatical(
+      //   JSON.parse(JSON.stringify(this.dataSource)),
+      //   self.searchProps[0],
+      //   false
+      // );
       // To get the distinct values
       // if(this.searchDataSourceMap.get(this.type)) {
       //     this.clonedDataSource = this.searchDataSourceMap.get(this.type);
