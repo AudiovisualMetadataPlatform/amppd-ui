@@ -230,7 +230,6 @@ import { requestOptions } from "@/helpers/request-options";
 import Modal from "@/components/shared/Modal.vue";
 import SaveBundle from "@/components/workflow/SaveBundle.vue";
 import WorkflowService from "../../service/workflow-service";
-import mockData from "./testData";
 
 export default {
   name: "SelectWorkflow",
@@ -467,13 +466,10 @@ export default {
         (node) => node.node_id === "supplement"
       );
       if (supplementNodes.length) {
-        //Facial recognition operation
+        console.log("Facial recognition operation");
         let supplements = await self.getSupplementsForPrimaryfiles(
           supplementNodes
         );
-        console.log(supplements);
-        console.log(mockData);
-        supplements = mockData; //TODO: ***
 
         //Empty primary file listing
         const emptyPFileIndexes = new Set();
@@ -490,7 +486,6 @@ export default {
             }
           }
         }
-        console.log(emptyPFileIndexes); //TODO: Prompt the error window for all of them in a list at once
 
         if (emptyPFileIndexes.size === supplements[0].length) {
           //In case all supplement nodes have error
@@ -520,19 +515,13 @@ export default {
               }
             });
           }
-          console.log(supplements);
 
           let paths = [];
           //Choosing one supplement
           for (let i = 0; i < supplements.length; i++) {
             for (let j = 0; j < supplements[i].length; j++) {
-              // console.log(paths);
-              // debugger
               let oneSupplement = [];
               if (supplements[i][j].length > 1) {
-                //TODO: Prompt the window to ask user to choose one supplement
-                // console.log(self.selectedFilesArray);
-                // debugger;
                 self.currentPrimaryFileName =
                   supplements[i][j][0].primaryFileName;
                 self.supplementList = supplements[i][j];
@@ -554,7 +543,7 @@ export default {
                     self.selectedSupplement = supplements[i][j][0];
                     self.showFRModal = true;
                     await self.pauser();
-                    oneSupplement = self.selectedSupplement; //TODO: Make it dynamic
+                    oneSupplement = self.selectedSupplement;
                     if (self.isActiveSupplementSwitch) {
                       self.defaultFacialRecognition.push(oneSupplement.name);
                       self.isActiveSupplementSwitch = false;
@@ -564,7 +553,7 @@ export default {
                   self.selectedSupplement = supplements[i][j][0];
                   self.showFRModal = true;
                   await self.pauser();
-                  oneSupplement = self.selectedSupplement; //TODO: Make it dynamic
+                  oneSupplement = self.selectedSupplement;
                   if (self.isActiveSupplementSwitch) {
                     self.defaultFacialRecognition.push(oneSupplement.name);
                     self.isActiveSupplementSwitch = false;
@@ -573,22 +562,15 @@ export default {
               } else {
                 oneSupplement = supplements[i][j][0];
               }
-              console.log("Now: " + oneSupplement);
               paths.push({ [j]: oneSupplement.absolutePathname });
-              // console.log(paths);
-              // debugger;
             }
           }
           self.showFRModal = false;
-          console.log(paths);
-          // debugger
 
           //Filtering all absolute paths of each PFile
           let submitFilesApiBody = [];
           for (let i = 0; i < supplements[0].length; i++) {
             const absolutePathList = self.getEachPFileAbsolutePaths(paths, i);
-            console.log("Unique by " + i);
-            console.log(JSON.stringify(absolutePathList));
             //Constructing POST API body
             const info = {
               map: {},
@@ -598,7 +580,6 @@ export default {
             }
             submitFilesApiBody.push(info);
           }
-          console.log(submitFilesApiBody);
 
           //POST api call
           self.submitWorkflowApi(submitFilesApiBody, emptyPFileIndexes);
