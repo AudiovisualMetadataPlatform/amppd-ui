@@ -184,7 +184,7 @@
         <template #modal-header="{}">
           <h5 class="text-capitalize">
             Choose the Facial Recognition input file for
-            {{ currentPrimaryFileName }}:
+            {{ supplementList[0].primaryFileName }}:
           </h5>
         </template>
         <template #default="{}">
@@ -246,7 +246,6 @@ export default {
       errors: [],
       showFRModal: false,
       supplementList: [],
-      currentPrimaryFileName: "",
       selectedSupplement: [],
       isActiveSupplementSwitch: false,
       defaultFacialRecognition: [],
@@ -334,7 +333,7 @@ export default {
       return arr.map((item) => item[key]).filter((data) => data);
     },
 
-    getEmptyPrimaryfileIds(emptyPFileIndexes, selectedFiles) {
+    getEmptyPrimaryfileNames(emptyPFileIndexes, selectedFiles) {
       if (
         selectedFiles === null ||
         !selectedFiles.size ||
@@ -413,7 +412,7 @@ export default {
           let emptyPrimaryfileIds;
           let eFailure;
           if (emptyPFileIndexes && emptyPFileIndexes.size) {
-            emptyPrimaryfileIds = self.getEmptyPrimaryfileIds(
+            emptyPrimaryfileIds = self.getEmptyPrimaryfileNames(
               emptyPFileIndexes,
               this.selectedFiles
             );
@@ -492,7 +491,7 @@ export default {
           const total = this.selectedFilesArray.length;
           const success = 0;
           const failure = emptyPFileIndexes.size;
-          const emptyPrimaryfileIds = self.getEmptyPrimaryfileIds(
+          const emptyPrimaryfileIds = self.getEmptyPrimaryfileNames(
             emptyPFileIndexes,
             this.selectedFiles
           );
@@ -522,8 +521,6 @@ export default {
             for (let j = 0; j < supplements[i].length; j++) {
               let oneSupplement = [];
               if (supplements[i][j].length > 1) {
-                self.currentPrimaryFileName =
-                  supplements[i][j][0].primaryFileName;
                 self.supplementList = supplements[i][j];
                 // Toggle button's work
                 if (self.defaultFacialRecognition.length) {
