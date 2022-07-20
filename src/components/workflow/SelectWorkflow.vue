@@ -519,13 +519,13 @@ export default {
           }
 
           let paths = [];
-          //Choosing one supplement
+            //User input in the case of multiple supplements are found
           for (let i = 0; i < supplements.length; i++) {
             for (let j = 0; j < supplements[i].length; j++) {
               let oneSupplement = [];
               if (supplements[i][j].length > 1) {
                 self.supplementList = supplements[i][j];
-                // Toggle button's work
+                  // Toggle button's activity
                 if (self.defaultFacialRecognition.length) {
                   let matched = true;
                   for (let frValue of self.defaultFacialRecognition) {
@@ -571,7 +571,7 @@ export default {
           let submitFilesApiBody = [];
           for (let i = 0; i < supplements[0].length; i++) {
             const absolutePathList = self.getEachPFileAbsolutePaths(paths, i);
-            //Constructing POST API body
+              //Constructing submitWorkflow API body
             const info = {
               map: {},
             };
