@@ -456,11 +456,13 @@ export default {
 
     async submitWorkflow() {
       let self = this;
+      try {
       self.workflowSubmission.loading = true;
       self.errors = [];
       console.log("Submitting workflow");
 
-      const workflowNodes = self.workflowSubmission.selectedWorkflowParameters;
+        const workflowNodes =
+          self.workflowSubmission.selectedWorkflowParameters;
       const supplementNodes = workflowNodes.filter(
         (node) => node.node_id === "supplement"
       );
@@ -469,6 +471,7 @@ export default {
         let supplements = await self.getSupplementsForPrimaryfiles(
           supplementNodes
         );
+          supplements = JSON.parse(JSON.stringify(supplements));
 
         //Empty primary file listing
         const emptyPFileIndexes = new Set();
@@ -583,6 +586,15 @@ export default {
         }
       } else {
         self.submitWorkflowApi();
+        }
+      } catch (error) {
+        console.log(error);
+        self.modalHeader = "Error";
+        self.modalTextList = [
+          "Error submitting workflow:  Could not finish submission.",
+        ];
+        self.showModal = true;
+        self.workflowSubmission.loading = false;
       }
     },
 
