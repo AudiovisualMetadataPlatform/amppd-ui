@@ -41,9 +41,13 @@ export default class WorkflowService extends BaseService{
         return super.post_auth(`/bundles/create?name=${name}&description=${description}&primaryfileIds=${primaryfileIds}`);
     }
 
-    submitWorkflow(selectedWorkflow, primaryfileIds){
+    getSupplementsForPrimaryfiles(primaryfileIds, name, category, format){
+        return super.get_auth('/primaryfiles/supplements?primaryfileIds=' + primaryfileIds + '&category=' + category + '&format=' + format);
+    }
+
+    submitWorkflow(selectedWorkflow, primaryfileIds, body = null){
         console.log('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds);
-        return super.post_auth('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds, null);
+        return super.post_auth('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds, body);
     }
 
     cleanParameterName(name){
