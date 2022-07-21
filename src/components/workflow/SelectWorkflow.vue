@@ -457,89 +457,99 @@ export default {
     async submitWorkflow() {
       let self = this;
       try {
-      self.workflowSubmission.loading = true;
-      self.errors = [];
-      console.log("Submitting workflow");
+        self.workflowSubmission.loading = true;
+        self.errors = [];
+        console.log("Submitting workflow");
 
         const workflowNodes =
           self.workflowSubmission.selectedWorkflowParameters;
-      const supplementNodes = workflowNodes.filter(
-        (node) => node.node_id === "supplement"
-      );
-      if (supplementNodes.length) {
-        console.log("Facial recognition operation");
-        let supplements = await self.getSupplementsForPrimaryfiles(
-          supplementNodes
+        const supplementNodes = workflowNodes.filter(
+          (node) => node.node_id === "supplement"
         );
+        if (supplementNodes.length) {
+          console.log("Facial recognition operation");
+          let supplements = await self.getSupplementsForPrimaryfiles(
+            supplementNodes
+          );
           supplements = JSON.parse(JSON.stringify(supplements));
 
-        //Empty primary file listing
-        const emptyPFileIndexes = new Set();
-        for (let i = 0; i < supplements.length; i++) {
-          for (let j = 0; j < supplements[i].length; j++) {
-            if (!supplements[i][j].length) {
-              emptyPFileIndexes.add(j);
-            } else {
-              for (let k = 0; k < supplements[i][j].length; k++) {
-                supplements[i][j][k][
-                  "primaryFileName"
-                ] = self.getPrimaryFileName(j);
+          //Empty primary file listing
+          const emptyPFileIndexes = new Set();
+          for (let i = 0; i < supplements.length; i++) {
+            for (let j = 0; j < supplements[i].length; j++) {
+              if (!supplements[i][j].length) {
+                emptyPFileIndexes.add(j);
+              } else {
+                for (let k = 0; k < supplements[i][j].length; k++) {
+                  supplements[i][j][k][
+                    "primaryFileName"
+                  ] = self.getPrimaryFileName(j);
+                }
               }
             }
           }
-        }
 
-        if (emptyPFileIndexes.size === supplements[0].length) {
-          //In case all supplement nodes have error
-          const total = this.selectedFilesArray.length;
-          const success = 0;
-          const failure = emptyPFileIndexes.size;
-          const emptyPrimaryfileIds = self.getEmptyPrimaryfileNames(
-            emptyPFileIndexes,
-            this.selectedFiles
-          );
-          self.modalHeader = "Error";
-          self.modalTextList = [
-            `Total number of files submitted: ${total}`,
-            `Number of jobs successfully created: ${success}`,
-            `Number of jobs failed to be created: ${failure}`,
-            `Files could not be submitted due to no facial recognition file available: ${emptyPrimaryfileIds}`,
-            `Please upload a supplemental file to be used as training set for the Facial Recognition tool.`,
-          ];
-          self.showModal = true;
-          self.workflowSubmission.loading = false;
-        } else {
-          //Filtering error free supplement nodes
-          if (emptyPFileIndexes.size) {
-            emptyPFileIndexes.forEach(function(value) {
-              for (let i = 0; i < supplements.length; i++) {
-                supplements[i].splice(value, 1);
-              }
-            });
-          }
+          if (emptyPFileIndexes.size === supplements[0].length) {
+            //In case all supplement nodes have error
+            const total = this.selectedFilesArray.length;
+            const success = 0;
+            const failure = emptyPFileIndexes.size;
+            const emptyPrimaryfileIds = self.getEmptyPrimaryfileNames(
+              emptyPFileIndexes,
+              this.selectedFiles
+            );
+            self.modalHeader = "Error";
+            self.modalTextList = [
+              `Total number of files submitted: ${total}`,
+              `Number of jobs successfully created: ${success}`,
+              `Number of jobs failed to be created: ${failure}`,
+              `Files could not be submitted due to no facial recognition file available: ${emptyPrimaryfileIds}`,
+              `Please upload a supplemental file to be used as training set for the Facial Recognition tool.`,
+            ];
+            self.showModal = true;
+            self.workflowSubmission.loading = false;
+          } else {
+            //Filtering error free supplement nodes
+            if (emptyPFileIndexes.size) {
+              emptyPFileIndexes.forEach(function(value) {
+                for (let i = 0; i < supplements.length; i++) {
+                  supplements[i].splice(value, 1);
+                }
+              });
+            }
 
-          let paths = [];
+            let paths = [];
             //User input in the case of multiple supplements are found
-          for (let i = 0; i < supplements.length; i++) {
-            for (let j = 0; j < supplements[i].length; j++) {
-              let oneSupplement = [];
-              if (supplements[i][j].length > 1) {
-                self.supplementList = supplements[i][j];
+            for (let i = 0; i < supplements.length; i++) {
+              for (let j = 0; j < supplements[i].length; j++) {
+                let oneSupplement = [];
+                if (supplements[i][j].length > 1) {
+                  self.supplementList = supplements[i][j];
                   // Toggle button's activity
-                if (self.defaultFacialRecognition.length) {
-                  let matched = true;
-                  for (let frValue of self.defaultFacialRecognition) {
-                    for (let sup of self.supplementList) {
-                      if (frValue === sup.name) {
-                        oneSupplement = sup;
-                        matched = true;
-                        break;
-                      } else {
-                        matched = false;
+                  if (self.defaultFacialRecognition.length) {
+                    let matched = true;
+                    for (let frValue of self.defaultFacialRecognition) {
+                      for (let sup of self.supplementList) {
+                        if (frValue === sup.name) {
+                          oneSupplement = sup;
+                          matched = true;
+                          break;
+                        } else {
+                          matched = false;
+                        }
                       }
                     }
-                  }
-                  if (!matched) {
+                    if (!matched) {
+                      self.selectedSupplement = supplements[i][j][0];
+                      self.showFRModal = true;
+                      await self.pauser();
+                      oneSupplement = self.selectedSupplement;
+                      if (self.isActiveSupplementSwitch) {
+                        self.defaultFacialRecognition.push(oneSupplement.name);
+                        self.isActiveSupplementSwitch = false;
+                      }
+                    }
+                  } else {
                     self.selectedSupplement = supplements[i][j][0];
                     self.showFRModal = true;
                     await self.pauser();
@@ -550,42 +560,32 @@ export default {
                     }
                   }
                 } else {
-                  self.selectedSupplement = supplements[i][j][0];
-                  self.showFRModal = true;
-                  await self.pauser();
-                  oneSupplement = self.selectedSupplement;
-                  if (self.isActiveSupplementSwitch) {
-                    self.defaultFacialRecognition.push(oneSupplement.name);
-                    self.isActiveSupplementSwitch = false;
-                  }
+                  oneSupplement = supplements[i][j][0];
                 }
-              } else {
-                oneSupplement = supplements[i][j][0];
+                paths.push({ [j]: oneSupplement.absolutePathname });
               }
-              paths.push({ [j]: oneSupplement.absolutePathname });
             }
-          }
-          self.showFRModal = false;
+            self.showFRModal = false;
 
-          //Filtering all absolute paths of each PFile
-          let submitFilesApiBody = [];
-          for (let i = 0; i < supplements[0].length; i++) {
-            const absolutePathList = self.getEachPFileAbsolutePaths(paths, i);
+            //Filtering all absolute paths of each PFile
+            let submitFilesApiBody = [];
+            for (let i = 0; i < supplements[0].length; i++) {
+              const absolutePathList = self.getEachPFileAbsolutePaths(paths, i);
               //Constructing submitWorkflow API body
-            const info = {
-              map: {},
-            };
-            for (let i = 0; i < absolutePathList.length; i++) {
-              info["map"][i + 1] = { path: absolutePathList[i] };
+              const info = {
+                map: {},
+              };
+              for (let i = 0; i < absolutePathList.length; i++) {
+                info["map"][i + 1] = { path: absolutePathList[i] };
+              }
+              submitFilesApiBody.push(info);
             }
-            submitFilesApiBody.push(info);
-          }
 
-          //POST api call
-          self.submitWorkflowApi(submitFilesApiBody, emptyPFileIndexes);
-        }
-      } else {
-        self.submitWorkflowApi();
+            //POST api call
+            self.submitWorkflowApi(submitFilesApiBody, emptyPFileIndexes);
+          }
+        } else {
+          self.submitWorkflowApi();
         }
       } catch (error) {
         console.log(error);
