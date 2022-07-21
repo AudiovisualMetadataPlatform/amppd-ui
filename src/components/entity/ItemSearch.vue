@@ -63,26 +63,31 @@ export default {
     },
     async refreshData() {
       const self = this;
-      self.loading= true;
-      self.itemSource = await this.workflowResultService.getWorkflowResults(
-        {filterOnly: true, filterByRelevant: true}
-      );
-      self.searchSource = await self.itemSource.filters['items']
-      self.loading=false;
+      try {
+        self.loading = true;
+        self.itemSource = await this.workflowResultService.getWorkflowResults({
+          filterOnly: true,
+          filterByRelevant: true,
+        });
+        self.searchSource = await self.itemSource.filters["items"];
+      } catch (error) {
+        console.log(error);
+        self.loading = false;
+      }
     },
   },
-  updated(){
+  updated() {
     this.onSearch();
   },
-  mounted(){
-    this.refreshData()
-  }
+  mounted() {
+    this.refreshData();
+  },
 };
 </script>
 
 <style lang="css">
 @import "/amppd-ui/src/styles/style.css";
-.item-search{
+.item-search {
   width: 100%;
 }
 </style>
