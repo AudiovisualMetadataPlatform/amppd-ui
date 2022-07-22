@@ -63,12 +63,16 @@ export default {
     },
     async refreshData() {
       const self = this;
-      self.loading= true;
-      self.itemSource = await this.workflowResultService.getWorkflowResults(
-        {filterOnly: true, filterByRelevant: true}
-      );
-      self.searchSource = await self.itemSource.filters['items']
-      self.loading=false;
+      try {
+        self.loading= true;
+        self.itemSource = await this.workflowResultService.getWorkflowResults(
+          {filterOnly: true, filterByRelevant: true}
+        );
+        self.searchSource = await self.itemSource.filters['items']
+      } catch (error) {
+        console.log(error)
+        self.loading=false;
+      }
     },
   },
   updated(){
