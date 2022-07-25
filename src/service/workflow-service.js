@@ -32,13 +32,14 @@ export default class WorkflowService extends BaseService{
                 }
                 }
             });
+            return primaryfileIds;
         } else {
             let primaryfileIds = "";
             for (let primaryfile of selectedFiles.values()) {
                 primaryfileIds = primaryfileIds === "" ? primaryfile.id : primaryfileIds + "," + primaryfile.id;
             }
+            return primaryfileIds;
         }
-        return primaryfileIds;
     }
 
     listBundles() {
