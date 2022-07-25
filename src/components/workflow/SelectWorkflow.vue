@@ -397,7 +397,10 @@ export default {
       await self.workflowService
         .submitWorkflow(
           this.workflowSubmission.selectedWorkflow,
-          self.workflowService.getSelectedPrimaryfileIds(this.selectedFiles),
+          self.workflowService.getSelectedPrimaryfileIds(
+            this.selectedFiles,
+            emptyPFileIndexes
+          ),
           body
         )
         .then((response) => {
@@ -409,10 +412,10 @@ export default {
             }
           }
 
-          let emptyPrimaryfileIds;
+          let emptyPrimaryfileNames;
           let eFailure;
           if (emptyPFileIndexes && emptyPFileIndexes.size) {
-            emptyPrimaryfileIds = self.getEmptyPrimaryfileNames(
+            emptyPrimaryfileNames = self.getEmptyPrimaryfileNames(
               emptyPFileIndexes,
               this.selectedFiles
             );
@@ -424,15 +427,15 @@ export default {
             `Total number of files submitted: ${total}`,
             `Number of jobs successfully created: ${eSuccess}`,
             `Number of jobs failed to be created: ${eFailure}`,
-            `Files could not be submitted due to no facial recognition file available: ${emptyPrimaryfileIds}`,
+            `Files could not be submitted due to no facial recognition file available: ${emptyPrimaryfileNames}`,
           ];
           let success = total - self.errors.length;
           let failure = self.errors.length;
           self.modalHeader =
-            failure || emptyPrimaryfileIds ? "Error" : "Success";
+            failure || emptyPrimaryfileNames ? "Error" : "Success";
           self.modalTextList =
-            failure || emptyPrimaryfileIds
-              ? emptyPrimaryfileIds
+            failure || emptyPrimaryfileNames
+              ? emptyPrimaryfileNames
                 ? emptyPFModalData
                 : [
                     `Total number of files submitted: ${total}`,
@@ -494,7 +497,7 @@ export default {
             const total = this.selectedFilesArray.length;
             const success = 0;
             const failure = emptyPFileIndexes.size;
-            const emptyPrimaryfileIds = self.getEmptyPrimaryfileNames(
+            const emptyPrimaryfileNames = self.getEmptyPrimaryfileNames(
               emptyPFileIndexes,
               this.selectedFiles
             );
@@ -503,7 +506,7 @@ export default {
               `Total number of files submitted: ${total}`,
               `Number of jobs successfully created: ${success}`,
               `Number of jobs failed to be created: ${failure}`,
-              `Files could not be submitted due to no facial recognition file available: ${emptyPrimaryfileIds}`,
+              `Files could not be submitted due to no facial recognition file available: ${emptyPrimaryfileNames}`,
               `Please upload a supplemental file to be used as training set for the Facial Recognition tool.`,
             ];
             self.showModal = true;
