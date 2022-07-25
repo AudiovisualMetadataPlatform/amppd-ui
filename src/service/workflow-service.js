@@ -18,20 +18,27 @@ export default class WorkflowService extends BaseService{
     getSelectedPrimaryfileIds(selectedFiles, emptyPFileIndexes){
         if (selectedFiles === null || selectedFiles.size === 0)
             return "";
-        let primaryfileIds = "";
         if(emptyPFileIndexes){
+            let primaryfileIds = "";
             const sortedEmptyIndexes = Array.from(emptyPFileIndexes).sort(
                 (a, b) => a - b
             );
             const selectedFilesList = Array.from(selectedFiles.values());
-            sortedEmptyIndexes.forEach(function(value) {
-                for (let i = 0; i < selectedFilesList.length; i++) {
-                if (i !== value) {
-                    let primaryfile = selectedFilesList[i];
-                    primaryfileIds = primaryfileIds === "" ? primaryfile.id : primaryfileIds + "," + primaryfile.id;
+            const files = selectedFilesList.filter((file,index) =>{
+                let isFound = false;
+                for (let i = 0; i < sortedEmptyIndexes.length; i++) {
+                    if(index === sortedEmptyIndexes[i]){
+                        isFound = true;
+                        break;
+                    }else{
+                        isFound = false;
+                    }
                 }
-                }
-            });
+                return !isFound;
+            })
+            for (let primaryfile of files) {
+                primaryfileIds = primaryfileIds === "" ? primaryfile.id : primaryfileIds + "," + primaryfile.id;
+            }
             return primaryfileIds;
         } else {
             let primaryfileIds = "";

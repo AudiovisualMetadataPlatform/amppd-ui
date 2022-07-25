@@ -514,7 +514,10 @@ export default {
           } else {
             //Filtering error free supplement nodes
             if (emptyPFileIndexes.size) {
-              emptyPFileIndexes.forEach(function(value) {
+              const reverseEmptyPFileIndexes = new Set(
+                Array.from(emptyPFileIndexes).reverse()
+              );
+              reverseEmptyPFileIndexes.forEach(function(value) {
                 for (let i = 0; i < supplements.length; i++) {
                   supplements[i].splice(value, 1);
                 }
