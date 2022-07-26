@@ -15,14 +15,38 @@ export default class WorkflowService extends BaseService{
     }
 
     // concatenate IDs of selected primaryfiles into a query string
-    getSelectedPrimaryfileIds(selectedFiles){
+    getSelectedPrimaryfileIds(selectedFiles, emptyPFileIndexes){
         if (selectedFiles === null || selectedFiles.size === 0)
             return "";
-        var primaryfileIds = "";
-        for (let primaryfile of selectedFiles.values()) {
-            primaryfileIds = primaryfileIds === "" ? primaryfile.id : primaryfileIds + "," + primaryfile.id;
+        if(emptyPFileIndexes){
+            let primaryfileIds = "";
+            const sortedEmptyIndexes = Array.from(emptyPFileIndexes).sort(
+                (a, b) => a - b
+            );
+            const selectedFilesList = Array.from(selectedFiles.values());
+            const files = selectedFilesList.filter((file,index) =>{
+                let isFound = false;
+                for (let i = 0; i < sortedEmptyIndexes.length; i++) {
+                    if(index === sortedEmptyIndexes[i]){
+                        isFound = true;
+                        break;
+                    }else{
+                        isFound = false;
+                    }
+                }
+                return !isFound;
+            })
+            for (let primaryfile of files) {
+                primaryfileIds = primaryfileIds === "" ? primaryfile.id : primaryfileIds + "," + primaryfile.id;
+            }
+            return primaryfileIds;
+        } else {
+            let primaryfileIds = "";
+            for (let primaryfile of selectedFiles.values()) {
+                primaryfileIds = primaryfileIds === "" ? primaryfile.id : primaryfileIds + "," + primaryfile.id;
+            }
+            return primaryfileIds;
         }
-        return primaryfileIds;
     }
 
     listBundles() {

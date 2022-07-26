@@ -195,6 +195,19 @@ var router = new Router({
       },
     },
     {
+      path: "/supplemental-files",
+      name: "supplemental-files",
+      component: EntityList,
+      meta: {
+        authorize: [],
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Supplemental Files" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    {
       path: "/collections/items/item-search/details",
       name: "item-search-details",
       component: EntityList,

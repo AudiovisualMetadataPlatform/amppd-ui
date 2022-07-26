@@ -11,6 +11,7 @@
           <!-- Header - Details page -->
 
           <b-card
+            v-if="baseUrl !== 'supplement'"
             class="text-center mt-5"
             :class="
               baseUrl === 'file' && entity.mediaType === 'video'
@@ -406,24 +407,47 @@
                             <h3 v-else-if="baseUrl == 'collection' && !purpose">My Collections</h3>-->
 
               <!-- Title - Unit Details page  -->
-              <div class="d-flex w-100" v-if="baseUrl == 'unit'">
+              <div
+                class="d-flex w-100"
+                v-if="baseUrl == 'unit' || baseUrl === 'supplement'"
+              >
                 <div class="col-3 text-left">
-                  <h2>Unit Collections</h2>
+                  <h2 v-if="baseUrl == 'unit'">Unit Collections</h2>
+                  <h1 v-else>Supplemental Files</h1>
                 </div>
                 <div class="col-9 text-right p0 btn-grp">
                   <button
+                    :disabled="baseUrl === 'supplement'"
                     class="btn btn-primary btn-lg btn-edit mr-2"
                     type="button"
-                    @click="onCreateCollection()"
+                    @click="onCreate()"
                   >
-                    Create New Collection
+                    {{
+                      baseUrl === "supplement"
+                        ? "Create New File"
+                        : baseUrl === "unit"
+                        ? "Create New Collection"
+                        : ""
+                    }}
                   </button>
                   <button
                     class="btn btn-primary btn-lg btn-edit"
                     type="button"
-                    @click="onSearch('listing-collection')"
+                    @click="
+                      onSearch(
+                        baseUrl === 'supplement'
+                          ? 'listing-supplement'
+                          : baseUrl === 'unit'
+                          ? 'listing-collection'
+                          : ''
+                      )
+                    "
                   >
-                    Search Collections
+                    {{
+                      baseUrl === "supplement"
+                        ? "Search Files"
+                        : "Search Collections"
+                    }}
                   </button>
                 </div>
               </div>
@@ -477,6 +501,7 @@
                           "
                         >
                           <button
+                            :disabled="baseUrl === 'supplement'"
                             class="btn btn-primary btn"
                             @click="onView(elem)"
                           >
@@ -515,6 +540,38 @@
                       <div class="col-2">
                         <label>Modified Date</label>
                         <p>{{ elem.modifiedDate | LOCAL_DATE_VALUE }}</p>
+                      </div>
+                    </div>
+
+                    <div v-if="baseUrl == 'supplement'">
+                      <div class="row">
+                        <div class="col">Unit: <br />{{ elem.unitName }}</div>
+                        <div class="col" v-if="elem.collectionName">
+                          Collection: <br />{{ elem.collectionName }}
+                        </div>
+                        <div class="col" v-if="elem.itemName">
+                          Item: <br />{{ elem.itemName }}
+                        </div>
+                        <div class="col" v-if="elem.primaryfileName">
+                          Primary File: <br />{{ elem.primaryfileName }}
+                        </div>
+                        <div class="col">
+                          Category: <br />{{ elem.category }}
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="row">
+                        <div class="col">
+                          Created By: <br />{{ elem.createdBy }}
+                        </div>
+                        <div class="col">
+                          Modified Date: <br />{{
+                            elem.modifiedDate | LOCAL_DATE_VALUE
+                          }}
+                        </div>
+                        <div class="col">
+                          Modified By: <br />{{ elem.modifiedBy }}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -601,6 +658,10 @@ export default {
       const self = this;
       if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
         return "unit";
+      } else if (
+        window.location.hash.toLowerCase().indexOf("supplemental") > -1
+      ) {
+        return "supplement";
       } else if (window.location.hash.toLowerCase().indexOf("file") > -1) {
         return "file";
       } else if (
@@ -669,6 +730,42 @@ export default {
         self.entity["mediaSource"] = mediaSourceUrl;
         self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
         self.showLoader = false;
+      } else if (self.baseUrl === "supplement") {
+        this.getSupplementalFiles();
+      }
+    },
+    async getSupplementalFiles() {
+      const self = this;
+      self.showLoader = true;
+      const supplementalFilesResponse = await self.entityService.getSupplementalFiles(
+        self
+      );
+      // Temporary logic, need to update while using paging
+      if (supplementalFilesResponse) {
+        console.log(
+          "totalElements:" + supplementalFilesResponse.page.totalElements
+        );
+        const tempSupplementalFilesResponse = await self.entityService.getSupplementalFiles(
+          "0",
+          supplementalFilesResponse.page.totalElements,
+          self
+        );
+
+        let supplementalFiles = [];
+        for (const property in tempSupplementalFilesResponse._embedded) {
+          supplementalFiles.push(
+            ...tempSupplementalFilesResponse._embedded[property]
+          );
+        }
+        if (supplementalFiles.length) {
+          self.records = self.sharedService.sortByAlphabatical(
+            supplementalFiles
+          );
+          self.masterRecords = JSON.parse(JSON.stringify(self.records));
+        }
+        self.showLoader = false;
+      } else {
+        self.showLoader = false;
       }
     },
     async getUnitDetails() {
@@ -721,12 +818,15 @@ export default {
       } else if (self.baseUrl === "unit" && self.purpose) {
         self.selectedCollection = objInstance;
         self.$router.push("/collection/details");
+      } else if (self.baseUrl === "supplement") {
+        console.log(objInstance);
       }
     },
-    onCreateCollection() {
+    onCreate() {
       const self = this;
-
-      self.$router.push("/collection/create");
+      if (self.baseUrl === "unit") self.$router.push("/collection/create");
+      else if (self.baseUrl === "supplement")
+        console.log("Create supplement file");
     },
     onCreateItem() {
       const self = this;
