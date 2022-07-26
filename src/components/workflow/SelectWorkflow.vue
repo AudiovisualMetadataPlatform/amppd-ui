@@ -340,7 +340,7 @@ export default {
         !emptyPFileIndexes.size
       )
         return "";
-      let primaryfileIds = "";
+      let primaryfileNames = [];
       const sortedEmptyIndexes = Array.from(emptyPFileIndexes).sort(
         (a, b) => a - b
       );
@@ -349,14 +349,11 @@ export default {
         for (let i = 0; i < selectedFilesList.length; i++) {
           if (i === value) {
             let primaryfile = selectedFilesList[i];
-            primaryfileIds =
-              primaryfileIds === ""
-                ? primaryfile.name
-                : primaryfileIds + ", " + primaryfile.name;
+            primaryfileNames.push(`- ${primaryfile.name}`);
           }
         }
       });
-      return primaryfileIds;
+      return primaryfileNames;
     },
 
     onDone() {
@@ -427,7 +424,9 @@ export default {
             `Total number of files submitted: ${total}`,
             `Number of jobs successfully created: ${eSuccess}`,
             `Number of jobs failed to be created: ${eFailure}`,
-            `Files could not be submitted due to no facial recognition file available: ${emptyPrimaryfileNames}`,
+            "Files could not be submitted due to no facial recognition file available:",
+            ...emptyPrimaryfileNames,
+            "Please upload a supplemental file to be used as training set for the Facial Recognition tool.",
           ];
           let success = total - self.errors.length;
           let failure = self.errors.length;
@@ -506,8 +505,9 @@ export default {
               `Total number of files submitted: ${total}`,
               `Number of jobs successfully created: ${success}`,
               `Number of jobs failed to be created: ${failure}`,
-              `Files could not be submitted due to no facial recognition file available: ${emptyPrimaryfileNames}`,
-              `Please upload a supplemental file to be used as training set for the Facial Recognition tool.`,
+              "Files could not be submitted due to no facial recognition file available:",
+              ...emptyPrimaryfileNames,
+              "Please upload a supplemental file to be used as training set for the Facial Recognition tool.",
             ];
             self.showModal = true;
             self.workflowSubmission.loading = false;
