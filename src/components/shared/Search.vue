@@ -83,7 +83,7 @@
                   :key="source.id"
                   v-if="selectedRecords.indexOf(source.id) > -1"
                 >
-                  <td colspan="1">
+                  <td :colspan="type === 'listing-supplement' ? 3 : 1">
                     <input
                       class="selectAll"
                       type="checkbox"
@@ -132,9 +132,26 @@
                     </td>
                   </template>
                   <template v-if="isEntityList">
-                    <td colspan="1">{{ source.name }}</td>
-                    <td colspan="3">{{ source.description }}</td>
-                    <td v-if="type === 'listing-item'">
+                    <td colspan="4">{{ source.name }}</td>
+                    <td colspan="3" v-if="type === 'listing-supplement'">
+                      {{ source.category }}
+                    </td>
+                    <td colspan="3" v-if="type === 'listing-supplement'">
+                      {{ source.unitName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.collectionName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.itemName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.primaryfileName }}
+                    </td>
+                    <td colspan="4" v-if="type !== 'listing-supplement'">
+                      {{ source.description }}
+                    </td>
+                    <td colspan="3" v-if="type === 'listing-item'">
                       {{ source.externalId }}
                     </td>
                   </template>
@@ -154,7 +171,10 @@
         >
           <table class="w-100 table table-striped">
             <thead>
-              <th v-if="type !== 'item-search'">
+              <th
+                v-if="type !== 'item-search'"
+                :class="type === 'listing-supplement' ? 'supSelectAll' : ''"
+              >
                 <label>
                   <input
                     class="selectAll"
@@ -216,12 +236,39 @@
                 </th>
               </template>
               <template v-if="isEntityList">
-                <th colspan="2" v-if="type === 'listing-collection'">
+                <th colspan="4" v-if="type === 'listing-supplement'">
+                  Title
+                </th>
+                <th colspan="3" v-if="type === 'listing-supplement'">
+                  Category
+                </th>
+                <th colspan="3" v-if="type === 'listing-supplement'">
+                  Unit
+                </th>
+                <th
+                  colspan="4"
+                  v-if="
+                    type === 'listing-collection' ||
+                      type === 'listing-supplement'
+                  "
+                >
                   Collection
                 </th>
-                <th colspan="2" v-if="type === 'listing-item'">Item</th>
-                <th colspan="2">Description</th>
-                <th v-if="type === 'listing-item'">External Id</th>
+                <th
+                  colspan="4"
+                  v-if="
+                    type === 'listing-item' || type === 'listing-supplement'
+                  "
+                >
+                  Item
+                </th>
+                <th colspan="4" v-if="type === 'listing-supplement'">
+                  Primary File
+                </th>
+                <th colspan="4" v-if="type !== 'listing-supplement'">
+                  Description
+                </th>
+                <th colspan="3" v-if="type === 'listing-item'">External Id</th>
               </template>
             </thead>
             <tbody>
@@ -303,9 +350,26 @@
                     </td>
                   </template>
                   <template v-if="isEntityList">
-                    <td colspan="1">{{ source.name }}</td>
-                    <td colspan="3">{{ source.description }}</td>
-                    <td v-if="type === 'listing-item'">
+                    <td colspan="4">{{ source.name }}</td>
+                    <td colspan="3" v-if="type === 'listing-supplement'">
+                      {{ source.category }}
+                    </td>
+                    <td colspan="3" v-if="type === 'listing-supplement'">
+                      {{ source.unitName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.collectionName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.itemName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.primaryfileName }}
+                    </td>
+                    <td colspan="4" v-if="type !== 'listing-supplement'">
+                      {{ source.description }}
+                    </td>
+                    <td colspan="3" v-if="type === 'listing-item'">
                       {{ source.externalId }}
                     </td>
                   </template>
@@ -329,7 +393,11 @@
           size="sm"
           class="btn btn-primary"
           :disabled="
-            type === 'item-search'
+            type === 'listing-collection' ||
+            type === 'listing-item' ||
+            type === 'listing-supplement'
+              ? false
+              : type === 'item-search'
               ? !selectedItemId
               : selectedRecords.length <= 0
               ? true
@@ -523,6 +591,7 @@ export default {
           break;
         case "listing-collection":
         case "listing-item":
+        case "listing-supplement":
           self.searchProps = ["name"];
           break;
         case "item-search":
@@ -585,6 +654,7 @@ export default {
           break;
         case "listing-collection":
         case "listing-item":
+        case "listing-supplement":
           this.$emit(
             "myEvent",
             this.selectedFilters[this.type] &&
@@ -703,6 +773,9 @@ table tbody tr:nth-of-type(odd) {
   animation-timing-function: ease-out;
   visibility: visible !important;
   max-width: 100%;
+}
+.supSelectAll {
+  width: 100px;
 }
 @keyframes expandOpen {
   from {

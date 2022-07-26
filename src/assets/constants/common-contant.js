@@ -58,7 +58,7 @@ const menus = [
             {
                 name: 'Supplemental Files',
                 class: 'units, units',
-                url: "",
+                url: "/supplemental-files",
             },
             {
                 name: 'Item Search',
