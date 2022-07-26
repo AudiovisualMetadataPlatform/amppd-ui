@@ -409,7 +409,7 @@ export default {
             }
           }
 
-          let emptyPrimaryfileNames;
+          let emptyPrimaryfileNames = [];
           let eFailure;
           if (emptyPFileIndexes && emptyPFileIndexes.size) {
             emptyPrimaryfileNames = self.getEmptyPrimaryfileNames(
@@ -431,10 +431,10 @@ export default {
           let success = total - self.errors.length;
           let failure = self.errors.length;
           self.modalHeader =
-            failure || emptyPrimaryfileNames ? "Error" : "Success";
+            failure || emptyPrimaryfileNames.length ? "Error" : "Success";
           self.modalTextList =
-            failure || emptyPrimaryfileNames
-              ? emptyPrimaryfileNames
+            failure || emptyPrimaryfileNames.length
+              ? emptyPrimaryfileNames.length
                 ? emptyPFModalData
                 : [
                     `Total number of files submitted: ${total}`,
