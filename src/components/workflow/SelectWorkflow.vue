@@ -322,6 +322,7 @@ export default {
             format
           )
           .then((response) => {
+            response.data["category"] = category;
             supplements.push(response.data);
           });
       }
@@ -333,27 +334,33 @@ export default {
       return arr.map((item) => item[key]).filter((data) => data);
     },
 
-    getEmptyPrimaryfileNames(emptyPFileIndexes, selectedFiles) {
+    getEmptyPrimaryfileNameList(emptySupplementalPFiles, selectedFiles) {
       if (
         selectedFiles === null ||
         !selectedFiles.size ||
-        !emptyPFileIndexes.size
+        !Object.keys(emptySupplementalPFiles).length
       )
         return "";
-      let primaryfileNames = [];
-      const sortedEmptyIndexes = Array.from(emptyPFileIndexes).sort(
-        (a, b) => a - b
-      );
-      const selectedFilesList = Array.from(selectedFiles.values());
-      sortedEmptyIndexes.forEach(function(value) {
-        for (let i = 0; i < selectedFilesList.length; i++) {
-          if (i === value) {
-            let primaryfile = selectedFilesList[i];
-            primaryfileNames.push(`- ${primaryfile.name}`);
+      let pfListWithNoSupplements = [];
+      for (let key in emptySupplementalPFiles) {
+        const sortedEmptyIndexes = emptySupplementalPFiles[key].sort(
+          (a, b) => a - b
+        );
+        pfListWithNoSupplements.push(
+          `Files that could not be submitted due to no ${key} supplement available:`
+        );
+        const selectedFilesList = Array.from(selectedFiles.values());
+        sortedEmptyIndexes.forEach(function(value) {
+          for (let i = 0; i < selectedFilesList.length; i++) {
+            if (i === value) {
+              let primaryfile = selectedFilesList[i];
+              pfListWithNoSupplements.push(`- ${primaryfile.name}`);
+            }
           }
-        }
-      });
-      return primaryfileNames;
+        });
+      }
+
+      return pfListWithNoSupplements;
     },
 
     onDone() {
@@ -389,7 +396,7 @@ export default {
       return primaryFileName;
     },
 
-    async submitWorkflowApi(body, emptyPFileIndexes) {
+    async submitWorkflowApi(body, emptyPFileIndexes, emptySupplementalPFiles) {
       let self = this;
       await self.workflowService
         .submitWorkflow(
@@ -409,11 +416,11 @@ export default {
             }
           }
 
-          let emptyPrimaryfileNames = [];
+          let emptyPrimaryfileDetails = [];
           let eFailure;
           if (emptyPFileIndexes && emptyPFileIndexes.size) {
-            emptyPrimaryfileNames = self.getEmptyPrimaryfileNames(
-              emptyPFileIndexes,
+            emptyPrimaryfileDetails = self.getEmptyPrimaryfileNameList(
+              emptySupplementalPFiles,
               this.selectedFiles
             );
             eFailure = self.errors.length + emptyPFileIndexes.size;
@@ -424,17 +431,16 @@ export default {
             `Total number of files submitted: ${total}`,
             `Number of jobs successfully created: ${eSuccess}`,
             `Number of jobs failed to be created: ${eFailure}`,
-            "Files could not be submitted due to no facial recognition file available:",
-            ...emptyPrimaryfileNames,
-            "Please upload a supplemental file to be used as training set for the Facial Recognition tool.",
+            ...emptyPrimaryfileDetails,
+            "Please upload the necessary supplemental files.",
           ];
           let success = total - self.errors.length;
           let failure = self.errors.length;
           self.modalHeader =
-            failure || emptyPrimaryfileNames.length ? "Error" : "Success";
+            failure || emptyPrimaryfileDetails.length ? "Error" : "Success";
           self.modalTextList =
-            failure || emptyPrimaryfileNames.length
-              ? emptyPrimaryfileNames.length
+            failure || emptyPrimaryfileDetails.length
+              ? emptyPrimaryfileDetails.length
                 ? emptyPFModalData
                 : [
                     `Total number of files submitted: ${total}`,
@@ -473,14 +479,29 @@ export default {
           let supplements = await self.getSupplementsForPrimaryfiles(
             supplementNodes
           );
-          supplements = JSON.parse(JSON.stringify(supplements));
 
           //Empty primary file listing
-          const emptyPFileIndexes = new Set();
+          const emptySupplementalPFiles = {};
           for (let i = 0; i < supplements.length; i++) {
             for (let j = 0; j < supplements[i].length; j++) {
               if (!supplements[i][j].length) {
-                emptyPFileIndexes.add(j);
+                if (Object.keys(emptySupplementalPFiles).length) {
+                  let matched = true;
+                  for (let key of Object.keys(emptySupplementalPFiles)) {
+                    if (key === supplements[i].category) {
+                      emptySupplementalPFiles[key].push(j);
+                      matched = true;
+                      break;
+                    } else {
+                      matched = false;
+                    }
+                  }
+                  if (!matched) {
+                    emptySupplementalPFiles[supplements[i].category] = [j];
+                  }
+                } else {
+                  emptySupplementalPFiles[supplements[i].category] = [j];
+                }
               } else {
                 for (let k = 0; k < supplements[i][j].length; k++) {
                   supplements[i][j][k][
@@ -490,14 +511,21 @@ export default {
               }
             }
           }
+          let emptyPFileIndexArr = [];
+          for (let key in Object.values(emptySupplementalPFiles)) {
+            emptyPFileIndexArr = emptyPFileIndexArr.concat(
+              Object.values(emptySupplementalPFiles)[key]
+            );
+          }
+          const emptyPFileIndexes = new Set(emptyPFileIndexArr);
 
           if (emptyPFileIndexes.size === supplements[0].length) {
             //In case all supplement nodes have error
             const total = this.selectedFilesArray.length;
             const success = 0;
-            const failure = emptyPFileIndexes.size;
-            const emptyPrimaryfileNames = self.getEmptyPrimaryfileNames(
-              emptyPFileIndexes,
+            const failure = supplements[0].length;
+            const emptyPrimaryfileDetails = self.getEmptyPrimaryfileNameList(
+              emptySupplementalPFiles,
               this.selectedFiles
             );
             self.modalHeader = "Error";
@@ -505,9 +533,8 @@ export default {
               `Total number of files submitted: ${total}`,
               `Number of jobs successfully created: ${success}`,
               `Number of jobs failed to be created: ${failure}`,
-              "Files could not be submitted due to no facial recognition file available:",
-              ...emptyPrimaryfileNames,
-              "Please upload a supplemental file to be used as training set for the Facial Recognition tool.",
+              ...emptyPrimaryfileDetails,
+              "Please upload the necessary supplemental files.",
             ];
             self.showModal = true;
             self.workflowSubmission.loading = false;
@@ -588,7 +615,11 @@ export default {
             }
 
             //POST api call
-            self.submitWorkflowApi(submitFilesApiBody, emptyPFileIndexes);
+            self.submitWorkflowApi(
+              submitFilesApiBody,
+              emptyPFileIndexes,
+              emptySupplementalPFiles
+            );
           }
         } else {
           self.submitWorkflowApi();
