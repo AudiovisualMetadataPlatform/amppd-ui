@@ -9,7 +9,7 @@
               <input
                 type="button"
                 class="primary-button"
-                v-on:click="onEditorDone"
+                v-on:click="onDone"
                 value="Done"
               />
             </div>
@@ -33,15 +33,15 @@
         </template>
         <template #default="{}">
           <div class="row pad-all-2">
-            Are you sure you want to proceed? Any unsaved changes will be lost.
+            Any unsaved changes will be lost. Do you want to continue?
           </div>
         </template>
         <template #modal-footer="{ hide }">
           <button class="btn btn-secondary" @click="hide()">
-            Cancel
+            Go Back
           </button>
-          <button size="sm" class="btn btn-primary" @click="onDone()">
-            Done
+          <button size="sm" class="btn btn-primary" @click="onContinue()">
+            Continue
           </button>
         </template>
       </b-modal>
@@ -88,11 +88,11 @@ export default {
     getIframeUrl(id) {
       return env.getGalaxyWorkflowUrl() + id;
     },
-    onEditorDone() {
+    onDone() {
       const self = this;
       self.showModal = true;
     },
-    async onDone() {
+    async onContinue() {
       const self = this;
       await self.workflowService
         .getEditorEndStatus(self.id)
