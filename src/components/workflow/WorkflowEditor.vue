@@ -9,7 +9,7 @@
               <input
                 type="button"
                 class="primary-button"
-                v-on:click="onDone"
+                v-on:click="onEditorDone"
                 value="Done"
               />
             </div>
@@ -25,6 +25,26 @@
           ></iframe>
         </div>
       </div>
+      <b-modal v-model="showModal" id="modal-center" centered>
+        <template #modal-header="{}">
+          <h5 class="text-capitalize">
+            Confirm
+          </h5>
+        </template>
+        <template #default="{}">
+          <div class="row pad-all-2">
+            Are you sure you want to proceed? All unsaved changes will be lost.
+          </div>
+        </template>
+        <template #modal-footer="{ hide }">
+          <button class="btn btn-secondary" @click="hide()">
+            Cancel
+          </button>
+          <button size="sm" class="btn btn-primary" @click="onDone()">
+            Done
+          </button>
+        </template>
+      </b-modal>
       <!-- <modal v-if="showValidation" @close="modalDismiss">
       <h3 slot="header">{{validationHeader}}</h3>
       <div slot="body">
@@ -60,6 +80,7 @@ export default {
       responseBody: "",
       modalDismiss: null,
       showValidation: false,
+      showModal: false,
     };
   },
   computed: {},
@@ -67,15 +88,21 @@ export default {
     getIframeUrl(id) {
       return env.getGalaxyWorkflowUrl() + id;
     },
+    onEditorDone() {
+      const self = this;
+      self.showModal = true;
+    },
     async onDone() {
       const self = this;
       await self.workflowService
         .getEditorEndStatus(self.id)
         .then((el) => {
           localStorage.removeItem("activeWorkflowSession");
+          self.showModal = false;
           this.$router.push(`/workflows`);
         })
         .catch((e) => {
+          self.showModal = false;
           self.$bvToast.toast(
             "Unable to process your request. Please contact Administrator",
             self.sharedService.erorrToastConfig
