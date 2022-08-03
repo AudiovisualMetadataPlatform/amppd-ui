@@ -33,7 +33,7 @@
         </template>
         <template #default="{}">
           <div class="row pad-all-2">
-            Are you sure you want to proceed? All unsaved changes will be lost.
+            Are you sure you want to proceed? Any unsaved changes will be lost.
           </div>
         </template>
         <template #modal-footer="{ hide }">
