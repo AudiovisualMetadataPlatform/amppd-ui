@@ -23,7 +23,7 @@
     "eslint-loader": "^3.0.2",
     "eslint-plugin-react": "^7.29.4",
     "mediaelement": "^5.0.5",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "sass-loader": "^8.0.2",
