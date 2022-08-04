@@ -19,6 +19,7 @@ import { env } from "./helpers/env.js";
 import WorkflowList from "./components/workflow/WorkflowList.vue";
 import EntityList from "./components/entity/EntityList.vue";
 import ItemSearch from "./components/entity/ItemSearch.vue";
+import MGMevaluation from "./components/evaluation/MGMevaluation.vue";
 Vue.use(Router);
 
 var router = new Router({
@@ -204,6 +205,16 @@ var router = new Router({
           { text: "Home", href: "#/" },
           { text: "Supplemental Files" },
         ],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    {
+      path: "/mgm-evaluation",
+      name: "mgm-evaluation",
+      component: MGMevaluation,
+      meta: {
+        authorize: [],
+        breadCrumb: [{ text: "Home", href: "#/" }, { text: "MGM Evaluation" }],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },

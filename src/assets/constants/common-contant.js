@@ -18,25 +18,6 @@ const icons = {
 // Menu List
 
 const menus = [
-    {
-        displayId:3,
-        name: 'Workflows',
-        class: 'workflows, workflows',
-        icon: icons['new_workflow'],
-        dropdownIcon: icons['drop_down'],
-        children: [ 
-            {
-                name: 'Listings',
-                class: 'workflows, workflows',
-                url: "/workflows",
-            },
-            {
-                name: 'Submissions',
-                class: 'workflows, workflows',
-                url: "/workflow/submit",
-            },
-        ]
-    },
     // {
     //     name: 'Collections',
     //     class: 'collection, collection',
@@ -75,11 +56,23 @@ const menus = [
         url: "/dashboard"
     },
     {
-        displayId:5,
-        name: 'Batch Ingest',
-        class: 'batch-ingest, batch-ingest',
-        icon: icons['batchIngest'],
-        url: "/batch/ingest"
+        displayId:3,
+        name: 'Workflows',
+        class: 'workflows, workflows',
+        icon: icons['new_workflow'],
+        dropdownIcon: icons['drop_down'],
+        children: [ 
+            {
+                name: 'Listings',
+                class: 'workflows, workflows',
+                url: "/workflows",
+            },
+            {
+                name: 'Submissions',
+                class: 'workflows, workflows',
+                url: "/workflow/submit",
+            },
+        ]
     },
     {
         displayId:4,
@@ -87,7 +80,21 @@ const menus = [
         class: 'deliverables, deliverables',
         icon: icons['deliverables'],
         url: "/deliverables"
-    }
+    },
+    {
+        displayId:5,
+        name: 'Batch Ingest',
+        class: 'batch-ingest, batch-ingest',
+        icon: icons['batchIngest'],
+        url: "/batch/ingest"
+    },
+    {
+        displayId:6,
+        name: 'Evaluation',
+        class: 'evaluations, evaluations',
+        icon: icons[''],
+        url: "/mgm-evaluation"
+    },
 ];
 
 
