@@ -54,7 +54,10 @@
                 <template #button-content>
                   <span v-html="menu.icon"></span>
                   <span class="pl-2">{{ menu.name }}</span>
-                  <span v-if="menu.dropdownIcon" v-html="menu.dropdownIcon"></span>
+                  <span
+                    v-if="menu.dropdownIcon"
+                    v-html="menu.dropdownIcon"
+                  ></span>
                 </template>
                 <b-dropdown-item
                   class="p-0"
@@ -173,9 +176,11 @@ nav ul li {
   display: none !important;
 }
 .navbar-light .navbar-nav .show > .nav-link,
-.navbar-light .navbar-nav .nav-link:hover,
 .navbar-light .navbar-nav .nav-link:focus {
   color: #fff !important;
+}
+.navbar-light .navbar-nav .nav-link:hover {
+  color: #f4871e !important;
 }
 
 .submenu {
