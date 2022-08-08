@@ -90,7 +90,7 @@ const menus = [
     },
     {
         displayId:6,
-        name: 'Evaluation',
+        name: 'MGM Evaluation',
         class: 'evaluations, evaluations',
         icon: icons[''],
         url: "/mgm-evaluation"
