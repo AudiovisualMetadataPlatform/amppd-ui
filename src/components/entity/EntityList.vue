@@ -7,12 +7,12 @@
     <div class="row">
       <!-- <Sidebar /> -->
       <div class="col-12 bg-light-gray-1">
-        <main class="m-0">
+        <main>
           <!-- Header - Details page -->
 
           <b-card
             v-if="baseUrl !== 'supplement'"
-            class="text-center mt-5"
+            class="text-center mt-5 mb-5"
             :class="
               baseUrl === 'file' && entity.mediaType === 'video'
                 ? 'extra-padding'
@@ -401,7 +401,10 @@
           </div>
           <div class v-else>
             <!-- Title ends here -->
-            <b-card class="text-left m-3">
+            <b-card
+              class="text-left"
+              :class="baseUrl === 'supplement' ? 'm-4' : 'm-0'"
+            >
               <!-- Title - Listing page -->
               <!-- <h3 v-if="baseUrl == 'unit' && !purpose">My Units</h3>
                             <h3 v-else-if="baseUrl == 'collection' && !purpose">My Collections</h3>-->
@@ -411,9 +414,14 @@
                 class="d-flex w-100"
                 v-if="baseUrl == 'unit' || baseUrl === 'supplement'"
               >
-                <div class="col-3 text-left">
-                  <h2 v-if="baseUrl == 'unit'">Unit Collections</h2>
-                  <h1 v-else>Supplemental Files</h1>
+                <div class="col-3 text-left p-0">
+                  <h2>
+                    {{
+                      baseUrl == "unit"
+                        ? "Unit Collections"
+                        : "Supplemental Files"
+                    }}
+                  </h2>
                 </div>
                 <div class="col-9 text-right p0 btn-grp">
                   <button
@@ -473,16 +481,16 @@
                   </button>
                 </div>
               </div>
-              <div class="row" v-if="records && records.length">
+              <div class="row row-spl" v-if="records && records.length">
                 <b-card
-                  class="m-3 w-100 text-left"
+                  class="m-3 w-100 text-left b-card-spl"
                   v-for="elem in records"
                   :key="elem.id"
                 >
-                  <div class="col-12">
+                  <div class="col-12 p-0">
                     <div class="row">
                       <div class="col-11">
-                        <h4>{{ elem.name }}</h4>
+                        <h3>{{ elem.name }}</h3>
                         <p>{{ elem.description }}</p>
                       </div>
                       <div class="col-1 text-right">
@@ -515,31 +523,35 @@
                     <div class="row w-100" v-if="purpose">
                       <div class="col-3" v-if="baseUrl == 'unit'">
                         <label>Task Manager</label>
-                        <p>{{ elem.taskManager }}</p>
+                        <p class="mb-0">{{ elem.taskManager }}</p>
                       </div>
                       <div class="col-2" v-if="baseUrl == 'collection'">
                         <label>Source Name</label>
-                        <p>{{ elem.externalSource }}</p>
+                        <p class="mb-0">{{ elem.externalSource }}</p>
                       </div>
                       <div class="col-2" v-if="baseUrl == 'collection'">
                         <label>Source Id</label>
-                        <p>{{ elem.externalId }}</p>
+                        <p class="mb-0">{{ elem.externalId }}</p>
                       </div>
                       <div class="col-2">
                         <label>Date Created:</label>
-                        <p>{{ elem.createdDate | LOCAL_DATE_VALUE }}</p>
+                        <p class="mb-0">
+                          {{ elem.createdDate | LOCAL_DATE_VALUE }}
+                        </p>
                       </div>
                       <div class="col-2">
                         <label>Created By</label>
-                        <p>{{ elem.createdBy }}</p>
+                        <p class="mb-0">{{ elem.createdBy }}</p>
                       </div>
                       <div class="col-2">
                         <label>Modified By</label>
-                        <p>{{ elem.modifiedBy }}</p>
+                        <p class="mb-0">{{ elem.modifiedBy }}</p>
                       </div>
                       <div class="col-2">
                         <label>Modified Date</label>
-                        <p>{{ elem.modifiedDate | LOCAL_DATE_VALUE }}</p>
+                        <p class="mb-0">
+                          {{ elem.modifiedDate | LOCAL_DATE_VALUE }}
+                        </p>
                       </div>
                     </div>
 
@@ -975,7 +987,17 @@ video {
   width: 100% !important;
 }
 .btn-grp {
-  margin-bottom: 10px;
+  margin-bottom: 33px;
   padding-right: 0px;
+}
+.b-card-spl {
+  background-color: #fafafa;
+  margin: 0px 0px 8px 0px !important;
+}
+.b-card-spl > div:first-child {
+  padding: 8px !important;
+}
+.row-spl {
+  margin: 0px;
 }
 </style>
