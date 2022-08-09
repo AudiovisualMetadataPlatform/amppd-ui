@@ -46,6 +46,15 @@ export default class ItemService extends BaseService{
         return await super.patch_auth(`/items/${obj.id}`, obj).then(result => result.data)
     }
 
+    /***
+     * To search items by keyword
+     * @params keyword
+     */
+
+    async searchItemsByKeyword(keyword){        
+        return await super.get_auth(`/items/search/findByKeyword?keyword=${keyword}`).then(result => result.data)
+    }
+
      /***
      * To get a list of external resources and task managers
      * @params obj, id
