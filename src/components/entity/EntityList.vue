@@ -205,12 +205,7 @@
                     ></textarea>
                   </div>
 
-                  <div
-                    class="row"
-                    v-if="
-                      baseUrl === 'item' && entity.parentType === 'item-search'
-                    "
-                  >
+                  <div class="row" v-if="baseUrl === 'item'">
                     <div class="col-6 text-left form-group">
                       <label>Unit:</label>
                       <input
@@ -231,12 +226,7 @@
                     </div>
                   </div>
 
-                  <div
-                    class="row"
-                    v-if="
-                      baseUrl === 'item' && entity.parentType === 'item-search'
-                    "
-                  >
+                  <div class="row" v-if="baseUrl === 'item'">
                     <div class="col-6 text-left form-group">
                       <label>Created By:</label>
                       <input
@@ -257,12 +247,7 @@
                     </div>
                   </div>
 
-                  <div
-                    class="row"
-                    v-if="
-                      baseUrl === 'item' && entity.parentType === 'item-search'
-                    "
-                  >
+                  <div class="row" v-if="baseUrl === 'item'">
                     <div class="col-6 text-left form-group">
                       <label>Modified By:</label>
                       <input
@@ -283,10 +268,7 @@
                     </div>
                   </div>
 
-                  <div
-                    class="col-12 p-0"
-                    v-if="entity.parentType !== 'item-search'"
-                  >
+                  <div class="col-12 p-0" v-if="baseUrl !== 'item'">
                     <div class="row">
                       <div class="col-3 text-left form-group">
                         <label>Created By:</label>

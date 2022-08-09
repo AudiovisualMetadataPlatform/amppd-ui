@@ -583,7 +583,6 @@ export default {
       const self = this;
       if (self.type === "item-search") {
         self.selectedItemId = record.id;
-        self.selectedCollectionId = record.collectionId;
         self.selectedUnit = record.unitName;
         self.selectedCollection = record.collectionName;
       }
@@ -754,21 +753,26 @@ export default {
           break;
         case "item-search":
           this.itemService
-            .getItemById(this.selectedCollectionId, this.selectedItemId)
-            .then((response) => {
-              const self = this;
-              self.collectionDetailsService
-                .getCollection(self.selectedCollectionId)
+            .getItemDetails(this.selectedItemId)
+            .then((res) => {
+              const selectedCollectionId = res._embedded.collection.id;
+              this.itemService
+                .getItemById(selectedCollectionId, this.selectedItemId)
                 .then((response) => {
-                  self.selectedCollection = response.data;
-                });
+                  const self = this;
+                  self.collectionDetailsService
+                    .getCollection(selectedCollectionId)
+                    .then((response) => {
+                      self.selectedCollection = response.data;
+                    });
 
-              const res = JSON.parse(JSON.stringify(response));
-              self.selectedItem = res;
-              self.selectedItem.parentType = self.type;
-              self.selectedItem.unitName = self.selectedUnit;
-              self.selectedItem.collectionName = self.selectedCollection;
-              self.$router.push("/collections/items/item-search/details");
+                  const res = JSON.parse(JSON.stringify(response));
+                  self.selectedItem = res;
+                  self.selectedItem.parentType = self.type;
+                  self.selectedItem.unitName = self.selectedUnit;
+                  self.selectedItem.collectionName = self.selectedCollection;
+                  self.$router.push("/collections/items/item-search/details");
+                });
             })
             .catch((error) => {
               this.dataSource = [];
