@@ -47,6 +47,15 @@ export default class ItemService extends BaseService{
     }
 
     /***
+     * To get details of a item
+     * @params itemId
+     */
+
+    async getItemDetails(itemId){        
+        return await super.get_auth(`/items/${itemId}`).then(result => result.data)
+    }
+
+    /***
      * To search items by keyword
      * @params keyword
      */
