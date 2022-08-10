@@ -29,9 +29,11 @@
     </div>
 
     <Search
-      v-if="searchSource.length"
       searchType="item-search"
       :dataSource="searchSource"
+      @handleSearchItems="searchItems"
+      :errors="errors"
+      :loading="loading"
     />
   </div>
 </template>
@@ -40,6 +42,7 @@
 import Search from "@/components/shared/Search.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
 import Loader from "@/components/shared/Loader.vue";
+import ItemService from "../../service/item-service";
 
 export default {
   name: "ItemSearch",
@@ -53,36 +56,60 @@ export default {
       searchType: "",
       searchSource: [],
       workflowResultService: new WorkflowResultService(),
+      itemService: new ItemService(),
+      errors: {
+        search_error: "",
+        no_data_error: "",
+      },
     };
   },
   computed: {},
   props: {},
   methods: {
+    searchItems(searchWord) {
+      this.refreshData(searchWord);
+    },
     onSearch() {
       this.$bvModal.show("modal-lg");
     },
-    async refreshData() {
+    async refreshData(searchWord = "") {
       const self = this;
-      self.loading= true;
-      self.itemSource = await this.workflowResultService.getWorkflowResults(
-        {filterOnly: true, filterByRelevant: true}
-      );
-      self.searchSource = await self.itemSource.filters['items']
-      self.loading=false;
+      try {
+        self.loading = true;
+        if (searchWord) {
+          self.errors.search_error = "";
+          self.itemSource = await self.itemService.searchItemsByKeyword(
+            searchWord
+          );
+          self.searchSource = self.itemSource._embedded["items"];
+          if (!self.searchSource.length) {
+            self.errors.no_data_error = "No data found";
+          } else {
+            self.errors.no_data_error = "";
+          }
+        } else {
+          self.errors.no_data_error = "";
+          self.errors.search_error = "Please enter a search keyword";
+        }
+        self.loading = false;
+      } catch (error) {
+        console.log(error);
+        self.loading = false;
+      }
     },
   },
-  updated(){
+  updated() {
     this.onSearch();
   },
-  mounted(){
-    this.refreshData()
-  }
+  mounted() {
+    this.onSearch();
+  },
 };
 </script>
 
 <style lang="css">
 @import "/amppd-ui/src/styles/style.css";
-.item-search{
+.item-search {
   width: 100%;
 }
 </style>

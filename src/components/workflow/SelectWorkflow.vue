@@ -144,8 +144,9 @@
     <modal v-if="showModal" @close="showModal = false" class="my-modal">
       <h3 slot="header">{{ modalHeader }}</h3>
       <div slot="body">
-        {{ modalText }}
-
+        <div v-for="(modalText, index) in modalTextList" :key="index">
+          {{ modalText }}
+        </div>
         <div v-if="errors.length > 0">
           <div class="error-header"><strong>Failed submissions:</strong></div>
           <div v-for="(error, index) in errors" v-bind:key="index" class="row">
@@ -173,6 +174,53 @@
       </div>
     </modal>
     <SaveBundle />
+    <div>
+      <b-button
+        id="fr-done-btn"
+        @click="showFRModal = true"
+        class="spl-fr-btn"
+      ></b-button>
+      <b-modal v-model="showFRModal" id="modal-center" centered>
+        <template #modal-header="{}">
+          <h5 class="text-capitalize">
+            Choose the Facial Recognition input file for
+            {{ supplementList[0].primaryFileName }}:
+          </h5>
+        </template>
+        <template #default="{}">
+          <b-form-group v-slot="{ ariaDescribedby }">
+            <b-form-radio
+              v-for="(supplement, index) in supplementList"
+              v-bind:key="index"
+              v-model="selectedSupplement"
+              :aria-describedby="ariaDescribedby"
+              name="some-radios"
+              :value="supplement"
+              >{{ supplement.name }}</b-form-radio
+            >
+          </b-form-group>
+          <div class="row pad-all-2">
+            <div class="float-left">
+              <label class="switch">
+                <input type="checkbox" v-model="isActiveSupplementSwitch" />
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="float-left text-left pad-l-1">
+              Use this input for all files in this batch.
+            </div>
+          </div>
+        </template>
+        <template #modal-footer="{ hide }">
+          <button class="btn btn-secondary" @click="hide()">
+            Cancel
+          </button>
+          <button size="sm" class="btn btn-primary" @click="onDone()">
+            Done
+          </button>
+        </template>
+      </b-modal>
+    </div>
   </div>
 </template>
 
@@ -192,10 +240,15 @@ export default {
       jobs: {},
       workflowService: new WorkflowService(),
       modalHeader: "",
-      modalText: "",
+      modalTextList: [],
       showModal: false,
       selectedFilesArray: [],
       errors: [],
+      showFRModal: false,
+      supplementList: [],
+      selectedSupplement: [],
+      isActiveSupplementSwitch: false,
+      defaultFacialRecognition: [],
     };
   },
   components: {
@@ -245,15 +298,114 @@ export default {
     // we don't need to create anoynymous bundle upon workflow submission,
     // since such bundles aren't accessible to users; and creating one each time will overcrowd DB table over time;
     // instead we can add endpoint on backend to submit list of primaryfiles and use that endpoint
-    async submitWorkflow() {
-      console.log("Submitting workflow");
+    async getSupplementsForPrimaryfiles(supplementNodes) {
       let self = this;
-      self.workflowSubmission.loading = true;
-      self.errors = [];
+      let supplements = [];
+      for (let i = 0; i < supplementNodes.length; i++) {
+        let name = "";
+        let category = "";
+        let format = "";
+        supplementNodes[i].params.map((param) => {
+          if (param.name === "Name") {
+            name = param.value;
+          } else if (param.name === "Category") {
+            category = param.value;
+          } else if (param.name === "Format") {
+            format = param.value;
+          }
+        });
+        await self.workflowService
+          .getSupplementsForPrimaryfiles(
+            self.workflowService.getSelectedPrimaryfileIds(this.selectedFiles),
+            name,
+            category,
+            format
+          )
+          .then((response) => {
+            response.data["category"] = category;
+            supplements.push(response.data);
+          });
+      }
+
+      return supplements;
+    },
+
+    getEachPFileAbsolutePaths(arr, key) {
+      return arr.map((item) => item[key]).filter((data) => data);
+    },
+
+    getEmptyPrimaryfileNameList(emptySupplementalPFiles, selectedFiles) {
+      if (
+        selectedFiles === null ||
+        !selectedFiles.size ||
+        !Object.keys(emptySupplementalPFiles).length
+      )
+        return "";
+      let pfListWithNoSupplements = [];
+      for (let key in emptySupplementalPFiles) {
+        const sortedEmptyIndexes = emptySupplementalPFiles[key].sort(
+          (a, b) => a - b
+        );
+        pfListWithNoSupplements.push(
+          `Files that could not be submitted due to no ${key} supplement available:`
+        );
+        const selectedFilesList = Array.from(selectedFiles.values());
+        sortedEmptyIndexes.forEach(function(value) {
+          for (let i = 0; i < selectedFilesList.length; i++) {
+            if (i === value) {
+              let primaryfile = selectedFilesList[i];
+              pfListWithNoSupplements.push(`- ${primaryfile.name}`);
+            }
+          }
+        });
+      }
+
+      return pfListWithNoSupplements;
+    },
+
+    onDone() {
+      document.getElementById("fr-done-btn").click();
+      this.workflowSubmission.loading = true;
+    },
+
+    pauser() {
+      //Pause inside the loop for user input
+      return new Promise((resolve) => {
+        let playbuttonclick = function() {
+          document
+            .getElementById("fr-done-btn")
+            .removeEventListener("click", playbuttonclick);
+          resolve("resolved");
+        };
+        this.workflowSubmission.loading = false;
+        document
+          .getElementById("fr-done-btn")
+          .addEventListener("click", playbuttonclick);
+      });
+    },
+
+    getPrimaryFileName(index) {
+      const files = Array.from(this.selectedFiles.values());
+      let primaryFileName = "";
+      for (let i = 0; i < files.length; i++) {
+        if (index === i) {
+          primaryFileName = files[i].name;
+          break;
+        }
+      }
+      return primaryFileName;
+    },
+
+    async submitWorkflowApi(body, emptyPFileIndexes, emptySupplementalPFiles) {
+      let self = this;
       await self.workflowService
         .submitWorkflow(
           this.workflowSubmission.selectedWorkflow,
-          self.workflowService.getSelectedPrimaryfileIds(this.selectedFiles)
+          self.workflowService.getSelectedPrimaryfileIds(
+            this.selectedFiles,
+            emptyPFileIndexes
+          ),
+          body
         )
         .then((response) => {
           let jobsobj = response.data;
@@ -264,22 +416,223 @@ export default {
             }
           }
 
+          let emptyPrimaryfileDetails = [];
+          let eFailure;
+          if (emptyPFileIndexes && emptyPFileIndexes.size) {
+            emptyPrimaryfileDetails = self.getEmptyPrimaryfileNameList(
+              emptySupplementalPFiles,
+              this.selectedFiles
+            );
+            eFailure = self.errors.length + emptyPFileIndexes.size;
+          }
           let total = this.selectedFilesArray.length;
+          let eSuccess = total - eFailure;
+          const emptyPFModalData = [
+            `Total number of files submitted: ${total}`,
+            `Number of jobs successfully created: ${eSuccess}`,
+            `Number of jobs failed to be created: ${eFailure}`,
+            ...emptyPrimaryfileDetails,
+            "Please upload the necessary supplemental files.",
+          ];
           let success = total - self.errors.length;
           let failure = self.errors.length;
-          self.modalHeader = failure > 0 ? "Error" : "Success";
-          self.modalText = `Total number of files submitted: ${total}; Number of jobs successfully created: ${success}; Number of jobs failed to be created: ${failure}`;
+          self.modalHeader =
+            failure || emptyPrimaryfileDetails.length ? "Error" : "Success";
+          self.modalTextList =
+            failure || emptyPrimaryfileDetails.length
+              ? emptyPrimaryfileDetails.length
+                ? emptyPFModalData
+                : [
+                    `Total number of files submitted: ${total}`,
+                    `Number of jobs successfully created: ${success}`,
+                    `Number of jobs failed to be created: ${failure}`,
+                  ]
+              : ["Files submitted successfully."];
           self.showModal = true;
           self.workflowSubmission.loading = false;
         })
         .catch((e) => {
           console.log(e);
           self.modalHeader = "Error";
-          self.modalText =
-            "Error submitting workflow:  Could not finish submission.";
+          self.modalTextList = [
+            "Error submitting workflow:  Could not finish submission.",
+          ];
           self.showModal = true;
           self.workflowSubmission.loading = false;
         });
+    },
+
+    async submitWorkflow() {
+      let self = this;
+      try {
+        self.workflowSubmission.loading = true;
+        self.errors = [];
+        console.log("Submitting workflow");
+
+        const workflowNodes =
+          self.workflowSubmission.selectedWorkflowParameters;
+        const supplementNodes = workflowNodes.filter(
+          (node) => node.node_id === "supplement"
+        );
+        if (supplementNodes.length) {
+          console.log("Facial recognition operation");
+          let supplements = await self.getSupplementsForPrimaryfiles(
+            supplementNodes
+          );
+
+          //Empty primary file listing
+          const emptySupplementalPFiles = {};
+          for (let i = 0; i < supplements.length; i++) {
+            for (let j = 0; j < supplements[i].length; j++) {
+              if (!supplements[i][j].length) {
+                if (Object.keys(emptySupplementalPFiles).length) {
+                  let matched = true;
+                  for (let key of Object.keys(emptySupplementalPFiles)) {
+                    if (key === supplements[i].category) {
+                      emptySupplementalPFiles[key].push(j);
+                      matched = true;
+                      break;
+                    } else {
+                      matched = false;
+                    }
+                  }
+                  if (!matched) {
+                    emptySupplementalPFiles[supplements[i].category] = [j];
+                  }
+                } else {
+                  emptySupplementalPFiles[supplements[i].category] = [j];
+                }
+              } else {
+                for (let k = 0; k < supplements[i][j].length; k++) {
+                  supplements[i][j][k][
+                    "primaryFileName"
+                  ] = self.getPrimaryFileName(j);
+                }
+              }
+            }
+          }
+          let emptyPFileIndexArr = [];
+          for (let key in Object.values(emptySupplementalPFiles)) {
+            emptyPFileIndexArr = emptyPFileIndexArr.concat(
+              Object.values(emptySupplementalPFiles)[key]
+            );
+          }
+          const emptyPFileIndexes = new Set(emptyPFileIndexArr);
+
+          if (emptyPFileIndexes.size === supplements[0].length) {
+            //In case all supplement nodes have error
+            const total = this.selectedFilesArray.length;
+            const success = 0;
+            const failure = supplements[0].length;
+            const emptyPrimaryfileDetails = self.getEmptyPrimaryfileNameList(
+              emptySupplementalPFiles,
+              this.selectedFiles
+            );
+            self.modalHeader = "Error";
+            self.modalTextList = [
+              `Total number of files submitted: ${total}`,
+              `Number of jobs successfully created: ${success}`,
+              `Number of jobs failed to be created: ${failure}`,
+              ...emptyPrimaryfileDetails,
+              "Please upload the necessary supplemental files.",
+            ];
+            self.showModal = true;
+            self.workflowSubmission.loading = false;
+          } else {
+            //Filtering error free supplement nodes
+            if (emptyPFileIndexes.size) {
+              const reverseEmptyPFileIndexes = new Set(
+                Array.from(emptyPFileIndexes).reverse()
+              );
+              reverseEmptyPFileIndexes.forEach(function(value) {
+                for (let i = 0; i < supplements.length; i++) {
+                  supplements[i].splice(value, 1);
+                }
+              });
+            }
+
+            let paths = [];
+            //User input in the case of multiple supplements are found
+            for (let i = 0; i < supplements.length; i++) {
+              for (let j = 0; j < supplements[i].length; j++) {
+                let oneSupplement = [];
+                if (supplements[i][j].length > 1) {
+                  self.supplementList = supplements[i][j];
+                  // Toggle button's activity
+                  if (self.defaultFacialRecognition.length) {
+                    let matched = true;
+                    for (let frValue of self.defaultFacialRecognition) {
+                      for (let sup of self.supplementList) {
+                        if (frValue === sup.name) {
+                          oneSupplement = sup;
+                          matched = true;
+                          break;
+                        } else {
+                          matched = false;
+                        }
+                      }
+                    }
+                    if (!matched) {
+                      self.selectedSupplement = supplements[i][j][0];
+                      self.showFRModal = true;
+                      await self.pauser();
+                      oneSupplement = self.selectedSupplement;
+                      if (self.isActiveSupplementSwitch) {
+                        self.defaultFacialRecognition.push(oneSupplement.name);
+                        self.isActiveSupplementSwitch = false;
+                      }
+                    }
+                  } else {
+                    self.selectedSupplement = supplements[i][j][0];
+                    self.showFRModal = true;
+                    await self.pauser();
+                    oneSupplement = self.selectedSupplement;
+                    if (self.isActiveSupplementSwitch) {
+                      self.defaultFacialRecognition.push(oneSupplement.name);
+                      self.isActiveSupplementSwitch = false;
+                    }
+                  }
+                } else {
+                  oneSupplement = supplements[i][j][0];
+                }
+                paths.push({ [j]: oneSupplement.absolutePathname });
+              }
+            }
+            self.showFRModal = false;
+
+            //Filtering all absolute paths of each PFile
+            let submitFilesApiBody = [];
+            for (let i = 0; i < supplements[0].length; i++) {
+              const absolutePathList = self.getEachPFileAbsolutePaths(paths, i);
+              //Constructing submitWorkflow API body
+              const info = {
+                map: {},
+              };
+              for (let i = 0; i < absolutePathList.length; i++) {
+                info["map"][i + 1] = { path: absolutePathList[i] };
+              }
+              submitFilesApiBody.push(info);
+            }
+
+            //POST api call
+            self.submitWorkflowApi(
+              submitFilesApiBody,
+              emptyPFileIndexes,
+              emptySupplementalPFiles
+            );
+          }
+        } else {
+          self.submitWorkflowApi();
+        }
+      } catch (error) {
+        console.log(error);
+        self.modalHeader = "Error";
+        self.modalTextList = [
+          "Error submitting workflow:  Could not finish submission.",
+        ];
+        self.showModal = true;
+        self.workflowSubmission.loading = false;
+      }
     },
 
     removeFile(id) {
@@ -327,7 +680,7 @@ export default {
   margin-bottom: 20px;
 }
 .error-header {
-  margin: 10px;
+  margin-top: 10px;
 }
 
 .btn-primary:disabled {
@@ -337,5 +690,8 @@ export default {
 .btn-secondary:disabled {
   background-color: rgba(187, 187, 187, 0.856) !important;
   border-color: rgba(187, 187, 187, 0.856) !important;
+}
+.spl-fr-btn {
+  visibility: hidden;
 }
 </style>

@@ -1,6 +1,12 @@
 <template>
   <div>
-    <b-modal size="lg" id="modal-lg" centered @show="processModalData()">
+    <b-modal
+      size="lg"
+      id="modal-lg"
+      centered
+      @show="processModalData()"
+      :no-close-on-backdrop="type === 'item-search'"
+    >
       <template #modal-header="{}">
         <!-- Emulate built in modal header close button action -->
 
@@ -17,7 +23,61 @@
       </template>
 
       <template #default="{}">
+        <div v-if="type === 'item-search'" class="form-group">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="input-group mb-3">
+                  <label for="exampleFormControlInput100" class="sr-only"
+                    >Search</label
+                  >
+                  <label
+                    class="form-errors"
+                    v-if="errors.search_error.length"
+                    >{{ errors.search_error }}</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="exampleFormControlInput100"
+                    placeholder="Search"
+                    v-model="searchWord"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      class="btn search-btn"
+                      type="button"
+                      v-on:click="searchItems()"
+                    >
+                      <svg
+                        data-v-6b33b2c4=""
+                        role="img"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 50 50"
+                        class="svg-search"
+                      >
+                        <path
+                          data-v-6b33b2c4=""
+                          d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"
+                        ></path>
+                      </svg>
+                      Search
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="form-errors no-data-error"
+          v-if="type === 'item-search' && errors.no_data_error.length"
+        >
+          {{ errors.no_data_error }}
+        </div>
+
         <form
+          v-if="type !== 'item-search'"
           class="mb-2 col-12 d-flex p-0"
           @submit.prevent="onFilterUserInput"
         >
@@ -83,7 +143,7 @@
                   :key="source.id"
                   v-if="selectedRecords.indexOf(source.id) > -1"
                 >
-                  <td colspan="1">
+                  <td :colspan="type === 'listing-supplement' ? 3 : 1">
                     <input
                       class="selectAll"
                       type="checkbox"
@@ -132,9 +192,26 @@
                     </td>
                   </template>
                   <template v-if="isEntityList">
-                    <td colspan="1">{{ source.name }}</td>
-                    <td colspan="3">{{ source.description }}</td>
-                    <td v-if="type === 'listing-item'">
+                    <td colspan="4">{{ source.name }}</td>
+                    <td colspan="3" v-if="type === 'listing-supplement'">
+                      {{ source.category }}
+                    </td>
+                    <td colspan="3" v-if="type === 'listing-supplement'">
+                      {{ source.unitName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.collectionName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.itemName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.primaryfileName }}
+                    </td>
+                    <td colspan="4" v-if="type !== 'listing-supplement'">
+                      {{ source.description }}
+                    </td>
+                    <td colspan="3" v-if="type === 'listing-item'">
                       {{ source.externalId }}
                     </td>
                   </template>
@@ -144,7 +221,7 @@
           </table>
         </div>
         <div
-          v-if="type !== 'statuses'"
+          v-if="type !== 'statuses' && clonedDataSource.length && !loading"
           class="scrollDiv w-100"
           :class="
             type === 'item-search' || type === 'primaryfiles'
@@ -154,7 +231,10 @@
         >
           <table class="w-100 table table-striped">
             <thead>
-              <th v-if="type !== 'item-search'">
+              <th
+                v-if="type !== 'item-search'"
+                :class="type === 'listing-supplement' ? 'supSelectAll' : ''"
+              >
                 <label>
                   <input
                     class="selectAll"
@@ -216,12 +296,39 @@
                 </th>
               </template>
               <template v-if="isEntityList">
-                <th colspan="2" v-if="type === 'listing-collection'">
+                <th colspan="4" v-if="type === 'listing-supplement'">
+                  Title
+                </th>
+                <th colspan="3" v-if="type === 'listing-supplement'">
+                  Category
+                </th>
+                <th colspan="3" v-if="type === 'listing-supplement'">
+                  Unit
+                </th>
+                <th
+                  colspan="4"
+                  v-if="
+                    type === 'listing-collection' ||
+                      type === 'listing-supplement'
+                  "
+                >
                   Collection
                 </th>
-                <th colspan="2" v-if="type === 'listing-item'">Item</th>
-                <th colspan="2">Description</th>
-                <th v-if="type === 'listing-item'">External Id</th>
+                <th
+                  colspan="4"
+                  v-if="
+                    type === 'listing-item' || type === 'listing-supplement'
+                  "
+                >
+                  Item
+                </th>
+                <th colspan="4" v-if="type === 'listing-supplement'">
+                  Primary File
+                </th>
+                <th colspan="4" v-if="type !== 'listing-supplement'">
+                  Description
+                </th>
+                <th colspan="3" v-if="type === 'listing-item'">External Id</th>
               </template>
             </thead>
             <tbody>
@@ -233,7 +340,7 @@
                   class=""
                   :class="
                     type === 'item-search'
-                      ? source.itemId === selectedItemId
+                      ? source.id === selectedItemId
                         ? 'item-cls trActive'
                         : 'item-cls'
                       : ''
@@ -256,7 +363,9 @@
                           type === 'item-search'
                       "
                     >
-                      {{ source.itemName }}
+                      {{
+                        type === "item-search" ? source.name : source.itemName
+                      }}
                     </td>
                     <td v-if="type === 'primaryfiles'">
                       {{ source.primaryfileName }}
@@ -303,9 +412,26 @@
                     </td>
                   </template>
                   <template v-if="isEntityList">
-                    <td colspan="1">{{ source.name }}</td>
-                    <td colspan="3">{{ source.description }}</td>
-                    <td v-if="type === 'listing-item'">
+                    <td colspan="4">{{ source.name }}</td>
+                    <td colspan="3" v-if="type === 'listing-supplement'">
+                      {{ source.category }}
+                    </td>
+                    <td colspan="3" v-if="type === 'listing-supplement'">
+                      {{ source.unitName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.collectionName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.itemName }}
+                    </td>
+                    <td colspan="4" v-if="type === 'listing-supplement'">
+                      {{ source.primaryfileName }}
+                    </td>
+                    <td colspan="4" v-if="type !== 'listing-supplement'">
+                      {{ source.description }}
+                    </td>
+                    <td colspan="3" v-if="type === 'listing-item'">
                       {{ source.externalId }}
                     </td>
                   </template>
@@ -321,15 +447,23 @@
         <button
           v-if="type !== 'statuses'"
           class="btn btn-outline"
-          @click="hide()"
+          @click="
+            hide();
+            onCancel();
+          "
         >
           Cancel
         </button>
         <button
+          v-if="clonedDataSource.length && !loading"
           size="sm"
           class="btn btn-primary"
           :disabled="
-            type === 'item-search'
+            type === 'listing-collection' ||
+            type === 'listing-item' ||
+            type === 'listing-supplement'
+              ? false
+              : type === 'item-search'
               ? !selectedItemId
               : selectedRecords.length <= 0
               ? true
@@ -371,6 +505,13 @@ export default {
     isEntityList: {
       default: false,
     },
+    errors: {
+      search_error: "",
+      no_data_error: "",
+    },
+    loading: {
+      default: false,
+    },
   },
   components: {
     Typeahead,
@@ -406,14 +547,23 @@ export default {
       selectAll: false,
       searchDataSourceMap: new Map(),
       selectedItemId: null,
+      searchWord: "",
       // type: JSON.parse(this.searchType)
     };
+  },
+  watch: {
+    dataSource: function() {
+      this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
+    },
   },
   created() {
     this.getTypeaheadSearchItems();
     this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
   },
   methods: {
+    async searchItems() {
+      this.$emit("handleSearchItems", this.searchWord);
+    },
     onSelectAllChange(ev) {
       const self = this;
       if (ev.srcElement.checked) {
@@ -432,8 +582,7 @@ export default {
     onChange(ev, record) {
       const self = this;
       if (self.type === "item-search") {
-        self.selectedItemId = record.itemId;
-        self.selectedCollectionId = record.collectionId;
+        self.selectedItemId = record.id;
         self.selectedUnit = record.unitName;
         self.selectedCollection = record.collectionName;
       }
@@ -523,10 +672,8 @@ export default {
           break;
         case "listing-collection":
         case "listing-item":
+        case "listing-supplement":
           self.searchProps = ["name"];
-          break;
-        case "item-search":
-          self.searchProps = ["itemName"];
           break;
       }
     },
@@ -535,6 +682,16 @@ export default {
       sefl.selectedFilters[self.type] = sefl.selectedFilters[self.type] || [];
       if (sefl.selectedFilters[self.type].indexOf(item) === -1)
         sefl.selectedFilters[self.type].push(item);
+    },
+    onCancel() {
+      if (this.type === "item-search") {
+        this.dataSource = [];
+        this.clonedDataSource = [];
+        this.searchWord = "";
+        this.selectedItemId = null;
+        this.errors.search_error = "";
+        this.errors.no_data_error = "";
+      }
     },
     onDone() {
       switch (this.type) {
@@ -585,6 +742,7 @@ export default {
           break;
         case "listing-collection":
         case "listing-item":
+        case "listing-supplement":
           this.$emit(
             "myEvent",
             this.selectedFilters[this.type] &&
@@ -595,23 +753,34 @@ export default {
           break;
         case "item-search":
           this.itemService
-            .getItemById(this.selectedCollectionId, this.selectedItemId)
-            .then((response) => {
-              const self = this;
-              self.collectionDetailsService
-                .getCollection(self.selectedCollectionId)
+            .getItemDetails(this.selectedItemId)
+            .then((res) => {
+              const selectedCollectionId = res._embedded.collection.id;
+              this.itemService
+                .getItemById(selectedCollectionId, this.selectedItemId)
                 .then((response) => {
-                  self.selectedCollection = response.data;
+                  const self = this;
+                  self.collectionDetailsService
+                    .getCollection(selectedCollectionId)
+                    .then((response) => {
+                      self.selectedCollection = response.data;
+                    });
+
+                  const res = JSON.parse(JSON.stringify(response));
+                  self.selectedItem = res;
+                  self.selectedItem.parentType = self.type;
+                  self.selectedItem.unitName = self.selectedUnit;
+                  self.selectedItem.collectionName = self.selectedCollection;
+                  self.$router.push("/collections/items/item-search/details");
                 });
-              
-              const res = JSON.parse(JSON.stringify(response));
-              self.selectedItem = res;
-              self.selectedItem.parentType = self.type;
-              self.selectedItem.unitName = self.selectedUnit;
-              self.selectedItem.collectionName = self.selectedCollection;
-              self.$router.push("/collections/items/item-search/details");
             })
             .catch((error) => {
+              this.dataSource = [];
+              this.clonedDataSource = [];
+              this.searchWord = "";
+              this.selectedItemId = null;
+              this.errors.search_error = "";
+              this.errors.no_data_error = "";
               this.$bvToast.toast("Failed to show the item", {
                 title: "Notification",
                 appendToast: true,
@@ -704,6 +873,9 @@ table tbody tr:nth-of-type(odd) {
   visibility: visible !important;
   max-width: 100%;
 }
+.supSelectAll {
+  width: 100px;
+}
 @keyframes expandOpen {
   from {
     transform: scale3d(1, 1, 1);
@@ -717,5 +889,20 @@ table tbody tr:nth-of-type(odd) {
     transform: scale3d(1, 1, 1);
     opacity: 1;
   }
+}
+.form-errors {
+  color: red;
+  margin: 0% !important;
+  font-size: 0.9rem;
+  padding-left: 3px;
+  width: inherit;
+}
+.no-data-error {
+  width: 100%;
+  text-align: center;
+  color: initial;
+}
+.search-btn:hover > .svg-search {
+  fill: #f4871e;
 }
 </style>

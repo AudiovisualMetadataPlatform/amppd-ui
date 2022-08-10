@@ -45,7 +45,11 @@
         <b-collapse id="nav-collapse" is-nav>
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto" v-if="isAuthenticated">
-            <span v-for="menu in orderedMenuList" :key="menu.name">
+            <span
+              class="nav-span"
+              v-for="menu in orderedMenuList"
+              :key="menu.name"
+            >
               <b-nav-item @click="routeTo(menu)" v-if="!menu.children">
                 <span v-html="menu.icon"></span>
                 <span class="pl-2">{{ menu.name }}</span>
@@ -54,7 +58,10 @@
                 <template #button-content>
                   <span v-html="menu.icon"></span>
                   <span class="pl-2">{{ menu.name }}</span>
-                  <span v-if="menu.dropdownIcon" v-html="menu.dropdownIcon"></span>
+                  <span
+                    v-if="menu.dropdownIcon"
+                    v-html="menu.dropdownIcon"
+                  ></span>
                 </template>
                 <b-dropdown-item
                   class="p-0"
@@ -81,7 +88,7 @@
             <b-dropdown-item href="#">FA</b-dropdown-item>
               </b-nav-item-dropdown>-->
             </span>
-            <b-nav-item>
+            <b-nav-item class="nav-span">
               <Logout />
             </b-nav-item>
           </b-navbar-nav>
@@ -173,9 +180,11 @@ nav ul li {
   display: none !important;
 }
 .navbar-light .navbar-nav .show > .nav-link,
-.navbar-light .navbar-nav .nav-link:hover,
 .navbar-light .navbar-nav .nav-link:focus {
   color: #fff !important;
+}
+.navbar-light .navbar-nav .nav-link:hover {
+  color: #f4871e !important;
 }
 
 .submenu {
@@ -193,5 +202,11 @@ nav ul li {
 
 .navbar-toggler {
   background-color: #ffffff !important;
+}
+
+.nav-span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

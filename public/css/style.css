@@ -183,6 +183,11 @@
   border-color: #153c4d !important;
   color: #fff !important; }
 
+.btn-primary:hover:disabled, .btn-secondary:hover:disabled, .btn-outline-primary:hover:disabled {
+  background: rgba(187, 187, 187, 0.856) !important;
+  border-color: rgba(187, 187, 187, 0.856) !important;
+  color: #153c4d !important; }
+
 .btn-secondary {
   background: #f8ae67 !important;
   border-color: #f6a14f !important;

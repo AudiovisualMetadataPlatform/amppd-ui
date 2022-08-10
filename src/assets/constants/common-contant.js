@@ -12,31 +12,14 @@ const icons = {
     new_workflow: '<svg class="svg-inline fill-white" role="img" enable-background="new 0 0 512 512" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><g focusable="false"><path class="icon-white" d="M0,24v160c0,13.26,9.32,24,20.81,24h166.5c11.49,0,20.81-10.74,20.81-24V24c0-13.26-9.32-24-20.81-24H20.81   C9.32,0,0,10.74,0,24z"></path></g><circle class="icon-white" cx="388.63" cy="391.3" r="121.02"></circle><path class="icon-white" d="m373.89 193.2c-0.56-0.13-1.13-0.35-1.7-0.38-10.2-0.48-20.4-1.04-30.61-1.33-3.08-0.09-6.28 0.17-9.24 0.95-6 1.59-8.18 6.24-5.61 11.89 1.18 2.6 2.83 5.12 4.75 7.24 14.59 16.13 29.26 32.18 43.97 48.2 10.5 11.44 28.15 12.7 40.21 2.96 0.08-0.07 0.17-0.13 0.25-0.2 17.01-15.58 34.06-31.12 50.98-46.8 1.8-1.67 3.17-3.99 4.19-6.26 2.02-4.49 0.43-8.34-3.99-10.57-3.28-1.66-6.84-2.12-10.46-2.28-9.88-0.45-19.77-0.9-29.65-1.33-0.58-0.03-1.16 0.08-1.89 0.13 0.24-1.87 0.44-3.43 0.63-5 2.58-21.79 0.19-43.05-6.9-63.8-6.92-20.25-18.06-37.94-32.82-53.31-12.5-13.02-27.02-23.38-43.55-30.67-36.33-16.01-73.24-17.38-110.57-3.64-14.69 5.41-20.87 22.2-13.43 35.96 5.89 10.89 18.98 15.85 30.81 11.5 10.11-3.72 20.49-5.95 31.28-6.17 20.08-0.42 38.43 5.03 55.02 16.33 9.14 6.22 16.83 13.91 23.27 22.91 8.17 11.42 13.49 24.01 15.9 37.81 2.03 11.8 1.96 23.59-0.84 35.86z"></path><path class="icon-white" d="m113.52 285.6c0.55 0.17 1.1 0.43 1.67 0.49 10.14 1.19 20.28 2.47 30.44 3.48 3.06 0.31 6.28 0.27 9.29-0.3 6.1-1.17 8.59-5.65 6.43-11.47-1-2.68-2.47-5.31-4.23-7.56-13.42-17.11-26.94-34.15-40.48-51.16-9.67-12.15-27.19-14.64-39.9-5.77-0.09 0.06-0.18 0.11-0.26 0.18-18.06 14.35-36.15 28.65-54.13 43.11-1.91 1.54-3.44 3.76-4.62 5.95-2.33 4.34-1.01 8.29 3.24 10.83 3.16 1.88 6.68 2.59 10.27 3.01 9.83 1.14 19.66 2.28 29.49 3.41 0.57 0.07 1.16 0.01 1.89 0-0.37 1.85-0.68 3.39-0.98 4.94-4.1 21.56-3.2 42.93 2.41 64.12 5.48 20.69 15.36 39.11 29 55.48 11.56 13.86 25.32 25.22 41.29 33.64 35.11 18.52 71.84 22.47 110.04 11.38 15.03-4.36 22.38-20.68 15.91-34.93-5.11-11.27-17.82-17.14-29.93-13.63-10.35 3-20.86 4.49-31.63 3.96-20.05-0.99-37.98-7.71-53.74-20.15-8.68-6.85-15.81-15.06-21.61-24.49-7.35-11.96-11.78-24.9-13.21-38.83-1.21-11.9-0.31-23.66 3.35-35.69z"></path></svg>',
     right_arrow: '<svg class="svg-inline dwn-arrow" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="hotlink" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path></svg>',
     help: '<svg class="help-svg" width="512px" height="512px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>Help, opens a new window for help topics for this page.</title><path d="M256 16C123.45 16 16 123.45 16 256s107.45 240 240 240 240-107.45 240-240S388.55 16 256 16zm0 60c99.41 0 180 80.59 180 180s-80.59 180-180 180S76 355.41 76 256 156.59 76 256 76zm0 30c-66.274 0-120 40.294-120 90 0 30 60 30 60 0 0-16.57 26.862-30 60-30 33.138 0 60 13.43 60 30s-30 15-60 30c-1.875.938-3.478 2.126-4.688 3.28C226.53 244.986 226 271.926 226 286v15c0 16.62 13.38 30 30 30 16.62 0 30-13.38 30-30v-15c0-45 90-40.294 90-90s-53.726-90-120-90zm0 240a30 30 0 0 0-30 30 30 30 0 0 0 30 30 30 30 0 0 0 30-30 30 30 0 0 0-30-30z"></path></svg>',
-    drop_down: "<svg aria-hidden='true' focusable='false' class='svg-inline' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><g id='Layer_2' class='icon-white'><path d='M14 20l10 10 10-10z'></path></g></svg>"
+    drop_down: "<svg aria-hidden='true' focusable='false' class='svg-inline' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><g id='Layer_2' class='icon-white'><path d='M14 20l10 10 10-10z'></path></g></svg>",
+    mgm_evaluation: `<svg class="svg-inline fill-white" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path class="icon-white" d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2z"/></svg>`
 }
 
 // Menu List
 
 const menus = [
-    {
-        displayId:3,
-        name: 'Workflows',
-        class: 'workflows, workflows',
-        icon: icons['new_workflow'],
-        dropdownIcon: icons['drop_down'],
-        children: [ 
-            {
-                name: 'Listings',
-                class: 'workflows, workflows',
-                url: "/workflows",
-            },
-            {
-                name: 'Submissions',
-                class: 'workflows, workflows',
-                url: "/workflow/submit",
-            },
-        ]
-    },
     // {
     //     name: 'Collections',
     //     class: 'collection, collection',
@@ -58,7 +41,7 @@ const menus = [
             {
                 name: 'Supplemental Files',
                 class: 'units, units',
-                url: "",
+                url: "/supplemental-files",
             },
             {
                 name: 'Item Search',
@@ -75,11 +58,23 @@ const menus = [
         url: "/dashboard"
     },
     {
-        displayId:5,
-        name: 'Batch Ingest',
-        class: 'batch-ingest, batch-ingest',
-        icon: icons['batchIngest'],
-        url: "/batch/ingest"
+        displayId:3,
+        name: 'Workflows',
+        class: 'workflows, workflows',
+        icon: icons['new_workflow'],
+        dropdownIcon: icons['drop_down'],
+        children: [ 
+            {
+                name: 'Listings',
+                class: 'workflows, workflows',
+                url: "/workflows",
+            },
+            {
+                name: 'Submissions',
+                class: 'workflows, workflows',
+                url: "/workflow/submit",
+            },
+        ]
     },
     {
         displayId:4,
@@ -87,7 +82,33 @@ const menus = [
         class: 'deliverables, deliverables',
         icon: icons['deliverables'],
         url: "/deliverables"
-    }
+    },
+    {
+        displayId:5,
+        name: 'Batch Ingest',
+        class: 'batch-ingest, batch-ingest',
+        icon: icons['batchIngest'],
+        url: "/batch/ingest"
+    },
+    {
+        displayId:6,
+        name: 'MGM Evaluation',
+        class: 'evaluations, evaluations',
+        icon: icons['mgm_evaluation'],
+        dropdownIcon: icons['drop_down'],
+        children: [ 
+            {
+                name: 'Test',
+                class: 'evaluations, evaluations',
+                url: "/mgm-evaluation",
+            },
+            {
+                name: 'Results',
+                class: 'evaluations, evaluations',
+                url: "",
+            },
+        ]
+    },
 ];
 
 
