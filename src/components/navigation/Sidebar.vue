@@ -52,12 +52,12 @@
             >
               <b-nav-item @click="routeTo(menu)" v-if="!menu.children">
                 <span v-html="menu.icon"></span>
-                <span class="pl-2">{{ menu.name }}</span>
+                <span class="pl-2 menu-name">{{ menu.name }}</span>
               </b-nav-item>
               <b-nav-item-dropdown v-else>
                 <template #button-content>
                   <span v-html="menu.icon"></span>
-                  <span class="pl-2">{{ menu.name }}</span>
+                  <span class="pl-2  menu-name">{{ menu.name }}</span>
                   <span
                     v-if="menu.dropdownIcon"
                     v-html="menu.dropdownIcon"
@@ -179,11 +179,13 @@ nav ul li {
 .dropdown-toggle::after {
   display: none !important;
 }
+.menu-name,
 .navbar-light .navbar-nav .show > .nav-link,
 .navbar-light .navbar-nav .nav-link:focus {
   color: #fff !important;
 }
-.navbar-light .navbar-nav .nav-link:hover {
+.navbar-light .navbar-nav .nav-link:hover,
+.nav-link:hover > .menu-name {
   color: #f4871e !important;
 }
 
