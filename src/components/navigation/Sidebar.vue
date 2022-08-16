@@ -1,6 +1,6 @@
 <template>
   <div class="w-100">
-    <div class="col-12 bg-dark-1">
+    <div class="col-12 bg-dark-1 nav-bar">
       <!-- <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header d-flex">
@@ -35,14 +35,14 @@
           </ul>
         </div>
       </nav>-->
-      <b-navbar toggleable="lg">
+      <b-navbar toggleable="lg nav-bar-items">
         <b-navbar-brand href="#">
           <span v-html="ampSvg"></span>
         </b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-        <b-collapse id="nav-collapse" is-nav>
+        <b-collapse id="nav-collapse" class="nav-menus" is-nav>
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto" v-if="isAuthenticated">
             <span
@@ -210,5 +210,21 @@ nav ul li {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.nav-bar {
+  height: 111.69px !important;
+}
+.nav-bar-items {
+  padding: 0px !important;
+  height: 103.69px !important;
+}
+.nav-bar-items > a > span > svg {
+  height: 87.69px !important;
+}
+.navbar-brand {
+  margin-top: -16px !important;
+}
+.nav-menus {
+  margin-top: 7px;
 }
 </style>

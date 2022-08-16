@@ -42,6 +42,8 @@
                     id="exampleFormControlInput100"
                     placeholder="Search"
                     v-model="searchWord"
+                    autocomplete="off"
+                    v-on:keyup.enter="searchKeyUp"
                   />
                   <div class="input-group-append">
                     <button
@@ -563,6 +565,11 @@ export default {
   methods: {
     async searchItems() {
       this.$emit("handleSearchItems", this.searchWord);
+    },
+    async searchKeyUp(e) {
+      if (e.keyCode === 13) {
+        this.searchItems();
+      }
     },
     onSelectAllChange(ev) {
       const self = this;
