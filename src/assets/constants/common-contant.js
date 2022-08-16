@@ -95,19 +95,7 @@ const menus = [
         name: 'MGM Evaluation',
         class: 'evaluations, evaluations',
         icon: icons['mgm_evaluation'],
-        dropdownIcon: icons['drop_down'],
-        children: [ 
-            {
-                name: 'Test',
-                class: 'evaluations, evaluations',
-                url: "/mgm-evaluation",
-            },
-            {
-                name: 'Results',
-                class: 'evaluations, evaluations',
-                url: "",
-            },
-        ]
+        url: "/mgm-evaluation",
     },
 ];
 
