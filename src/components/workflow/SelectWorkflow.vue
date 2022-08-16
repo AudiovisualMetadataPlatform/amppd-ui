@@ -322,6 +322,7 @@ export default {
             format
           )
           .then((response) => {
+            response = JSON.parse(JSON.stringify(response));
             response.data["category"] = category;
             supplements.push(response.data);
           });
