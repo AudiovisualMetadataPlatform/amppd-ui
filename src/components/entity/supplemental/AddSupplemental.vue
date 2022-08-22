@@ -290,7 +290,7 @@ export default {
       supplementService: new SupplementService(),
       configPropertiesService: new ConfigPropertiesService(),
       supplement: {
-        showUnitList: true, //Need to remove
+        showUnitList: true, //Need to remove: entity update @view page
         showCollectionList: false,
         collectionList: [],
         showItemList: false,
@@ -298,15 +298,7 @@ export default {
         showPrimaryFileList: false,
         primaryFileList: [],
         fileDetails: {
-          // category: "",
-          // createdBy: "",
-          // createdDate: "",
-          // description: "",
-          // modifiedBy: "",
-          // modifiedDate: "",
-          // name: "",
           originalFilename: "",
-
           unit: "",
           collection: "",
           item: "",
@@ -369,7 +361,6 @@ export default {
               .then((r) => {
                 switch (self.supplementType) {
                   case "p-sup":
-                    // console.log(r);
                     self.supplement.fileDetails.unit = r.unitId;
                     self.onInputChange("unit").then(() => {
                       self.supplement.fileDetails.collection = r.collectionId;
@@ -380,8 +371,7 @@ export default {
                             r.primaryfileId;
                           self.superLoading = false;
 
-                          //Need to remove
-                          self.supplement.showUnitList = false;
+                          //Need to remove: entity update @view page;
                           self.supplement.showCollectionList = false;
                           self.supplement.showItemList = false;
                           self.supplement.showPrimaryFileList = false;
@@ -400,8 +390,7 @@ export default {
                         self.onInputChange("item").then(() => {
                           self.superLoading = false;
 
-                          //Need to remove
-                          self.supplement.showUnitList = false;
+                          //Need to remove: entity update @view page;
                           self.supplement.showCollectionList = false;
                           self.supplement.showItemList = false;
                           self.supplement.showPrimaryFileList = false;
@@ -417,8 +406,7 @@ export default {
                       self.onInputChange("collection").then(() => {
                         self.superLoading = false;
 
-                        //Need to remove
-                        self.supplement.showUnitList = false;
+                        //Need to remove: entity update @view page;
                         self.supplement.showCollectionList = false;
                         self.supplement.showItemList = false;
                       });
@@ -429,8 +417,7 @@ export default {
                     self.onInputChange("unit").then(() => {
                       self.superLoading = false;
 
-                      //Need to remove
-                      self.supplement.showUnitList = false;
+                      //Need to remove: entity update @view page;
                       self.supplement.showCollectionList = false;
                     });
                     break;
@@ -465,7 +452,6 @@ export default {
       const self = this;
       self.entityType = type;
       self.entityId = self.supplement.fileDetails[type];
-      // console.log("1-->" + self.entityType + self.entityId);
       try {
         switch (type) {
           case "unit":
@@ -547,7 +533,6 @@ export default {
         return;
       }
 
-      // console.log("2-->" + self.entityType + self.entityId + data);
       try {
         self.loading = true;
         if (self.action === "add") {
