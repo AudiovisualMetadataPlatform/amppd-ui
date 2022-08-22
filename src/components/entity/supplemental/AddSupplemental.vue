@@ -372,6 +372,7 @@ export default {
                           self.superLoading = false;
 
                           //Need to remove: entity update @view page;
+                          self.supplement.showUnitList = false;
                           self.supplement.showCollectionList = false;
                           self.supplement.showItemList = false;
                           self.supplement.showPrimaryFileList = false;
@@ -391,6 +392,7 @@ export default {
                           self.superLoading = false;
 
                           //Need to remove: entity update @view page;
+                          self.supplement.showUnitList = false;
                           self.supplement.showCollectionList = false;
                           self.supplement.showItemList = false;
                           self.supplement.showPrimaryFileList = false;
@@ -407,8 +409,10 @@ export default {
                         self.superLoading = false;
 
                         //Need to remove: entity update @view page;
+                        self.supplement.showUnitList = false;
                         self.supplement.showCollectionList = false;
                         self.supplement.showItemList = false;
+                        self.supplement.showPrimaryFileList = false;
                       });
                     });
                     break;
@@ -418,7 +422,10 @@ export default {
                       self.superLoading = false;
 
                       //Need to remove: entity update @view page;
+                      self.supplement.showUnitList = false;
                       self.supplement.showCollectionList = false;
+                      self.supplement.showItemList = false;
+                      self.supplement.showPrimaryFileList = false;
                     });
                     break;
                   default:
