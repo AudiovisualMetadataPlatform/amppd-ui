@@ -11,7 +11,7 @@
           <!-- Header - Details page -->
 
           <b-card
-            v-if="baseUrl !== 'supplement'"
+            v-if="baseUrl !== 'list-supplement' && baseUrl !== 'supplement'"
             class="text-center mt-5 mb-5"
             :class="
               baseUrl === 'file' && entity.mediaType === 'video'
@@ -385,7 +385,11 @@
             <!-- Title ends here -->
             <b-card
               class="text-left"
-              :class="baseUrl === 'supplement' ? 'm-4' : 'm-0'"
+              :class="
+                baseUrl === 'list-supplement' || baseUrl === 'supplement'
+                  ? 'm-4'
+                  : 'm-0'
+              "
             >
               <!-- Title - Listing page -->
               <!-- <h3 v-if="baseUrl == 'unit' && !purpose">My Units</h3>
@@ -394,10 +398,15 @@
               <!-- Title - Unit Details page  -->
               <div
                 class="d-flex w-100"
-                v-if="baseUrl == 'unit' || baseUrl === 'supplement'"
+                v-if="
+                  baseUrl == 'unit' ||
+                    baseUrl === 'list-supplement' ||
+                    baseUrl == 'supplement'
+                "
               >
                 <div class="col-3 text-left p-0">
-                  <h2>
+                  <h1 v-if="baseUrl == 'supplement'">Supplemental File</h1>
+                  <h2 v-else>
                     {{
                       baseUrl == "unit"
                         ? "Unit Collections"
@@ -405,15 +414,17 @@
                     }}
                   </h2>
                 </div>
-                <div class="col-9 text-right p0 btn-grp">
+                <div
+                  class="col-9 text-right p0 btn-grp"
+                  v-if="baseUrl !== 'supplement'"
+                >
                   <button
-                    :disabled="baseUrl === 'supplement'"
                     class="btn btn-primary btn-lg btn-edit mr-2"
                     type="button"
                     @click="onCreate()"
                   >
                     {{
-                      baseUrl === "supplement"
+                      baseUrl === "list-supplement"
                         ? "Create New File"
                         : baseUrl === "unit"
                         ? "Create New Collection"
@@ -425,7 +436,7 @@
                     type="button"
                     @click="
                       onSearch(
-                        baseUrl === 'supplement'
+                        baseUrl === 'list-supplement'
                           ? 'listing-supplement'
                           : baseUrl === 'unit'
                           ? 'listing-collection'
@@ -434,7 +445,7 @@
                     "
                   >
                     {{
-                      baseUrl === "supplement"
+                      baseUrl === "list-supplement"
                         ? "Search Files"
                         : "Search Collections"
                     }}
@@ -463,7 +474,8 @@
                   </button>
                 </div>
               </div>
-              <div class="row row-spl" v-if="records && records.length">
+              <AddSupplemental v-if="baseUrl === 'supplement'" />
+              <div class="row row-spl" v-else-if="records && records.length">
                 <b-card
                   class="m-3 w-100 text-left b-card-spl"
                   v-for="elem in records"
@@ -491,7 +503,6 @@
                           "
                         >
                           <button
-                            :disabled="baseUrl === 'supplement'"
                             class="btn btn-primary btn"
                             @click="onView(elem)"
                           >
@@ -537,7 +548,7 @@
                       </div>
                     </div>
 
-                    <div v-if="baseUrl == 'supplement'">
+                    <div v-if="baseUrl == 'list-supplement'">
                       <div class="row">
                         <div class="col">Unit: <br />{{ elem.unitName }}</div>
                         <div class="col" v-if="elem.collectionName">
@@ -571,7 +582,7 @@
                   </div>
                 </b-card>
               </div>
-              <div class="col-12 text-left" v-if="!records || !records.length">
+              <div class="col-12 text-left" v-else>
                 <p>-No records found-</p>
               </div>
             </b-card>
@@ -607,6 +618,8 @@ import EntityService from "../../service/entity-service";
 import { env } from "../../helpers/env";
 import Mediaelement from "./Mediaelement.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
+import AddSupplemental from "@/components/entity/supplemental/AddSupplemental.vue";
+import ConfigPropertiesService from "@/service/config-properties-service";
 
 export default {
   name: "EntityList",
@@ -618,6 +631,7 @@ export default {
     Search,
     OutputFile,
     mediaelement: Mediaelement,
+    AddSupplemental,
   },
   props: [],
   data() {
@@ -630,6 +644,7 @@ export default {
       primaryFileService: new PrimaryFileService(),
       entityService: new EntityService(),
       workflowResultService: new WorkflowResultService(),
+      configPropertiesService: new ConfigPropertiesService(),
       records: [],
       masterRecords: [],
       showLoader: false,
@@ -648,14 +663,20 @@ export default {
     selectedItem: sync("selectedItem"),
     selectedFile: sync("selectedFile"),
     itemConfigs: sync("itemConfigs"),
+    configProperties: sync("configProperties"),
+    allUnits: sync("allUnits"),
     baseUrl() {
       const self = this;
       if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
         return "unit";
       } else if (
-        window.location.hash.toLowerCase().indexOf("supplemental") > -1
+        window.location.hash.toLowerCase().indexOf("supplemental-files/") > -1
       ) {
         return "supplement";
+      } else if (
+        window.location.hash.toLowerCase().indexOf("supplemental-files") > -1
+      ) {
+        return "list-supplement";
       } else if (window.location.hash.toLowerCase().indexOf("file") > -1) {
         return "file";
       } else if (
@@ -693,6 +714,16 @@ export default {
     },
   },
   methods: {
+    async networkCalls() {
+      const self = this;
+      try {
+        const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
+        self.configProperties = configPropertiesResponse.data;
+      } catch (error) {
+        self.showLoader = false;
+        console.log(error);
+      }
+    },
     async getData() {
       const self = this;
       if (self.baseUrl === "unit") {
@@ -724,7 +755,7 @@ export default {
         self.entity["mediaSource"] = mediaSourceUrl;
         self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
         self.showLoader = false;
-      } else if (self.baseUrl === "supplement") {
+      } else if (self.baseUrl === "list-supplement") {
         this.getSupplementalFiles();
       }
     },
@@ -804,7 +835,7 @@ export default {
           }
         });
     },
-    onView(objInstance) {
+    async onView(objInstance) {
       const self = this;
       if (self.baseUrl === "collection" && self.purpose) {
         self.selectedItem = objInstance;
@@ -812,15 +843,27 @@ export default {
       } else if (self.baseUrl === "unit" && self.purpose) {
         self.selectedCollection = objInstance;
         self.$router.push("/collection/details");
-      } else if (self.baseUrl === "supplement") {
+      } else if (self.baseUrl === "list-supplement") {
         console.log(objInstance);
+
+        let typeValue = "";
+        if (objInstance && objInstance.primaryfileName) {
+          typeValue = "p-sup";
+        } else if (objInstance && objInstance.itemName) {
+          typeValue = "i-sup";
+        } else if (objInstance && objInstance.collectionName) {
+          typeValue = "c-sup";
+        } else if (objInstance && objInstance.unitName) {
+          typeValue = "u-sup";
+        }
+        self.$router.push(`/supplemental-files/${typeValue}/${objInstance.id}`);
       }
     },
     onCreate() {
       const self = this;
       if (self.baseUrl === "unit") self.$router.push("/collection/create");
-      else if (self.baseUrl === "supplement")
-        console.log("Create supplement file");
+      else if (self.baseUrl === "list-supplement")
+        self.$router.push("/supplemental-files/add");
     },
     onCreateItem() {
       const self = this;
@@ -915,12 +958,15 @@ export default {
   mounted() {
     const self = this;
     self.showLoader = true;
+    if (self.baseUrl === "unit") {
+      this.networkCalls(); //TODO: Need to move to "home" page once it'll be implemented.
+    }
     self.getDefaultUnit();
 
     let formHTML = document.getElementsByClassName("form")[0];
-    if (this.baseUrl === "file") {
+    if (formHTML && this.baseUrl === "file") {
       formHTML.style.width = "50%";
-    } else {
+    } else if (formHTML) {
       formHTML.style.width = "100%";
     }
   },

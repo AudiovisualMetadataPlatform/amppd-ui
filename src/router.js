@@ -209,6 +209,34 @@ var router = new Router({
       },
     },
     {
+      path: "/supplemental-files/add",
+      name: "create-supplemental",
+      component: EntityList,
+      meta: {
+        authorize: [],
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Supplemental Files", href: "#/supplemental-files" },
+          { text: "File Details", href: "#/supplemental-files/add" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    {
+      path: "/supplemental-files/:supplementType/:supplementId",
+      name: "show-supplemental",
+      component: EntityList,
+      meta: {
+        authorize: [],
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Supplemental Files", href: "#/supplemental-files" },
+          { text: "File Details" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    {
       path: "/mgm-evaluation",
       name: "mgm-evaluation",
       component: MGMevaluation,
