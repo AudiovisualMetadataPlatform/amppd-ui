@@ -107,6 +107,8 @@ const state = {
     externalSources: [],
     taskManagers: [],
   },
+  configProperties: {},
+  allUnits: {},
 };
 
 export default state;
