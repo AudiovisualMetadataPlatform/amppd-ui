@@ -9,4 +9,13 @@ export default class EvaluationService extends BaseService {
   async getMgmCategories() {
     return super.get_auth(`/mgmCategories`);
   }
+
+  /***
+   * To get details of a mgm category
+   * @method GET
+   */
+
+  async getDetailsMgmCategory(id) {
+    return super.get_auth(`/mgmCategories/${id}?projection=detail`);
+  }
 }
