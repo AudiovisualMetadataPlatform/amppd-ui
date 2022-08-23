@@ -231,7 +231,6 @@ export default {
     async onView(objInstance, tab) {
       const self = this;
       self.selectedCategory = tab;
-      console.log(objInstance);
       try {
         self.loading = true;
         const mgmCategoryDetailsResponse = await this.evaluationService.getDetailsMgmCategory(
@@ -240,7 +239,6 @@ export default {
         self.mgmCategoryDetails = JSON.parse(
           JSON.stringify(mgmCategoryDetailsResponse.data)
         );
-        console.log(self.mgmCategoryDetails);
         self.loading = false;
       } catch (error) {
         console.log(error);
