@@ -42,7 +42,10 @@
               <div class="card-body">
                 <div class="description stt-word">
                   <h4>{{ selectedMst.body.name }}</h4>
-                  <span class='span-html' v-html="selectedMst.body.description"></span>
+                  <span
+                    class="span-html"
+                    v-html="selectedMst.body.description"
+                  ></span>
                   <p>
                     Short Description of the "Ground Truth Template" and
                     requirements,
@@ -130,14 +133,15 @@ export default {
   },
   mounted() {
     const self = this;
-    if (self.selectedMst.index === 0) {
+    if (self.mgmCategory.msts.length) {
       self.selectedMst.body = self.mgmCategory.msts[0];
     }
   },
   watch: {
     mgmCategory: function() {
       const self = this;
-      if (self.selectedMst.index === 0) {
+      self.selectedMst.index = 0;
+      if (self.mgmCategory.msts.length) {
         self.selectedMst.body = self.mgmCategory.msts[0];
       }
     },
@@ -194,7 +198,7 @@ export default {
 .mst-span {
   width: 100%;
 }
-.span-html > ul{
+.span-html > ul {
   padding-left: 1.5rem;
 }
 </style>
