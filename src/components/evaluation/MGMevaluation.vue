@@ -196,8 +196,9 @@ export default {
     },
     onConfluenceRoute(ev, mgmCategory) {
       ev.preventDefault();
-      const url = "";
-      window.open(url, "helpwindow", "width=800, height=500");
+      console.log("Clicked on mgmHelpRoute!!" + mgmCategory);
+      // const url = "";
+      // window.open(url, "helpwindow", "width=800, height=500");
     },
     mgmHelpRoute(mgm) {
       console.log("Clicked on mgmHelpRoute!!" + mgm);
