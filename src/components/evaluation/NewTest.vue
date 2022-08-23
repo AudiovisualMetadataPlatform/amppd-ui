@@ -125,10 +125,10 @@ export default {
       self.selectedMst.body = mstObj;
     },
     onGroundtruthInfo(ev, mstObj) {
-      console.log(mstObj);
+      console.log("Clicked on onGroundtruthInfo!!" + mstObj);
     },
     downloadGroundtruthTemplate(ev, mstObj) {
-      console.log(mstObj);
+      console.log("Clicked on onGroundtruthInfo!!" + mstObj);
     },
   },
   mounted() {
