@@ -273,7 +273,7 @@ import Loader from "@/components/shared/Loader.vue";
 import ConfigPropertiesService from "@/service/config-properties-service";
 
 export default {
-  name: "AddSupplemental",
+  name: "SupplementFile",
   components: {
     Loader,
   },

@@ -1,11 +1,7 @@
-import SharedService from './shared-service';
 import UnitService from './unit-service';
-import SupplementService from './supplement-service';
 import { env } from '../helpers/env'; 
 
-const sharedService = new SharedService();
 const unitService = new UnitService();
-const supplementService = new SupplementService();
 
 export default class EntityService {
     
@@ -20,17 +16,6 @@ export default class EntityService {
             self.$bvToast.toast("Unable to retrive unit details. Please try again!", context.sharedService.erorrToastConfig);
         });
         return unitDetails;
-    }
-
-
-    async getSupplementalFiles(num, size, self) {
-        let supplementalFiles = {};
-        await supplementService.getSupplementFiles(num, size).then(res => {
-            supplementalFiles = res;
-        }).catch(err => {
-            self.$bvToast.toast("Unable to retrive Supplemental Files. Please try again!", self.sharedService.erorrToastConfig);
-        });
-        return supplementalFiles;
     }
 
 
