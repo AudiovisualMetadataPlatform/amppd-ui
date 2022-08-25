@@ -3,7 +3,7 @@
     <loader :show="loading" />
     <div class="container col-12">
       <div class="row expand-h">
-        <div class="col-12 bg-light-gray-1">
+        <div class="col-12 bg-light-gray-1 item-search-container">
           <main class="m-0">
             <div class="pad-all-3">
               <div class="card">
@@ -110,6 +110,9 @@ export default {
 <style lang="css">
 @import "/amppd-ui/src/styles/style.css";
 .item-search {
-  width: 100%;
+  width: calc(100% - 64px);
+}
+.item-search-container {
+  margin: 0px 32px;
 }
 </style>
