@@ -209,6 +209,14 @@
                     <div class="col-6 text-left form-group">
                       <label>Unit:</label>
                       <input
+                        v-if="isCreatePage && selectedUnit"
+                        type="text"
+                        class="form-control w-100"
+                        v-model="selectedUnit.name"
+                        :disabled="true"
+                      />
+                      <input
+                        v-else
                         type="text"
                         class="form-control w-100"
                         v-model="entity.unitName"
@@ -218,6 +226,14 @@
                     <div class="col-6 text-left form-group">
                       <label>Collection:</label>
                       <input
+                        v-if="isCreatePage && selectedCollection"
+                        type="text"
+                        class="form-control w-100"
+                        v-model="selectedCollection.name"
+                        :disabled="true"
+                      />
+                      <input
+                        v-else
                         type="text"
                         class="form-control w-100"
                         :value="entity.collectionName"
