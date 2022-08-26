@@ -497,6 +497,14 @@ export default {
       self.supplement.fileDetails.originalFilename = "";
     },
 
+    successMessage() {
+      const self = this;
+      self.$bvToast.toast(
+        "Supplemental file has been successfully updated.",
+        self.sharedService.successToastConfig
+      );
+    },
+
     async saveFile(e, data) {
       const self = this;
       e.preventDefault();
@@ -638,9 +646,17 @@ export default {
                         .then((response) => {
                           self.loading = false;
                           self.moveSupplement = false;
-                          self.$router.push(
-                            `/supplemental-files/${newUrlType}/${response.id}`
-                          );
+                          self.action = "view";
+                          self.$router
+                            .push(
+                              `/supplemental-files/${newUrlType}/${response.id}`
+                            )
+                            .then(() => {
+                              self.successMessage();
+                            })
+                            .catch(() => {
+                              self.successMessage();
+                            });
                         });
                     });
                 });
@@ -664,9 +680,16 @@ export default {
                     .then((response) => {
                       self.loading = false;
                       self.moveSupplement = false;
-                      self.$router.push(
-                        `/supplemental-files/${newUrlType}/${response.id}`
-                      );
+                      self.$router
+                        .push(
+                          `/supplemental-files/${newUrlType}/${response.id}`
+                        )
+                        .then(() => {
+                          self.successMessage();
+                        })
+                        .catch(() => {
+                          self.successMessage();
+                        });
                     });
                 });
             }
@@ -687,7 +710,8 @@ export default {
                   )
                   .then((response) => {
                     self.loading = false;
-                    location.reload();
+                    self.action = "view";
+                    self.successMessage();
                   });
               });
           } else if (self.action === "view") {
@@ -700,6 +724,7 @@ export default {
               )
               .then((response) => {
                 self.loading = false;
+                self.successMessage();
               });
           }
         }
