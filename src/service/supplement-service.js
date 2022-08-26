@@ -60,9 +60,22 @@ export default class SupplementService extends BaseService {
    * @params entityId, formData
    */
 
-  async updateSupplementFile(type, id, fileData) {
+  async replaceSupplementFile(type, id, fileData) {
     return await super
       .post_auth(`/${type}/${id}/upload`, fileData)
+      .then((result) => result.data);
+  }
+
+  /***
+   * To move a supplement file
+   * @params parentId, parentType
+   */
+
+  async moveSupplementFile(currentSupType, currentSupId, parentId, parentType) {
+    return await super
+      .post_auth(
+        `/${currentSupType}/${currentSupId}/move?parentId=${parentId}&parentType=${parentType}`
+      )
       .then((result) => result.data);
   }
 }
