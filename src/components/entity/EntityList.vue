@@ -465,7 +465,11 @@
                           :title="elem.active ? 'Deactivate' : 'Activate'"
                           v-if="baseUrl == 'unit'"
                         >
-                          <input type="checkbox" v-model="elem.active" />
+                          <input
+                            type="checkbox"
+                            v-model="elem.active"
+                            v-on:click="toggleCollectionActive(elem)"
+                          />
                           <span class="slider round"></span>
                         </label>
                         <div
@@ -643,6 +647,13 @@ export default {
     },
   },
   methods: {
+    async toggleCollectionActive(collection) {
+      collection.active = !collection.active;
+      this.collectionService.activateCollection(
+        collection.id,
+        collection.active
+      );
+    },
     async networkCalls() {
       const self = this;
       try {
