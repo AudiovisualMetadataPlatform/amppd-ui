@@ -53,6 +53,7 @@
                     <a
                       class="a-link"
                       @click="onGroundtruthInfo($event, selectedMst.body)"
+                      style="pointer-events: none"
                       >link to more ground truth information</a
                     >.
                   </p>
@@ -60,6 +61,7 @@
                     <a
                       class="a-link"
                       @click="downloadGTTemplate($event, selectedMst.body)"
+                      style="pointer-events: none"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

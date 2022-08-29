@@ -82,6 +82,7 @@
                         {{ mgmCategoryDetails.help }}
                         <br />
                         <a
+                          style="pointer-events: none"
                           class="a-link"
                           @click="onConfluenceRoute($event, mgmCategoryDetails)"
                         >
@@ -109,6 +110,7 @@
                         :key="i"
                         class="a-link"
                         @click="mgmHelpRoute(mgm)"
+                        style="pointer-events: none"
                       >
                         <strong>
                           <a>{{ mgm.name }}</a>
