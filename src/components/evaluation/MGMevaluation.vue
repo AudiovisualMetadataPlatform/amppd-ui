@@ -211,8 +211,11 @@ export default {
         self.sortedMgmCategories = self.sharedService.sortByAlphabatical(
           self.mgmCategoryResponse.data._embedded.mgmCategories
         );
+        self.filteredMgmCategories = self.sortedMgmCategories.filter((item) =>
+          parseInt(item.mstsCount, 10)
+        );
         self.mgmCategories = JSON.parse(
-          JSON.stringify(self.sortedMgmCategories)
+          JSON.stringify(self.filteredMgmCategories)
         );
         self.loading = false;
       } catch (error) {
