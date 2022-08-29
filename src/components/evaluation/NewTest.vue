@@ -59,7 +59,7 @@
                   <p>
                     <a
                       class="a-link"
-                      @click="downloadGroundtruthTemplate($event, selectedMst.body)"
+                      @click="downloadGTTemplate($event, selectedMst.body)"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -76,12 +76,63 @@
                       Download the Ground Truth Template
                     </a>
                   </p>
-                  <div class="form-group marg-t-2">
+
+                  <!-- Parameter by seconds -->
+                  <div
+                    v-if="selectedMst.mstDetails.name.includes('by seconds')"
+                    class="form-group marg-t-2"
+                  >
+                    <h4>Parameters</h4>
+                    <p>
+                      Analysis threshold: the number of seconds buffer (float)
+                      for counting a true positive (match between the ground
+                      truth and MGM output). For example, a 2-second threshold
+                      will consider a GT and MGM segment a match if both the
+                      start and end times for each fall within 2 seconds of each
+                      other.
+                    </p>
+                    <label for="description" class="sr-only">Parameters</label>
+                    <div class="input-group mb-3">
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="Parameters"
+                        aria-label="description"
+                        aria-describedby="basic-addon2"
+                        step="0.25"
+                        v-model="testParams.parameter"
+                        @change="onInputChange"
+                      />
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2"
+                          >seconds</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Other parameters -->
+                  <div v-else class="form-group marg-t-2">
                     <label for="descriptiona">Parameters</label>
+                    <select
+                      v-if="selectedMst.mstDetails.parameters.length"
+                      class="select custom-select w-100"
+                      v-model="testParams.parameter"
+                      @change="onInputChange"
+                    >
+                      <option
+                        v-for="option in selectedMst.mstDetails.parameters"
+                        :key="option.id"
+                        :value="option.id"
+                        >{{ option.name }}</option
+                      >
+                    </select>
                     <textarea
+                      v-else
                       id="descriptiona"
                       class="form-control"
                       spellcheck="false"
+                      @change="onInputChange"
+                      v-model="testParams.parameter"
                     ></textarea>
                   </div>
                 </div>
@@ -96,8 +147,8 @@
 
 <script>
 import Loader from "@/components/shared/Loader.vue";
-import SharedService from "../../service/shared-service";
-import EvaluationService from "../../service/evaluation-service";
+import SharedService from "@/service/shared-service";
+import EvaluationService from "@/service/evaluation-service";
 
 export default {
   name: "NewTest",
@@ -109,7 +160,8 @@ export default {
       loading: false,
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
-      selectedMst: { index: 0, body: {} },
+      selectedMst: { index: 0, body: {}, mstDetails: {} },
+      testParams: {},
     };
   },
   computed: {},
@@ -122,15 +174,40 @@ export default {
     },
   },
   methods: {
+    onInputChange() {
+      console.log(this.testParams);
+    },
+    async getDetailsMgmScoringTool(mstId) {
+      const self = this;
+      try {
+        self.loading = true;
+        const mgmScoringToolDetailsResponse = await this.evaluationService.getDetailsMgmScoringTool(
+          mstId
+        );
+        self.selectedMst.mstDetails = JSON.parse(
+          JSON.stringify(mgmScoringToolDetailsResponse.data)
+        );
+        self.loading = false;
+      } catch (error) {
+        console.log(error);
+        self.loading = false;
+        self.$bvToast.toast(
+          "Oops! Something went wrong.",
+          self.sharedService.erorrToastConfig
+        );
+      }
+    },
     onChangeMst(mstIndex, mstObj) {
       const self = this;
       self.selectedMst.index = mstIndex;
       self.selectedMst.body = mstObj;
+      self.getDetailsMgmScoringTool(mstObj.id);
+      self.testParams = {};
     },
     onGroundtruthInfo(ev, mstObj) {
       console.log("Clicked on onGroundtruthInfo!!" + mstObj);
     },
-    downloadGroundtruthTemplate(ev, mstObj) {
+    downloadGTTemplate(ev, mstObj) {
       console.log("Clicked on onGroundtruthInfo!!" + mstObj);
     },
   },
@@ -138,6 +215,7 @@ export default {
     const self = this;
     if (self.mgmCategory.msts.length) {
       self.selectedMst.body = self.mgmCategory.msts[0];
+      self.getDetailsMgmScoringTool(self.mgmCategory.msts[0].id);
     }
   },
   watch: {
@@ -146,6 +224,8 @@ export default {
       self.selectedMst.index = 0;
       if (self.mgmCategory.msts.length) {
         self.selectedMst.body = self.mgmCategory.msts[0];
+        self.getDetailsMgmScoringTool(self.mgmCategory.msts[0].id);
+        self.testParams = {};
       }
     },
     mgmCategoryLoading: function() {
