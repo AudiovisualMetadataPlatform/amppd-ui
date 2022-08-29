@@ -146,6 +146,7 @@
                     <NewTest
                       v-if="activeTab === 'new-test'"
                       :mgmCategory="mgmCategoryDetails"
+                      :mgmCategoryLoading="loading"
                     />
                     <TestResults v-else-if="activeTab === 'test-results'" />
                   </div>

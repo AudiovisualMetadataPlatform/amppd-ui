@@ -9,7 +9,7 @@
           role="tablist"
           aria-orientation="vertical"
         >
-          <h3 class="col-12 hdr-3">Select a New Test</h3>
+          <h3 id="select-test-title" class="col-12 hdr-3">Select a New Test</h3>
           <b-overlay rounded="sm">
             <b-navbar
               id="pills-tab-1"
@@ -117,6 +117,9 @@ export default {
     mgmCategory: {
       default: {},
     },
+    mgmCategoryLoading: {
+      default: false,
+    },
   },
   methods: {
     onChangeMst(mstIndex, mstObj) {
@@ -143,6 +146,15 @@ export default {
       self.selectedMst.index = 0;
       if (self.mgmCategory.msts.length) {
         self.selectedMst.body = self.mgmCategory.msts[0];
+      }
+    },
+    mgmCategoryLoading: function() {
+      const self = this;
+      const newTestTitle = document.getElementById("select-test-title");
+      if (self.mgmCategoryLoading) {
+        newTestTitle.classList.remove("hdr-3");
+      } else {
+        newTestTitle.classList.add("hdr-3");
       }
     },
   },
