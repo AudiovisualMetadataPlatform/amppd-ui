@@ -79,7 +79,7 @@
                     <h2 class="col-12">{{ mgmCategoryDetails.name }}</h2>
                     <div class="col-7">
                       <p>
-                        {{ mgmCategoryDetails.description }}
+                        {{ mgmCategoryDetails.help }}
                         <br />
                         <a
                           class="a-link"
