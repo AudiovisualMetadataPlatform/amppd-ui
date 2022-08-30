@@ -26,7 +26,7 @@ export default class WorkflowResultService extends BaseService{
         return data;
     }
     async setWorkflowResultFinal(id, isFinal){
-        var data = await super.post_auth('/workflow-results/' + id + '?isFinal=' + isFinal, null).
+        var data = await super.patch_auth('/workflow-results/' + id + '?isFinal=' + isFinal, null).
         then(result=>{
             return result.data;
         });
