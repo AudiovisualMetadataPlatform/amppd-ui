@@ -18,12 +18,11 @@ import time
 import io
 import zipfile
 import json
-#from amp_bootstrap_utils import run_cmd, build_package
+from amp.package import *
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--debug', default=False, action='store_true', help="Turn on debugging")
-    parser.add_argument('--version', default=None, help="Package Version")  
     parser.add_argument('--package', default=False, action='store_true', help="build a package instead of installing")
     parser.add_argument('--clean', default=False, action='store_true', help="Clean previous build & dependencies")
     parser.add_argument('destdir', help="Output directory for package or webserver path root", nargs='?')
@@ -51,21 +50,47 @@ def main():
 
     if not args.package:
         logging.info(f"UI code is in dist directory")
-    else:
-        destdir = Path(args.destdir).resolve()
-        buildtime = datetime.now().strftime("%Y%m%d_%H%M%S")
-        if args.version is None:
-            # look in package.json to see if there's a version string...
+        exit(0)
+
+    with tempfile.TemporaryDirectory() as builddir:
+        # create a zip file of the data        
+        with zipfile.ZipFile(builddir + "/ROOT.war", mode="w", compression=zipfile.ZIP_DEFLATED) as z:
+            dist_dir = Path('./dist')
+            for f in dist_dir.glob("**/*"):
+                if f.is_file():
+                    logging.debug(f"Adding {f!s} -> {f.relative_to(dist_dir)!s} to war")
+                    z.write(f, f"{str(f.relative_to(dist_dir))}")
+                else:
+                    logging.debug(f"Skipping file: {f!s}")
+        
+            version = "0.0.unknown"
             try:
                 with open("package.json") as f:
                     jdata = json.load(f)
                     if 'version' in jdata:
-                        args.version = jdata['version']
-                    else:
-                        args.version = buildtime
+                        version = jdata['version']
             except:            
-                args.version = buildtime
-        basedir = f"amp_ui-{args.version}"
+                pass
+
+            pfile = create_package(Path(args.destdir), Path(builddir),
+                                metadata={'name': 'amp_ui',
+                                            'version': version,
+                                            'install_path': 'tomcat/webapps'
+                                            },
+                                hooks={'post': 'amp_hook_post.py',
+                                        'config': 'amp_hook_config.py'},
+                                defaults='amp_config.default',
+                                depends_on='tomcat')
+                                
+        logging.info(f"New package is in {pfile}")
+
+        exit(0)
+    #else:
+        destdir = Path(args.destdir).resolve()
+        buildtime = datetime.now().strftime("%Y%m%d_%H%M%S")
+        if args.version is None:
+            # look in package.json to see if there's a version string...
+                 basedir = f"amp_ui-{args.version}"
         pkgfile = Path(destdir, f"{basedir}.tar")
         
 
@@ -98,16 +123,7 @@ def main():
             data_info.mode = 0o755
             tfile.addfile(data_info, None)
 
-            # create a zip file of the data
-            zipdata = io.BytesIO()
-            with zipfile.ZipFile(zipdata, mode="w", compression=zipfile.ZIP_DEFLATED) as z:
-                dist_dir = Path('./dist')
-                for f in dist_dir.glob("**/*"):
-                    if f.is_file():
-                        logging.debug(f"Adding {f!s} -> {f.relative_to(dist_dir)!s} to war")
-                        z.write(f, f"{str(f.relative_to(dist_dir))}")
-                    else:
-                        logging.debug(f"Skipping file: {f!s}")
+
 
             logging.debug("Adding ROOT.war to tarball")
             war_info = tarfile.TarInfo(name=f"{basedir}/data/ROOT.war")
