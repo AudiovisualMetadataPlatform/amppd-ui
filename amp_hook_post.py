@@ -16,12 +16,13 @@ def main():
     setup_logging(None, args.debug)
 
     # manually deploy the servlet if it is the UI or REST
-    amp_root = Path(os.environ['AMP_ROOT'])
-    logging.info("Deploying war file")
+    amp_root = Path(os.environ['AMP_ROOT'])    
     warfile = amp_root / 'tomcat/webapps/ROOT.war'
     deployroot = amp_root / 'tomcat/webapps/ROOT'
+    logging.info(f"Deploying war file: {warfile!s} -> {deployroot!s}")
     # remove everything in the deploy root
     if deployroot.exists():
+        logging.debug("Removing previous deployment")
         shutil.rmtree(deployroot)
     with zipfile.ZipFile(warfile, 'r') as zfile:
         zfile.extractall(deployroot)

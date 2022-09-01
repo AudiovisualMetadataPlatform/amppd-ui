@@ -63,76 +63,27 @@ def main():
                 else:
                     logging.debug(f"Skipping file: {f!s}")
         
-            version = "0.0.unknown"
-            try:
-                with open("package.json") as f:
-                    jdata = json.load(f)
-                    if 'version' in jdata:
-                        version = jdata['version']
-            except:            
-                pass
+        version = "0.0.unknown"
+        try:
+            with open("package.json") as f:
+                jdata = json.load(f)
+                if 'version' in jdata:
+                    version = jdata['version']
+        except:            
+            pass
 
-            pfile = create_package(Path(args.destdir), Path(builddir),
-                                metadata={'name': 'amp_ui',
-                                            'version': version,
-                                            'install_path': 'tomcat/webapps'
-                                            },
-                                hooks={'post': 'amp_hook_post.py',
-                                        'config': 'amp_hook_config.py'},
-                                defaults='amp_config.default',
-                                depends_on='tomcat')
-                                
+        pfile = create_package(Path(args.destdir), Path(builddir),
+                            metadata={'name': 'amp_ui',
+                                        'version': version,
+                                        'install_path': 'tomcat/webapps'
+                                        },
+                            hooks={'post': 'amp_hook_post.py',
+                                    'config': 'amp_hook_config.py'},
+                            defaults='amp_config.default',
+                            depends_on='tomcat')
+                            
         logging.info(f"New package is in {pfile}")
 
-        exit(0)
-    #else:
-        destdir = Path(args.destdir).resolve()
-        buildtime = datetime.now().strftime("%Y%m%d_%H%M%S")
-        if args.version is None:
-            # look in package.json to see if there's a version string...
-                 basedir = f"amp_ui-{args.version}"
-        pkgfile = Path(destdir, f"{basedir}.tar")
-        
-
-        with tarfile.open(pkgfile, "w") as tfile:
-            # create base directory
-            base_info = tarfile.TarInfo(name=basedir)
-            base_info.mtime = int(time.time())
-            base_info.type = tarfile.DIRTYPE
-            base_info.mode = 0o755
-            tfile.addfile(base_info, None)
-            
-            
-            # write metadata file
-            metafile = tarfile.TarInfo(name=f"{basedir}/amp_package.yaml")
-            metafile_data = yaml.safe_dump({
-                'name': 'amp_ui',
-                'version': args.version,
-                'build_date': buildtime,
-                'install_path': 'tomcat/webapps'
-            }).encode('utf-8')
-            metafile.size = len(metafile_data)
-            metafile.mtime = int(time.time())
-            metafile.mode = 0o644
-            tfile.addfile(metafile, io.BytesIO(metafile_data))
-
-            # create the data directory
-            data_info = tarfile.TarInfo(name=f'{basedir}/data')
-            data_info.mtime = int(time.time())
-            data_info.type = tarfile.DIRTYPE
-            data_info.mode = 0o755
-            tfile.addfile(data_info, None)
-
-
-
-            logging.debug("Adding ROOT.war to tarball")
-            war_info = tarfile.TarInfo(name=f"{basedir}/data/ROOT.war")
-            war_info.mtime = int(time.time())
-            war_info.mode = 0o644
-            war_info.size = len(zipdata.getvalue())
-            tfile.addfile(war_info, io.BytesIO(zipdata.getvalue()))
-            
-            logging.info(f"Build complete.  Package is in: {pkgfile}")
 
 if __name__ == "__main__":
     main()
