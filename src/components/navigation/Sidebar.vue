@@ -137,7 +137,9 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
-        self.$router.push(`${menu.url}`);
+        self.$router.push(`${menu.url}`).catch(() => {
+          location.reload();
+        });
       }
     },
     convertToSvg(value) {
