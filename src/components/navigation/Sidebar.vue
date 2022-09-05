@@ -137,8 +137,12 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
-        self.$router.push(`${menu.url}`).catch(() => {
-          location.reload();
+        self.$router.push(`${menu.url}`).catch((error) => {
+          if (error.message.includes("/mgm-evaluation")) {
+            location.reload();
+          } else {
+            console.log(error.message);
+          }
         });
       }
     },
