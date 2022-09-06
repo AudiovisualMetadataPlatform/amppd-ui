@@ -1,7 +1,7 @@
 <template>
   <div class="dataTables_wrapper no-footer">
     <loader :show="workflowDashboard.loading" />
-    <div class="export-row">
+    <div v-if="parent !== 'NewTest'" class="export-row">
       <input
         id="export-results"
         type="button"
@@ -53,7 +53,7 @@
         v-model="workflowDashboard.searchQuery.pageNum"
         :total-rows="workflowDashboard.searchResult.totalResults"
         :per-page="workflowDashboard.searchQuery.resultsPerPage"
-        @change="paginate(workflowDashboard.searchQuery.pageNum)"
+        @change="paginate($event)"
         size="sm"
         align="center"
         first-number
@@ -75,10 +75,23 @@
 
     <br />
 
-    <div class="table-responsive">
+    <div
+      class="table-responsive"
+      :class="parent === 'NewTest' ? 'table-gap' : ''"
+    >
       <table id="myTable" class="table dataTable no-footer">
         <thead>
-          <tr>
+          <tr v-if="parent === 'NewTest'">
+            <th
+              scope="col"
+              class="btn-header"
+              v-for="column in columns"
+              :key="column.field"
+            >
+              <span class="col-title new-test-column">{{ column.label }}</span>
+            </th>
+          </tr>
+          <tr v-else>
             <sortable-header
               class="btn-header"
               v-for="column in columns"
@@ -126,7 +139,13 @@
           </tr>
         </thead>
         <tbody v-if="visibleRows && visibleRows.length > 0">
-          <tr v-for="rec in visibleRows" :key="rec.id">
+          <tr
+            v-for="rec in visibleRows"
+            :key="rec.id"
+            :class="{
+              'selected-mgm-outputs': isSelected(rec.id),
+            }"
+          >
             <td v-if="!collapsedColumns.dateCreated">
               {{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}
             </td>
@@ -166,7 +185,7 @@
               >
             </td>
             <td v-else>{{ rec.outputName }}</td>
-            <td>
+            <td v-if="parent !== 'NewTest'">
               <button
                 v-if="rec.status === 'COMPLETE'"
                 type="button"
@@ -210,6 +229,14 @@
                 Deleted
               </button>
             </td>
+            <td v-if="parent === 'NewTest'" class="text-center slim-col-14">
+              <input
+                class="add-to-test-checkbox"
+                type="checkbox"
+                v-model="mgmEvaluation.selectedRecords"
+                :value="rec"
+              />
+            </td>
           </tr>
         </tbody>
         <tbody v-else>
@@ -239,7 +266,7 @@
             v-model="workflowDashboard.searchQuery.pageNum"
             :total-rows="workflowDashboard.searchResult.totalResults"
             :per-page="workflowDashboard.searchQuery.resultsPerPage"
-            @change="paginate(workflowDashboard.searchQuery.pageNum)"
+            @change="paginate($event)"
             size="sm"
             align="center"
             first-number
@@ -287,6 +314,7 @@ export default {
         { label: "Step", field: "workflowStep" },
         { label: "Output", field: "outputName" },
         { label: "Status", field: "status" },
+        { label: "Add to Test", field: "addToTest" },
       ],
       workflowResultService: new WorkflowResultService(),
       sharedService: new SharedService(),
@@ -301,6 +329,7 @@ export default {
     };
   },
   computed: {
+    mgmEvaluation: sync("mgmEvaluation"),
     workflowDashboard: sync("workflowDashboard"),
     filterByCollections: sync(
       "workflowDashboard.searchQuery.filterByCollections"
@@ -358,8 +387,25 @@ export default {
       return `Showing ${start} - ${end} of ${total}`;
     },
   },
-  props: {},
+  props: {
+    parent: {
+      default: "",
+    },
+    workflowResultType: {
+      default: "",
+    },
+  },
   methods: {
+    isSelected(recId) {
+      const selctedRecordIds = this.mgmEvaluation.selectedRecords.map(
+        (record) => record.id
+      );
+      if (selctedRecordIds.indexOf(recId) !== -1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     async sortQuery(sortRule) {
       this.workflowDashboard.searchQuery.sortRule = sortRule;
       this.workflowDashboard.searchQuery.pageNum = 1;
@@ -425,6 +471,22 @@ export default {
     },
   },
   async mounted() {
+    if (this.parent === "NewTest") {
+      this.$emit("clearAll");
+      this.columns = this.columns.filter((column) => column.field !== "status");
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.workflowDashboard.searchQuery.filterByTypes = [
+        this.workflowResultType,
+      ];
+      this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
+    } else {
+      this.columns = this.columns.filter(
+        (column) => column.field !== "addToTest"
+      );
+      this.workflowDashboard.searchQuery.filterByTypes = [];
+      this.$emit("clearAll");
+    }
+
     const limit = this.sharedService.getUserValue("limit");
     this.workflowDashboard.searchQuery.resultsPerPage = limit
       ? limit
@@ -487,6 +549,14 @@ export default {
     filterByRelevant: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
+    },
+    workflowResultType: function() {
+      this.columns = this.columns.filter((column) => column.field !== "status");
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.workflowDashboard.searchQuery.filterByTypes = [
+        this.workflowResultType,
+      ];
+      this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
     },
   },
   beforeDestroy() {
@@ -625,5 +695,19 @@ th:hover .btn-slim {
 .dateColumnHead {
   width: 15px;
   background: transparent;
+}
+.table-gap {
+  margin-top: -20px !important;
+  overflow-y: hidden;
+}
+.add-to-test-checkbox {
+  width: 28px;
+  height: 28px;
+}
+.new-test-column {
+  font-size: 14px;
+}
+.selected-mgm-outputs {
+  background-color: #fef4ea;
 }
 </style>
