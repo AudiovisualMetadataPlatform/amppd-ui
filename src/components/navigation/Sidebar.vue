@@ -141,7 +141,7 @@ export default {
           if (error.message.includes("/mgm-evaluation")) {
             location.reload();
           } else {
-            console.log(error.message);
+            console.error(error.message);
           }
         });
       }
