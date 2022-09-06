@@ -109,6 +109,9 @@ const state = {
   },
   configProperties: {},
   allUnits: {},
+  mgmEvaluation: {
+    selectedRecords: [],
+  },
 };
 
 export default state;

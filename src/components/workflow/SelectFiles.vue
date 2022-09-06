@@ -81,6 +81,7 @@
                   id="exampleFormControlInput100"
                   placeholder="Search"
                   v-model="searchWord"
+                  autocomplete="off"
                 />
                 <div class="input-group-append">
                   <button class="btn" type="button" v-on:click="searchFiles()">
