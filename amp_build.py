@@ -9,13 +9,8 @@ import tempfile
 from pathlib import Path
 import shutil
 import sys
-import yaml
-from datetime import datetime
 import os
 import subprocess
-import tarfile
-import time
-import io
 import zipfile
 import json
 from amp.package import *
@@ -72,15 +67,12 @@ def main():
         except:            
             pass
 
-        pfile = create_package(Path(args.destdir), Path(builddir),
-                            metadata={'name': 'amp_ui',
-                                        'version': version,
-                                        'install_path': 'tomcat/webapps'
-                                        },
-                            hooks={'post': 'amp_hook_post.py',
-                                    'config': 'amp_hook_config.py'},
-                            defaults='amp_config.default',
-                            depends_on='tomcat')
+        pfile = create_package("amp_ui", version, "tomcat/webapps",
+                               Path(args.destdir), Path(builddir),
+                               hooks={'post': 'amp_hook_post.py',
+                                      'config': 'amp_hook_config.py'},
+                               user_defaults='amp_config.user_defaults',
+                               depends_on='tomcat')
                             
         logging.info(f"New package is in {pfile}")
 
