@@ -138,7 +138,6 @@
           <div class="form-group col-6">
             <label for="unit-name">Unit*</label>
             <select
-              v-if="supplement && supplement.allUnits"
               class="select custom-select w-100"
               v-model="supplement.fileDetails.unit"
               @change="onInputChange('unit', true)"
@@ -541,18 +540,23 @@ export default {
         if (self.action === "add") {
           //API call for add supplement page
           let apiType = "";
+          let newUrlType = "";
           let formDataKey = "";
           if (self.entityType === "unit") {
             apiType = "units";
+            newUrlType = "u-sup";
             formDataKey = "unitSupplement";
           } else if (self.entityType === "collection") {
             apiType = "collections";
+            newUrlType = "c-sup";
             formDataKey = "collectionSupplement";
           } else if (self.entityType === "item") {
             apiType = "items";
+            newUrlType = "i-sup";
             formDataKey = "itemSupplement";
           } else if (self.entityType === "primaryFile") {
             apiType = "primaryfiles";
+            newUrlType = "p-sup";
             formDataKey = "primaryfileSupplement";
           }
           let formData = new FormData();
@@ -573,13 +577,19 @@ export default {
             )
           );
           formData.append("mediaFile", data.file);
-          await self.supplementService.addSupplement(
-            apiType,
-            self.entityId,
-            formData
-          );
+          await self.supplementService
+            .addSupplement(apiType, self.entityId, formData)
+            .then((response) => {
+              self.$router
+                .push(`/supplemental-files/${newUrlType}/${response.id}`)
+                .then(() => {
+                  self.$bvToast.toast(
+                    "Supplemental file has been successfully created.",
+                    self.sharedService.successToastConfig
+                  );
+                });
+            });
           self.loading = false;
-          this.$router.push("/supplemental-files");
         } else if (self.action === "replace" || self.action === "view") {
           //API call for view supplement page
           let formDataKey = "";
@@ -766,15 +776,18 @@ export default {
   },
   mounted() {
     const self = this;
-    self.networkCalls();
     self.supplementType = self.$route.params.supplementType;
     self.supplementId = self.$route.params.supplementId;
     if (self.supplementType && self.supplementId) {
       self.action = "view";
       const uploadDetailsBody = document.getElementById("upload-details-body");
       uploadDetailsBody.style.display = "block";
-      self.viewSupplementNetworkCalls();
     }
+    self.networkCalls().then(() => {
+      if (self.action === "view") {
+        self.viewSupplementNetworkCalls();
+      }
+    });
   },
 };
 </script>
