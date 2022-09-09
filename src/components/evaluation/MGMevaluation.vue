@@ -75,7 +75,7 @@
               </dl>
               <div v-else>
                 <div class="">
-                  <div class="row">
+                  <div class="row" v-if="mgmCategoryDetails">
                     <h2 class="col-12">{{ mgmCategoryDetails.name }}</h2>
                     <div class="col-7">
                       <p>

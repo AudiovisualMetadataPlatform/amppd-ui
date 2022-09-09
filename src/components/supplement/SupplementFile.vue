@@ -138,7 +138,7 @@
           <div class="form-group col-6">
             <label for="unit-name">Unit*</label>
             <select
-              v-if="allUnits && allUnits._embedded"
+              v-if="supplement && supplement.allUnits"
               class="select custom-select w-100"
               v-model="supplement.fileDetails.unit"
               @change="onInputChange('unit', true)"
@@ -148,7 +148,7 @@
               }"
               ><option value="" disabled selected>- Choose Unit -</option>
               <option
-                v-for="option in allUnits._embedded.units"
+                v-for="option in supplement.allUnits"
                 :key="option.id"
                 :value="option.id"
                 >{{ option.name }}</option
@@ -325,6 +325,11 @@ export default {
             .getAllUnits("0", response.data.page.totalElements)
             .then((res) => {
               self.allUnits = res.data;
+              self.supplement[
+                "allUnits"
+              ] = self.sharedService.sortByAlphabatical(
+                this.allUnits._embedded.units
+              );
               self.loading = false;
             });
         });
@@ -418,7 +423,9 @@ export default {
       self.supplement[
         "allCategories"
       ] = this.configProperties.supplementCategories;
-      self.supplement["allUnits"] = this.allUnits._embedded.units;
+      self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
+        this.allUnits._embedded.units
+      );
       const uploadDetailsBody = document.getElementById("upload-details-body");
       uploadDetailsBody.style.display = "block";
 
@@ -442,7 +449,9 @@ export default {
             await self.collectionService
               .getCollectionByUnitId(self.entityId)
               .then((res) => {
-                self.supplement.collectionList = res._embedded.collections;
+                self.supplement.collectionList = self.sharedService.sortByAlphabatical(
+                  res._embedded.collections
+                );
                 self.supplement.fileDetails.collection = "";
                 self.supplement.showCollectionList = true;
                 self.supplement.showItemList = false;
@@ -459,7 +468,9 @@ export default {
             await self.itemService
               .getCollectionItems(self.entityId)
               .then((res) => {
-                self.supplement.itemList = res.data._embedded.items;
+                self.supplement.itemList = self.sharedService.sortByAlphabatical(
+                  res.data._embedded.items
+                );
                 self.supplement.fileDetails.item = "";
                 self.supplement.showItemList = true;
                 self.supplement.showPrimaryFileList = false;
@@ -473,8 +484,9 @@ export default {
             await self.fileService
               .getPrimaryFiles(self.entityId)
               .then((res) => {
-                self.supplement.primaryFileList =
-                  res.data._embedded.primaryfiles;
+                self.supplement.primaryFileList = self.sharedService.sortByAlphabatical(
+                  res.data._embedded.primaryfiles
+                );
                 self.supplement.fileDetails.primaryFile = "";
                 self.supplement.showPrimaryFileList = true;
                 self.loading = false;

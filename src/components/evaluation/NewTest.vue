@@ -80,7 +80,11 @@
 
                   <!-- Parameter by seconds -->
                   <div
-                    v-if="selectedMst.detailBody.name.includes('by seconds')"
+                    v-if="
+                      selectedMst.detailBody &&
+                        selectedMst.detailBody.name &&
+                        selectedMst.detailBody.name.includes('by seconds')
+                    "
                     class="form-group marg-t-2"
                   >
                     <h4>Parameters</h4>
@@ -114,7 +118,11 @@
                   <div v-else class="form-group marg-t-2">
                     <label for="descriptiona">Parameters</label>
                     <select
-                      v-if="selectedMst.detailBody.parameters.length"
+                      v-if="
+                        selectedMst.detailBody &&
+                          selectedMst.detailBody.parameters &&
+                          selectedMst.detailBody.parameters.length
+                      "
                       class="select custom-select w-100"
                       v-model="testParams.parameter"
                     >
@@ -367,7 +375,11 @@ export default {
   },
   mounted() {
     const self = this;
-    if (self.mgmCategory.msts.length) {
+    if (
+      self.mgmCategory &&
+      self.mgmCategory.msts &&
+      self.mgmCategory.msts.length
+    ) {
       self.selectedMst.body = self.mgmCategory.msts[0];
       self.getDetailsMgmScoringTool(self.mgmCategory.msts[0].id);
     }
