@@ -45,7 +45,7 @@
                     <td>
                       {{ supplement.description }}
                     </td>
-                    <td>{{ supplement.modifiedDate | LOCAL_DATE_VALUE }}</td>
+                    <td>{{ supplement.createdDate | LOCAL_DATE_VALUE }}</td>
                     <td class="text-center slim-col-12">
                       <input
                         type="radio"
