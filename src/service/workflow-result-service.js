@@ -41,4 +41,8 @@ export default class WorkflowResultService extends BaseService{
         const url = `${this.API_URL}/workflow-results/${id}/output`;
         return url; 
     }
+
+    async deleteWorkflowResult(id){
+        await super.delete_auth(`/workflow-results/${id}`);
+    }
 }

@@ -229,6 +229,25 @@
                 Deleted
               </button>
             </td>
+            <td v-if="parent !== 'NewTest'" class="toggleActions">
+              <a class="btn btn-link add-remove to-delete">
+                <span class="sr-only">delete this item</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="28"
+                  height="28"
+                  fill="currentColor"
+                  class="bi bi-x-octagon-fill icon-delete-stop"
+                  viewBox="0 0 16 16"
+                  @click="deleteRow(rec)"
+                >
+                  <title>Delete this item</title>
+                  <path
+                    d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z"
+                  />
+                </svg>
+              </a>
+            </td>
             <td v-if="parent === 'NewTest'" class="text-center slim-col-14">
               <input
                 class="add-to-test-checkbox"
@@ -314,6 +333,7 @@ export default {
         { label: "Step", field: "workflowStep" },
         { label: "Output", field: "outputName" },
         { label: "Status", field: "status" },
+        { label: "Actions", field: "actions" },
         { label: "Add to Test", field: "addToTest" },
       ],
       workflowResultService: new WorkflowResultService(),
@@ -396,6 +416,22 @@ export default {
     },
   },
   methods: {
+    deleteRow(record) {
+      const self = this;
+      self.workflowDashboard.loading = true;
+      try {
+        this.workflowResultService.deleteWorkflowResult(record.id).then(() => {
+          self.refreshData();
+          self.$bvToast.toast(
+            "Workflow result has been removed successfully.",
+            self.sharedService.successToastConfig
+          );
+        });
+      } catch (error) {
+        self.workflowDashboard.loading = false;
+        console.error(error.message);
+      }
+    },
     isSelected(recId) {
       const selctedRecordIds = this.mgmEvaluation.selectedRecords.map(
         (record) => record.id
@@ -407,9 +443,11 @@ export default {
       }
     },
     async sortQuery(sortRule) {
-      this.workflowDashboard.searchQuery.sortRule = sortRule;
-      this.workflowDashboard.searchQuery.pageNum = 1;
-      this.refreshData();
+      if (sortRule.columnName !== "actions") {
+        this.workflowDashboard.searchQuery.sortRule = sortRule;
+        this.workflowDashboard.searchQuery.pageNum = 1;
+        this.refreshData();
+      }
     },
     getDateString() {
       const date = new Date();
@@ -457,10 +495,19 @@ export default {
     async refreshData() {
       const self = this;
       self.workflowDashboard.loading = true;
-      self.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(
-        this.workflowDashboard.searchQuery
-      );
-      self.workflowDashboard.loading = false;
+      try {
+        self.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(
+          this.workflowDashboard.searchQuery
+        );
+        self.workflowDashboard.loading = false;
+      } catch (error) {
+        self.workflowDashboard.loading = false;
+        self.$bvToast.toast(
+          "Oops! Something went wrong.",
+          self.sharedService.erorrToastConfig
+        );
+        console.error(error.message);
+      }
     },
     updateUserValues() {
       const self = this;
@@ -473,7 +520,9 @@ export default {
   async mounted() {
     if (this.parent === "NewTest") {
       this.$emit("clearAll");
-      this.columns = this.columns.filter((column) => column.field !== "status");
+      this.columns = this.columns.filter(
+        (column) => column.field !== "status" && column.field !== "actions"
+      );
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.workflowDashboard.searchQuery.filterByTypes = [
         this.workflowResultType,
@@ -494,7 +543,15 @@ export default {
     this.refreshData();
 
     let dateColumnHeadHTML = document.getElementsByClassName("btn-slim")[0];
-    dateColumnHeadHTML.style.left = 0;
+    if (dateColumnHeadHTML) dateColumnHeadHTML.style.left = 0;
+
+    let actionsButton = document.getElementById("actions"); //To remove the sortable icon
+    if (actionsButton) {
+      actionsButton.childNodes[0].removeChild(
+        actionsButton.childNodes[0].childNodes[3]
+      );
+      actionsButton.childNodes[0].style.justifyContent = "center";
+    }
   },
   watch: {
     filterByDates: function() {
@@ -551,7 +608,9 @@ export default {
       this.refreshData();
     },
     workflowResultType: function() {
-      this.columns = this.columns.filter((column) => column.field !== "status");
+      this.columns = this.columns.filter(
+        (column) => column.field !== "status" && column.field !== "actions"
+      );
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.workflowDashboard.searchQuery.filterByTypes = [
         this.workflowResultType,
@@ -709,5 +768,11 @@ th:hover .btn-slim {
 }
 .selected-mgm-outputs {
   background-color: #fef4ea;
+}
+.icon-delete-stop {
+  fill: red;
+}
+.icon-delete-stop:hover {
+  fill: #f4871e;
 }
 </style>
