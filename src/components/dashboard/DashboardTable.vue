@@ -230,8 +230,12 @@
               </button>
             </td>
             <td v-if="parent !== 'NewTest'" class="toggleActions">
-              <a class="btn btn-link add-remove to-delete">
-                <span class="sr-only">delete this item</span>
+              <a
+                class="btn btn-link add-remove to-delete"
+                :class="{
+                  'disabled dis-color': currentUser.username !== rec.submitter,
+                }"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="28"
@@ -297,6 +301,29 @@
         </div>
         <div class="col-2 col-md-2 col-sm-2 col-xs-12"></div>
       </div>
+
+      <!-- Modal for delete confirmation -->
+      <b-modal v-model="showModal" id="modal-center" centered>
+        <template #modal-header="{}">
+          <h5 class="text-capitalize">
+            Confirm
+          </h5>
+        </template>
+        <template #default="{}">
+          <div class="row pad-all-2">
+            Are you sure you want to delete this result from the Dashboard? This
+            action cannot be rolled back.
+          </div>
+        </template>
+        <template #modal-footer="{ hide }">
+          <button class="btn btn-outline" @click="hide()">
+            Cancel
+          </button>
+          <button size="sm" class="btn btn-primary" @click="handleDeleteRow()">
+            Delete
+          </button>
+        </template>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -309,6 +336,7 @@ import Pagination from "../shared/Pagination";
 import SearchFilter from "./DashboardFilters/SearchFilter";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "../../service/shared-service";
+import { accountService } from "@/service/account-service.js";
 
 export default {
   name: "DashboardTable",
@@ -346,6 +374,8 @@ export default {
         externalId: false,
         workflowName: false,
       },
+      showModal: false,
+      currentUser: "",
     };
   },
   computed: {
@@ -416,21 +446,30 @@ export default {
     },
   },
   methods: {
-    deleteRow(record) {
+    handleDeleteRow() {
       const self = this;
       self.workflowDashboard.loading = true;
       try {
-        this.workflowResultService.deleteWorkflowResult(record.id).then(() => {
-          self.refreshData();
-          self.$bvToast.toast(
-            "Workflow result has been removed successfully.",
-            self.sharedService.successToastConfig
-          );
-        });
+        self.showModal = false;
+        this.workflowResultService
+          .deleteWorkflowResult(self.selectedRecord.id)
+          .then(() => {
+            self.refreshData();
+            self.$bvToast.toast(
+              "Workflow result has been removed successfully.",
+              self.sharedService.successToastConfig
+            );
+          });
       } catch (error) {
+        self.showModal = false;
         self.workflowDashboard.loading = false;
         console.error(error.message);
       }
+    },
+    deleteRow(record) {
+      const self = this;
+      self.showModal = true;
+      self.selectedRecord = record;
     },
     isSelected(recId) {
       const selctedRecordIds = this.mgmEvaluation.selectedRecords.map(
@@ -518,6 +557,7 @@ export default {
     },
   },
   async mounted() {
+    this.currentUser = accountService.currentUserValue;
     if (this.parent === "NewTest") {
       this.$emit("clearAll");
       this.columns = this.columns.filter(
@@ -774,5 +814,8 @@ th:hover .btn-slim {
 }
 .icon-delete-stop:hover {
   fill: #f4871e;
+}
+.dis-color > svg {
+  fill: rgba(187, 187, 187, 0.856) !important;
 }
 </style>

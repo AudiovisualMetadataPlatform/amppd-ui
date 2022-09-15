@@ -82,7 +82,10 @@ function login(username, password) {
   return baseService.post(`/account/authenticate`, { username, password })
       .then(user => {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
-          localStorage.setItem('currentUser', JSON.stringify(user.data));
+          localStorage.setItem(
+            "currentUser",
+            JSON.stringify({ ...user.data, username })
+          );
           this.currentUser = user.data;
           console.log(currentUser);
           return this.currentUser;
