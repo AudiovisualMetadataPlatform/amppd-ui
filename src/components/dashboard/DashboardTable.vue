@@ -103,7 +103,8 @@
             v-for="rec in visibleRows"
             :key="rec.id"
             :class="{
-              'selected-mgm-outputs': isSelected(rec.id),
+              'selected-mgm-outputs':
+                parent === 'NewTest' && isSelected(rec.id),
             }"
           >
             <td>
