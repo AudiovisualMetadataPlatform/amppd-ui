@@ -36,7 +36,7 @@
         </div>
       </nav>-->
       <b-navbar toggleable="lg nav-bar-items">
-        <b-navbar-brand href="#">
+        <b-navbar-brand id="amp-logo" @click="routeToHome">
           <span v-html="ampSvg"></span>
         </b-navbar-brand>
 
@@ -127,6 +127,9 @@ export default {
     },
   },
   methods: {
+    routeToHome() {
+      this.$router.push("/");
+    },
     routeTo(menu) {
       const self = this;
       if (
@@ -210,6 +213,10 @@ nav ul li {
 
 .navbar-toggler {
   background-color: #ffffff !important;
+}
+
+#amp-logo:hover {
+  cursor: pointer;
 }
 
 .nav-span {
