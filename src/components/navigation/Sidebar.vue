@@ -217,6 +217,8 @@ nav ul li {
   align-items: center;
   justify-content: center;
 }
+
+/* constant navbar CSS in every browser */
 .nav-bar {
   height: 111.69px !important;
 }
@@ -232,5 +234,16 @@ nav ul li {
 }
 .nav-menus {
   margin-top: 7px;
+}
+@media screen and (max-width: 991px) {
+  .navbar-brand {
+    margin-top: 0px !important;
+  }
+  .nav-bar {
+    height: auto !important;
+  }
+  .nav-bar-items {
+    height: auto !important;
+  }
 }
 </style>
