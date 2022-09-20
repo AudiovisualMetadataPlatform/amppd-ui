@@ -539,6 +539,45 @@
                         >Status</b-button
                       >
 
+                      <div
+                        v-if="parent !== 'NewTest'"
+                        id="btn-show-hide"
+                        class="dropdown"
+                      >
+                        <b-dropdown id="dropdown-form">
+                          <template #button-content>
+                            <span>Show/Hide Columns</span>
+                            <span
+                              ><svg
+                                aria-hidden="true"
+                                focusable="false"
+                                class="svg-inline"
+                                role="img"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 48 48"
+                              >
+                                <g id="Layer_2" class="icon-white">
+                                  <path d="M14 20l10 10 10-10z"></path>
+                                </g></svg
+                            ></span>
+                          </template>
+                          <b-dropdown-form>
+                            <b-form-checkbox
+                              v-for="column in dashboardColumns.filter(
+                                (item) => item.field !== 'addToTest'
+                              )"
+                              :key="column.field"
+                              :value="column"
+                              :checked="column"
+                              v-model="columns"
+                              @change="onChange($event.target, column)"
+                              class="mb-3"
+                              >{{ column.label }}</b-form-checkbox
+                            >
+                          </b-dropdown-form>
+                        </b-dropdown>
+                      </div>
+
                       <div v-if="parent !== 'NewTest'" class="relevant-togggle">
                         <span class="txt-v pr-2"
                           >Show Relevant Results Only</span
@@ -561,9 +600,10 @@
                     ></div>
                   </div>
                   <DashboardTable
+                    v-if="columns.length"
+                    :columns="columns"
                     :parent="parent"
                     :workflowResultType="workflowResultType"
-                    @clearAll="clearAll"
                   />
                   <Search
                     :searchType="searchType"
@@ -589,6 +629,7 @@ import Logout from "@/components/shared/Logout.vue";
 import Search from "@/components/shared/Search.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
 import Loader from "@/components/shared/Loader.vue";
+import SharedService from "@/service/shared-service";
 
 export default {
   name: "Dashboard",
@@ -608,11 +649,14 @@ export default {
       searchType: "",
       searchSource: [],
       workflowResultService: new WorkflowResultService(),
+      sharedService: new SharedService(),
       isFilterApiLoaded: false,
+      columns: [],
     };
   },
   computed: {
     workflowDashboard: sync("workflowDashboard"),
+    dashboardColumns: sync("dashboardColumns"),
     filterCount: function() {
       var dateFilter = 0;
       if (this.workflowDashboard.searchQuery.filterByDates.length > 0)
@@ -650,6 +694,23 @@ export default {
     },
   },
   methods: {
+    onChange(ev, col) {
+      const self = this;
+      self.columns = self.sharedService.sortByAlphabatical(
+        self.columns,
+        "order"
+      );
+      if (col.field === "actions") {
+        //To remove the sortable icon
+        let actionsButton = document.getElementById("actions");
+        if (actionsButton) {
+          actionsButton.childNodes[0].removeChild(
+            actionsButton.childNodes[0].childNodes[1]
+          );
+          actionsButton.childNodes[0].style.justifyContent = "center";
+        }
+      }
+    },
     changeDisplayedFilter(item) {
       this.workflowDashboard.filtersEnabled.dateFilter = false;
       this.workflowDashboard.filtersEnabled.submitterFilter = false;
@@ -997,7 +1058,24 @@ export default {
     },
   },
   mounted() {
-    // this.getFilterValues();
+    this.columns = this.dashboardColumns;
+    if (this.parent === "NewTest") {
+      this.clearAll();
+      this.columns = this.columns.filter(
+        (column) => column.field !== "status" && column.field !== "actions"
+      );
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.workflowDashboard.searchQuery.filterByTypes = [
+        this.workflowResultType,
+      ];
+      this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
+    } else {
+      this.columns = this.columns.filter(
+        (column) => column.field !== "addToTest"
+      );
+      this.workflowDashboard.searchQuery.filterByTypes = [];
+      this.clearAll();
+    }
   },
 };
 </script>
@@ -1056,5 +1134,16 @@ export default {
 }
 .filter-gap {
   height: 18px !important;
+}
+
+#dropdown-form {
+  margin: 0px;
+  padding: 0px;
+}
+#dropdown-form > button > span > svg > g > path {
+  fill: #153c4d !important;
+}
+#dropdown-form:hover > button > span > svg > g > path {
+  fill: #fff !important;
 }
 </style>

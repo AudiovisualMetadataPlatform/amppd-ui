@@ -107,18 +107,20 @@
                 parent === 'NewTest' && isSelected(rec.id),
             }"
           >
-            <td>
+            <td v-if="checkAvailability('dateCreated')">
               {{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}
             </td>
-            <td>{{ rec.submitter }}</td>
-            <td>{{ rec.unitName }}</td>
-            <td>
+            <td v-if="checkAvailability('submitter')">{{ rec.submitter }}</td>
+            <td v-if="checkAvailability('unit')">{{ rec.unitName }}</td>
+            <td v-if="checkAvailability('collectionName')">
               {{ rec.collectionName }}
             </td>
-            <td>{{ rec.externalSource }}</td>
-            <td>{{ rec.externalId }}</td>
-            <td>{{ rec.itemName }}</td>
-            <td>
+            <td v-if="checkAvailability('externalSource')">
+              {{ rec.externalSource }}
+            </td>
+            <td v-if="checkAvailability('externalId')">{{ rec.externalId }}</td>
+            <td v-if="checkAvailability('itemName')">{{ rec.itemName }}</td>
+            <td v-if="checkAvailability('primaryfileName')">
               <a
                 v-bind:href="
                   workflowResultService.getSourceUrl(rec.primaryfileId)
@@ -127,11 +129,19 @@
                 >{{ rec.primaryfileName }}</a
               >
             </td>
-            <td>
+            <td v-if="checkAvailability('workflowName')">
               {{ rec.workflowName }}
             </td>
-            <td>{{ rec.workflowStep }}</td>
-            <td v-if="rec.outputPath != null && rec.status == 'COMPLETE'">
+            <td v-if="checkAvailability('workflowStep')">
+              {{ rec.workflowStep }}
+            </td>
+            <td
+              v-if="
+                rec.outputPath != null &&
+                  rec.status == 'COMPLETE' &&
+                  checkAvailability('outputName')
+              "
+            >
               <a
                 v-bind:href="workflowResultService.getOutputUrl(rec.id)"
                 target="_blank"
@@ -139,8 +149,10 @@
                 >{{ rec.outputName }}</a
               >
             </td>
-            <td v-else>{{ rec.outputName }}</td>
-            <td v-if="parent !== 'NewTest'">
+            <td v-else-if="checkAvailability('outputName')">
+              {{ rec.outputName }}
+            </td>
+            <td v-if="parent !== 'NewTest' && checkAvailability('status')">
               <button
                 v-if="rec.status === 'COMPLETE'"
                 type="button"
@@ -184,7 +196,10 @@
                 Deleted
               </button>
             </td>
-            <td v-if="parent !== 'NewTest'" class="toggleActions">
+            <td
+              v-if="parent !== 'NewTest' && checkAvailability('actions')"
+              class="toggleActions"
+            >
               <a
                 class="btn btn-link add-remove to-delete"
                 :class="{
@@ -207,7 +222,10 @@
                 </svg>
               </a>
             </td>
-            <td v-if="parent === 'NewTest'" class="text-center slim-col-14">
+            <td
+              v-if="parent === 'NewTest' && checkAvailability('addToTest')"
+              class="text-center slim-col-14"
+            >
               <input
                 class="add-to-test-checkbox"
                 type="checkbox"
@@ -303,22 +321,6 @@ export default {
   },
   data() {
     return {
-      columns: [
-        { label: "Date", field: "dateCreated" },
-        { label: "Submitter", field: "submitter" },
-        { label: "Unit", field: "unit" },
-        { label: "Collection", field: "collectionName" },
-        { label: "External Source", field: "externalSource" },
-        { label: "External ID", field: "externalId" },
-        { label: "Item", field: "itemName" },
-        { label: "Primaryfile", field: "primaryfileName" },
-        { label: "Workflow", field: "workflowName" },
-        { label: "Step", field: "workflowStep" },
-        { label: "Output", field: "outputName" },
-        { label: "Status", field: "status" },
-        { label: "Actions", field: "actions" },
-        { label: "Add to Test", field: "addToTest" },
-      ],
       workflowResultService: new WorkflowResultService(),
       sharedService: new SharedService(),
       showModal: false,
@@ -391,8 +393,16 @@ export default {
     workflowResultType: {
       default: "",
     },
+    columns: {
+      default: [],
+    },
   },
   methods: {
+    checkAvailability(fieldName) {
+      const search = this.columns.find((column) => column.field === fieldName);
+      if (!search) return false;
+      else return true;
+    },
     handleDeleteRow() {
       const self = this;
       self.workflowDashboard.loading = true;
@@ -487,23 +497,6 @@ export default {
   },
   async mounted() {
     this.currentUser = accountService.currentUserValue;
-    if (this.parent === "NewTest") {
-      this.$emit("clearAll");
-      this.columns = this.columns.filter(
-        (column) => column.field !== "status" && column.field !== "actions"
-      );
-      this.workflowDashboard.searchQuery.pageNum = 1;
-      this.workflowDashboard.searchQuery.filterByTypes = [
-        this.workflowResultType,
-      ];
-      this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
-    } else {
-      this.columns = this.columns.filter(
-        (column) => column.field !== "addToTest"
-      );
-      this.workflowDashboard.searchQuery.filterByTypes = [];
-      this.$emit("clearAll");
-    }
 
     const limit = this.sharedService.getUserValue("limit");
     this.workflowDashboard.searchQuery.resultsPerPage = limit
