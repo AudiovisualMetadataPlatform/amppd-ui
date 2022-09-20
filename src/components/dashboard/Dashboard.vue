@@ -1143,7 +1143,7 @@ export default {
 #dropdown-form > button > span > svg > g > path {
   fill: #153c4d !important;
 }
-#dropdown-form:hover > button > span > svg > g > path {
+#dropdown-form > button:hover > span > svg > g > path {
   fill: #fff !important;
 }
 </style>
