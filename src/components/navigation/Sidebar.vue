@@ -36,7 +36,7 @@
         </div>
       </nav>-->
       <b-navbar toggleable="lg nav-bar-items">
-        <b-navbar-brand href="#">
+        <b-navbar-brand id="amp-logo" @click="routeToHome">
           <span v-html="ampSvg"></span>
         </b-navbar-brand>
 
@@ -127,6 +127,9 @@ export default {
     },
   },
   methods: {
+    routeToHome() {
+      this.$router.push("/");
+    },
     routeTo(menu) {
       const self = this;
       if (
@@ -212,11 +215,17 @@ nav ul li {
   background-color: #ffffff !important;
 }
 
+#amp-logo:hover {
+  cursor: pointer;
+}
+
 .nav-span {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+/* constant navbar CSS in every browser */
 .nav-bar {
   height: 111.69px !important;
 }
@@ -232,5 +241,16 @@ nav ul li {
 }
 .nav-menus {
   margin-top: 7px;
+}
+@media screen and (max-width: 991px) {
+  .navbar-brand {
+    margin-top: 0px !important;
+  }
+  .nav-bar {
+    height: auto !important;
+  }
+  .nav-bar-items {
+    height: auto !important;
+  }
 }
 </style>

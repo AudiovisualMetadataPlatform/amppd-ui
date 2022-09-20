@@ -208,7 +208,10 @@
                     <div class="col-6 text-left form-group">
                       <label>Unit:</label>
                       <input
-                        v-if="isCreatePage && selectedUnit"
+                        v-if="
+                          (isCreatePage || selectedItem.selectedItemId) &&
+                            selectedUnit
+                        "
                         type="text"
                         class="form-control w-100"
                         v-model="selectedUnit.name"
@@ -225,7 +228,10 @@
                     <div class="col-6 text-left form-group">
                       <label>Collection:</label>
                       <input
-                        v-if="isCreatePage && selectedCollection"
+                        v-if="
+                          (isCreatePage || selectedItem.selectedItemId) &&
+                            selectedCollection
+                        "
                         type="text"
                         class="form-control w-100"
                         v-model="selectedCollection.name"
@@ -338,9 +344,6 @@
                       <select
                         class="select custom-select w-100"
                         v-model="entity.externalSource"
-                        :class="{
-                          'error-border': submitted && !entity.externalSource,
-                        }"
                         @change="onInputChange"
                       >
                         <option
@@ -390,13 +393,18 @@
           </b-card>
 
           <!-- Header - Details page Ends here-->
-          <div v-if="baseUrl === 'item'">
+          <div
+            v-if="
+              baseUrl === 'item' &&
+                (selectedItem.id || selectedItem.selectedItemId)
+            "
+          >
             <ItemFiles></ItemFiles>
           </div>
           <div v-else-if="baseUrl === 'file'">
             <OutputFile />
           </div>
-          <div class v-else>
+          <div class v-else-if="baseUrl !== 'item' && baseUrl !== 'file'">
             <!-- Title ends here -->
             <b-card class="m-0 text-left">
               <!-- Title - Listing page -->

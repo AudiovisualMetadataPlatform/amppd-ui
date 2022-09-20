@@ -82,60 +82,20 @@
       <table id="myTable" class="table dataTable no-footer">
         <thead>
           <tr v-if="parent === 'NewTest'">
-            <th
-              scope="col"
-              class="btn-header"
-              v-for="column in columns"
-              :key="column.field"
-            >
+            <th scope="col" v-for="column in columns" :key="column.field">
               <span class="col-title new-test-column">{{ column.label }}</span>
             </th>
           </tr>
           <tr v-else>
             <sortable-header
-              class="btn-header"
               v-for="column in columns"
               :key="column.field"
+              v-bind:id="column.field"
               :property-name="column.field"
               :sort-rule="workflowDashboard.searchQuery.sortRule"
               @sort="sortQuery"
-              v-bind:id="column.field"
-            >
-              <div
-                v-if="column.field === 'dateCreated'"
-                class="dateColumnHead"
-              />
-              <button
-                class="btn-slim"
-                data-toggle="tooltip"
-                data-placement="top"
-                v-bind:title="'Show/Hide ' + column.label + ' Column'"
-                v-if="
-                  column.field === 'dateCreated' ||
-                    column.field === 'submitter' ||
-                    column.field === 'unit' ||
-                    column.field === 'collectionName' ||
-                    column.field === 'externalId' ||
-                    column.field === 'workflowName'
-                "
-                v-on:click="(event) => showHideColumn(event, column.field)"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-arrows-collapse"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8zm7-8a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 4.293V.5A.5.5 0 0 1 8 0zm-.5 11.707-1.146 1.147a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 11.707V15.5a.5.5 0 0 1-1 0v-3.793z"
-                  />
-                </svg>
-              </button>
-              <span class="col-title">{{ column.label }}</span>
-            </sortable-header>
+              :label="column.label"
+            />
           </tr>
         </thead>
         <tbody v-if="visibleRows && visibleRows.length > 0">
@@ -143,26 +103,24 @@
             v-for="rec in visibleRows"
             :key="rec.id"
             :class="{
-              'selected-mgm-outputs': isSelected(rec.id),
+              'selected-mgm-outputs':
+                parent === 'NewTest' && isSelected(rec.id),
             }"
           >
-            <td v-if="!collapsedColumns.dateCreated">
+            <td v-if="checkAvailability('dateCreated')">
               {{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}
             </td>
-            <td v-else class="collapsedColumn"></td>
-            <td v-if="!collapsedColumns.submitter">{{ rec.submitter }}</td>
-            <td v-else class="collapsedColumn"></td>
-            <td v-if="!collapsedColumns.unit">{{ rec.unitName }}</td>
-            <td v-else class="collapsedColumn"></td>
-            <td v-if="!collapsedColumns.collectionName">
+            <td v-if="checkAvailability('submitter')">{{ rec.submitter }}</td>
+            <td v-if="checkAvailability('unit')">{{ rec.unitName }}</td>
+            <td v-if="checkAvailability('collectionName')">
               {{ rec.collectionName }}
             </td>
-            <td v-else class="collapsedColumn"></td>
-            <td>{{ rec.externalSource }}</td>
-            <td v-if="!collapsedColumns.externalId">{{ rec.externalId }}</td>
-            <td v-else class="collapsedColumn"></td>
-            <td>{{ rec.itemName }}</td>
-            <td>
+            <td v-if="checkAvailability('externalSource')">
+              {{ rec.externalSource }}
+            </td>
+            <td v-if="checkAvailability('externalId')">{{ rec.externalId }}</td>
+            <td v-if="checkAvailability('itemName')">{{ rec.itemName }}</td>
+            <td v-if="checkAvailability('primaryfileName')">
               <a
                 v-bind:href="
                   workflowResultService.getSourceUrl(rec.primaryfileId)
@@ -171,12 +129,19 @@
                 >{{ rec.primaryfileName }}</a
               >
             </td>
-            <td v-if="!collapsedColumns.workflowName">
+            <td v-if="checkAvailability('workflowName')">
               {{ rec.workflowName }}
             </td>
-            <td v-else class="collapsedColumn"></td>
-            <td>{{ rec.workflowStep }}</td>
-            <td v-if="rec.outputPath != null && rec.status == 'COMPLETE'">
+            <td v-if="checkAvailability('workflowStep')">
+              {{ rec.workflowStep }}
+            </td>
+            <td
+              v-if="
+                rec.outputPath != null &&
+                  rec.status == 'COMPLETE' &&
+                  checkAvailability('outputName')
+              "
+            >
               <a
                 v-bind:href="workflowResultService.getOutputUrl(rec.id)"
                 target="_blank"
@@ -184,8 +149,10 @@
                 >{{ rec.outputName }}</a
               >
             </td>
-            <td v-else>{{ rec.outputName }}</td>
-            <td v-if="parent !== 'NewTest'">
+            <td v-else-if="checkAvailability('outputName')">
+              {{ rec.outputName }}
+            </td>
+            <td v-if="parent !== 'NewTest' && checkAvailability('status')">
               <button
                 v-if="rec.status === 'COMPLETE'"
                 type="button"
@@ -229,7 +196,10 @@
                 Deleted
               </button>
             </td>
-            <td v-if="parent !== 'NewTest'" class="toggleActions">
+            <td
+              v-if="parent !== 'NewTest' && checkAvailability('actions')"
+              class="toggleActions"
+            >
               <a
                 class="btn btn-link add-remove to-delete"
                 :class="{
@@ -252,7 +222,10 @@
                 </svg>
               </a>
             </td>
-            <td v-if="parent === 'NewTest'" class="text-center slim-col-14">
+            <td
+              v-if="parent === 'NewTest' && checkAvailability('addToTest')"
+              class="text-center slim-col-14"
+            >
               <input
                 class="add-to-test-checkbox"
                 type="checkbox"
@@ -348,32 +321,8 @@ export default {
   },
   data() {
     return {
-      columns: [
-        { label: "Date", field: "dateCreated" },
-        { label: "Submitter", field: "submitter" },
-        { label: "Unit", field: "unit" },
-        { label: "Collection", field: "collectionName" },
-        { label: "External Source", field: "externalSource" },
-        { label: "External ID", field: "externalId" },
-        { label: "Item", field: "itemName" },
-        { label: "Primaryfile", field: "primaryfileName" },
-        { label: "Workflow", field: "workflowName" },
-        { label: "Step", field: "workflowStep" },
-        { label: "Output", field: "outputName" },
-        { label: "Status", field: "status" },
-        { label: "Actions", field: "actions" },
-        { label: "Add to Test", field: "addToTest" },
-      ],
       workflowResultService: new WorkflowResultService(),
       sharedService: new SharedService(),
-      collapsedColumns: {
-        dateCreated: false,
-        submitter: false,
-        unit: false,
-        collectionName: false,
-        externalId: false,
-        workflowName: false,
-      },
       showModal: false,
       currentUser: "",
     };
@@ -444,8 +393,16 @@ export default {
     workflowResultType: {
       default: "",
     },
+    columns: {
+      default: [],
+    },
   },
   methods: {
+    checkAvailability(fieldName) {
+      const search = this.columns.find((column) => column.field === fieldName);
+      if (!search) return false;
+      else return true;
+    },
     handleDeleteRow() {
       const self = this;
       self.workflowDashboard.loading = true;
@@ -509,24 +466,6 @@ export default {
       link.href = "data:text/csv," + uriContent;
       link.click();
     },
-    showHideColumn(event, field) {
-      event.stopPropagation();
-      let columnHTMLs = document.getElementsByClassName("btn-header");
-      let currentColumnHTML;
-      for (let i = 0; i < columnHTMLs.length; i++) {
-        if (columnHTMLs[i].id === field) {
-          currentColumnHTML = columnHTMLs[i];
-        }
-      }
-      let classes = Array.from(currentColumnHTML.classList);
-      let index = classes.indexOf("slim");
-      if (index === -1) {
-        currentColumnHTML.classList.add("slim");
-      } else {
-        currentColumnHTML.classList.remove("slim");
-      }
-      this.collapsedColumns[field] = !this.collapsedColumns[field];
-    },
     paginate(page_number) {
       this.workflowDashboard.searchQuery.pageNum = page_number;
       this.refreshData();
@@ -558,23 +497,6 @@ export default {
   },
   async mounted() {
     this.currentUser = accountService.currentUserValue;
-    if (this.parent === "NewTest") {
-      this.$emit("clearAll");
-      this.columns = this.columns.filter(
-        (column) => column.field !== "status" && column.field !== "actions"
-      );
-      this.workflowDashboard.searchQuery.pageNum = 1;
-      this.workflowDashboard.searchQuery.filterByTypes = [
-        this.workflowResultType,
-      ];
-      this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
-    } else {
-      this.columns = this.columns.filter(
-        (column) => column.field !== "addToTest"
-      );
-      this.workflowDashboard.searchQuery.filterByTypes = [];
-      this.$emit("clearAll");
-    }
 
     const limit = this.sharedService.getUserValue("limit");
     this.workflowDashboard.searchQuery.resultsPerPage = limit
@@ -582,13 +504,10 @@ export default {
       : this.workflowDashboard.searchQuery.resultsPerPage;
     this.refreshData();
 
-    let dateColumnHeadHTML = document.getElementsByClassName("btn-slim")[0];
-    if (dateColumnHeadHTML) dateColumnHeadHTML.style.left = 0;
-
     let actionsButton = document.getElementById("actions"); //To remove the sortable icon
     if (actionsButton) {
       actionsButton.childNodes[0].removeChild(
-        actionsButton.childNodes[0].childNodes[3]
+        actionsButton.childNodes[0].childNodes[1]
       );
       actionsButton.childNodes[0].style.justifyContent = "center";
     }
@@ -740,60 +659,6 @@ th {
 }
 .justify-content-right {
   justify-content: right;
-}
-.btn-slim:hover,
-.btn-slim:active,
-.btn-slim:focus {
-  background-color: transparent;
-  border: none;
-  outline: none;
-}
-.btn-header {
-  position: relative;
-}
-.btn-slim {
-  position: absolute;
-  left: -15px;
-  cursor: pointer;
-  border: none;
-  background-color: transparent;
-  display: none;
-}
-.slim .btn-slim {
-  left: 10%;
-  right: 10%;
-}
-.slim .btn-slim svg {
-  fill: #153c4d;
-}
-th.slim .btn-slim,
-th:hover .btn-slim {
-  display: block;
-}
-.btn-slim svg {
-  transform: rotate(90deg) scale(1.5, 1.5);
-  fill: #f4871e;
-}
-#myTable td.slim span,
-#myTable .slim .col-title {
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-  visibility: hidden;
-  display: none;
-}
-.collapsedColumn,
-.slim {
-  background: #fafafa;
-  width: 15px;
-}
-.dateColumnHead {
-  width: 15px;
-  background: transparent;
 }
 .table-gap {
   margin-top: -20px !important;

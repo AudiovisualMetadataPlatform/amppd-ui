@@ -90,7 +90,10 @@ var router = new Router({
       path: "/workflow/edit",
       name: "workflow-editor",
       component: WorkflowEditor,
-      meta: { authorize: [] },
+      meta: {
+        authorize: [],
+        helpUrl: env.getEnv("VUE_APP_DOC_WORKFLOW_CREATING"),
+      },
     },
     {
       path: "/workflow/submit",
