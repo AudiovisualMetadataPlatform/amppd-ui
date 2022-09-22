@@ -26,7 +26,7 @@ export default class WorkflowResultService extends BaseService{
         return data;
     }
     async setWorkflowResultFinal(id, isFinal){
-        var data = await super.post_auth('/workflow-results/' + id + '?isFinal=' + isFinal, null).
+        var data = await super.patch_auth('/workflow-results/' + id + '?isFinal=' + isFinal, null).
         then(result=>{
             return result.data;
         });
@@ -40,5 +40,9 @@ export default class WorkflowResultService extends BaseService{
     getOutputUrl(id) {
         const url = `${this.API_URL}/workflow-results/${id}/output`;
         return url; 
+    }
+
+    async deleteWorkflowResult(id){
+        await super.delete_auth(`/workflow-results/${id}`);
     }
 }

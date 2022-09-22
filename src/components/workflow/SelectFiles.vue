@@ -81,6 +81,7 @@
                   id="exampleFormControlInput100"
                   placeholder="Search"
                   v-model="searchWord"
+                  autocomplete="off"
                 />
                 <div class="input-group-append">
                   <button class="btn" type="button" v-on:click="searchFiles()">
@@ -310,6 +311,19 @@ export default {
     workflowSubmission: sync("workflowSubmission"),
     selectedFiles: sync("workflowSubmission.selectedFiles"),
     updateSelectedFiles: sync("workflowSubmission.updateSelectedFiles"),
+  },
+  mounted() {
+    this.workflowSubmission = {
+      loading: false,
+      showBundleError: false,
+      showSelectBundle: false,
+      showSaveBundle: false,
+      bundles: [],
+      selectedFiles: new Map(),
+      updateSelectedFiles: 0,
+      selectedWorkflow: null,
+      selectedWorkflowParameters: [],
+    };
   },
   methods: {
     itemClicked(index) {

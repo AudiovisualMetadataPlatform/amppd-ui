@@ -138,18 +138,16 @@
           <div class="form-group col-6">
             <label for="unit-name">Unit*</label>
             <select
-              v-if="allUnits && allUnits._embedded"
               class="select custom-select w-100"
               v-model="supplement.fileDetails.unit"
-              @change="onInputChange('unit')"
-              :disabled="!supplement.showUnitList"
+              @change="onInputChange('unit', true)"
               required
               :class="{
                 'error-border': submitted && !supplement.fileDetails.unit,
               }"
               ><option value="" disabled selected>- Choose Unit -</option>
               <option
-                v-for="option in allUnits._embedded.units"
+                v-for="option in supplement.allUnits"
                 :key="option.id"
                 :value="option.id"
                 >{{ option.name }}</option
@@ -161,7 +159,7 @@
             <select
               class="select custom-select w-100"
               v-model="supplement.fileDetails.collection"
-              @change="onInputChange('collection')"
+              @change="onInputChange('collection', true)"
               :disabled="!supplement.showCollectionList"
               ><option value="" disabled selected>- Choose Collection -</option>
               <option
@@ -179,7 +177,7 @@
             <select
               class="select custom-select w-100"
               v-model="supplement.fileDetails.item"
-              @change="onInputChange('item')"
+              @change="onInputChange('item', true)"
               :disabled="!supplement.showItemList"
               ><option value="" disabled selected>- Choose Item -</option>
               <option
@@ -195,7 +193,7 @@
             <select
               class="select custom-select w-100"
               v-model="supplement.fileDetails.primaryFile"
-              @change="onInputChange('primaryFile')"
+              @change="onInputChange('primaryFile', true)"
               :disabled="!supplement.showPrimaryFileList"
               ><option value="" disabled selected
                 >- Choose Primary File -</option
@@ -274,7 +272,7 @@ import Loader from "@/components/shared/Loader.vue";
 import ConfigPropertiesService from "@/service/config-properties-service";
 
 export default {
-  name: "AddSupplemental",
+  name: "SupplementFile",
   components: {
     Loader,
   },
@@ -290,7 +288,6 @@ export default {
       supplementService: new SupplementService(),
       configPropertiesService: new ConfigPropertiesService(),
       supplement: {
-        showUnitList: true, //Need to remove: entity update @view page
         showCollectionList: false,
         collectionList: [],
         showItemList: false,
@@ -307,6 +304,7 @@ export default {
       },
       action: "add",
       submitted: false,
+      moveSupplement: false,
     };
   },
   computed: {
@@ -326,6 +324,11 @@ export default {
             .getAllUnits("0", response.data.page.totalElements)
             .then((res) => {
               self.allUnits = res.data;
+              self.supplement[
+                "allUnits"
+              ] = self.sharedService.sortByAlphabatical(
+                this.allUnits._embedded.units
+              );
               self.loading = false;
             });
         });
@@ -339,7 +342,6 @@ export default {
       const self = this;
       try {
         self.superLoading = true;
-        console.log(self.supplementType, self.supplementId, self.action);
         if (self.supplementType === "u-sup") {
           self.viewApiType = "unitSupplements";
         } else if (self.supplementType === "c-sup") {
@@ -370,19 +372,12 @@ export default {
                           self.supplement.fileDetails.primaryFile =
                             r.primaryfileId;
                           self.superLoading = false;
-
-                          //Need to remove: entity update @view page;
-                          self.supplement.showUnitList = false;
-                          self.supplement.showCollectionList = false;
-                          self.supplement.showItemList = false;
-                          self.supplement.showPrimaryFileList = false;
                         });
                       });
                     });
                     self.supplement.fileDetails.primaryFile = r.primaryfileId;
                     break;
                   case "i-sup":
-                    console.log(r);
                     self.supplement.fileDetails.unit = r.unitId;
                     self.onInputChange("unit").then(() => {
                       self.supplement.fileDetails.collection = r.collectionId;
@@ -390,29 +385,16 @@ export default {
                         self.supplement.fileDetails.item = r.itemId;
                         self.onInputChange("item").then(() => {
                           self.superLoading = false;
-
-                          //Need to remove: entity update @view page;
-                          self.supplement.showUnitList = false;
-                          self.supplement.showCollectionList = false;
-                          self.supplement.showItemList = false;
-                          self.supplement.showPrimaryFileList = false;
                         });
                       });
                     });
                     break;
                   case "c-sup":
-                    console.log(r);
                     self.supplement.fileDetails.unit = r.unitId;
                     self.onInputChange("unit").then(() => {
                       self.supplement.fileDetails.collection = r.collectionId;
                       self.onInputChange("collection").then(() => {
                         self.superLoading = false;
-
-                        //Need to remove: entity update @view page;
-                        self.supplement.showUnitList = false;
-                        self.supplement.showCollectionList = false;
-                        self.supplement.showItemList = false;
-                        self.supplement.showPrimaryFileList = false;
                       });
                     });
                     break;
@@ -420,12 +402,6 @@ export default {
                     self.supplement.fileDetails.unit = res._embedded.unit.id;
                     self.onInputChange("unit").then(() => {
                       self.superLoading = false;
-
-                      //Need to remove: entity update @view page;
-                      self.supplement.showUnitList = false;
-                      self.supplement.showCollectionList = false;
-                      self.supplement.showItemList = false;
-                      self.supplement.showPrimaryFileList = false;
                     });
                     break;
                   default:
@@ -446,7 +422,9 @@ export default {
       self.supplement[
         "allCategories"
       ] = this.configProperties.supplementCategories;
-      self.supplement["allUnits"] = this.allUnits._embedded.units;
+      self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
+        this.allUnits._embedded.units
+      );
       const uploadDetailsBody = document.getElementById("upload-details-body");
       uploadDetailsBody.style.display = "block";
 
@@ -455,10 +433,14 @@ export default {
         self.supplement.files[0].name;
     },
 
-    async onInputChange(type) {
+    async onInputChange(type, directCall = false) {
       const self = this;
       self.entityType = type;
       self.entityId = self.supplement.fileDetails[type];
+      const action = self.action === "view" || self.action === "replace";
+      if (directCall && action) {
+        self.moveSupplement = true;
+      }
       try {
         switch (type) {
           case "unit":
@@ -466,7 +448,9 @@ export default {
             await self.collectionService
               .getCollectionByUnitId(self.entityId)
               .then((res) => {
-                self.supplement.collectionList = res._embedded.collections;
+                self.supplement.collectionList = self.sharedService.sortByAlphabatical(
+                  res._embedded.collections
+                );
                 self.supplement.fileDetails.collection = "";
                 self.supplement.showCollectionList = true;
                 self.supplement.showItemList = false;
@@ -483,7 +467,9 @@ export default {
             await self.itemService
               .getCollectionItems(self.entityId)
               .then((res) => {
-                self.supplement.itemList = res.data._embedded.items;
+                self.supplement.itemList = self.sharedService.sortByAlphabatical(
+                  res.data._embedded.items
+                );
                 self.supplement.fileDetails.item = "";
                 self.supplement.showItemList = true;
                 self.supplement.showPrimaryFileList = false;
@@ -497,8 +483,9 @@ export default {
             await self.fileService
               .getPrimaryFiles(self.entityId)
               .then((res) => {
-                self.supplement.primaryFileList =
-                  res.data._embedded.primaryfiles;
+                self.supplement.primaryFileList = self.sharedService.sortByAlphabatical(
+                  res.data._embedded.primaryfiles
+                );
                 self.supplement.fileDetails.primaryFile = "";
                 self.supplement.showPrimaryFileList = true;
                 self.loading = false;
@@ -519,6 +506,14 @@ export default {
       e.preventDefault();
       self.action = "replace";
       self.supplement.fileDetails.originalFilename = "";
+    },
+
+    successMessage() {
+      const self = this;
+      self.$bvToast.toast(
+        "Supplemental file has been successfully updated.",
+        self.sharedService.successToastConfig
+      );
     },
 
     async saveFile(e, data) {
@@ -545,18 +540,23 @@ export default {
         if (self.action === "add") {
           //API call for add supplement page
           let apiType = "";
+          let newUrlType = "";
           let formDataKey = "";
           if (self.entityType === "unit") {
             apiType = "units";
+            newUrlType = "u-sup";
             formDataKey = "unitSupplement";
           } else if (self.entityType === "collection") {
             apiType = "collections";
+            newUrlType = "c-sup";
             formDataKey = "collectionSupplement";
           } else if (self.entityType === "item") {
             apiType = "items";
+            newUrlType = "i-sup";
             formDataKey = "itemSupplement";
           } else if (self.entityType === "primaryFile") {
             apiType = "primaryfiles";
+            newUrlType = "p-sup";
             formDataKey = "primaryfileSupplement";
           }
           let formData = new FormData();
@@ -577,16 +577,21 @@ export default {
             )
           );
           formData.append("mediaFile", data.file);
-          await self.supplementService.addSupplement(
-            apiType,
-            self.entityId,
-            formData
-          );
+          await self.supplementService
+            .addSupplement(apiType, self.entityId, formData)
+            .then((response) => {
+              self.$router
+                .push(`/supplemental-files/${newUrlType}/${response.id}`)
+                .then(() => {
+                  self.$bvToast.toast(
+                    "Supplemental file has been successfully created.",
+                    self.sharedService.successToastConfig
+                  );
+                });
+            });
           self.loading = false;
-          this.$router.push("/supplemental-files");
         } else if (self.action === "replace" || self.action === "view") {
           //API call for view supplement page
-          console.log(self.supplementType, self.viewApiType, self.supplementId);
           let formDataKey = "";
           if (self.supplementType === "u-sup") {
             formDataKey = "unitSupplement";
@@ -619,34 +624,135 @@ export default {
             category: data.category,
           };
 
-          if (self.action === "replace") {
+          if (self.moveSupplement) {
+            let newEntityType = "";
+            let newUrlType = "";
+            if (self.entityType === "unit") {
+              newEntityType = "Unit";
+              newUrlType = "u-sup";
+            } else if (self.entityType === "collection") {
+              newEntityType = "Collection";
+              newUrlType = "c-sup";
+            } else if (self.entityType === "item") {
+              newEntityType = "Item";
+              newUrlType = "i-sup";
+            } else if (self.entityType === "primaryFile") {
+              newEntityType = "Primaryfile";
+              newUrlType = "p-sup";
+            }
+
+            if (self.action === "replace") {
+              //API call in the case: file + data update + move
+              await self.supplementService
+                .replaceSupplementFile(
+                  self.viewApiType,
+                  self.supplementId,
+                  updatedFormData
+                )
+                .then((res) => {
+                  self.supplementService
+                    .updateSupplement(
+                      self.viewApiType,
+                      self.supplementId,
+                      updatedData
+                    )
+                    .then((r) => {
+                      const newEntityId = self.entityId;
+                      self.supplementService
+                        .moveSupplementFile(
+                          self.viewApiType,
+                          self.supplementId,
+                          newEntityId,
+                          newEntityType
+                        )
+                        .then((response) => {
+                          self.loading = false;
+                          self.moveSupplement = false;
+                          self.action = "view";
+                          self.$router
+                            .push(
+                              `/supplemental-files/${newUrlType}/${response.id}`
+                            )
+                            .then(() => {
+                              self.successMessage();
+                            })
+                            .catch(() => {
+                              self.successMessage();
+                            });
+                        });
+                    });
+                });
+            } else if (self.action === "view") {
+              //API call in the case: data update + move
+              await self.supplementService
+                .updateSupplement(
+                  self.viewApiType,
+                  self.supplementId,
+                  updatedData
+                )
+                .then((r) => {
+                  const newEntityId = self.entityId;
+                  self.supplementService
+                    .moveSupplementFile(
+                      self.viewApiType,
+                      self.supplementId,
+                      newEntityId,
+                      newEntityType
+                    )
+                    .then((response) => {
+                      self.loading = false;
+                      self.moveSupplement = false;
+                      self.$router
+                        .push(
+                          `/supplemental-files/${newUrlType}/${response.id}`
+                        )
+                        .then(() => {
+                          self.successMessage();
+                        })
+                        .catch(() => {
+                          self.successMessage();
+                        });
+                    });
+                });
+            }
+          } else if (self.action === "replace") {
             //API call in the case: file + data update
             await self.supplementService
-              .updateSupplementFile(
+              .replaceSupplementFile(
                 self.viewApiType,
                 self.supplementId,
                 updatedFormData
               )
               .then((res) => {
-                self.supplementService.updateSupplement(
-                  self.viewApiType,
-                  self.supplementId,
-                  updatedData
-                );
+                self.supplementService
+                  .updateSupplement(
+                    self.viewApiType,
+                    self.supplementId,
+                    updatedData
+                  )
+                  .then((response) => {
+                    self.loading = false;
+                    self.action = "view";
+                    self.successMessage();
+                  });
               });
           } else if (self.action === "view") {
             //API call in the case: data update
-            await self.supplementService.updateSupplement(
-              self.viewApiType,
-              self.supplementId,
-              updatedData
-            );
+            await self.supplementService
+              .updateSupplement(
+                self.viewApiType,
+                self.supplementId,
+                updatedData
+              )
+              .then((response) => {
+                self.loading = false;
+                self.successMessage();
+              });
           }
-
-          self.loading = false;
-          this.$router.push("/supplemental-files");
         }
+        self.moveSupplement = false;
       } catch (error) {
+        self.moveSupplement = false;
         self.loading = false;
         if (
           error.response &&
@@ -670,15 +776,18 @@ export default {
   },
   mounted() {
     const self = this;
-    self.networkCalls();
     self.supplementType = self.$route.params.supplementType;
     self.supplementId = self.$route.params.supplementId;
     if (self.supplementType && self.supplementId) {
       self.action = "view";
       const uploadDetailsBody = document.getElementById("upload-details-body");
       uploadDetailsBody.style.display = "block";
-      self.viewSupplementNetworkCalls();
     }
+    self.networkCalls().then(() => {
+      if (self.action === "view") {
+        self.viewSupplementNetworkCalls();
+      }
+    });
   },
 };
 </script>

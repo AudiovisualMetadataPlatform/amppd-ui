@@ -18,4 +18,13 @@ export default class EvaluationService extends BaseService {
   async getDetailsMgmCategory(id) {
     return super.get_auth(`/mgmCategories/${id}?projection=detail`);
   }
+
+  /***
+   * To get details of a mgm scoring tool
+   * @method GET
+   */
+
+  async getDetailsMgmScoringTool(id) {
+    return super.get_auth(`/mgmScoringTools/${id}?projection=detail`);
+  }
 }

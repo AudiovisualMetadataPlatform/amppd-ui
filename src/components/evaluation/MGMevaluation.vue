@@ -75,13 +75,14 @@
               </dl>
               <div v-else>
                 <div class="">
-                  <div class="row">
+                  <div class="row" v-if="mgmCategoryDetails">
                     <h2 class="col-12">{{ mgmCategoryDetails.name }}</h2>
                     <div class="col-7">
                       <p>
-                        {{ mgmCategoryDetails.description }}
+                        {{ mgmCategoryDetails.help }}
                         <br />
                         <a
+                          style="pointer-events: none"
                           class="a-link"
                           @click="onConfluenceRoute($event, mgmCategoryDetails)"
                         >
@@ -109,6 +110,7 @@
                         :key="i"
                         class="a-link"
                         @click="mgmHelpRoute(mgm)"
+                        style="pointer-events: none"
                       >
                         <strong>
                           <a>{{ mgm.name }}</a>
@@ -146,6 +148,7 @@
                     <NewTest
                       v-if="activeTab === 'new-test'"
                       :mgmCategory="mgmCategoryDetails"
+                      :mgmCategoryLoading="loading"
                     />
                     <TestResults v-else-if="activeTab === 'test-results'" />
                   </div>
@@ -211,8 +214,11 @@ export default {
         self.sortedMgmCategories = self.sharedService.sortByAlphabatical(
           self.mgmCategoryResponse.data._embedded.mgmCategories
         );
+        self.filteredMgmCategories = self.sortedMgmCategories.filter((item) =>
+          parseInt(item.mstsCount, 10)
+        );
         self.mgmCategories = JSON.parse(
-          JSON.stringify(self.sortedMgmCategories)
+          JSON.stringify(self.filteredMgmCategories)
         );
         self.loading = false;
       } catch (error) {

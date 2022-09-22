@@ -20,6 +20,7 @@ import WorkflowList from "./components/workflow/WorkflowList.vue";
 import EntityList from "./components/entity/EntityList.vue";
 import ItemSearch from "./components/entity/ItemSearch.vue";
 import MGMevaluation from "./components/evaluation/MGMevaluation.vue";
+import SupplementList from "./components/supplement/SupplementList.vue";
 Vue.use(Router);
 
 var router = new Router({
@@ -89,7 +90,10 @@ var router = new Router({
       path: "/workflow/edit",
       name: "workflow-editor",
       component: WorkflowEditor,
-      meta: { authorize: [] },
+      meta: {
+        authorize: [],
+        helpUrl: env.getEnv("VUE_APP_DOC_WORKFLOW_CREATING"),
+      },
     },
     {
       path: "/workflow/submit",
@@ -198,7 +202,7 @@ var router = new Router({
     {
       path: "/supplemental-files",
       name: "supplemental-files",
-      component: EntityList,
+      component: SupplementList,
       meta: {
         authorize: [],
         breadCrumb: [
@@ -211,7 +215,7 @@ var router = new Router({
     {
       path: "/supplemental-files/add",
       name: "create-supplemental",
-      component: EntityList,
+      component: SupplementList,
       meta: {
         authorize: [],
         breadCrumb: [
@@ -225,7 +229,7 @@ var router = new Router({
     {
       path: "/supplemental-files/:supplementType/:supplementId",
       name: "show-supplemental",
-      component: EntityList,
+      component: SupplementList,
       meta: {
         authorize: [],
         breadCrumb: [

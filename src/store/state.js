@@ -109,6 +109,26 @@ const state = {
   },
   configProperties: {},
   allUnits: {},
+  mgmEvaluation: {
+    selectedRecords: [],
+  },
+
+  dashboardColumns: [
+    { order: "a", label: "Date", field: "dateCreated" },
+    { order: "b", label: "Submitter", field: "submitter" },
+    { order: "c", label: "Unit", field: "unit" },
+    { order: "d", label: "Collection", field: "collectionName" },
+    { order: "e", label: "External Source", field: "externalSource" },
+    { order: "f", label: "External ID", field: "externalId" },
+    { order: "g", label: "Item", field: "itemName" },
+    { order: "h", label: "Primaryfile", field: "primaryfileName" },
+    { order: "i", label: "Workflow", field: "workflowName" },
+    { order: "j", label: "Step", field: "workflowStep" },
+    { order: "k", label: "Output", field: "outputName" },
+    { order: "l", label: "Status", field: "status" },
+    { order: "m", label: "Actions", field: "actions" },
+    { order: "n", label: "Add to Test", field: "addToTest" },
+  ],
 };
 
 export default state;

@@ -533,6 +533,7 @@ export default {
     selectedFilters: sync("selectedFilters"),
     workflowDashboard: sync("workflowDashboard"),
     selectedItem: sync("selectedItem"),
+    selectedUnit: sync("selectedUnit"),
     selectedCollection: sync("selectedCollection"),
   },
 
@@ -590,7 +591,8 @@ export default {
       const self = this;
       if (self.type === "item-search") {
         self.selectedItemId = record.id;
-        self.selectedUnit = record.unitName;
+        self.selectedUnit = {};
+        self.selectedUnit.name = record.unitName;
         self.selectedCollection = record.collectionName;
       }
       console.log(self.selectAll);
@@ -776,7 +778,7 @@ export default {
                   const res = JSON.parse(JSON.stringify(response));
                   self.selectedItem = res;
                   self.selectedItem.parentType = self.type;
-                  self.selectedItem.unitName = self.selectedUnit;
+                  self.selectedItem.unitName = self.selectedUnit.name;
                   self.selectedItem.collectionName = self.selectedCollection;
                   self.$router.push("/collections/items/item-search/details");
                 });

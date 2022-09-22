@@ -1,11 +1,7 @@
-import SharedService from './shared-service';
 import UnitService from './unit-service';
-import SupplementService from './supplement-service';
 import { env } from '../helpers/env'; 
 
-const sharedService = new SharedService();
 const unitService = new UnitService();
-const supplementService = new SupplementService();
 
 export default class EntityService {
     
@@ -20,17 +16,6 @@ export default class EntityService {
             self.$bvToast.toast("Unable to retrive unit details. Please try again!", context.sharedService.erorrToastConfig);
         });
         return unitDetails;
-    }
-
-
-    async getSupplementalFiles(num, size, self) {
-        let supplementalFiles = {};
-        await supplementService.getSupplementFiles(num, size).then(res => {
-            supplementalFiles = res;
-        }).catch(err => {
-            self.$bvToast.toast("Unable to retrive Supplemental Files. Please try again!", self.sharedService.erorrToastConfig);
-        });
-        return supplementalFiles;
     }
 
 
@@ -111,10 +96,8 @@ export default class EntityService {
 
             // Collection Validation rules
             if (!self.entity.name) {
-
                 self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
                 return false;
-
             }
             self.showLoader = true;
             if (self.isCreatePage) {
@@ -125,10 +108,11 @@ export default class EntityService {
                 self.itemService.addItemToCollection(self.entity).then(response => {
                     self.showLoader = false;
                     self.submitted = false;
-                    self.$bvToast.toast("Item has been added successfully", self.sharedService.successToastConfig);
                     self.entity = response;
                     self.selectedItem = response;
+                    self.selectedItem.selectedItemId = response.id;
                     self.isDataChanged = false;
+                    self.$router.push("/collections/items/details");
                     // self.$router.push("/collection/details");
                 }).catch(error => {
                     self.showLoader = false;

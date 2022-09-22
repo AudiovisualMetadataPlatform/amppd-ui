@@ -11,7 +11,6 @@
           <!-- Header - Details page -->
 
           <b-card
-            v-if="baseUrl !== 'list-supplement' && baseUrl !== 'supplement'"
             class="text-center mt-5 mb-5"
             :class="
               baseUrl === 'file' && entity.mediaType === 'video'
@@ -209,6 +208,17 @@
                     <div class="col-6 text-left form-group">
                       <label>Unit:</label>
                       <input
+                        v-if="
+                          (isCreatePage || selectedItem.selectedItemId) &&
+                            selectedUnit
+                        "
+                        type="text"
+                        class="form-control w-100"
+                        v-model="selectedUnit.name"
+                        :disabled="true"
+                      />
+                      <input
+                        v-else
                         type="text"
                         class="form-control w-100"
                         v-model="entity.unitName"
@@ -218,6 +228,17 @@
                     <div class="col-6 text-left form-group">
                       <label>Collection:</label>
                       <input
+                        v-if="
+                          (isCreatePage || selectedItem.selectedItemId) &&
+                            selectedCollection
+                        "
+                        type="text"
+                        class="form-control w-100"
+                        v-model="selectedCollection.name"
+                        :disabled="true"
+                      />
+                      <input
+                        v-else
                         type="text"
                         class="form-control w-100"
                         :value="entity.collectionName"
@@ -323,9 +344,6 @@
                       <select
                         class="select custom-select w-100"
                         v-model="entity.externalSource"
-                        :class="{
-                          'error-border': submitted && !entity.externalSource,
-                        }"
                         @change="onInputChange"
                       >
                         <option
@@ -375,80 +393,43 @@
           </b-card>
 
           <!-- Header - Details page Ends here-->
-          <div v-if="baseUrl === 'item'">
+          <div
+            v-if="
+              baseUrl === 'item' &&
+                (selectedItem.id || selectedItem.selectedItemId)
+            "
+          >
             <ItemFiles></ItemFiles>
           </div>
           <div v-else-if="baseUrl === 'file'">
             <OutputFile />
           </div>
-          <div class v-else>
+          <div class v-else-if="baseUrl !== 'item' && baseUrl !== 'file'">
             <!-- Title ends here -->
-            <b-card
-              class="text-left"
-              :class="
-                baseUrl === 'list-supplement' || baseUrl === 'supplement'
-                  ? 'm-4'
-                  : 'm-0'
-              "
-            >
+            <b-card class="m-0 text-left">
               <!-- Title - Listing page -->
               <!-- <h3 v-if="baseUrl == 'unit' && !purpose">My Units</h3>
                             <h3 v-else-if="baseUrl == 'collection' && !purpose">My Collections</h3>-->
 
               <!-- Title - Unit Details page  -->
-              <div
-                class="d-flex w-100"
-                v-if="
-                  baseUrl == 'unit' ||
-                    baseUrl === 'list-supplement' ||
-                    baseUrl == 'supplement'
-                "
-              >
+              <div class="d-flex w-100" v-if="baseUrl == 'unit'">
                 <div class="col-3 text-left p-0">
-                  <h1 v-if="baseUrl == 'supplement'">Supplemental File</h1>
-                  <h2 v-else>
-                    {{
-                      baseUrl == "unit"
-                        ? "Unit Collections"
-                        : "Supplemental Files"
-                    }}
-                  </h2>
+                  <h2>Unit Collections</h2>
                 </div>
-                <div
-                  class="col-9 text-right p0 btn-grp"
-                  v-if="baseUrl !== 'supplement'"
-                >
+                <div class="col-9 text-right p0 btn-grp">
                   <button
                     class="btn btn-primary btn-lg btn-edit mr-2"
                     type="button"
-                    @click="onCreate()"
+                    @click="onCreateCollection()"
                   >
-                    {{
-                      baseUrl === "list-supplement"
-                        ? "Create New File"
-                        : baseUrl === "unit"
-                        ? "Create New Collection"
-                        : ""
-                    }}
+                    Create New Collection
                   </button>
                   <button
                     class="btn btn-primary btn-lg btn-edit"
                     type="button"
-                    @click="
-                      onSearch(
-                        baseUrl === 'list-supplement'
-                          ? 'listing-supplement'
-                          : baseUrl === 'unit'
-                          ? 'listing-collection'
-                          : ''
-                      )
-                    "
+                    @click="onSearch('listing-collection')"
                   >
-                    {{
-                      baseUrl === "list-supplement"
-                        ? "Search Files"
-                        : "Search Collections"
-                    }}
+                    Search Collections
                   </button>
                 </div>
               </div>
@@ -474,8 +455,7 @@
                   </button>
                 </div>
               </div>
-              <AddSupplemental v-if="baseUrl === 'supplement'" />
-              <div class="row row-spl" v-else-if="records && records.length">
+              <div class="row row-spl" v-if="records && records.length">
                 <b-card
                   class="m-3 w-100 text-left b-card-spl"
                   v-for="elem in records"
@@ -493,7 +473,11 @@
                           :title="elem.active ? 'Deactivate' : 'Activate'"
                           v-if="baseUrl == 'unit'"
                         >
-                          <input type="checkbox" v-model="elem.active" />
+                          <input
+                            type="checkbox"
+                            v-model="elem.active"
+                            v-on:click="toggleCollectionActive(elem)"
+                          />
                           <span class="slider round"></span>
                         </label>
                         <div
@@ -547,38 +531,6 @@
                         </p>
                       </div>
                     </div>
-
-                    <div v-if="baseUrl == 'list-supplement'">
-                      <div class="row">
-                        <div class="col">Unit: <br />{{ elem.unitName }}</div>
-                        <div class="col" v-if="elem.collectionName">
-                          Collection: <br />{{ elem.collectionName }}
-                        </div>
-                        <div class="col" v-if="elem.itemName">
-                          Item: <br />{{ elem.itemName }}
-                        </div>
-                        <div class="col" v-if="elem.primaryfileName">
-                          Primary File: <br />{{ elem.primaryfileName }}
-                        </div>
-                        <div class="col">
-                          Category: <br />{{ elem.category }}
-                        </div>
-                      </div>
-                      <hr />
-                      <div class="row">
-                        <div class="col">
-                          Created By: <br />{{ elem.createdBy }}
-                        </div>
-                        <div class="col">
-                          Modified Date: <br />{{
-                            elem.modifiedDate | LOCAL_DATE_VALUE
-                          }}
-                        </div>
-                        <div class="col">
-                          Modified By: <br />{{ elem.modifiedBy }}
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </b-card>
               </div>
@@ -618,7 +570,6 @@ import EntityService from "../../service/entity-service";
 import { env } from "../../helpers/env";
 import Mediaelement from "./Mediaelement.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
-import AddSupplemental from "@/components/entity/supplemental/AddSupplemental.vue";
 import ConfigPropertiesService from "@/service/config-properties-service";
 
 export default {
@@ -631,7 +582,6 @@ export default {
     Search,
     OutputFile,
     mediaelement: Mediaelement,
-    AddSupplemental,
   },
   props: [],
   data() {
@@ -664,19 +614,10 @@ export default {
     selectedFile: sync("selectedFile"),
     itemConfigs: sync("itemConfigs"),
     configProperties: sync("configProperties"),
-    allUnits: sync("allUnits"),
     baseUrl() {
       const self = this;
       if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
         return "unit";
-      } else if (
-        window.location.hash.toLowerCase().indexOf("supplemental-files/") > -1
-      ) {
-        return "supplement";
-      } else if (
-        window.location.hash.toLowerCase().indexOf("supplemental-files") > -1
-      ) {
-        return "list-supplement";
       } else if (window.location.hash.toLowerCase().indexOf("file") > -1) {
         return "file";
       } else if (
@@ -714,6 +655,13 @@ export default {
     },
   },
   methods: {
+    async toggleCollectionActive(collection) {
+      collection.active = !collection.active;
+      this.collectionService.activateCollection(
+        collection.id,
+        collection.active
+      );
+    },
     async networkCalls() {
       const self = this;
       try {
@@ -754,42 +702,6 @@ export default {
         self.entity = self.selectedFile;
         self.entity["mediaSource"] = mediaSourceUrl;
         self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
-        self.showLoader = false;
-      } else if (self.baseUrl === "list-supplement") {
-        this.getSupplementalFiles();
-      }
-    },
-    async getSupplementalFiles() {
-      const self = this;
-      self.showLoader = true;
-      const supplementalFilesResponse = await self.entityService.getSupplementalFiles(
-        self
-      );
-      // Temporary logic, need to update while using paging
-      if (supplementalFilesResponse) {
-        console.log(
-          "totalElements:" + supplementalFilesResponse.page.totalElements
-        );
-        const tempSupplementalFilesResponse = await self.entityService.getSupplementalFiles(
-          "0",
-          supplementalFilesResponse.page.totalElements,
-          self
-        );
-
-        let supplementalFiles = [];
-        for (const property in tempSupplementalFilesResponse._embedded) {
-          supplementalFiles.push(
-            ...tempSupplementalFilesResponse._embedded[property]
-          );
-        }
-        if (supplementalFiles.length) {
-          self.records = self.sharedService.sortByAlphabatical(
-            supplementalFiles
-          );
-          self.masterRecords = JSON.parse(JSON.stringify(self.records));
-        }
-        self.showLoader = false;
-      } else {
         self.showLoader = false;
       }
     },
@@ -843,27 +755,11 @@ export default {
       } else if (self.baseUrl === "unit" && self.purpose) {
         self.selectedCollection = objInstance;
         self.$router.push("/collection/details");
-      } else if (self.baseUrl === "list-supplement") {
-        console.log(objInstance);
-
-        let typeValue = "";
-        if (objInstance && objInstance.primaryfileName) {
-          typeValue = "p-sup";
-        } else if (objInstance && objInstance.itemName) {
-          typeValue = "i-sup";
-        } else if (objInstance && objInstance.collectionName) {
-          typeValue = "c-sup";
-        } else if (objInstance && objInstance.unitName) {
-          typeValue = "u-sup";
-        }
-        self.$router.push(`/supplemental-files/${typeValue}/${objInstance.id}`);
       }
     },
-    onCreate() {
+    onCreateCollection() {
       const self = this;
-      if (self.baseUrl === "unit") self.$router.push("/collection/create");
-      else if (self.baseUrl === "list-supplement")
-        self.$router.push("/supplemental-files/add");
+      self.$router.push("/collection/create");
     },
     onCreateItem() {
       const self = this;
