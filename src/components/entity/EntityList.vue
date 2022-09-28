@@ -56,7 +56,11 @@
                     Media Information
                   </b-button>
                 </div>
-                <b-collapse id="collapse-1" class="mt-2 media-details">
+                <b-collapse
+                  v-if="selectedFile.mediaInfo"
+                  id="collapse-1"
+                  class="mt-2 media-details"
+                >
                   <textarea
                     v-model="mediaInfo"
                     disabled
@@ -699,6 +703,7 @@ export default {
         let mediaSourceType = await self.primaryFileService.getPrimaryFile(
           self.selectedFile.id
         );
+        self.selectedFile["mediaInfo"] = mediaSourceType.mediaInfo;
         self.entity = self.selectedFile;
         self.entity["mediaSource"] = mediaSourceUrl;
         self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
