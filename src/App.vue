@@ -30,6 +30,7 @@
 <script>
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import config from "./assets/constants/common-contant.js";
+import { env } from "@/helpers/env.js";
 export default {
   components: {
     Sidebar,
@@ -48,6 +49,9 @@ export default {
           "helpwindow",
           "width=800, height=500"
         );
+      } else {
+        const helpUrl = env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE");
+        window.open(helpUrl, "helpwindow", "width=800, height=500");
       }
       return;
     },
