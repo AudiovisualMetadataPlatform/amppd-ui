@@ -220,12 +220,14 @@ export default {
     },
     saveFile(data, index) {
       const self = this;
-      if (!self.selectedItem.id) {
+      if (!self.selectedItem.id && !self.selectedItem.selectedItemId) {
         self.$bvToast.toast(
           "Item details cannot be found to add primary file",
-          self.sharedService.successToastConfig
+          self.sharedService.erorrToastConfig
         );
         return;
+      } else if (!self.selectedItem.id && self.selectedItem.selectedItemId) {
+        self.selectedItem.id = self.selectedItem.selectedItemId;
       }
 
       const formData = new FormData();

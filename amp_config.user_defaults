@@ -1,0 +1,17 @@
+
+ui:
+    # UI configuration.
+    user_guide_url: https://example.edu/AMP/
+    unit: AMP Pilot Unit
+
+    user_guide:
+        AMP_USER_GUIDE: https://uisapp2.iu.edu/confluence-prd/display/AMP/AMP+User+Guide
+        COLLECTIONS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Collections 
+        DELIVERABLES: https://uisapp2.iu.edu/confluence-prd/display/AMP/Deliverables 
+        ITEMS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Items 
+        PRIMARY_FILE: https://uisapp2.iu.edu/confluence-prd/display/AMP/Primary+File 
+        THE_DASHBOARD: https://uisapp2.iu.edu/confluence-prd/display/AMP/The+Dashboard 
+        UNITS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Units 
+        UPLOADING_FILES_VIA_BATCH_INGEST: https://uisapp2.iu.edu/confluence-prd/display/AMP/Uploading+Files+via+Batch+Ingest 
+        WORKFLOW_SUBMISSIONS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Workflow+Submissions    
+

@@ -7,11 +7,11 @@
     <div class="row">
       <!-- <Sidebar /> -->
       <div class="col-12 bg-light-gray-1">
-        <main class="m-0">
+        <main>
           <!-- Header - Details page -->
 
           <b-card
-            class="text-center mt-5"
+            class="text-center mt-5 mb-5"
             :class="
               baseUrl === 'file' && entity.mediaType === 'video'
                 ? 'extra-padding'
@@ -204,15 +204,21 @@
                     ></textarea>
                   </div>
 
-                  <div
-                    class="row"
-                    v-if="
-                      baseUrl === 'item' && entity.parentType === 'item-search'
-                    "
-                  >
+                  <div class="row" v-if="baseUrl === 'item'">
                     <div class="col-6 text-left form-group">
                       <label>Unit:</label>
                       <input
+                        v-if="
+                          (isCreatePage || selectedItem.selectedItemId) &&
+                            selectedUnit
+                        "
+                        type="text"
+                        class="form-control w-100"
+                        v-model="selectedUnit.name"
+                        :disabled="true"
+                      />
+                      <input
+                        v-else
                         type="text"
                         class="form-control w-100"
                         v-model="entity.unitName"
@@ -222,6 +228,17 @@
                     <div class="col-6 text-left form-group">
                       <label>Collection:</label>
                       <input
+                        v-if="
+                          (isCreatePage || selectedItem.selectedItemId) &&
+                            selectedCollection
+                        "
+                        type="text"
+                        class="form-control w-100"
+                        v-model="selectedCollection.name"
+                        :disabled="true"
+                      />
+                      <input
+                        v-else
                         type="text"
                         class="form-control w-100"
                         :value="entity.collectionName"
@@ -230,12 +247,7 @@
                     </div>
                   </div>
 
-                  <div
-                    class="row"
-                    v-if="
-                      baseUrl === 'item' && entity.parentType === 'item-search'
-                    "
-                  >
+                  <div class="row" v-if="baseUrl === 'item'">
                     <div class="col-6 text-left form-group">
                       <label>Created By:</label>
                       <input
@@ -256,12 +268,7 @@
                     </div>
                   </div>
 
-                  <div
-                    class="row"
-                    v-if="
-                      baseUrl === 'item' && entity.parentType === 'item-search'
-                    "
-                  >
+                  <div class="row" v-if="baseUrl === 'item'">
                     <div class="col-6 text-left form-group">
                       <label>Modified By:</label>
                       <input
@@ -282,10 +289,7 @@
                     </div>
                   </div>
 
-                  <div
-                    class="col-12 p-0"
-                    v-if="entity.parentType !== 'item-search'"
-                  >
+                  <div class="col-12 p-0" v-if="baseUrl !== 'item'">
                     <div class="row">
                       <div class="col-3 text-left form-group">
                         <label>Created By:</label>
@@ -340,9 +344,6 @@
                       <select
                         class="select custom-select w-100"
                         v-model="entity.externalSource"
-                        :class="{
-                          'error-border': submitted && !entity.externalSource,
-                        }"
                         @change="onInputChange"
                       >
                         <option
@@ -392,22 +393,27 @@
           </b-card>
 
           <!-- Header - Details page Ends here-->
-          <div v-if="baseUrl === 'item'">
+          <div
+            v-if="
+              baseUrl === 'item' &&
+                (selectedItem.id || selectedItem.selectedItemId)
+            "
+          >
             <ItemFiles></ItemFiles>
           </div>
           <div v-else-if="baseUrl === 'file'">
             <OutputFile />
           </div>
-          <div class v-else>
+          <div class v-else-if="baseUrl !== 'item' && baseUrl !== 'file'">
             <!-- Title ends here -->
-            <b-card class="text-left m-3">
+            <b-card class="m-0 text-left">
               <!-- Title - Listing page -->
               <!-- <h3 v-if="baseUrl == 'unit' && !purpose">My Units</h3>
                             <h3 v-else-if="baseUrl == 'collection' && !purpose">My Collections</h3>-->
 
               <!-- Title - Unit Details page  -->
               <div class="d-flex w-100" v-if="baseUrl == 'unit'">
-                <div class="col-3 text-left">
+                <div class="col-3 text-left p-0">
                   <h2>Unit Collections</h2>
                 </div>
                 <div class="col-9 text-right p0 btn-grp">
@@ -449,16 +455,16 @@
                   </button>
                 </div>
               </div>
-              <div class="row" v-if="records && records.length">
+              <div class="row row-spl" v-if="records && records.length">
                 <b-card
-                  class="m-3 w-100 text-left"
+                  class="m-3 w-100 text-left b-card-spl"
                   v-for="elem in records"
                   :key="elem.id"
                 >
-                  <div class="col-12">
+                  <div class="col-12 p-0">
                     <div class="row">
                       <div class="col-11">
-                        <h4>{{ elem.name }}</h4>
+                        <h3>{{ elem.name }}</h3>
                         <p>{{ elem.description }}</p>
                       </div>
                       <div class="col-1 text-right">
@@ -467,7 +473,11 @@
                           :title="elem.active ? 'Deactivate' : 'Activate'"
                           v-if="baseUrl == 'unit'"
                         >
-                          <input type="checkbox" v-model="elem.active" />
+                          <input
+                            type="checkbox"
+                            v-model="elem.active"
+                            v-on:click="toggleCollectionActive(elem)"
+                          />
                           <span class="slider round"></span>
                         </label>
                         <div
@@ -490,37 +500,41 @@
                     <div class="row w-100" v-if="purpose">
                       <div class="col-3" v-if="baseUrl == 'unit'">
                         <label>Task Manager</label>
-                        <p>{{ elem.taskManager }}</p>
+                        <p class="mb-0">{{ elem.taskManager }}</p>
                       </div>
                       <div class="col-2" v-if="baseUrl == 'collection'">
                         <label>Source Name</label>
-                        <p>{{ elem.externalSource }}</p>
+                        <p class="mb-0">{{ elem.externalSource }}</p>
                       </div>
                       <div class="col-2" v-if="baseUrl == 'collection'">
                         <label>Source Id</label>
-                        <p>{{ elem.externalId }}</p>
+                        <p class="mb-0">{{ elem.externalId }}</p>
                       </div>
                       <div class="col-2">
                         <label>Date Created:</label>
-                        <p>{{ elem.createdDate | LOCAL_DATE_VALUE }}</p>
+                        <p class="mb-0">
+                          {{ elem.createdDate | LOCAL_DATE_VALUE }}
+                        </p>
                       </div>
                       <div class="col-2">
                         <label>Created By</label>
-                        <p>{{ elem.createdBy }}</p>
+                        <p class="mb-0">{{ elem.createdBy }}</p>
                       </div>
                       <div class="col-2">
                         <label>Modified By</label>
-                        <p>{{ elem.modifiedBy }}</p>
+                        <p class="mb-0">{{ elem.modifiedBy }}</p>
                       </div>
                       <div class="col-2">
                         <label>Modified Date</label>
-                        <p>{{ elem.modifiedDate | LOCAL_DATE_VALUE }}</p>
+                        <p class="mb-0">
+                          {{ elem.modifiedDate | LOCAL_DATE_VALUE }}
+                        </p>
                       </div>
                     </div>
                   </div>
                 </b-card>
               </div>
-              <div class="col-12 text-left" v-if="!records || !records.length">
+              <div class="col-12 text-left" v-else>
                 <p>-No records found-</p>
               </div>
             </b-card>
@@ -556,6 +570,7 @@ import EntityService from "../../service/entity-service";
 import { env } from "../../helpers/env";
 import Mediaelement from "./Mediaelement.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
+import ConfigPropertiesService from "@/service/config-properties-service";
 
 export default {
   name: "EntityList",
@@ -579,6 +594,7 @@ export default {
       primaryFileService: new PrimaryFileService(),
       entityService: new EntityService(),
       workflowResultService: new WorkflowResultService(),
+      configPropertiesService: new ConfigPropertiesService(),
       records: [],
       masterRecords: [],
       showLoader: false,
@@ -597,6 +613,7 @@ export default {
     selectedItem: sync("selectedItem"),
     selectedFile: sync("selectedFile"),
     itemConfigs: sync("itemConfigs"),
+    configProperties: sync("configProperties"),
     baseUrl() {
       const self = this;
       if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
@@ -638,6 +655,23 @@ export default {
     },
   },
   methods: {
+    async toggleCollectionActive(collection) {
+      collection.active = !collection.active;
+      this.collectionService.activateCollection(
+        collection.id,
+        collection.active
+      );
+    },
+    async networkCalls() {
+      const self = this;
+      try {
+        const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
+        self.configProperties = configPropertiesResponse.data;
+      } catch (error) {
+        self.showLoader = false;
+        console.log(error);
+      }
+    },
     async getData() {
       const self = this;
       if (self.baseUrl === "unit") {
@@ -713,7 +747,7 @@ export default {
           }
         });
     },
-    onView(objInstance) {
+    async onView(objInstance) {
       const self = this;
       if (self.baseUrl === "collection" && self.purpose) {
         self.selectedItem = objInstance;
@@ -725,7 +759,6 @@ export default {
     },
     onCreateCollection() {
       const self = this;
-
       self.$router.push("/collection/create");
     },
     onCreateItem() {
@@ -821,12 +854,15 @@ export default {
   mounted() {
     const self = this;
     self.showLoader = true;
+    if (self.baseUrl === "unit") {
+      this.networkCalls(); //TODO: Need to move to "home" page once it'll be implemented.
+    }
     self.getDefaultUnit();
 
     let formHTML = document.getElementsByClassName("form")[0];
-    if (this.baseUrl === "file") {
+    if (formHTML && this.baseUrl === "file") {
       formHTML.style.width = "50%";
-    } else {
+    } else if (formHTML) {
       formHTML.style.width = "100%";
     }
   },
@@ -875,7 +911,17 @@ video {
   width: 100% !important;
 }
 .btn-grp {
-  margin-bottom: 10px;
+  margin-bottom: 33px;
   padding-right: 0px;
+}
+.b-card-spl {
+  background-color: #fafafa;
+  margin: 0px 0px 8px 0px !important;
+}
+.b-card-spl > div:first-child {
+  padding: 8px !important;
+}
+.row-spl {
+  margin: 0px;
 }
 </style>

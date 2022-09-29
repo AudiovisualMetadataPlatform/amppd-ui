@@ -1,6 +1,6 @@
 <template>
   <div class="w-100">
-    <div class="col-12 bg-dark-1">
+    <div class="col-12 bg-dark-1 nav-bar">
       <!-- <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header d-flex">
@@ -35,26 +35,33 @@
           </ul>
         </div>
       </nav>-->
-      <b-navbar toggleable="lg">
-        <b-navbar-brand href="#">
+      <b-navbar toggleable="lg nav-bar-items">
+        <b-navbar-brand id="amp-logo" @click="routeToHome">
           <span v-html="ampSvg"></span>
         </b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-        <b-collapse id="nav-collapse" is-nav>
+        <b-collapse id="nav-collapse" class="nav-menus" is-nav>
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto" v-if="isAuthenticated">
-            <span v-for="menu in orderedMenuList" :key="menu.name">
+            <span
+              class="nav-span"
+              v-for="menu in orderedMenuList"
+              :key="menu.name"
+            >
               <b-nav-item @click="routeTo(menu)" v-if="!menu.children">
                 <span v-html="menu.icon"></span>
-                <span class="pl-2">{{ menu.name }}</span>
+                <span class="pl-2 menu-name">{{ menu.name }}</span>
               </b-nav-item>
               <b-nav-item-dropdown v-else>
                 <template #button-content>
                   <span v-html="menu.icon"></span>
-                  <span class="pl-2">{{ menu.name }}</span>
-                  <span v-if="menu.dropdownIcon" v-html="menu.dropdownIcon"></span>
+                  <span class="pl-2  menu-name">{{ menu.name }}</span>
+                  <span
+                    v-if="menu.dropdownIcon"
+                    v-html="menu.dropdownIcon"
+                  ></span>
                 </template>
                 <b-dropdown-item
                   class="p-0"
@@ -81,7 +88,7 @@
             <b-dropdown-item href="#">FA</b-dropdown-item>
               </b-nav-item-dropdown>-->
             </span>
-            <b-nav-item>
+            <b-nav-item class="nav-span">
               <Logout />
             </b-nav-item>
           </b-navbar-nav>
@@ -120,6 +127,9 @@ export default {
     },
   },
   methods: {
+    routeToHome() {
+      this.$router.push("/");
+    },
     routeTo(menu) {
       const self = this;
       if (
@@ -130,7 +140,13 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
-        self.$router.push(`${menu.url}`);
+        self.$router.push(`${menu.url}`).catch((error) => {
+          if (error.message.includes("/mgm-evaluation")) {
+            location.reload();
+          } else {
+            console.error(error.message);
+          }
+        });
       }
     },
     convertToSvg(value) {
@@ -172,10 +188,14 @@ nav ul li {
 .dropdown-toggle::after {
   display: none !important;
 }
+.menu-name,
 .navbar-light .navbar-nav .show > .nav-link,
-.navbar-light .navbar-nav .nav-link:hover,
 .navbar-light .navbar-nav .nav-link:focus {
   color: #fff !important;
+}
+.navbar-light .navbar-nav .nav-link:hover,
+.nav-link:hover > .menu-name {
+  color: #f4871e !important;
 }
 
 .submenu {
@@ -193,5 +213,44 @@ nav ul li {
 
 .navbar-toggler {
   background-color: #ffffff !important;
+}
+
+#amp-logo:hover {
+  cursor: pointer;
+}
+
+.nav-span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* constant navbar CSS in every browser */
+.nav-bar {
+  height: 111.69px !important;
+}
+.nav-bar-items {
+  padding: 0px !important;
+  height: 103.69px !important;
+}
+.nav-bar-items > a > span > svg {
+  height: 87.69px !important;
+}
+.navbar-brand {
+  margin-top: -16px !important;
+}
+.nav-menus {
+  margin-top: 7px;
+}
+@media screen and (max-width: 991px) {
+  .navbar-brand {
+    margin-top: 0px !important;
+  }
+  .nav-bar {
+    height: auto !important;
+  }
+  .nav-bar-items {
+    height: auto !important;
+  }
 }
 </style>

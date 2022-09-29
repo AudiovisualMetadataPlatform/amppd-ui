@@ -19,6 +19,8 @@ import { env } from "./helpers/env.js";
 import WorkflowList from "./components/workflow/WorkflowList.vue";
 import EntityList from "./components/entity/EntityList.vue";
 import ItemSearch from "./components/entity/ItemSearch.vue";
+import MGMevaluation from "./components/evaluation/MGMevaluation.vue";
+import SupplementList from "./components/supplement/SupplementList.vue";
 Vue.use(Router);
 
 var router = new Router({
@@ -88,7 +90,10 @@ var router = new Router({
       path: "/workflow/edit",
       name: "workflow-editor",
       component: WorkflowEditor,
-      meta: { authorize: [] },
+      meta: {
+        authorize: [],
+        helpUrl: env.getEnv("VUE_APP_DOC_WORKFLOW_CREATING"),
+      },
     },
     {
       path: "/workflow/submit",
@@ -184,6 +189,57 @@ var router = new Router({
           { text: "Item Search" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
+      },
+    },
+    {
+      path: "/supplemental-files",
+      name: "supplemental-files",
+      component: SupplementList,
+      meta: {
+        authorize: [],
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Supplemental Files" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    {
+      path: "/supplemental-files/add",
+      name: "create-supplemental",
+      component: SupplementList,
+      meta: {
+        authorize: [],
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Supplemental Files", href: "#/supplemental-files" },
+          { text: "File Details", href: "#/supplemental-files/add" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    {
+      path: "/supplemental-files/:supplementType/:supplementId",
+      name: "show-supplemental",
+      component: SupplementList,
+      meta: {
+        authorize: [],
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Supplemental Files", href: "#/supplemental-files" },
+          { text: "File Details" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    {
+      path: "/mgm-evaluation",
+      name: "mgm-evaluation",
+      component: MGMevaluation,
+      meta: {
+        authorize: [],
+        breadCrumb: [{ text: "Home", href: "#/" }, { text: "MGM Evaluation" }],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
     {
