@@ -128,7 +128,17 @@ export default {
   },
   methods: {
     routeToHome() {
-      this.$router.push("/");
+      const self = this;
+      if (
+        self.$route.path === "/workflow/edit" &&
+        localStorage.getItem("activeWorkflowSession")
+      ) {
+        alert(
+          "Workflow editor session is active. Please click on done button before leaving the page."
+        );
+      } else {
+        self.$router.push("/");
+      }
     },
     routeTo(menu) {
       const self = this;
