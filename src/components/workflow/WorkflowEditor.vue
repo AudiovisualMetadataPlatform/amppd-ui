@@ -115,8 +115,21 @@ export default {
     this.iframeUrl = this.getIframeUrl(this.id);
     console.log("workflowId = " + this.id + ", iframeUrl = " + this.iframeUrl);
 
+    //Scroll back to top
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+
     //Setting activeWorkflowId
     localStorage.setItem("activeWorkflowSession", this.id);
+
+    //Prevent browser back button event
+    window.onpopstate = function() {
+      window.history.forward();
+      if (this.location.hash.includes("/workflow/edit"))
+        alert(
+          "Workflow editor session is active. Please click on done button before leaving the page."
+        );
+    };
 
     //Prevent page closing
     let confirm = true;
@@ -145,6 +158,11 @@ export default {
     //Removing prevention of page closing
     if (window.onbeforeunload != null) {
       window.onbeforeunload = null;
+    }
+
+    //Removing prevention of back button event
+    if (window.onpopstate != null) {
+      window.onpopstate = null;
     }
   },
 };
