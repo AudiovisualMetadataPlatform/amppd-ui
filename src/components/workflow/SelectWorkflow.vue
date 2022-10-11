@@ -11,7 +11,7 @@
         >
           <option value="">Select a workflow...</option>
           <option
-            v-for="(workflow, index) in workflows"
+            v-for="(workflow, index) in workflows.rows"
             v-bind:key="index"
             v-bind:value="workflow.id"
             >{{ workflow.name }}</option

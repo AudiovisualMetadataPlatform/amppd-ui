@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="workflow-selection">
-      <select id="workflows" v-on:change="selection" v-if="workflows">
+      <select id="workflows" v-on:change="selection" v-if="workflows.rows">
         <option value="">Select a workflow...</option>
         <option
-          v-for="(workflow, index) in workflows"
+          v-for="(workflow, index) in workflows.rows"
           v-bind:key="index"
           v-bind:value="workflow.id"
           >{{ workflow.name }}</option

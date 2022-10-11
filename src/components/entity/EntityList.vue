@@ -472,23 +472,29 @@
                         <p>{{ elem.description }}</p>
                       </div>
                       <div class="col-1 text-right">
-                        <label
-                          class="switch"
-                          :title="elem.active ? 'Deactivate' : 'Activate'"
+                        <div
                           v-if="baseUrl == 'unit'"
+                          class="d-flex float-right"
                         >
-                          <input
-                            type="checkbox"
-                            v-model="elem.active"
-                            v-on:click="toggleCollectionActive(elem)"
-                          />
-                          <span class="slider round"></span>
-                        </label>
+                          <span class="mr-1">Active</span>
+                          <label
+                            class="switch"
+                            :title="elem.active ? 'Deactivate' : 'Activate'"
+                          >
+                            <input
+                              type="checkbox"
+                              v-model="elem.active"
+                              v-on:click="toggleCollectionActive(elem)"
+                            />
+                            <span class="slider round"></span>
+                          </label>
+                        </div>
                         <div
                           v-if="
                             (elem.active && baseUrl == 'unit') ||
                               baseUrl !== 'unit'
                           "
+                          class="float-right"
                         >
                           <button
                             class="btn btn-primary btn"
@@ -928,5 +934,8 @@ video {
 }
 .row-spl {
   margin: 0px;
+}
+.switch {
+  min-width: 45px;
 }
 </style>
