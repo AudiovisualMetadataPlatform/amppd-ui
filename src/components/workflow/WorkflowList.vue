@@ -222,7 +222,7 @@ export default {
       self.workflowService
         .getAllWorkflows()
         .then((response) => {
-          self.listOfWorkflows = response.data;
+          self.listOfWorkflows = response.data.rows;
         })
         .catch((e) => {
           console.log(e, "error");
