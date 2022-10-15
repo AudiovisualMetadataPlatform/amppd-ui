@@ -205,7 +205,7 @@ export default {
       const source = Object.keys(sourceFiles).map((key) => sourceFiles[key]);
       source.forEach((file) => {
         const primaryFile = {
-          name: "",
+          name: file.name,
           originalFilename: file.name,
           description: "",
           file: file,
