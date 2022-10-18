@@ -21,10 +21,16 @@ import EntityList from "./components/entity/EntityList.vue";
 import ItemSearch from "./components/entity/ItemSearch.vue";
 import MGMevaluation from "./components/evaluation/MGMevaluation.vue";
 import SupplementList from "./components/supplement/SupplementList.vue";
+import POC from "./components/POC/index.vue";
 Vue.use(Router);
 
 var router = new Router({
   routes: [
+    {
+      path: "/poc",
+      name: "poc",
+      component: POC,
+    },
     {
       // TODO we may want to have a separate landing/welcome page with some greeting and a brief introduction to AMP
       path: "/",
