@@ -1146,4 +1146,14 @@ export default {
 #dropdown-form > button:hover > span > svg > g > path {
   fill: #fff !important;
 }
+form.b-dropdown-form {
+  width: 350px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+form.b-dropdown-form > * {
+  flex: 0 0 50%;
+}
 </style>

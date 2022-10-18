@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="transcript-wrapper">
+    <loader :show="inProgress" />
     <!-- <AmpHeader/> -->
     <!-- <Logout/> -->
     <div class="transcript-content">
@@ -113,7 +114,7 @@
       </div>
     </modal>
     <token-validator
-      v-if="showTokenModal"
+      v-if="showTokenValidator"
       @validAuth="authValidated"
       :datasetUrl="datasetUrl"
       :authString="authString"
@@ -123,6 +124,7 @@
 
 <script>
 import AmpHeader from "@/components/shared/Header.vue";
+import Loader from "@/components/shared/Loader.vue";
 import Logout from "@/components/shared/Logout.vue";
 import TokenValidator from "@/components/hmgm/TokenValidator";
 import BBCTranscriptEditor from "@bbc/react-transcript-editor/dist";
@@ -131,12 +133,14 @@ import {
   getTranscript,
   saveTranscript,
   completeTranscript,
+  auth_token_required,
 } from "@/service/hmgm-service";
 
 export default {
   name: "TranscriptEditor",
   components: {
     AmpHeader,
+    Loader,
     Logout,
     BBCTranscriptEditor,
     TokenValidator,
@@ -145,6 +149,8 @@ export default {
   data() {
     return {
       requireAuth: true,
+      showTokenValidator: false,
+      inProgress: false,
       datasetUrl: null,
       authString: null,
       transcriptDataValue: null,
@@ -165,17 +171,11 @@ export default {
       transcriptType: 1,
     };
   },
-  computed: {
-    showTokenModal() {
-      if (!this.datasetUrl || this.datasetUrl.length == 0) return false;
-      if (!this.authString) return false;
-      return this.requireAuth;
-    },
-  },
   methods: {
     // This method is required by the token validator to load data on success callback
     authValidated() {
       this.requireAuth = false;
+      this.showTokenValidator = false;
       this.getFile(this.datasetUrl);
     },
     // Set data for editor
@@ -242,18 +242,22 @@ export default {
     // Get the transcript
     async getFile(datasetPath) {
       let self = this;
+      this.inProgress = true;
       this.originalFileName = datasetPath;
       this.fileName = datasetPath + ".tmp";
       var response = await getTranscript(datasetPath, false);
       if (response.complete) {
         self.handleAlreadyComplete();
+        this.inProgress = false;
         return;
       }
       if (!response.success) {
         self.handleGetTranscriptError();
+        this.inProgress = false;
         return;
       }
       this.setData(response.content, response.temporaryFile);
+      this.inProgress = false;
     },
     // Complete the edits
     async complete() {
@@ -312,6 +316,16 @@ export default {
     this.authString = this.$route.query.auth;
     this.datasetUrl = this.$route.query.datasetUrl;
     this.mediaUrl = this.$route.query.mediaUrl;
+
+    let requires_auth_token = await auth_token_required(
+      this.authString,
+      this.datasetUrl
+    );
+    if (requires_auth_token === false) {
+      this.authValidated();
+    } else {
+      this.showTokenValidator = true;
+    }
   },
   setData(data) {
     this.transcriptDataValue = data;
@@ -320,6 +334,9 @@ export default {
 </script>
 
 <style scoped>
+.transcript-wrapper {
+  width: 100%;
+}
 .my-modal {
   backdrop-filter: brightness(60%);
 }

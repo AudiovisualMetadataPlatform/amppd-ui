@@ -34,7 +34,8 @@
               <h3 contenteditable="true" class="pointer-events-none">
                 {{ workflow.name }}
               </h3>
-              <p contenteditable="true">{{ workflow.description }}</p>
+              <!-- <p contenteditable="true">{{ workflow.description }}</p> -->
+              <span>{{ workflow.annotations[0] }}</span>
             </div>
             <div class="col-lg-2 text-right">
               <button
@@ -56,7 +57,7 @@
             <div class="col">
               Created By:
               <br />
-              {{ workflow.owner }}
+              {{ workflow.creator ? workflow.creator : workflow.owner }}
             </div>
             <!-- <div class="col">
                             Creator:
@@ -221,7 +222,7 @@ export default {
       self.workflowService
         .getAllWorkflows()
         .then((response) => {
-          self.listOfWorkflows = response.data;
+          self.listOfWorkflows = response.data.rows;
         })
         .catch((e) => {
           console.log(e, "error");
