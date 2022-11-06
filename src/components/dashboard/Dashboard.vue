@@ -1,14 +1,27 @@
 <template>
   <div class="collections w-100">
     <!-- <loader :show="!isFilterApiLoaded"/> -->
-    <div class="container col-12">
+    <div
+      class="container col-12"
+      :class="{
+        'p-0': parent === 'NewTest',
+      }"
+    >
       <div class="row">
-        <!-- <Sidebar/> -->
-        <div class="col-12 bg-light-gray-1">
+        <div
+          class="col-12"
+          :class="{
+            'bg-light-gray-1': parent !== 'NewTest',
+          }"
+        >
           <main class="m-0">
-            <!-- <Logout/> -->
             <div class="pad-all-3">
-              <div class="card">
+              <div
+                class="card"
+                :class="{
+                  'mb-0': parent === 'NewTest',
+                }"
+              >
                 <div class="card-body">
                   <h1 v-if="parent !== 'NewTest'" class="card-title">
                     AMP Dashboard

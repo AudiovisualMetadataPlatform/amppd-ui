@@ -233,7 +233,7 @@ var router = new Router({
       },
     },
     {
-      path: "/mgm-evaluation",
+      path: "/mgm-evaluation/:mgmCategoryId",
       name: "mgm-evaluation",
       component: MGMevaluation,
       meta: {

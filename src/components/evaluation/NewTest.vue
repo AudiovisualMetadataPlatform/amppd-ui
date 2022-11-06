@@ -1,277 +1,219 @@
 <template>
   <div class="new-test">
     <loader :show="loading" />
-    <div class="tab-pane fade active show" role="tabpanel" id="collapse-test">
-      <div class="row" v-show="mgmCategory.msts && mgmCategory.msts.length">
-        <div
-          class="col-4 nav bg-none nav-pills v-pills-body"
-          id="v-pills-tab"
-          role="tablist"
-          aria-orientation="vertical"
+    <h3 class="m-b-0 m-t-2 mt-1">1) Select a Test</h3>
+    <b-card
+      class="mgm-card bg-light-gray-1"
+      v-for="(mst, i) in mgmCategory.msts"
+      :key="i"
+    >
+      <h3
+        class="w-100 d-flex justify-content-between align-items-center mgm-h3 card-title bg-light-gray"
+      >
+        <button
+          class="btn"
+          :class="visible.includes(i) ? null : 'collapsed'"
+          :aria-expanded="visible.includes(i) ? 'true' : 'false'"
+          :aria-controls="'mgm' + i"
+          style="font-size:24px; font-weight:400"
+          @click="handleVisibility(i)"
         >
-          <h3 id="select-test-title" class="col-12 hdr-3">Select a New Test</h3>
-          <b-overlay rounded="sm">
-            <b-navbar
-              id="pills-tab-1"
-              toggleable="lg"
-              type="dark"
-              class="nav flex-column nav-pills col-12 mst-items"
-            >
-              <span
-                class="mst-span"
-                v-for="(mst, i) in mgmCategory.msts"
-                :key="i"
-              >
-                <b-nav-item
-                  :class="mst && selectedMst.index === i ? 'active' : ''"
-                  @click="onChangeMst(i, mst)"
-                  >{{ mst.name }}</b-nav-item
-                >
-              </span>
-            </b-navbar>
-          </b-overlay>
-        </div>
-        <div class="col-8 tab-content" id="v-pills-tabContent">
-          <div
-            class="tab-pane fade show active v-pills-card"
-            id="v-pills-home"
-            role="tabpanel"
-            aria-labelledby="v-pills-home-tab"
-          >
-            <div class="card">
-              <div class="card-body">
-                <div class="description stt-word">
-                  <h4>{{ selectedMst.body.name }}</h4>
-                  <span
-                    class="span-html"
-                    v-html="selectedMst.body.description"
-                  ></span>
-                  <p>
-                    Short Description of the "Ground Truth Template" and
-                    requirements,
-                    <a
-                      class="a-link"
-                      @click="onGroundtruthInfo($event, selectedMst.body)"
-                      style="pointer-events: none"
-                      >link to more ground truth information</a
-                    >.
-                  </p>
-                  <p>
-                    <a
-                      class="a-link"
-                      @click="downloadGTTemplate($event, selectedMst.body)"
-                      style="pointer-events: none"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        fill="currentColor"
-                        class="bi bi-file-earmark-arrow-down-fill"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"
-                        ></path>
-                      </svg>
-                      Download the Ground Truth Template
-                    </a>
-                  </p>
+          <span v-html="rightArrowSvg" style="font-size:1.25rem"></span>
+          <span class="sr-only">Toggle hidden content</span>
+          <span class="pl-2" style="font-size:1.25rem">{{ mst.name }}</span>
+        </button>
+        <b-form-radio
+          v-model="selectedMst.body"
+          style="font-size:1.25rem;"
+          name="some-radios"
+          :value="mst"
+          @change="onChangeMst(i, mst)"
+          >&nbsp;select test</b-form-radio
+        >
+      </h3>
+      <b-collapse
+        :id="'mgm' + i"
+        class="mgm-content"
+        :visible="visible.includes(i)"
+      >
+        <span class="span-html" v-html="mst.description"></span>
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-md"
+          data-toggle="modal"
+          data-target=".upload-modal"
+          @click="downloadGTTemplate($event, mst)"
+          disabled
+        >
+          Download Ground Truth Template
+        </button>
+      </b-collapse>
+    </b-card>
+    <h3 class="m-b-0 m-t-2 mt-4">2) Set Parameters</h3>
+    <div>Set any necessary parameters for running your test</div>
 
-                  <!-- Parameter by seconds -->
-                  <div
-                    v-if="
-                      selectedMst.detailBody &&
-                        selectedMst.detailBody.name &&
-                        selectedMst.detailBody.name.includes('by seconds')
-                    "
-                    class="form-group marg-t-2"
-                  >
-                    <h4>Parameters</h4>
-                    <p>
-                      Analysis threshold: the number of seconds buffer (float)
-                      for counting a true positive (match between the ground
-                      truth and MGM output). For example, a 2-second threshold
-                      will consider a GT and MGM segment a match if both the
-                      start and end times for each fall within 2 seconds of each
-                      other.
-                    </p>
-                    <label for="description" class="sr-only">Parameters</label>
-                    <div class="input-group mb-3">
-                      <input
-                        type="number"
-                        class="form-control"
-                        placeholder="Parameters"
-                        aria-label="description"
-                        aria-describedby="basic-addon2"
-                        step="0.25"
-                        v-model="testParams.parameter"
-                      />
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2"
-                          >seconds</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Other parameters -->
-                  <div v-else class="form-group marg-t-2">
-                    <label for="descriptiona">Parameters</label>
-                    <select
-                      v-if="
-                        selectedMst.detailBody &&
-                          selectedMst.detailBody.parameters &&
-                          selectedMst.detailBody.parameters.length
-                      "
-                      class="select custom-select w-100"
-                      v-model="testParams.parameter"
-                    >
-                      <option
-                        v-for="option in selectedMst.detailBody.parameters"
-                        :key="option.id"
-                        :value="option.id"
-                        >{{ option.name }}</option
-                      >
-                    </select>
-                    <textarea
-                      v-else
-                      id="descriptiona"
-                      class="form-control"
-                      spellcheck="false"
-                      v-model="testParams.parameter"
-                    ></textarea>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="output-select">
-          <h3 class="m-b-0 m-t-0">Select MGM Outputs to Test</h3>
-          <p class="m-b-0">
-            Short description of the outputs and requirements,
-            <a
-              class="a-link"
-              style="pointer-events: none"
-              @click="selectOutputProcess"
-              >link to more information on this process</a
-            >.
-          </p>
-        </div>
-        <WorkflowDashboard
-          parent="NewTest"
-          :workflowResultType="selectedMst.detailBody.workflowResultType"
+    <!-- Parameter by seconds -->
+    <div
+      v-if="
+        selectedMst.body &&
+          selectedMst.body.name &&
+          selectedMst.body.name.includes('by seconds')
+      "
+      class="form-group marg-t-1"
+    >
+      <p class="bg-light-gray mgm-h3 p-1 mb-2">
+        <strong>Analysis threshold:</strong> the number of seconds buffer
+        (float) for counting a true positive (match between the ground truth and
+        MGM output). For example, a 2-second threshold will consider a GT and
+        MGM segment a match if both the start and end times for each fall within
+        2 seconds of each other.
+      </p>
+      <div class="input-group mb-3">
+        <input
+          type="number"
+          class="form-control"
+          placeholder="Parameters"
+          aria-label="description"
+          aria-describedby="basic-addon2"
+          step="0.25"
+          v-model="testParams.parameter"
         />
-
-        <div class="card m-b-0 m-t-0 w-100 ml-3 mr-3">
-          <div class="card-body">
-            <h4 class="">
-              Select Ground Truth<a
-                class="a-link"
-                style="pointer-events: none"
-                @click="selectGroundtruth"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  fill="currentColor"
-                  class="bi bi-info-circle-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
-                  ></path></svg
-              ></a>
-            </h4>
-            <table id="reviewUpload" class="table fixed">
-              <thead>
-                <tr>
-                  <th scope="col" class="slim-col-1">File</th>
-                  <th scope="col" class="slim-col-2">MGM Output</th>
-                  <th scope="col" class="slim-col-3">Ground Truth</th>
-                  <th scope="col" class="text-right slim-col-4">
-                    Upload/Select Ground Truth
-                  </th>
-                  <th scope="col" class="text-right slim-col-5">Remove Row</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  class="cloneable selected-mgm-outputs"
-                  v-for="(record, i) in mgmEvaluation.selectedRecords"
-                  :key="i"
-                >
-                  <td class="primaryFile cloneCell slim-col-1">
-                    <span> {{ record.primaryfileName }}</span>
-                  </td>
-                  <td class="output cloneCell slim-col-2">
-                    <span>{{ record.outputName }}</span>
-                  </td>
-                  <td class="output cloneCell slim-col-3">
-                    <span
-                      class="ground-truth"
-                      v-if="record && record.gtSupplement"
-                    >
-                      {{ record.gtSupplement.name }}</span
-                    >
-                  </td>
-                  <td class="slim-col-4 text-right">
-                    <button
-                      type="button"
-                      class="btn btn-outline-primary btn-md  uploadModal"
-                      data-toggle="modal"
-                      data-target=".upload-modal"
-                      @click="handleGroundTruthModal(record)"
-                    >
-                      Upload/Select Ground Truth
-                    </button>
-                  </td>
-                  <td class="text-right slim-col-5">
-                    <a
-                      @click="removeRow(record)"
-                      class="float-right remove-row-top remove-row"
-                    >
-                      <svg
-                        class="remove-svg"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="red"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
-                        ></path></svg
-                      >Remove Row
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <button
-              class="btn btn-primary btn-lg marg-tb-3 float-right"
-              type="button"
-              @click="onNewTestSubmit"
-              disabled
-            >
-              Submit
-            </button>
-          </div>
+        <div class="input-group-append">
+          <span class="input-group-text" id="basic-addon2">seconds</span>
         </div>
-        <GroundTruthModal
-          v-if="selectedRecord.id"
-          :showModal="showModal"
-          :mstDetails="selectedMst.detailBody"
-          :selectedRecord="selectedRecord"
-          @close="handleGroundTruthModal"
-        />
       </div>
     </div>
+
+    <!-- Other parameters -->
+    <div v-else class="form-group marg-t-1">
+      <select
+        v-if="
+          selectedMst.detailBody &&
+            selectedMst.detailBody.parameters &&
+            selectedMst.detailBody.parameters.length
+        "
+        class="select custom-select w-100"
+        v-model="testParams.parameter"
+      >
+        <option
+          v-for="option in selectedMst.detailBody.parameters"
+          :key="option.id"
+          :value="option.id"
+          >{{ option.name }}</option
+        >
+      </select>
+      <textarea
+        v-else
+        id="descriptiona"
+        class="form-control"
+        spellcheck="false"
+        v-model="testParams.parameter"
+      ></textarea>
+    </div>
+    <div>
+      <h3 class="m-b-0 m-t-2 mt-4">3) Select MGM Outputs to Test</h3>
+      <p class="m-b-0">
+        Select the MGM output files to be tested against ground truth data
+      </p>
+      <WorkflowDashboard
+        parent="NewTest"
+        :workflowResultType="selectedMst.detailBody.workflowResultType"
+      />
+    </div>
+    <h3 class="m-b-0 m-t-2 mt-4">4) Upload or Select Ground Truth Data</h3>
+    <p class="m-b-0">
+      Upload a ground truth data file for each MGM output or select previously
+      uploaded files
+    </p>
+    <div class="card m-b-0 m-t-0 w-100 mt-0">
+      <div class="card-body pt-0">
+        <table id="reviewUpload" class="table fixed">
+          <thead>
+            <tr>
+              <th scope="col" class="slim-col-1 border-top-0">File</th>
+              <th scope="col" class="slim-col-2 border-top-0">MGM Output</th>
+              <th scope="col" class="slim-col-3 border-top-0">Ground Truth</th>
+              <th scope="col" class="text-right slim-col-4 border-top-0">
+                Upload/Select Ground Truth
+              </th>
+              <th scope="col" class="text-right slim-col-5 border-top-0">
+                Remove Row
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="cloneable selected-mgm-outputs"
+              v-for="(record, i) in mgmEvaluation.selectedRecords"
+              :key="i"
+            >
+              <td class="primaryFile cloneCell slim-col-1">
+                <span> {{ record.primaryfileName }}</span>
+              </td>
+              <td class="output cloneCell slim-col-2">
+                <span>{{ record.outputName }}</span>
+              </td>
+              <td class="output cloneCell slim-col-3">
+                <span class="ground-truth" v-if="record && record.gtSupplement">
+                  {{ record.gtSupplement.name }}</span
+                >
+              </td>
+              <td class="slim-col-4 text-right">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-md  uploadModal"
+                  data-toggle="modal"
+                  data-target=".upload-modal"
+                  @click="handleGroundTruthModal(record)"
+                >
+                  Upload/Select Ground Truth
+                </button>
+              </td>
+              <td class="text-right slim-col-5">
+                <a
+                  @click="removeRow(record)"
+                  class="float-right remove-row-top remove-row"
+                >
+                  <svg
+                    class="remove-svg"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="red"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+                    ></path></svg
+                  >Remove Row
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button
+          class="btn btn-primary btn-lg marg-tb-3 float-right"
+          type="button"
+          @click="onNewTestSubmit"
+          disabled
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+    <GroundTruthModal
+      v-if="selectedRecord.id"
+      :showModal="showModal"
+      :mstDetails="selectedMst.detailBody"
+      :selectedRecord="selectedRecord"
+      @close="handleGroundTruthModal"
+    />
   </div>
 </template>
 
 <script>
 import { sync } from "vuex-pathify";
+import config from "@/assets/constants/common-contant.js";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 import EvaluationService from "@/service/evaluation-service";
@@ -294,6 +236,8 @@ export default {
       testParams: {},
       showModal: false,
       selectedRecord: {},
+      rightArrowSvg: config.common.icons["right_arrow"],
+      visible: [],
     };
   },
   computed: {
@@ -308,6 +252,16 @@ export default {
     },
   },
   methods: {
+    handleVisibility(index) {
+      const self = this;
+      if (self.visible.includes(index)) {
+        self.visible = self.visible.filter((ele) => {
+          return ele !== index;
+        });
+      } else {
+        self.visible.push(index);
+      }
+    },
     handleGroundTruthModal(record) {
       const self = this;
       self.showModal = !self.showModal;
@@ -323,9 +277,6 @@ export default {
       console.log("Selected mst:" + self.selectedMst);
       console.log("Selected records:" + self.mgmEvaluation.selectedRecords);
       console.log("Parameters:" + self.testParams);
-    },
-    selectGroundtruth() {
-      console.log("Clicked on selectGroundtruth!!");
     },
     removeRow(record) {
       const self = this;
@@ -368,9 +319,6 @@ export default {
     },
     downloadGTTemplate(ev, mstObj) {
       console.log("Clicked on onGroundtruthInfo!!" + mstObj);
-    },
-    selectOutputProcess() {
-      console.log("Clicked on selectOutputProcess!!");
     },
   },
   mounted() {
@@ -471,5 +419,120 @@ export default {
 }
 .selected-mgm-outputs {
   background-color: #fef4ea;
+}
+
+.btn:focus {
+  box-shadow: none !important;
+}
+.mgm-card {
+  margin: 10px 0px !important;
+}
+
+.mgm-card .card-body {
+  padding: 0px !important;
+}
+
+.mgm-h3 {
+  padding: 0.75rem 1.25rem !important;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  margin-bottom: 0px;
+}
+
+.mgm-card .collapse .card,
+.mgm-card .collapse .card-body {
+  border: 0px !important;
+}
+
+.mgm-content {
+  padding: 1.25rem !important;
+}
+nav.nav-pills {
+  justify-content: flex-start !important;
+  padding: 0.5rem !important;
+  background: #e9ecef !important;
+  border-radius: 0.5rem !important;
+  list-style: none;
+}
+
+.nav-pills .nav-item.active {
+  background: #153c4d !important;
+  color: white !important;
+}
+
+.nav-item.active .a:link,
+.nav-item.active a {
+  color: white !important;
+}
+
+a:link,
+a {
+  color: #153c4d !important;
+}
+
+.nav-pills .active {
+  border-radius: 0.25rem !important;
+}
+
+a:hover {
+  color: #f4871e;
+  text-decoration: none;
+}
+.nav {
+  list-style: none !important;
+}
+.bg-light-gray {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+h3.card-title .btn {
+  line-height: 1rem;
+  text-decoration: none;
+  color: #153c4d;
+}
+.card-title {
+  margin-bottom: 0px !important;
+}
+
+.nav-pills .nav-link {
+  border-radius: 0.25rem;
+}
+.nav-link:focus,
+.nav-link:hover {
+  text-decoration: none;
+}
+a:hover {
+  color: #f4871e !important;
+  text-decoration: none;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.nav-link {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.custom-radio .custom-control-input:checked ~ .custom-control-label::after {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+.custom-radio .custom-control-input:checked ~ .custom-control-label::before {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  background-color: #153c4d !important;
+  border-color: #153c4d !important;
+}
+.custom-control-label::after {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+.custom-radio .custom-control-label::before {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+  width: 1rem !important;
+  height: 1rem !important;
 }
 </style>

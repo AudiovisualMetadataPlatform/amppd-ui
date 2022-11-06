@@ -112,6 +112,7 @@ const state = {
   mgmEvaluation: {
     selectedRecords: [],
   },
+  mgmCategories: [],
 
   dashboardColumns: [
     { order: "a", label: "Date", field: "dateCreated" },
