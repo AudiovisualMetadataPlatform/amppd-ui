@@ -28,6 +28,10 @@ jest.mock('../../../../src/service/workflow-service',
                         return Promise.resolve({data: [{id:1, name: "TestName1", visible: true}, {id:2, name: "TestName2", visible: true}]});
                         
                     },
+                    getAllWorkflows: ()=>{
+                        return Promise.resolve({data: { rows:[{id:1, name: "TestName1", visible: true, annotations: ['test']}, {id:2, name: "TestName2", visible: true, annotations: ['test']}] }});
+                        
+                    },
                     getWorkflowDetails(id) {
                         return Promise.resolve([{id: 1, nodeName: "dummy-test"},{id: 2, nodeName: "test-name-2"}]);
                     }
@@ -54,9 +58,9 @@ describe('WorkflowList.vue', () => {
             },
             filters: {
                 "LOCAL_DATE_VALUE":
-                  (value) => {
-                    if(value) return moment(value).format("DD/MM/YYYY");
-                  }
+                    (value) => {
+                        if(value) return moment(value).format("DD/MM/YYYY");
+                    }
                 }
         });
     });
