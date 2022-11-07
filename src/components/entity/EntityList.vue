@@ -581,6 +581,7 @@ import { env } from "../../helpers/env";
 import Mediaelement from "./Mediaelement.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
 import ConfigPropertiesService from "@/service/config-properties-service";
+import EvaluationService from "@/service/evaluation-service";
 
 export default {
   name: "EntityList",
@@ -605,6 +606,7 @@ export default {
       entityService: new EntityService(),
       workflowResultService: new WorkflowResultService(),
       configPropertiesService: new ConfigPropertiesService(),
+      evaluationService: new EvaluationService(),
       records: [],
       masterRecords: [],
       showLoader: false,
@@ -624,6 +626,7 @@ export default {
     selectedFile: sync("selectedFile"),
     itemConfigs: sync("itemConfigs"),
     configProperties: sync("configProperties"),
+    mgmCategories: sync("mgmCategories"),
     baseUrl() {
       const self = this;
       if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
@@ -677,6 +680,18 @@ export default {
       try {
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;
+
+        //MGM Evaluation menus
+        self.mgmCategoryResponse = await this.evaluationService.getMgmCategories();
+        self.sortedMgmCategories = self.sharedService.sortByAlphabatical(
+          self.mgmCategoryResponse.data._embedded.mgmCategories
+        );
+        self.filteredMgmCategories = self.sortedMgmCategories.filter((item) =>
+          parseInt(item.mstsCount, 10)
+        );
+        self.mgmCategories = JSON.parse(
+          JSON.stringify(self.filteredMgmCategories)
+        );
       } catch (error) {
         self.showLoader = false;
         console.log(error);

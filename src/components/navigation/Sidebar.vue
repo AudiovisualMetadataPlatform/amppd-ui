@@ -50,7 +50,10 @@
               v-for="menu in orderedMenuList"
               :key="menu.name"
             >
-              <b-nav-item @click="routeTo(menu)" v-if="!menu.children">
+              <b-nav-item
+                @click="routeTo(menu)"
+                v-if="!menu.children && menu.url !== '/mgm-evaluation'"
+              >
                 <span v-html="menu.icon"></span>
                 <span class="pl-2 menu-name">{{ menu.name }}</span>
               </b-nav-item>
@@ -63,7 +66,18 @@
                     v-html="menu.dropdownIcon"
                   ></span>
                 </template>
+                <span v-if="menu.url === '/mgm-evaluation'">
+                  <b-dropdown-item
+                    class="p-0"
+                    v-for="submenu in mgmCategories"
+                    :key="submenu.name"
+                    @click="routeTo(menu, submenu)"
+                  >
+                    <span class="submenu">{{ submenu.name }}</span>
+                  </b-dropdown-item>
+                </span>
                 <b-dropdown-item
+                  v-else
                   class="p-0"
                   :disabled="!submenu.url"
                   v-for="submenu in menu.children"
@@ -105,6 +119,7 @@ import BreadCrumbs from "@/components/shared/BreadCrumbs.vue";
 import { accountService } from "../../service/account-service.js";
 import { sync } from "vuex-pathify";
 import SharedService from "../../service/shared-service.js";
+import EvaluationService from "@/service/evaluation-service";
 
 export default {
   components: {
@@ -117,16 +132,36 @@ export default {
       ampSvg: config.common.icons["amp"],
       accountService: accountService,
       sharedService: new SharedService(),
+      evaluationService: new EvaluationService(),
     };
   },
   computed: {
     isAuthenticated: sync("isAuthenticated"),
+    mgmCategories: sync("mgmCategories"),
     orderedMenuList() {
       let self = this;
       return this.sharedService.sortByNumber(self.menuList, "displayId");
     },
   },
   methods: {
+    async networkCalls() {
+      const self = this;
+      try {
+        //MGM Evaluation menus
+        self.mgmCategoryResponse = await this.evaluationService.getMgmCategories();
+        self.sortedMgmCategories = self.sharedService.sortByAlphabatical(
+          self.mgmCategoryResponse.data._embedded.mgmCategories
+        );
+        self.filteredMgmCategories = self.sortedMgmCategories.filter((item) =>
+          parseInt(item.mstsCount, 10)
+        );
+        self.mgmCategories = JSON.parse(
+          JSON.stringify(self.filteredMgmCategories)
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    },
     routeToHome() {
       const self = this;
       if (
@@ -140,7 +175,7 @@ export default {
         self.$router.push("/");
       }
     },
-    routeTo(menu) {
+    routeTo(menu, data) {
       const self = this;
       if (
         self.$route.path === "/workflow/edit" &&
@@ -150,13 +185,11 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
-        self.$router.push(`${menu.url}`).catch((error) => {
-          if (error.message.includes("/mgm-evaluation")) {
-            location.reload();
-          } else {
-            console.error(error.message);
-          }
-        });
+        if (menu.url === "/mgm-evaluation") {
+          self.$router.push(`${menu.url}/${data.id}`);
+        } else {
+          self.$router.push(`${menu.url}`);
+        }
       }
     },
     convertToSvg(value) {
@@ -166,6 +199,10 @@ export default {
     showDropdown(menu) {
       menu.show = !menu.show;
     },
+  },
+  mounted() {
+    const self = this;
+    this.networkCalls();
   },
 };
 </script>

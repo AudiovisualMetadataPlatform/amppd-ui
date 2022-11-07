@@ -1,168 +1,125 @@
 <template>
-  <div class="mgm-evaluation">
-    <loader :show="loading" />
-    <div class="container col-12">
-      <div class="row expand-h">
-        <div class="col-12 bg-light-gray-1">
-          <main>
-            <h1>MGM Evaluation</h1>
-            <b-overlay rounded="sm" c>
-              <b-navbar
-                id="pills-tab-1"
-                toggleable="lg"
-                type="dark"
-                class="mb-3 nav-pills"
-              >
-                <b-nav-item
-                  :class="selectedCategory === 0 ? 'active' : ''"
-                  @click="onChangeCategory(0)"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-house-fill"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"
-                    />
-                  </svg>
-                </b-nav-item>
-                <span v-for="(category, i) in mgmCategories" :key="i">
-                  <b-nav-item
-                    :class="
-                      category && selectedCategory === i + 1 ? 'active' : ''
-                    "
-                    @click="onChangeCategory(i + 1, category)"
-                    >{{ category.name }}</b-nav-item
-                  >
-                </span>
-              </b-navbar>
-
-              <dl
-                class="d-flex col-12 mt-3 mb-0 pr-0"
-                v-if="selectedCategory === 0"
-              >
-                <div class="row card-container">
-                  <div
-                    class="col-sm-4"
-                    v-for="(category, i) in mgmCategories"
-                    :key="i"
-                  >
-                    <div class="card">
-                      <div class="card-body">
-                        <h5 class="card-title">{{ category.name }}</h5>
-                        <p class="card-text">
-                          {{ category.description }}
-                        </p>
-                        <button
-                          class="btn btn-primary btn"
-                          @click="onView(category, i + 1)"
-                        >
-                          View
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </dl>
-              <div v-else>
-                <div class="">
-                  <div class="row" v-if="mgmCategoryDetails">
-                    <h2 class="col-12">{{ mgmCategoryDetails.name }}</h2>
-                    <div class="col-7">
-                      <p>
-                        {{ mgmCategoryDetails.help }}
-                        <br />
-                        <a
-                          style="pointer-events: none"
-                          class="a-link"
-                          @click="onConfluenceRoute($event, mgmCategoryDetails)"
-                        >
-                          <svg
-                            style="padding-bottom: 4px"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            class="bi bi-arrow-right"
-                            viewBox="0 0 16 16"
+  <div class="col-12 bg-light-gray-1">
+    <main class="m-0">
+      <b-card class="w-100">
+        <loader :show="loading" />
+        <div class="container col-12 p-0">
+          <div class="row expand-h">
+            <div class="col-12 p-0">
+              <main>
+                <h1>MGM Evaluation</h1>
+                <b-overlay rounded="sm" class="mt-4">
+                  <div>
+                    <div class="">
+                      <div class="row mb-5" v-if="mgmCategoryDetails">
+                        <h1 class="col-12" style="font-size: 2.25rem;">
+                          {{ mgmCategoryDetails.name }}
+                        </h1>
+                        <div class="col-12">
+                          <div class="d-flex justify-content-between">
+                            <p class="mb-4">
+                              {{ mgmCategoryDetails.help }}
+                            </p>
+                            <div class="ml-5 pr-5" v-if="selectedTab === 0">
+                              <button
+                                class="btn btn-primary btn-lg btn-edit float-right"
+                                type="button"
+                                @click="onNewTest()"
+                              >
+                                New Test
+                              </button>
+                            </div>
+                          </div>
+                          <h3 style="margin-bottom: 0px;">
+                            {{ mgmCategoryDetails.name + " MGMs" }}
+                          </h3>
+                          <p
+                            class="mb-0"
+                            v-for="(mgm, i) in sharedService.sortByAlphabatical(
+                              mgmCategoryDetails.mgms
+                            )"
+                            :key="i"
+                            @click="getMgmHelp(index)"
                           >
-                            <path
-                              fill-rule="evenodd"
-                              d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
-                            ></path></svg
-                          >Confluence documentation
-                        </a>
-                      </p>
-                      <h3>Tools</h3>
-                      <p
-                        v-for="(mgm, i) in sharedService.sortByAlphabatical(
-                          mgmCategoryDetails.mgms
-                        )"
-                        :key="i"
-                        class="a-link"
-                        @click="mgmHelpRoute(mgm)"
-                        style="pointer-events: none"
+                            <button
+                              class="btn collaps-btn pl-0"
+                              :class="visible.includes(i) ? null : 'collapsed'"
+                              :aria-expanded="
+                                visible.includes(i) ? 'true' : 'false'
+                              "
+                              :aria-controls="'mgm' + i"
+                              @click="handleVisibility(i)"
+                            >
+                              <span
+                                v-html="rightArrowSvg"
+                                style="font-size:18px"
+                              ></span>
+                              <span class="sr-only">Toggle hidden content</span
+                              ><strong
+                                style="margin-left: 10px; color: #153c4d !important;"
+                              >
+                                <a style="color: #153c4d !important;">{{
+                                  mgm.name
+                                }}</a>
+                              </strong>
+                            </button>
+                            <b-collapse
+                              :id="'mgm' + i"
+                              class="mgm-help"
+                              :visible="visible.includes(i)"
+                            >
+                              {{ mgm.help }}
+                            </b-collapse>
+                          </p>
+                        </div>
+                      </div>
+                      <b-navbar
+                        id="pills-tab-1"
+                        toggleable="lg"
+                        type="dark"
+                        class="mb-3 nav-pills"
                       >
-                        <strong>
-                          <a>{{ mgm.name }}</a>
-                        </strong>
-                        <br />
-                        {{ mgm.help }}
-                      </p>
-                    </div>
-                    <div
-                      class="col-5 nav nav-pills bg-none action-btn-grp"
-                      style="display: block"
-                      id="pills-tab-1"
-                      role="tablist"
-                    >
-                      <button
-                        class="btn btn-primary btn-lg btn-edit mr-4 float-right"
-                        type="button"
-                        @click="onTestResults()"
-                        :class="{ 'active-tab': activeTab === 'test-results' }"
-                        disabled
+                        <span
+                          v-for="(item, i) in ['Test Results', 'New Test']"
+                          :key="i"
+                        >
+                          <b-nav-item
+                            :class="selectedTab === i ? 'active' : ''"
+                            @click="onChangeTab(i)"
+                            >{{ item }}</b-nav-item
+                          >
+                        </span>
+                      </b-navbar>
+
+                      <dl
+                        class="d-flex col-12 mt-3 mb-0 pr-0"
+                        v-if="selectedTab === 0"
                       >
-                        Test Results
-                      </button>
-                      <button
-                        class="btn btn-primary btn-lg btn-edit float-right btn-new-test"
-                        type="button"
-                        @click="onNewTest()"
-                        :class="{ 'active-tab': activeTab === 'new-test' }"
-                      >
-                        + New Test
-                      </button>
+                        <TestResults :mgmCategory="mgmCategoryDetails" />
+                      </dl>
+                      <dl class="d-flex col-12 mt-3 mb-0 pr-0" v-else>
+                        <div class="row div-test">
+                          <NewTest
+                            :mgmCategory="mgmCategoryDetails"
+                            :mgmCategoryLoading="loading"
+                          />
+                        </div>
+                      </dl>
                     </div>
                   </div>
-                  <div class="row div-test">
-                    <NewTest
-                      v-if="activeTab === 'new-test'"
-                      :mgmCategory="mgmCategoryDetails"
-                      :mgmCategoryLoading="loading"
-                    />
-                    <TestResults v-else-if="activeTab === 'test-results'" />
-                  </div>
-                </div>
-              </div>
-            </b-overlay>
-          </main>
+                </b-overlay>
+              </main>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </b-card>
+    </main>
   </div>
 </template>
 
 <script>
+import { sync } from "vuex-pathify";
+import config from "../../assets/constants/common-contant.js";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "../../service/shared-service";
 import EvaluationService from "../../service/evaluation-service";
@@ -181,17 +138,31 @@ export default {
       loading: false,
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
-      mgmCategories: [],
-      selectedCategory: 0,
-      activeTab: "new-test",
+      rightArrowSvg: config.common.icons["right_arrow"],
+      selectedTab: 0,
+      activeTab: "test-results",
+      visible: [],
     };
   },
-  computed: {},
+  computed: {
+    mgmCategories: sync("mgmCategories"),
+  },
   props: {},
   methods: {
+    handleVisibility(index) {
+      const self = this;
+      if (self.visible.includes(index)) {
+        self.visible = self.visible.filter((ele) => {
+          return ele !== index;
+        });
+      } else {
+        self.visible.push(index);
+      }
+    },
     onNewTest() {
       const self = this;
       self.activeTab = "new-test";
+      self.selectedTab = 1;
     },
     onTestResults() {
       const self = this;
@@ -200,48 +171,17 @@ export default {
     onConfluenceRoute(ev, mgmCategory) {
       ev.preventDefault();
       console.log("Clicked on mgmHelpRoute!!" + mgmCategory);
-      // const url = "";
-      // window.open(url, "helpwindow", "width=800, height=500");
     },
-    mgmHelpRoute(mgm) {
-      console.log("Clicked on mgmHelpRoute!!" + mgm);
-    },
-    async getMgmCategories() {
+    onChangeTab(index) {
       const self = this;
-      try {
-        self.loading = true;
-        self.mgmCategoryResponse = await this.evaluationService.getMgmCategories();
-        self.sortedMgmCategories = self.sharedService.sortByAlphabatical(
-          self.mgmCategoryResponse.data._embedded.mgmCategories
-        );
-        self.filteredMgmCategories = self.sortedMgmCategories.filter((item) =>
-          parseInt(item.mstsCount, 10)
-        );
-        self.mgmCategories = JSON.parse(
-          JSON.stringify(self.filteredMgmCategories)
-        );
-        self.loading = false;
-      } catch (error) {
-        console.log(error);
-        self.loading = false;
-        self.$bvToast.toast(
-          "Oops! Something went wrong. Please contact Administrator.",
-          self.sharedService.erorrToastConfig
-        );
-      }
+      self.selectedTab = index;
     },
-    onChangeCategory(categoryIndex, categoryObj) {
+    async networkCalls(mgmCategoryId) {
       const self = this;
-      self.selectedCategory = categoryIndex;
-      if (self.selectedCategory !== 0) self.onView(categoryObj, categoryIndex);
-    },
-    async onView(objInstance, tab) {
-      const self = this;
-      self.selectedCategory = tab;
       try {
         self.loading = true;
         const mgmCategoryDetailsResponse = await this.evaluationService.getDetailsMgmCategory(
-          objInstance.id
+          mgmCategoryId
         );
         self.mgmCategoryDetails = JSON.parse(
           JSON.stringify(mgmCategoryDetailsResponse.data)
@@ -258,16 +198,15 @@ export default {
     },
   },
   mounted() {
-    this.getMgmCategories();
+    const self = this;
+    const mgmCategoryId = self.$route.params.mgmCategoryId;
+    self.networkCalls(mgmCategoryId);
   },
 };
 </script>
 
 <style lang="css">
 @import "/amppd-ui/src/styles/style.css";
-.mgm-evaluation {
-  width: 100%;
-}
 main {
   margin-top: 0px;
 }
@@ -280,7 +219,7 @@ main {
 
 nav.nav-pills {
   justify-content: flex-start !important;
-  padding: 0.5rem !important;
+  padding: 0.4rem !important;
   background: #e9ecef !important;
   border-radius: 0.5rem !important;
   list-style: none;
@@ -323,6 +262,15 @@ a:hover {
   border-color: #153c4d !important;
 }
 .div-test {
-  padding: 15px;
+  padding: 0px 15px 15px 0px;
+}
+.mgm-help {
+  padding-left: 30px !important;
+}
+.collaps-btn {
+  box-shadow: none !important;
+}
+.collaps-btn:hover {
+  color: #153c4d !important;
 }
 </style>
