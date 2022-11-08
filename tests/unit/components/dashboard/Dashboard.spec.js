@@ -30,64 +30,80 @@ describe('Dashboard.vue', () => {
     const localVue = createLocalVue();
     localVue.use(BootstrapVue);
     const $store = {
-       state: {
-        workflowDashboard: {
-            loading: false,
-            filtersEnabled: {
-                dateFilter: false,
-                submitterFilter: false,
-                collectionFilter: false,
-                externalIdFilter: false,
-                itemFilter: false,
-                fileFilter: false,
-                workflowFilter: false,
-                stepFilter: false,
-                outputFilter: false,
-                statusFilter: false,
-                searchFilter: false,
-            },
-            searchQuery: {
-                sortRule: {
-                    columnName: 'dateCreated',
-                    orderByDescending: true
+        state: {
+            workflowDashboard: {
+                loading: false,
+                filtersEnabled: {
+                    dateFilter: false,
+                    submitterFilter: false,
+                    collectionFilter: false,
+                    externalIdFilter: false,
+                    itemFilter: false,
+                    fileFilter: false,
+                    workflowFilter: false,
+                    stepFilter: false,
+                    outputFilter: false,
+                    statusFilter: false,
+                    searchFilter: false,
                 },
-                pageNum: 1,
-                resultsPerPage: 10,
-                filterByDates: [],
-                filterBySubmitters: [],
-                filterByCollections: [],
-                filterByUnits: [],
-                filterByExternalIds: [],
-                filterByItems: [],
-                filterByFiles: [],
-                filterByWorkflows: [],
-                filterBySteps: [],
-                filterByOutputs: [],
-                filterByStatuses: [],
-                filterBySearchTerms: [],
-                filterByRelevant: true,
+                searchQuery: {
+                    sortRule: {
+                        columnName: 'dateCreated',
+                        orderByDescending: true
+                    },
+                    pageNum: 1,
+                    resultsPerPage: 10,
+                    filterByDates: [],
+                    filterBySubmitters: [],
+                    filterByCollections: [],
+                    filterByUnits: [],
+                    filterByExternalIds: [],
+                    filterByItems: [],
+                    filterByFiles: [],
+                    filterByWorkflows: [],
+                    filterBySteps: [],
+                    filterByOutputs: [],
+                    filterByStatuses: [],
+                    filterBySearchTerms: [],
+                    filterByRelevant: true,
+                },
+                searchResult: {
+                    rows: [],
+                    totalResults: 0,
+                    filters: {
+                        dates: [],
+                        submitters: [],
+                        collections: [],
+                        externalIds: [],
+                        items: [],
+                        files: [],
+                        workflows: [],
+                        steps: [],
+                        outputs: [],
+                        statuses: [],
+                        searchTerms: [],
+                    }
+                },
+                rows: []
             },
-            searchResult: {
-                rows: [],
-                totalResults: 0,
-                filters: {
-                    dates: [],
-                    submitters: [],
-                    collections: [],
-                    externalIds: [],
-                    items: [],
-                    files: [],
-                    workflows: [],
-                    steps: [],
-                    outputs: [],
-                    statuses: [],
-                    searchTerms: [],
-                }
-            },
-            rows: []
-        },
-        selectedFilters: {}
-       }
+            selectedFilters: {},
+            dashboardColumns: [
+                { order: "a", label: "Date", field: "dateCreated" },
+                { order: "b", label: "Submitter", field: "submitter" },
+                { order: "c", label: "Unit", field: "unit" },
+                { order: "d", label: "Collection", field: "collectionName" },
+                { order: "e", label: "External Source", field: "externalSource" },
+                { order: "f", label: "External ID", field: "externalId" },
+                { order: "g", label: "Item", field: "itemName" },
+                { order: "h", label: "Primaryfile", field: "primaryfileName" },
+                { order: "i", label: "Workflow", field: "workflowName" },
+                { order: "j", label: "Step", field: "workflowStep" },
+                { order: "k", label: "Output", field: "outputName" },
+                { order: "l", label: "Status", field: "status" },
+                { order: "m", label: "Actions", field: "actions" },
+                { order: "n", label: "Add to Test", field: "addToTest" },
+            ],
+        }
     };
     beforeEach(() => {
         wrapper = shallowMount(Dashboard, {
