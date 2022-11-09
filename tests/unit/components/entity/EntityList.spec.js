@@ -134,11 +134,11 @@ describe('EntityList.vue', () => {
     });
 
     it('EntityList Instance', () => {
-        expect(wrapper.isVueInstance).toBeFalsy();
+        expect(wrapper.isVueInstance).toBeTruthy();
     });
 
     it('should fetch config values', async () => {
         await wrapper.vm.getItemsConfig();
-        expect(wrapper.vm.itemConfigs.externalSources.length).toBe(1)
+        expect(wrapper.vm.itemConfigs.externalSources.length).toBe(2)
     });
 });
