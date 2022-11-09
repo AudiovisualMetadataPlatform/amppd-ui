@@ -139,6 +139,6 @@ describe('EntityList.vue', () => {
 
     it('should fetch config values', async () => {
         await wrapper.vm.getItemsConfig();
-        expect(wrapper.vm.itemConfigs.externalSources.length).toBe(2)
+        expect(wrapper.vm.itemConfigs.externalSources.length).toBe(1)
     });
 });
