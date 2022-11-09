@@ -134,7 +134,7 @@ describe('EntityList.vue', () => {
     });
 
     it('EntityList Instance', () => {
-        expect(wrapper.isVueInstance).toBeFalsy();
+        expect(wrapper.isVueInstance).toBeTruthy();
     });
 
     it('should fetch config values', async () => {
