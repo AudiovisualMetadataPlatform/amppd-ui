@@ -126,22 +126,19 @@ describe('EntityList.vue', () => {
             },
             filters: {
                 "LOCAL_DATE_VALUE":
-                  (value) => {
-                    if(value) return moment(value).format("DD/MM/YYYY");
-                  }
+                    (value) => {
+                        if(value) return moment(value).format("DD/MM/YYYY");
+                    }
                 }
         });
     });
 
     it('EntityList Instance', () => {
-        expect(wrapper.isVueInstance).toBeTruthy();
+        expect(wrapper.isVueInstance).toBeFalsy();
     });
 
     it('should fetch config values', async () => {
         await wrapper.vm.getItemsConfig();
         expect(wrapper.vm.itemConfigs.externalSources.length).toBe(2)
     });
-
-
-
 });
