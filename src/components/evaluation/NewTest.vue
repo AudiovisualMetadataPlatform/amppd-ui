@@ -127,7 +127,17 @@
     </p>
     <div class="card m-b-0 m-t-0 w-100 mt-0">
       <div class="card-body pt-0">
-        <table id="reviewUpload" class="table fixed">
+        <table
+          id="reviewUpload"
+          class="table fixed"
+          :class="
+            mgmEvaluation &&
+            mgmEvaluation.selectedRecords &&
+            mgmEvaluation.selectedRecords.length
+              ? 'mb-0'
+              : 'mb-4'
+          "
+        >
           <thead>
             <tr>
               <th scope="col" class="slim-col-1 border-top-0">File</th>
@@ -191,16 +201,23 @@
             </tr>
           </tbody>
         </table>
-        <button
-          class="btn btn-primary btn-lg marg-tb-3 float-right"
-          type="button"
-          @click="onNewTestSubmit"
-          disabled
-        >
-          Submit
-        </button>
       </div>
     </div>
+    <button
+      class="btn btn-primary btn-lg marg-tb-3 float-right"
+      type="button"
+      @click="onNewTestSubmit"
+      disabled
+    >
+      Submit
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-primary btn-lg mr-2 float-right"
+      @click="onNewTestCancel"
+    >
+      Cancel
+    </button>
     <GroundTruthModal
       v-if="selectedRecord.id"
       :showModal="showModal"
@@ -270,6 +287,10 @@ export default {
       } else {
         self.selectedRecord = {};
       }
+    },
+    onNewTestCancel() {
+      const self = this;
+      this.$emit("changeTab", 0);
     },
     onNewTestSubmit() {
       const self = this;
