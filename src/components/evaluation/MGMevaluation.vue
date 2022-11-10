@@ -102,6 +102,7 @@
                           <NewTest
                             :mgmCategory="mgmCategoryDetails"
                             :mgmCategoryLoading="loading"
+                            @changeTab="onChangeTab"
                           />
                         </div>
                       </dl>
@@ -175,6 +176,11 @@ export default {
     onChangeTab(index) {
       const self = this;
       self.selectedTab = index;
+      if (index === 1) {
+        self.activeTab = "new-test";
+      } else {
+        self.activeTab = "test-results";
+      }
     },
     async networkCalls(mgmCategoryId) {
       const self = this;
