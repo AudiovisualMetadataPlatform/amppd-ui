@@ -69,7 +69,7 @@
                 <span v-if="menu.url === '/mgm-evaluation'">
                   <b-dropdown-item
                     class="p-0"
-                    v-for="submenu in mgmCategories"
+                    v-for="submenu in [{ name: 'All MGMs' }, ...mgmCategories]"
                     :key="submenu.name"
                     @click="routeTo(menu, submenu)"
                   >
@@ -186,7 +186,11 @@ export default {
         );
       } else {
         if (menu.url === "/mgm-evaluation") {
-          self.$router.push(`${menu.url}/${data.id}`);
+          if (data.name === "All MGMs") {
+            self.$router.push(menu.url);
+          } else {
+            self.$router.push(`${menu.url}/${data.id}`);
+          }
         } else {
           self.$router.push(`${menu.url}`);
         }

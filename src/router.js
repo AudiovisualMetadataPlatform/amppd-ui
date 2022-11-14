@@ -233,12 +233,26 @@ var router = new Router({
       },
     },
     {
-      path: "/mgm-evaluation/:mgmCategoryId",
+      path: "/mgm-evaluation",
       name: "mgm-evaluation",
       component: MGMevaluation,
       meta: {
         authorize: [],
         breadCrumb: [{ text: "Home", href: "#/" }, { text: "MGM Evaluation" }],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    {
+      path: "/mgm-evaluation/:mgmCategoryId",
+      name: "mgm-evaluation",
+      component: MGMevaluation,
+      meta: {
+        authorize: [],
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "MGM Evaluation", href: "#/mgm-evaluation" },
+          { text: "MGM Category" },
+        ],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },

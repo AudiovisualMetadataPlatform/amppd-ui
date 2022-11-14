@@ -8,7 +8,7 @@
             <div class="col-12 p-0">
               <main>
                 <h1>MGM Evaluation</h1>
-                <b-overlay rounded="sm" class="mt-4">
+                <b-overlay v-if="mgmCategoryId" rounded="sm" class="mt-4">
                   <div>
                     <div class="">
                       <div class="row mb-5" v-if="mgmCategoryDetails">
@@ -98,7 +98,7 @@
                         <TestResults :mgmCategory="mgmCategoryDetails" />
                       </dl>
                       <dl class="d-flex col-12 mt-3 mb-0 pr-0" v-else>
-                        <div class="row div-test">
+                        <div class="w-100 row div-test">
                           <NewTest
                             :mgmCategory="mgmCategoryDetails"
                             :mgmCategoryLoading="loading"
@@ -108,6 +108,32 @@
                       </dl>
                     </div>
                   </div>
+                </b-overlay>
+                <b-overlay v-else rounded="sm" class="mt-4">
+                  <dl class="d-flex col-12 mt-3 mb-0 pl-0 pr-0">
+                    <div class="row card-container">
+                      <div
+                        class="col-sm-4"
+                        v-for="(category, i) in mgmCategories"
+                        :key="i"
+                      >
+                        <div class="card">
+                          <div class="card-body">
+                            <h5 class="card-title">{{ category.name }}</h5>
+                            <p class="card-text">
+                              {{ category.description }}
+                            </p>
+                            <button
+                              class="btn btn-primary btn"
+                              @click="onView(category)"
+                            >
+                              View
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </dl>
                 </b-overlay>
               </main>
             </div>
@@ -139,6 +165,7 @@ export default {
       loading: false,
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
+      mgmCategoryId: null,
       rightArrowSvg: config.common.icons["right_arrow"],
       selectedTab: 0,
       activeTab: "test-results",
@@ -150,6 +177,10 @@ export default {
   },
   props: {},
   methods: {
+    onView(category) {
+      const self = this;
+      self.$router.push(`/mgm-evaluation/${category.id}`);
+    },
     handleVisibility(index) {
       const self = this;
       if (self.visible.includes(index)) {
@@ -186,6 +217,16 @@ export default {
       const self = this;
       try {
         self.loading = true;
+        self.mgmCategoryResponse = await this.evaluationService.getMgmCategories();
+        self.sortedMgmCategories = self.sharedService.sortByAlphabatical(
+          self.mgmCategoryResponse.data._embedded.mgmCategories
+        );
+        self.filteredMgmCategories = self.sortedMgmCategories.filter((item) =>
+          parseInt(item.mstsCount, 10)
+        );
+        self.mgmCategories = JSON.parse(
+          JSON.stringify(self.filteredMgmCategories)
+        );
         const mgmCategoryDetailsResponse = await this.evaluationService.getDetailsMgmCategory(
           mgmCategoryId
         );
@@ -205,8 +246,10 @@ export default {
   },
   mounted() {
     const self = this;
-    const mgmCategoryId = self.$route.params.mgmCategoryId;
-    self.networkCalls(mgmCategoryId);
+    self.mgmCategoryId = self.$route.params.mgmCategoryId;
+    if (self.mgmCategoryId) {
+      self.networkCalls(self.mgmCategoryId);
+    }
   },
 };
 </script>
@@ -268,7 +311,7 @@ a:hover {
   border-color: #153c4d !important;
 }
 .div-test {
-  padding: 0px 15px 15px 0px;
+  padding-bottom: 15px;
 }
 .mgm-help {
   padding-left: 30px !important;
