@@ -1,5 +1,5 @@
 <template>
-  <div class="new-test">
+  <div class="w-100 new-test">
     <loader :show="loading" />
     <h3 class="m-b-0 m-t-2 mt-1">1) Select a Test</h3>
     <b-card
@@ -49,158 +49,205 @@
         </button>
       </b-collapse>
     </b-card>
-    <h3 class="m-b-0 m-t-2 mt-4">2) Set Parameters</h3>
-    <div>Set any necessary parameters for running your test</div>
-
-    <!-- Parameter by seconds -->
-    <div
-      v-if="
-        selectedMst.body &&
-          selectedMst.body.name &&
-          selectedMst.body.name.includes('by seconds')
-      "
-      class="form-group marg-t-1"
-    >
-      <p class="bg-light-gray mgm-h3 p-1 mb-2">
-        <strong>Analysis threshold:</strong> the number of seconds buffer
-        (float) for counting a true positive (match between the ground truth and
-        MGM output). For example, a 2-second threshold will consider a GT and
-        MGM segment a match if both the start and end times for each fall within
-        2 seconds of each other.
-      </p>
-      <div class="input-group mb-3">
-        <input
-          type="number"
-          class="form-control"
-          placeholder="Parameters"
-          aria-label="description"
-          aria-describedby="basic-addon2"
-          step="0.25"
-          v-model="testParams.parameter"
-        />
-        <div class="input-group-append">
-          <span class="input-group-text" id="basic-addon2">seconds</span>
+    <div v-if="selectedMst.index.toString()">
+      <div
+        v-if="
+          (selectedMst.detailBody &&
+            selectedMst.detailBody.parameters &&
+            selectedMst.detailBody.parameters.length) ||
+            (selectedMst.body &&
+              selectedMst.body.name &&
+              selectedMst.body.name.includes('by seconds'))
+        "
+      >
+        <h3 class="m-b-0 m-t-2 mt-4">
+          2) Set Parameters
+        </h3>
+        <div>
+          Set any necessary parameters for running your test
         </div>
       </div>
-    </div>
 
-    <!-- Other parameters -->
-    <div v-else class="form-group marg-t-1">
-      <select
+      <!-- Parameter by seconds -->
+      <div
         v-if="
-          selectedMst.detailBody &&
-            selectedMst.detailBody.parameters &&
-            selectedMst.detailBody.parameters.length
+          selectedMst.body &&
+            selectedMst.body.name &&
+            selectedMst.body.name.includes('by seconds')
         "
-        class="select custom-select w-100"
-        v-model="testParams.parameter"
+        class="form-group marg-t-1"
       >
-        <option
-          v-for="option in selectedMst.detailBody.parameters"
-          :key="option.id"
-          :value="option.id"
-          >{{ option.name }}</option
-        >
-      </select>
-      <textarea
+        <p class="bg-light-gray mgm-h3 p-1 mb-2">
+          <strong>Analysis threshold:</strong> the number of seconds buffer
+          (float) for counting a true positive (match between the ground truth
+          and MGM output). For example, a 2-second threshold will consider a GT
+          and MGM segment a match if both the start and end times for each fall
+          within 2 seconds of each other.
+        </p>
+        <div class="input-group mb-3">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Parameters"
+            aria-label="description"
+            aria-describedby="basic-addon2"
+            step="0.25"
+            v-model="testParams.parameter"
+          />
+          <div class="input-group-append">
+            <span class="input-group-text" id="basic-addon2">seconds</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other parameters -->
+      <div v-else class="form-group marg-t-1">
+        <select
+          v-if="
+            selectedMst.detailBody &&
+              selectedMst.detailBody.parameters &&
+              selectedMst.detailBody.parameters.length
+          "
+          class="select custom-select w-100"
+          v-model="testParams.parameter"
+          required
+          ><option value="default" disabled selected
+            >Select a parameter...</option
+          >
+          <option
+            v-for="option in selectedMst.detailBody.parameters"
+            :key="option.id"
+            :value="option.id"
+            >{{ option.name }}</option
+          >
+        </select>
+        <!-- <textarea
         v-else
         id="descriptiona"
         class="form-control"
         spellcheck="false"
         v-model="testParams.parameter"
-      ></textarea>
-    </div>
-    <div>
-      <h3 class="m-b-0 m-t-2 mt-4">3) Select MGM Outputs to Test</h3>
+      ></textarea> -->
+      </div>
+      <div>
+        <h3 class="m-b-0 m-t-2 mt-4">
+          {{
+            (selectedMst.detailBody &&
+              selectedMst.detailBody.parameters &&
+              selectedMst.detailBody.parameters.length) ||
+            (selectedMst.body &&
+              selectedMst.body.name &&
+              selectedMst.body.name.includes("by seconds"))
+              ? "3"
+              : "2"
+          }}) Select MGM Outputs to Test
+        </h3>
+        <p class="m-b-0">
+          Select the MGM output files to be tested against ground truth data
+        </p>
+        <WorkflowDashboard
+          parent="NewTest"
+          :workflowResultType="selectedMst.detailBody.workflowResultType"
+        />
+      </div>
+      <h3 class="m-b-0 m-t-2 mt-4">
+        {{
+          (selectedMst.detailBody &&
+            selectedMst.detailBody.parameters &&
+            selectedMst.detailBody.parameters.length) ||
+          (selectedMst.body &&
+            selectedMst.body.name &&
+            selectedMst.body.name.includes("by seconds"))
+            ? "4"
+            : "3"
+        }}) Upload or Select Ground Truth Data
+      </h3>
       <p class="m-b-0">
-        Select the MGM output files to be tested against ground truth data
+        Upload a ground truth data file for each MGM output or select previously
+        uploaded files
       </p>
-      <WorkflowDashboard
-        parent="NewTest"
-        :workflowResultType="selectedMst.detailBody.workflowResultType"
-      />
-    </div>
-    <h3 class="m-b-0 m-t-2 mt-4">4) Upload or Select Ground Truth Data</h3>
-    <p class="m-b-0">
-      Upload a ground truth data file for each MGM output or select previously
-      uploaded files
-    </p>
-    <div class="card m-b-0 m-t-0 w-100 mt-0">
-      <div class="card-body pt-0">
-        <table
-          id="reviewUpload"
-          class="table fixed"
-          :class="
-            mgmEvaluation &&
-            mgmEvaluation.selectedRecords &&
-            mgmEvaluation.selectedRecords.length
-              ? 'mb-0'
-              : 'mb-4'
-          "
-        >
-          <thead>
-            <tr>
-              <th scope="col" class="slim-col-1 border-top-0">File</th>
-              <th scope="col" class="slim-col-2 border-top-0">MGM Output</th>
-              <th scope="col" class="slim-col-3 border-top-0">Ground Truth</th>
-              <th scope="col" class="text-right slim-col-4 border-top-0">
-                Upload/Select Ground Truth
-              </th>
-              <th scope="col" class="text-right slim-col-5 border-top-0">
-                Remove Row
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              class="cloneable selected-mgm-outputs"
-              v-for="(record, i) in mgmEvaluation.selectedRecords"
-              :key="i"
-            >
-              <td class="primaryFile cloneCell slim-col-1">
-                <span> {{ record.primaryfileName }}</span>
-              </td>
-              <td class="output cloneCell slim-col-2">
-                <span>{{ record.outputName }}</span>
-              </td>
-              <td class="output cloneCell slim-col-3">
-                <span class="ground-truth" v-if="record && record.gtSupplement">
-                  {{ record.gtSupplement.name }}</span
-                >
-              </td>
-              <td class="slim-col-4 text-right">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary btn-md  uploadModal"
-                  data-toggle="modal"
-                  data-target=".upload-modal"
-                  @click="handleGroundTruthModal(record)"
-                >
+      <div class="card m-b-0 m-t-0 w-100 mt-0">
+        <div class="card-body pt-0">
+          <table
+            id="reviewUpload"
+            class="table fixed"
+            :class="
+              mgmEvaluation &&
+              mgmEvaluation.selectedRecords &&
+              mgmEvaluation.selectedRecords.length
+                ? 'mb-0'
+                : 'mb-4'
+            "
+          >
+            <thead>
+              <tr>
+                <th scope="col" class="slim-col-1 border-top-0">File</th>
+                <th scope="col" class="slim-col-2 border-top-0">MGM Output</th>
+                <th scope="col" class="slim-col-3 border-top-0">
+                  Ground Truth
+                </th>
+                <th scope="col" class="text-right slim-col-4 border-top-0">
                   Upload/Select Ground Truth
-                </button>
-              </td>
-              <td class="text-right slim-col-5">
-                <a
-                  @click="removeRow(record)"
-                  class="float-right remove-row-top remove-row"
-                >
-                  <svg
-                    class="remove-svg"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="red"
-                    viewBox="0 0 16 16"
+                </th>
+                <th scope="col" class="text-right slim-col-5 border-top-0">
+                  Remove Row
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="cloneable selected-mgm-outputs"
+                v-for="(record, i) in mgmEvaluation.selectedRecords"
+                :key="i"
+              >
+                <td class="primaryFile cloneCell slim-col-1">
+                  <span> {{ record.primaryfileName }}</span>
+                </td>
+                <td class="output cloneCell slim-col-2">
+                  <span>{{ record.outputName }}</span>
+                </td>
+                <td class="output cloneCell slim-col-3">
+                  <span
+                    class="ground-truth"
+                    v-if="record && record.gtSupplement"
                   >
-                    <path
-                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
-                    ></path></svg
-                  >Remove Row
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                    {{ record.gtSupplement.name }}</span
+                  >
+                </td>
+                <td class="slim-col-4 text-right">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-md  uploadModal"
+                    data-toggle="modal"
+                    data-target=".upload-modal"
+                    @click="handleGroundTruthModal(record)"
+                  >
+                    Upload/Select Ground Truth
+                  </button>
+                </td>
+                <td class="text-right slim-col-5">
+                  <a
+                    @click="removeRow(record)"
+                    class="float-right remove-row-top remove-row"
+                  >
+                    <svg
+                      class="remove-svg"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="red"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+                      ></path></svg
+                    >Remove Row
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <button
@@ -249,8 +296,8 @@ export default {
       loading: false,
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
-      selectedMst: { index: 0, body: {}, detailBody: {} },
-      testParams: {},
+      selectedMst: { index: "", body: {}, detailBody: {} },
+      testParams: { parameter: "default" },
       showModal: false,
       selectedRecord: {},
       rightArrowSvg: config.common.icons["right_arrow"],
@@ -269,14 +316,19 @@ export default {
     },
   },
   methods: {
-    handleVisibility(index) {
+    handleVisibility(index, open = "") {
       const self = this;
-      if (self.visible.includes(index)) {
-        self.visible = self.visible.filter((ele) => {
-          return ele !== index;
-        });
-      } else {
+      if (open) {
+        self.visible = [];
         self.visible.push(index);
+      } else {
+        if (self.visible.includes(index)) {
+          self.visible = self.visible.filter((ele) => {
+            return ele !== index;
+          });
+        } else {
+          self.visible.push(index);
+        }
       }
     },
     handleGroundTruthModal(record) {
@@ -330,10 +382,11 @@ export default {
     },
     onChangeMst(mstIndex, mstObj) {
       const self = this;
+      self.handleVisibility(mstIndex, "forceOpen");
       self.selectedMst.index = mstIndex;
       self.selectedMst.body = mstObj;
       self.getDetailsMgmScoringTool(mstObj.id);
-      self.testParams = {};
+      self.testParams = { parameter: "default" };
     },
     onGroundtruthInfo(ev, mstObj) {
       console.log("Clicked on onGroundtruthInfo!!" + mstObj);
@@ -342,17 +395,6 @@ export default {
       console.log("Clicked on onGroundtruthInfo!!" + mstObj);
     },
   },
-  mounted() {
-    const self = this;
-    if (
-      self.mgmCategory &&
-      self.mgmCategory.msts &&
-      self.mgmCategory.msts.length
-    ) {
-      self.selectedMst.body = self.mgmCategory.msts[0];
-      self.getDetailsMgmScoringTool(self.mgmCategory.msts[0].id);
-    }
-  },
   watch: {
     mgmCategory: function() {
       const self = this;
@@ -360,7 +402,7 @@ export default {
       if (self.mgmCategory.msts.length) {
         self.selectedMst.body = self.mgmCategory.msts[0];
         self.getDetailsMgmScoringTool(self.mgmCategory.msts[0].id);
-        self.testParams = {};
+        self.testParams = { parameter: "default" };
       }
     },
     mgmCategoryLoading: function() {
@@ -379,7 +421,7 @@ export default {
 <style lang="css">
 @import "/amppd-ui/src/styles/style.css";
 .new-test {
-  padding: 0px 15px;
+  padding-left: 15px;
 }
 
 .pulse,

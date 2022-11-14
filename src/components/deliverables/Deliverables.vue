@@ -511,7 +511,7 @@ export default {
   position: absolute;
   right: 0;
   top: 0.5em;
-  z-index: 1001;
+  z-index: 1 !important;
 }
 .table-responsive {
   position: relative;

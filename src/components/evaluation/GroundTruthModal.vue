@@ -225,7 +225,7 @@ export default {
         self.loading = true;
         const primaryfileId = self.selectedRecord.primaryfileId;
         const name = "";
-        const category = "Groundtruth";
+        const category = `Groudtruth-${self.mstDetails.workflowResultType}`;
         const format = self.mstDetails.groundtruthFormat;
         await self.workflowService
           .getSupplementsForPrimaryfiles(primaryfileId, name, category, format)
@@ -294,7 +294,7 @@ export default {
                 name: data.name,
                 originalFilename: data.originalFilename,
                 description: data.description,
-                category: "Groundtruth",
+                category: `Groudtruth-${self.mstDetails.workflowResultType}`,
               }),
             ],
             {
