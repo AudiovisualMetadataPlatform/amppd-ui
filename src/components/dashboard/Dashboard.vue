@@ -1,14 +1,27 @@
 <template>
   <div class="collections w-100">
     <!-- <loader :show="!isFilterApiLoaded"/> -->
-    <div class="container col-12">
+    <div
+      class="container col-12"
+      :class="{
+        'p-0': parent === 'NewTest',
+      }"
+    >
       <div class="row">
-        <!-- <Sidebar/> -->
-        <div class="col-12 bg-light-gray-1">
+        <div
+          class="col-12"
+          :class="{
+            'bg-light-gray-1': parent !== 'NewTest',
+          }"
+        >
           <main class="m-0">
-            <!-- <Logout/> -->
             <div class="pad-all-3">
-              <div class="card">
+              <div
+                class="card"
+                :class="{
+                  'mb-0': parent === 'NewTest',
+                }"
+              >
                 <div class="card-body">
                   <h1 v-if="parent !== 'NewTest'" class="card-title">
                     AMP Dashboard
@@ -266,7 +279,7 @@
                           </svg>
                           <div class="col-sm-1">
                             <label class="row label-bold no-padding-col"
-                              >Primaryfile</label
+                              >Content File</label
                             >
                             <label class="row no-padding-col">{{
                               file.primaryfileName
@@ -523,7 +536,7 @@
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('primaryfile')"
-                        >Primary File</b-button
+                        >Content File</b-button
                       >
                       <b-button
                         class="btn btn-info dropdown"
@@ -1071,7 +1084,12 @@ export default {
       this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
     } else {
       this.columns = this.columns.filter(
-        (column) => column.field !== "addToTest"
+        (column) =>
+          column.field !== "addToTest" &&
+          column.field !== "unit" &&
+          column.field !== "actions" &&
+          column.field !== "externalSource" &&
+          column.field !== "workflowStep"
       );
       this.workflowDashboard.searchQuery.filterByTypes = [];
       this.clearAll();

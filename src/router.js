@@ -243,6 +243,20 @@ var router = new Router({
       },
     },
     {
+      path: "/mgm-evaluation/:mgmCategoryId",
+      name: "mgm-evaluation",
+      component: MGMevaluation,
+      meta: {
+        authorize: [],
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "MGM Evaluation", href: "#/mgm-evaluation" },
+          { text: "MGM Category" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    {
       path: "/collections/items/item-search/details",
       name: "item-search-details",
       component: EntityList,
@@ -271,7 +285,7 @@ var router = new Router({
             text: "Item Details",
             href: "#/collections/items/item-search/details",
           },
-          { text: "Primary File Details" },
+          { text: "Content File Details" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_PRIMARY_FILE"),
       },
@@ -345,7 +359,7 @@ var router = new Router({
           { text: "Unit Details", href: "#/unit/details" },
           { text: "Collection Details", href: "#/collection/details" },
           { text: "Item Details", href: "#/collections/items/details" },
-          { text: "Primary File Details" },
+          { text: "Content File Details" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_PRIMARY_FILE"),
       },

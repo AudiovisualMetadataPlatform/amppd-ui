@@ -9,7 +9,7 @@
           id="workflow-name-select"
           v-on:change="selection"
         >
-          <option value="">Select a workflow...</option>
+          <option value="" selected disabled>Select a workflow...</option>
           <option
             v-for="(workflow, index) in workflows.rows"
             v-bind:key="index"
@@ -145,20 +145,32 @@
       <h3 slot="header">{{ modalHeader }}</h3>
       <div slot="body">
         <div v-for="(modalText, index) in modalTextList" :key="index">
-          {{ modalText }}
+          <div
+            v-if="
+              modalText === 'Please upload the necessary supplemental files.'
+            "
+          >
+            {{ modalText }}
+            <b-link class="font-italic" @click="handleSeeHelp($event)"
+              >See Help</b-link
+            >
+          </div>
+          <div v-else>
+            {{ modalText }}
+          </div>
         </div>
         <div v-if="errors.length > 0">
           <div class="error-header"><strong>Failed submissions:</strong></div>
           <div v-for="(error, index) in errors" v-bind:key="index" class="row">
             <div class="col-md-12 error-item">
-              Primaryfile ID: {{ error.primaryfileId }}
+              Content File ID: {{ error.primaryfileId }}
             </div>
             <div class="col-md-12 error-item">
               Collection: {{ error.collectionName }}
             </div>
             <div class="col-md-12 error-item">Item: {{ error.itemName }}</div>
             <div class="col-md-12 error-item">
-              Primaryfile: {{ error.primaryfileName }}
+              Content File: {{ error.primaryfileName }}
             </div>
             <div class="col-md-12 error-item">Error: {{ error.error }}</div>
           </div>
@@ -168,7 +180,7 @@
         <input
           type="button"
           class="secondary-button"
-          v-on:click="showModal = false"
+          v-on:click="handleSuccess"
           value="Ok"
         />
       </div>
@@ -226,6 +238,7 @@
 
 <script>
 import { sync } from "vuex-pathify";
+import { env } from "@/helpers/env.js";
 import { requestOptions } from "@/helpers/request-options";
 import Modal from "@/components/shared/Modal.vue";
 import SaveBundle from "@/components/workflow/SaveBundle.vue";
@@ -259,6 +272,7 @@ export default {
     workflowSubmission: sync("workflowSubmission"),
     selectedFiles: sync("workflowSubmission.selectedFiles"),
     updateSelectedFiles: sync("workflowSubmission.updateSelectedFiles"),
+    workflowSubmissionsearchResults: sync("workflowSubmissionsearchResults"),
     submissionEnabled() {
       let self = this;
       console.log(
@@ -280,6 +294,26 @@ export default {
     },
   },
   methods: {
+    handleSeeHelp(ev) {
+      ev.preventDefault();
+      const helpUrl = env.getEnv("VUE_APP_DOC_WORKFLOW_SUBMISSIONS_ERROR_HELP");
+      window.open(helpUrl, "helpwindow", "width=800, height=500");
+      return;
+    },
+    handleSuccess() {
+      let self = this;
+      self.showModal = false;
+      if (self.modalTextList[0] === "Files submitted successfully.") {
+        self.workflowSubmission.loading = false;
+        self.workflowSubmission.showBundleError = false;
+        self.workflowSubmission.showSelectBundle = false;
+        self.workflowSubmission.showSaveBundle = false;
+        self.workflowSubmission.bundles = [];
+        self.workflowSubmission.selectedFiles = new Map();
+        self.workflowSubmission.updateSelectedFiles = 0;
+        self.workflowSubmissionsearchResults = false;
+      }
+    },
     async getWorkflows() {
       let self = this;
 
@@ -481,7 +515,7 @@ export default {
             supplementNodes
           );
 
-          //Empty primary file listing
+          //Empty Content File listing
           const emptySupplementalPFiles = {};
           for (let i = 0; i < supplements.length; i++) {
             for (let j = 0; j < supplements[i].length; j++) {

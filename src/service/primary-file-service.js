@@ -3,7 +3,7 @@ const baseService = new BaseService();
 
 export default class PrimaryFileService extends BaseService {
   /***
-   * To get a primary file details
+   * To get a content file details
    * @params primaryfileid
    */
 
@@ -13,7 +13,7 @@ export default class PrimaryFileService extends BaseService {
   }
 
   /***
-   * To get all primary file details
+   * To get all content file details
    * @params itemId
    */
 
@@ -22,7 +22,7 @@ export default class PrimaryFileService extends BaseService {
   }
 
   /***
-   * To update a  primary file details
+   * To update a  content file details
    * @params primaryfileid, postobj
    */
 

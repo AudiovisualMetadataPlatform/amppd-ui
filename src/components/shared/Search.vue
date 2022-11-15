@@ -15,7 +15,7 @@
             type === "item-search"
               ? "Items"
               : type === "primaryfiles"
-              ? "Primary Files"
+              ? "Content Files"
               : type
           }}
         </h5>
@@ -260,7 +260,7 @@
                   Item
                 </th>
                 <th v-if="type === 'primaryfiles'">
-                  Primary File
+                  Content File
                 </th>
                 <th
                   v-if="
@@ -325,7 +325,7 @@
                   Item
                 </th>
                 <th colspan="4" v-if="type === 'listing-supplement'">
-                  Primary File
+                  Content File
                 </th>
                 <th colspan="4" v-if="type !== 'listing-supplement'">
                   Description

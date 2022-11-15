@@ -151,7 +151,23 @@ describe('DashboardTable.vue', () => {
           (value) => {
             if(value) return moment(value).format("DD/MM/YYYY");
           }
-        }
+      },
+      propsData: {
+        columns: [
+          { label: "Date", field: "dateCreated" },
+          { label: "Submitter", field: "submitter" },
+          { label: "Unit", field: "unit" },
+          { label: "Collection", field: "collectionName" },
+          { label: "External Source", field: "externalSource" },
+          { label: "External ID", field: "externalId" },
+          { label: "Item", field: "itemName" },
+          { label: "Content File", field: "primaryfileName" },
+          { label: "Workflow", field: "workflowName" },
+          { label: "Step", field: "workflowStep" },
+          { label: "Output", field: "outputName" },
+          { label: "Status", field: "status" },
+        ],
+      },
     });
     refreshDataSpy = jest.spyOn(wrapper.vm, "refreshData") 
   })

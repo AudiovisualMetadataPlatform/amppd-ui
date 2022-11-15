@@ -189,14 +189,14 @@
             </select>
           </div>
           <div class="form-group  col-6">
-            <label for="primary-file-name">Primary File</label>
+            <label for="primary-file-name">Content File</label>
             <select
               class="select custom-select w-100"
               v-model="supplement.fileDetails.primaryFile"
               @change="onInputChange('primaryFile', true)"
               :disabled="!supplement.showPrimaryFileList"
               ><option value="" disabled selected
-                >- Choose Primary File -</option
+                >- Choose Content File -</option
               >
               <option
                 v-for="option in supplement.primaryFileList"
