@@ -207,7 +207,7 @@ describe('DashboardTable.vue', () => {
 
   it('should return date string', () => {
     const date = wrapper.vm.getDateString();
-    expect(moment().format("YYYYMMDD")).not.toEqual(date);
+    expect(moment().format("YYYYMMDD")).toEqual(date);
   });
 
   it('should send selected filters to Workflow Result API', () => {
