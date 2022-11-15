@@ -10,6 +10,7 @@ const state = {
     selectedWorkflow: null,
     selectedWorkflowParameters: [],
   },
+  workflowSubmissionsearchResults: false,
   workflowDashboard: {
     loading: false,
     filtersEnabled: {

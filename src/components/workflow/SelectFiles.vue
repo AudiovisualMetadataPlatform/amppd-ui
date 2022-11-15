@@ -69,7 +69,7 @@
           <div class="row">
             <div class="col-12">
               <div class="input-group mb-3">
-                <label for="exampleFormControlInput100" class="sr-only"
+                <label for="workflowSubmissionSelectFilesSearch" class="sr-only"
                   >Search</label
                 >
                 <label class="form-errors" v-if="errors.search_error.length">{{
@@ -78,7 +78,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  id="exampleFormControlInput100"
+                  id="workflowSubmissionSelectFilesSearch"
                   placeholder="Search"
                   v-model="searchWord"
                   autocomplete="off"
@@ -108,7 +108,7 @@
       </div>
       <div></div>
     </form>
-    <div v-if="searchResults">
+    <div v-if="workflowSubmissionsearchResults">
       <h4>Search Results</h4>
       <hr class="w-100" />
       <div
@@ -298,7 +298,6 @@ export default {
       searchWord: "",
       searchedItems: [],
       workflowService: new WorkflowService(),
-      searchResults: false,
       errors: {
         search_error: "",
       },
@@ -311,6 +310,7 @@ export default {
     workflowSubmission: sync("workflowSubmission"),
     selectedFiles: sync("workflowSubmission.selectedFiles"),
     updateSelectedFiles: sync("workflowSubmission.updateSelectedFiles"),
+    workflowSubmissionsearchResults: sync("workflowSubmissionsearchResults"),
   },
   mounted() {
     this.workflowSubmission = {
@@ -349,15 +349,15 @@ export default {
           this.searchWord,
           media_type
         );
-        self.searchResults = true;
+        self.workflowSubmissionsearchResults = true;
         // we dont require two conditions needs to be checked for displaying accrodian on result section. so commenting the below part.
         // if(self.searchedItems.rows!=null)
         // {
-        //    self.searchResults = true;
+        //    self.workflowSubmissionsearchResults = true;
         // }
         // else
         // {
-        //    self.searchResults = false;
+        //    self.workflowSubmissionsearchResults = false;
         // }
       } else {
         self.errors.search_error = "Please enter a search keyword";
@@ -448,6 +448,9 @@ export default {
     },
     searchOther: function() {
       this.searchFiles();
+    },
+    workflowSubmissionsearchResults: function() {
+      if (!this.workflowSubmissionsearchResults) this.searchWord = "";
     },
   },
 };
