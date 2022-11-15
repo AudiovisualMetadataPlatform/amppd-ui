@@ -161,7 +161,7 @@ describe('DashboardTable.vue', () => {
           { label: "External Source", field: "externalSource" },
           { label: "External ID", field: "externalId" },
           { label: "Item", field: "itemName" },
-          { label: "Primaryfile", field: "primaryfileName" },
+          { label: "Content File", field: "primaryfileName" },
           { label: "Workflow", field: "workflowName" },
           { label: "Step", field: "workflowStep" },
           { label: "Output", field: "outputName" },

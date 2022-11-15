@@ -20,7 +20,7 @@
           >
             <h1 class="text-left">
               <span class="text-capitalize">{{
-                baseUrl === "file" ? "Primary File" : baseUrl
+                baseUrl === "file" ? "Content File" : baseUrl
               }}</span>
               Details
               <button

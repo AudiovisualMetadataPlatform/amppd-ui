@@ -95,7 +95,7 @@ describe('Dashboard.vue', () => {
                 { order: "e", label: "External Source", field: "externalSource" },
                 { order: "f", label: "External ID", field: "externalId" },
                 { order: "g", label: "Item", field: "itemName" },
-                { order: "h", label: "Primaryfile", field: "primaryfileName" },
+                { order: "h", label: "Content File", field: "primaryfileName" },
                 { order: "i", label: "Workflow", field: "workflowName" },
                 { order: "j", label: "Step", field: "workflowStep" },
                 { order: "k", label: "Output", field: "outputName" },

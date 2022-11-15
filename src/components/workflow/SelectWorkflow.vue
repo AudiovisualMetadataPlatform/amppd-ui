@@ -163,14 +163,14 @@
           <div class="error-header"><strong>Failed submissions:</strong></div>
           <div v-for="(error, index) in errors" v-bind:key="index" class="row">
             <div class="col-md-12 error-item">
-              Primaryfile ID: {{ error.primaryfileId }}
+              Content File ID: {{ error.primaryfileId }}
             </div>
             <div class="col-md-12 error-item">
               Collection: {{ error.collectionName }}
             </div>
             <div class="col-md-12 error-item">Item: {{ error.itemName }}</div>
             <div class="col-md-12 error-item">
-              Primaryfile: {{ error.primaryfileName }}
+              Content File: {{ error.primaryfileName }}
             </div>
             <div class="col-md-12 error-item">Error: {{ error.error }}</div>
           </div>
@@ -515,7 +515,7 @@ export default {
             supplementNodes
           );
 
-          //Empty primary file listing
+          //Empty Content File listing
           const emptySupplementalPFiles = {};
           for (let i = 0; i < supplements.length; i++) {
             for (let j = 0; j < supplements[i].length; j++) {

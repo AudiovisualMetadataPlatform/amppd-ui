@@ -36,7 +36,7 @@
                       External ID: <span>{{ pfile.externalId }}</span>
                     </h2>
                     <h2 class="sub-title">
-                      Primaryfile: <span>{{ pfile.primaryfileName }}</span>
+                      Content File: <span>{{ pfile.primaryfileName }}</span>
                     </h2>
                     <h2 class="sub-title">
                       Filename: <span>{{ pfile.primaryfileOriginalname }}</span>
@@ -193,7 +193,7 @@
                           External ID
                         </th>
                         <th data-sortable="true" data-field="primaryfileName">
-                          Primaryfile
+                          Content File
                         </th>
                         <th
                           data-sortable="true"
