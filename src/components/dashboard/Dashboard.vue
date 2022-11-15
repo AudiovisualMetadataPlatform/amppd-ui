@@ -1084,7 +1084,12 @@ export default {
       this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
     } else {
       this.columns = this.columns.filter(
-        (column) => column.field !== "addToTest"
+        (column) =>
+          column.field !== "addToTest" &&
+          column.field !== "unit" &&
+          column.field !== "actions" &&
+          column.field !== "externalSource" &&
+          column.field !== "workflowStep"
       );
       this.workflowDashboard.searchQuery.filterByTypes = [];
       this.clearAll();
