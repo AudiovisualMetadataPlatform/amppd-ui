@@ -70,7 +70,7 @@
                           Item: <br />{{ elem.itemName }}
                         </div>
                         <div class="col" v-if="elem.primaryfileName">
-                          Primary File: <br />{{ elem.primaryfileName }}
+                          Content File: <br />{{ elem.primaryfileName }}
                         </div>
                         <div class="col">
                           Category: <br />{{ elem.category }}

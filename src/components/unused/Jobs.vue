@@ -10,7 +10,7 @@
         <table class="jobs-table">
           <thead>
             <tr>
-              <th>Primary File ID</th>
+              <th>Content File ID</th>
               <th>AMPPD Job ID</th>
               <th>History ID</th>
               <th>Update Time</th>

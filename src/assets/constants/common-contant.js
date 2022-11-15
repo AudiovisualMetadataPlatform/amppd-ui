@@ -106,7 +106,7 @@ const menus = [
   },
 ];
 
-// Primary File - Table - Columns
+// Content File - Table - Columns
 const OUTPUT_FILE_HEADERS = [
   { label: "Date", field: "dateCreated" },
   { label: "Submitter", field: "submitter" },

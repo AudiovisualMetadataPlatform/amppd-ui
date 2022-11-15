@@ -2,7 +2,7 @@
   <div class="w-100">
     <loader :show="showLoader" />
     <b-card class="text-left">
-      <h2 class="mb-3">Files</h2>
+      <h2 class="mb-3">Content Files</h2>
       <table
         class="table"
         v-if="
@@ -222,7 +222,7 @@ export default {
       const self = this;
       if (!self.selectedItem.id && !self.selectedItem.selectedItemId) {
         self.$bvToast.toast(
-          "Item details cannot be found to add primary file",
+          "Item details cannot be found to add content file",
           self.sharedService.erorrToastConfig
         );
         return;
@@ -354,14 +354,14 @@ export default {
             self.showLoader = false;
             self.primaryFiles._embedded.primaryfiles.splice(index, 1);
             self.$bvToast.toast(
-              "Primary file has been removed successfully.",
+              "Content file has been removed successfully.",
               self.sharedService.successToastConfig
             );
           })
           .catch((err) => {
             self.showLoader = false;
             self.$bvToast.toast(
-              "Unable to remove a primary file. Please try again later!",
+              "Unable to remove a content file. Please try again later!",
               self.sharedService.erorrToastConfig
             );
           });

@@ -279,7 +279,7 @@
                           </svg>
                           <div class="col-sm-1">
                             <label class="row label-bold no-padding-col"
-                              >Primaryfile</label
+                              >Content File</label
                             >
                             <label class="row no-padding-col">{{
                               file.primaryfileName
@@ -536,7 +536,7 @@
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('primaryfile')"
-                        >Primary File</b-button
+                        >Content File</b-button
                       >
                       <b-button
                         class="btn btn-info dropdown"

@@ -158,7 +158,7 @@ describe('ItemFiles.vue', () => {
         expect(wrapper.isVueInstance).toBeTruthy();
     });
 
-    // it('Should return the Primary Files', async () => {
+    // it('Should return the Content Files', async () => {
     //    await wrapper.vm.getPrimaryFiles(1);
     //    console.log(wrapper.vm.primaryFiles._embedded.primaryfiles);
       

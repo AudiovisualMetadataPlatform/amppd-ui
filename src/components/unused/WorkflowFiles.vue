@@ -3,7 +3,7 @@
     <div class="file-selection ">
       <div class="sub-header-container">
         <span class="section-title"
-          >Primary files to include in batch WF submission</span
+          >Content Files to include in batch WF submission</span
         >
         <i id="addFile" class="fa fa-plus" v-on:click="showModal"></i>
       </div>
