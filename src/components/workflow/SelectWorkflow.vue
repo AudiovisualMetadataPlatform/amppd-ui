@@ -145,7 +145,19 @@
       <h3 slot="header">{{ modalHeader }}</h3>
       <div slot="body">
         <div v-for="(modalText, index) in modalTextList" :key="index">
-          {{ modalText }}
+          <div
+            v-if="
+              modalText === 'Please upload the necessary supplemental files.'
+            "
+          >
+            {{ modalText }}
+            <b-link class="font-italic" @click="handleSeeHelp($event)"
+              >See Help</b-link
+            >
+          </div>
+          <div v-else>
+            {{ modalText }}
+          </div>
         </div>
         <div v-if="errors.length > 0">
           <div class="error-header"><strong>Failed submissions:</strong></div>
@@ -226,6 +238,7 @@
 
 <script>
 import { sync } from "vuex-pathify";
+import { env } from "@/helpers/env.js";
 import { requestOptions } from "@/helpers/request-options";
 import Modal from "@/components/shared/Modal.vue";
 import SaveBundle from "@/components/workflow/SaveBundle.vue";
@@ -281,6 +294,12 @@ export default {
     },
   },
   methods: {
+    handleSeeHelp(ev) {
+      ev.preventDefault();
+      const helpUrl = env.getEnv("VUE_APP_DOC_WORKFLOW_SUBMISSIONS_ERROR_HELP");
+      window.open(helpUrl, "helpwindow", "width=800, height=500");
+      return;
+    },
     handleSuccess() {
       let self = this;
       self.showModal = false;
