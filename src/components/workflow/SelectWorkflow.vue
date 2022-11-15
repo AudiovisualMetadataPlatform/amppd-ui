@@ -9,7 +9,7 @@
           id="workflow-name-select"
           v-on:change="selection"
         >
-          <option value="">Select a workflow...</option>
+          <option value="" selected disabled>Select a workflow...</option>
           <option
             v-for="(workflow, index) in workflows.rows"
             v-bind:key="index"
@@ -168,7 +168,7 @@
         <input
           type="button"
           class="secondary-button"
-          v-on:click="showModal = false"
+          v-on:click="handleSuccess"
           value="Ok"
         />
       </div>
@@ -259,6 +259,7 @@ export default {
     workflowSubmission: sync("workflowSubmission"),
     selectedFiles: sync("workflowSubmission.selectedFiles"),
     updateSelectedFiles: sync("workflowSubmission.updateSelectedFiles"),
+    workflowSubmissionsearchResults: sync("workflowSubmissionsearchResults"),
     submissionEnabled() {
       let self = this;
       console.log(
@@ -280,6 +281,20 @@ export default {
     },
   },
   methods: {
+    handleSuccess() {
+      let self = this;
+      self.showModal = false;
+      if (self.modalTextList[0] === "Files submitted successfully.") {
+        self.workflowSubmission.loading = false;
+        self.workflowSubmission.showBundleError = false;
+        self.workflowSubmission.showSelectBundle = false;
+        self.workflowSubmission.showSaveBundle = false;
+        self.workflowSubmission.bundles = [];
+        self.workflowSubmission.selectedFiles = new Map();
+        self.workflowSubmission.updateSelectedFiles = 0;
+        self.workflowSubmissionsearchResults = false;
+      }
+    },
     async getWorkflows() {
       let self = this;
 
