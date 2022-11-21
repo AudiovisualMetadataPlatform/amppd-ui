@@ -425,8 +425,10 @@ export default {
     },
     deleteRow(record) {
       const self = this;
-      self.showModal = true;
-      self.selectedRecord = record;
+      if (self.currentUser.username === record.submitter) {
+        self.showModal = true;
+        self.selectedRecord = record;
+      }
     },
     isSelected(recId) {
       const selctedRecordIds = this.mgmEvaluation.selectedRecords.map(
