@@ -152,6 +152,23 @@
             <td v-else-if="checkAvailability('outputName')">
               {{ rec.outputName }}
             </td>
+            <td
+              v-if="
+                rec.outputPath != null &&
+                  rec.status == 'COMPLETE' &&
+                  checkAvailability('outputLabel')
+              "
+            >
+              <a
+                v-bind:href="workflowResultService.getOutputUrl(rec.id)"
+                target="_blank"
+                class="complete-output"
+                >{{ rec.outputLabel }}</a
+              >
+            </td>
+            <td v-else-if="checkAvailability('outputLabel')">
+              {{ rec.outputLabel }}
+            </td>
             <td v-if="parent !== 'NewTest' && checkAvailability('status')">
               <button
                 v-if="rec.status === 'COMPLETE'"

@@ -127,9 +127,10 @@ const state = {
     { order: "i", label: "Workflow", field: "workflowName" },
     { order: "j", label: "Step", field: "workflowStep" },
     { order: "k", label: "Output", field: "outputName" },
-    { order: "l", label: "Status", field: "status" },
-    { order: "m", label: "Actions", field: "actions" },
-    { order: "n", label: "Add to Test", field: "addToTest" },
+    { order: "l", label: "Alias", field: "outputLabel" },
+    { order: "m", label: "Status", field: "status" },
+    { order: "n", label: "Actions", field: "actions" },
+    { order: "o", label: "Add to Test", field: "addToTest" },
   ],
 };
 
