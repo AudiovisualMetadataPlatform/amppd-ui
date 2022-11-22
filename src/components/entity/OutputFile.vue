@@ -2,8 +2,17 @@
   <div class="w-100">
     <loader :show="showLoader" />
     <b-card class="text-left">
-      <div class="col-lg-12">
-        <h2 class="card-title">Output Files</h2>
+      <div class="d-flex">
+        <div class="col-lg">
+          <h2 class="card-title">Output Files</h2>
+        </div>
+        <button
+          class="btn btn-primary btn float-right"
+          type="button"
+          @click="onAliasSave"
+        >
+          Save
+        </button>
       </div>
       <div class="table-responsive">
         <table id="myTable" data-detail-view="true" class="table dataTable">
@@ -75,7 +84,12 @@
                 <span v-else>{{ output.outputName }}</span>
               </td>
               <td>
-                <input type="text" :value="output.name" class="form-control" />
+                <input
+                  type="text"
+                  v-model="output.outputLabel"
+                  class="form-control"
+                  @change="onAliasChange($event, output.id, output.outputLabel)"
+                />
               </td>
             </tr>
 
@@ -113,9 +127,35 @@ export default {
       },
       listOfOutputList: [],
       showLoader: false,
+      aliasChanges: [],
     };
   },
   methods: {
+    onAliasChange(ev, outputId, outputLabel) {
+      const self = this;
+      self.aliasChanges.push({ outputId, outputLabel });
+    },
+    async onAliasSave() {
+      const self = this;
+      try {
+        for (let i = 0; i < self.aliasChanges.length; i++) {
+          const response = await this.workflowResultService.updateWorkflowResult(
+            self.aliasChanges[i].outputId,
+            self.aliasChanges[i].outputLabel
+          );
+        }
+        self.$bvToast.toast(
+          "Output results have been updated successfully.",
+          self.sharedService.successToastConfig
+        );
+        self.aliasChanges = [];
+      } catch (error) {
+        self.$bvToast.toast(
+          "Unable to save changes. Please try again!",
+          self.sharedService.erorrToastConfig
+        );
+      }
+    },
     async getOutputFileList(
       pageNum = 1,
       sortRule = { columnName: "dateCreated", orderByDescending: false }
@@ -137,6 +177,7 @@ export default {
     },
     sortQuery(sortRule) {
       const self = this;
+      self.aliasChanges = [];
       this.sortRule = sortRule;
       this.getOutputFileList(1, sortRule);
     },
