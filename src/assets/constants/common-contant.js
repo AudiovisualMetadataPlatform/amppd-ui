@@ -112,8 +112,8 @@ const OUTPUT_FILE_HEADERS = [
   { label: "Submitter", field: "submitter" },
   { label: "Workflow Name", field: "workflowName" },
   { label: "Workflow Step", field: "workflowStep" },
-  { label: "Output Link", field: "outputLink" },
-  { label: "Name", field: "name" },
+  { label: "Output Link", field: "outputName" },
+  { label: "Alias", field: "outputLabel" },
 ];
 
 export default {
