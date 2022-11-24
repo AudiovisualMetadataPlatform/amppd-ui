@@ -7,11 +7,11 @@
     <div class="row">
       <!-- <Sidebar /> -->
       <div class="col-12 bg-light-gray-1">
-        <main>
+        <main :class="!unitEntity.currentUnit ? 'mb-3' : 'mb-5'">
           <!-- Header - Details page -->
 
           <b-card
-            class="text-center mt-5 mb-5"
+            class="text-center mt-5 mb-3"
             :class="
               baseUrl === 'file' && entity.mediaType === 'video'
                 ? 'extra-padding'
@@ -155,7 +155,25 @@
                       <label>
                         <span class="text-capitalize">{{ baseUrl }}</span> Name:
                       </label>
+                      <select
+                        v-if="baseUrl == 'unit'"
+                        class="select custom-select w-100"
+                        v-model="unitEntity.currentUnit"
+                        @change="onUnitChange"
+                        required
+                        id="unit-select"
+                        ><option value="" disabled selected
+                          >- Choose Unit -</option
+                        >
+                        <option
+                          v-for="option in unitEntity.unitList"
+                          :key="option.id"
+                          :value="option.id"
+                          >{{ option.name }}</option
+                        >
+                      </select>
                       <input
+                        v-else
                         type="text"
                         class="form-control w-100"
                         v-model="entity.name"
@@ -198,7 +216,10 @@
                       :disabled="true"
                     />
                   </div>
-                  <div class="col-12 text-left form-group p-0">
+                  <div
+                    v-if="unitEntity.currentUnit"
+                    class="col-12 text-left form-group p-0"
+                  >
                     <label>Description:</label>
                     <textarea
                       class="form-control w-100"
@@ -293,7 +314,10 @@
                     </div>
                   </div>
 
-                  <div class="col-12 p-0" v-if="baseUrl !== 'item'">
+                  <div
+                    v-if="baseUrl !== 'item' && unitEntity.currentUnit"
+                    class="col-12 p-0"
+                  >
                     <div class="row">
                       <div class="col-3 text-left form-group">
                         <label>Created By:</label>
@@ -370,7 +394,7 @@
                   </div>
                 </div>
 
-                <div class="w-100 text-right p-0">
+                <div v-if="unitEntity.currentUnit" class="w-100 text-right p-0">
                   <!-- <div v-if="!showEdit"> -->
                   <!-- <button
                     class="btn btn-outline btn-lg btn-edit mr-2"
@@ -408,7 +432,12 @@
           <div v-else-if="baseUrl === 'file'">
             <OutputFile />
           </div>
-          <div class v-else-if="baseUrl !== 'item' && baseUrl !== 'file'">
+          <div
+            class
+            v-else-if="
+              baseUrl !== 'item' && baseUrl !== 'file' && unitEntity.currentUnit
+            "
+          >
             <!-- Title ends here -->
             <b-card class="m-0 text-left">
               <!-- Title - Listing page -->
@@ -627,6 +656,7 @@ export default {
     itemConfigs: sync("itemConfigs"),
     configProperties: sync("configProperties"),
     mgmCategories: sync("mgmCategories"),
+    unitEntity: sync("unitEntity"),
     baseUrl() {
       const self = this;
       if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
@@ -668,12 +698,46 @@ export default {
     },
   },
   methods: {
+    onUnitChange() {
+      const self = this;
+      sessionStorage.setItem(
+        "unitEntity",
+        JSON.stringify({ ...self.unitEntity })
+      );
+      self.getData();
+    },
     async toggleCollectionActive(collection) {
       collection.active = !collection.active;
       this.collectionService.activateCollection(
         collection.id,
         collection.active
       );
+    },
+    async getAllUnits() {
+      const self = this;
+      try {
+        self.showLoader = true;
+        await self.unitService.getAllUnits().then(async (response) => {
+          await self.unitService
+            .getAllUnits("0", response.data.page.totalElements)
+            .then((res) => {
+              self.allUnits = res.data;
+              self.unitEntity.unitList = self.sharedService.sortByAlphabatical(
+                this.allUnits._embedded.units
+              );
+              self.showLoader = false;
+
+              // self.unitEntity.unitList = [{ ...self.unitEntity.unitList[2] }]; //For single unit test scenario
+              if (self.unitEntity.unitList.length === 1) {
+                self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
+                self.onUnitChange();
+              } else document.getElementById("unit-select").focus();
+            });
+        });
+      } catch (error) {
+        self.showLoader = false;
+        console.log(error);
+      }
     },
     async networkCalls() {
       const self = this;
@@ -692,6 +756,7 @@ export default {
         self.mgmCategories = JSON.parse(
           JSON.stringify(self.filteredMgmCategories)
         );
+        self.showLoader = false;
       } catch (error) {
         self.showLoader = false;
         console.log(error);
@@ -734,7 +799,7 @@ export default {
     async getUnitDetails() {
       const self = this;
       const unitDetails = await self.entityService.getUnitDetails(
-        self.defaultUnitId,
+        self.unitEntity.currentUnit,
         self
       );
       if (unitDetails.response) {
@@ -883,7 +948,17 @@ export default {
     if (self.baseUrl === "unit") {
       this.networkCalls(); //TODO: Need to move to "home" page once it'll be implemented.
     }
-    self.getDefaultUnit();
+    // self.getDefaultUnit();
+
+    // For unit details page
+    const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+    if (!uEntity || !uEntity.currentUnit) {
+      self.unitEntity = { unitList: [], currentUnit: "" };
+      self.getAllUnits();
+    } else {
+      self.unitEntity = uEntity;
+      self.getData();
+    }
 
     let formHTML = document.getElementsByClassName("form")[0];
     if (formHTML && this.baseUrl === "file") {
