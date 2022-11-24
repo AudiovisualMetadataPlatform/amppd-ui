@@ -5,13 +5,16 @@ export default class WorkflowService extends BaseService{
         return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + encodeURIComponent(searchWord) +'&mediaType=' + media_type).then(response => response.data);
     }
 
-    isAudioFile(primaryfile){
-        if (primaryfile.mediaType)
-            return primaryfile.mediaType.startsWith('audio');
-        if (primaryfile.originalFilename)
-            return primaryfile.originalFilename.endsWith('.mp3') ||
-                    primaryfile.originalFilename.endsWith('.wav') ||
-                    primaryfile.originalFilename.endsWith('.flac');
+    isAudioFile(primaryfile) {
+        if (primaryfile.mediaType) return primaryfile.mediaType.startsWith("audio");
+        else if (primaryfile.mimeType)
+            return primaryfile.mimeType.startsWith("audio");
+        else if (primaryfile.originalFilename)
+            return (
+            primaryfile.originalFilename.endsWith(".mp3") ||
+            primaryfile.originalFilename.endsWith(".wav") ||
+            primaryfile.originalFilename.endsWith(".flac")
+            );
     }
 
     // concatenate IDs of selected primaryfiles into a query string
