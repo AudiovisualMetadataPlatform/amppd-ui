@@ -31,7 +31,6 @@ def main():
 
     # the UI bits are configured with these variables in javascript...    
     vars = {'VUE_APP_DISABLE_AUTH': config['ui'].get('disable_auth', 'false'),
-            'VUE_APP_AMP_UNIT': config['ui']['unit'],
             'VUE_APP_USER_GUIDE': config['ui']['user_guide_url']}
             
 
