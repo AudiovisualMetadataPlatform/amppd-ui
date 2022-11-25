@@ -56,6 +56,9 @@ jest.mock('../../../../src/service/primary-file-service',
                 const superFn = {
                     getDefaultUnit: (id) => {
                         return Promise.resolve({})
+                    },
+                    getAllUnits: () => {
+                        return Promise.resolve({data:{page:10, _embedded:{}}})
                     }
                 };
                 return superFn;

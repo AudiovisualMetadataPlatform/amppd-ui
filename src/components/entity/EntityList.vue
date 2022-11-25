@@ -646,6 +646,7 @@ export default {
       submitted: false,
       isDataChanged: false,
       defaultUnitId: "",
+      unitEntity: { unitList: [], currentUnit: "" },
     };
   },
   computed: {
@@ -656,7 +657,6 @@ export default {
     itemConfigs: sync("itemConfigs"),
     configProperties: sync("configProperties"),
     mgmCategories: sync("mgmCategories"),
-    unitEntity: sync("unitEntity"),
     baseUrl() {
       const self = this;
       if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
@@ -728,10 +728,16 @@ export default {
               self.showLoader = false;
 
               // self.unitEntity.unitList = [{ ...self.unitEntity.unitList[2] }]; //For single unit test scenario
-              if (self.unitEntity.unitList.length === 1) {
+              if (
+                self.unitEntity.unitList &&
+                self.unitEntity.unitList.length === 1
+              ) {
                 self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
                 self.onUnitChange();
-              } else document.getElementById("unit-select").focus();
+              } else {
+                const unitSelectHtml = document.getElementById("unit-select");
+                if (unitSelectHtml) unitSelectHtml.focus();
+              }
             });
         });
       } catch (error) {

@@ -132,8 +132,6 @@ const state = {
     { order: "n", label: "Actions", field: "actions" },
     { order: "o", label: "Add to Test", field: "addToTest" },
   ],
-
-  unitEntity: { unitList: [], currentUnit: "" },
 };
 
 export default state;
