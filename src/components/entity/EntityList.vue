@@ -7,15 +7,17 @@
     <div class="row">
       <!-- <Sidebar /> -->
       <div class="col-12 bg-light-gray-1">
-        <main>
+        <main :class="!unitEntity.currentUnit ? 'mb-3' : 'mb-5'">
           <!-- Header - Details page -->
 
           <b-card
-            class="text-center mt-5 mb-5"
+            class="text-center mt-5 mb-3"
             :class="
               baseUrl === 'file' && entity.mediaType === 'video'
-                ? 'extra-padding'
-                : ''
+                ? 'extra-padding mb-5'
+                : unitEntity.currentUnit
+                ? 'mb-5'
+                : 'mb-3'
             "
           >
             <h1 class="text-left">
@@ -155,7 +157,25 @@
                       <label>
                         <span class="text-capitalize">{{ baseUrl }}</span> Name:
                       </label>
+                      <select
+                        v-if="baseUrl == 'unit'"
+                        class="select custom-select w-100"
+                        v-model="unitEntity.currentUnit"
+                        @change="onUnitChange"
+                        required
+                        id="unit-select"
+                        ><option value="" disabled selected
+                          >- Choose Unit -</option
+                        >
+                        <option
+                          v-for="option in unitEntity.unitList"
+                          :key="option.id"
+                          :value="option.id"
+                          >{{ option.name }}</option
+                        >
+                      </select>
                       <input
+                        v-else
                         type="text"
                         class="form-control w-100"
                         v-model="entity.name"
@@ -198,7 +218,10 @@
                       :disabled="true"
                     />
                   </div>
-                  <div class="col-12 text-left form-group p-0">
+                  <div
+                    v-if="unitEntity.currentUnit"
+                    class="col-12 text-left form-group p-0 expand-ani"
+                  >
                     <label>Description:</label>
                     <textarea
                       class="form-control w-100"
@@ -293,7 +316,10 @@
                     </div>
                   </div>
 
-                  <div class="col-12 p-0" v-if="baseUrl !== 'item'">
+                  <div
+                    v-if="baseUrl !== 'item' && unitEntity.currentUnit"
+                    class="col-12 p-0 expand-ani"
+                  >
                     <div class="row">
                       <div class="col-3 text-left form-group">
                         <label>Created By:</label>
@@ -370,7 +396,10 @@
                   </div>
                 </div>
 
-                <div class="w-100 text-right p-0">
+                <div
+                  v-if="unitEntity.currentUnit"
+                  class="w-100 text-right p-0 expand-ani"
+                >
                   <!-- <div v-if="!showEdit"> -->
                   <!-- <button
                     class="btn btn-outline btn-lg btn-edit mr-2"
@@ -408,9 +437,14 @@
           <div v-else-if="baseUrl === 'file'">
             <OutputFile />
           </div>
-          <div class v-else-if="baseUrl !== 'item' && baseUrl !== 'file'">
+          <div
+            class
+            v-else-if="
+              baseUrl !== 'item' && baseUrl !== 'file' && unitEntity.currentUnit
+            "
+          >
             <!-- Title ends here -->
-            <b-card class="m-0 text-left">
+            <b-card class="m-0 text-left expand-ani">
               <!-- Title - Listing page -->
               <!-- <h3 v-if="baseUrl == 'unit' && !purpose">My Units</h3>
                             <h3 v-else-if="baseUrl == 'collection' && !purpose">My Collections</h3>-->
@@ -617,6 +651,7 @@ export default {
       submitted: false,
       isDataChanged: false,
       defaultUnitId: "",
+      unitEntity: { unitList: [], currentUnit: "" },
     };
   },
   computed: {
@@ -668,12 +703,65 @@ export default {
     },
   },
   methods: {
+    onUnitChange() {
+      const self = this;
+      //Removing expand animation css
+      const expandAniHtml = document.getElementsByClassName("expand-ani");
+      if (expandAniHtml.length === 4)
+        for (let i = 0; i < expandAniHtml.length; i++) {
+          expandAniHtml[i].classList.remove("expandOpen");
+        }
+
+      sessionStorage.setItem(
+        "unitEntity",
+        JSON.stringify({ ...self.unitEntity })
+      );
+      self.getData();
+    },
     async toggleCollectionActive(collection) {
       collection.active = !collection.active;
       this.collectionService.activateCollection(
         collection.id,
         collection.active
       );
+    },
+    async getAllUnits() {
+      const self = this;
+      try {
+        self.showLoader = true;
+        await self.unitService.getAllUnits().then(async (response) => {
+          await self.unitService
+            .getAllUnits("0", response.data.page.totalElements)
+            .then((res) => {
+              self.allUnits = res.data;
+              self.unitEntity.unitList = self.sharedService.sortByAlphabatical(
+                this.allUnits._embedded.units
+              );
+              self.showLoader = false;
+
+              // self.unitEntity.unitList = [{ ...self.unitEntity.unitList[2] }]; //For single unit test scenario
+              if (
+                self.unitEntity.unitList &&
+                self.unitEntity.unitList.length === 1
+              ) {
+                self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
+                self.onUnitChange();
+              } else {
+                let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+                if (!uEntity)
+                  sessionStorage.setItem(
+                    "unitEntity",
+                    JSON.stringify({ ...self.unitEntity })
+                  );
+                const unitSelectHtml = document.getElementById("unit-select");
+                if (unitSelectHtml) unitSelectHtml.focus();
+              }
+            });
+        });
+      } catch (error) {
+        self.showLoader = false;
+        console.log(error);
+      }
     },
     async networkCalls() {
       const self = this;
@@ -692,6 +780,7 @@ export default {
         self.mgmCategories = JSON.parse(
           JSON.stringify(self.filteredMgmCategories)
         );
+        self.showLoader = false;
       } catch (error) {
         self.showLoader = false;
         console.log(error);
@@ -733,29 +822,38 @@ export default {
     },
     async getUnitDetails() {
       const self = this;
+      self.showLoader = true;
       const unitDetails = await self.entityService.getUnitDetails(
-        self.defaultUnitId,
+        self.unitEntity.currentUnit,
         self
       );
       if (unitDetails.response) {
         self.selectedUnit = unitDetails.response;
         self.entity = unitDetails.response;
         this.getUnitCollections();
+        self.showLoader = false;
       } else {
         self.showLoader = false;
       }
     },
     async getUnitCollections() {
       const self = this;
+      self.showLoader = true;
       self.collectionService
         .getCollectionByUnitId(self.selectedUnit.id)
         .then((response) => {
-          self.showLoader = false;
           if (response && response && response._embedded) {
             self.records =
               response._embedded[Object.keys(response._embedded)[0]];
             self.records = self.sharedService.sortByAlphabatical(self.records);
             self.masterRecords = JSON.parse(JSON.stringify(self.records));
+          }
+          self.showLoader = false;
+
+          //Adding expand animation css
+          const expandAniHtml = document.getElementsByClassName("expand-ani");
+          for (let i = 0; i < expandAniHtml.length; i++) {
+            expandAniHtml[i].classList.add("expandOpen");
           }
         });
     },
@@ -883,7 +981,17 @@ export default {
     if (self.baseUrl === "unit") {
       this.networkCalls(); //TODO: Need to move to "home" page once it'll be implemented.
     }
-    self.getDefaultUnit();
+    // self.getDefaultUnit();
+
+    // For unit details page
+    const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+    if (!uEntity) {
+      self.unitEntity = { unitList: [], currentUnit: "" };
+      self.getAllUnits();
+    } else {
+      self.unitEntity = uEntity;
+      self.getData();
+    }
 
     let formHTML = document.getElementsByClassName("form")[0];
     if (formHTML && this.baseUrl === "file") {
@@ -952,5 +1060,28 @@ video {
 }
 .switch {
   min-width: 45px;
+}
+
+.expandOpen,
+.trActive {
+  animation-name: expandOpen;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  visibility: visible !important;
+  max-width: 100%;
+}
+@keyframes expandOpen {
+  from {
+    transform: scale3d(1, 1, 1);
+    opacity: 0;
+  }
+  50% {
+    transform: scale3d(1.03, 1, 1.03);
+    opacity: 0.25;
+  }
+  to {
+    transform: scale3d(1, 1, 1);
+    opacity: 1;
+  }
 }
 </style>

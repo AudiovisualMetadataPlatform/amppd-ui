@@ -773,6 +773,17 @@ export default {
                     .getCollection(selectedCollectionId)
                     .then((response) => {
                       self.selectedCollection = response.data;
+
+                      //Updating unit id in our session storage for content page
+                      const unitId = response.data._embedded.unit.id;
+                      let uEntity = JSON.parse(
+                        sessionStorage.getItem("unitEntity")
+                      );
+                      uEntity.currentUnit = unitId;
+                      sessionStorage.setItem(
+                        "unitEntity",
+                        JSON.stringify({ ...uEntity })
+                      );
                     });
 
                   const res = JSON.parse(JSON.stringify(response));
