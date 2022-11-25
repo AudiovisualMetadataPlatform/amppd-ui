@@ -779,13 +779,11 @@ export default {
                       let uEntity = JSON.parse(
                         sessionStorage.getItem("unitEntity")
                       );
-                      if (uEntity || uEntity.currentUnit) {
-                        uEntity.currentUnit = unitId;
-                        sessionStorage.setItem(
-                          "unitEntity",
-                          JSON.stringify({ ...uEntity })
-                        );
-                      }
+                      uEntity.currentUnit = unitId;
+                      sessionStorage.setItem(
+                        "unitEntity",
+                        JSON.stringify({ ...uEntity })
+                      );
                     });
 
                   const res = JSON.parse(JSON.stringify(response));

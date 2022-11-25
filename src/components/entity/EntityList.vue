@@ -14,8 +14,10 @@
             class="text-center mt-5 mb-3"
             :class="
               baseUrl === 'file' && entity.mediaType === 'video'
-                ? 'extra-padding'
-                : ''
+                ? 'extra-padding mb-5'
+                : unitEntity.currentUnit
+                ? 'mb-5'
+                : 'mb-3'
             "
           >
             <h1 class="text-left">
@@ -735,6 +737,12 @@ export default {
                 self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
                 self.onUnitChange();
               } else {
+                let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+                if (!uEntity)
+                  sessionStorage.setItem(
+                    "unitEntity",
+                    JSON.stringify({ ...self.unitEntity })
+                  );
                 const unitSelectHtml = document.getElementById("unit-select");
                 if (unitSelectHtml) unitSelectHtml.focus();
               }
@@ -958,7 +966,7 @@ export default {
 
     // For unit details page
     const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
-    if (!uEntity || !uEntity.currentUnit) {
+    if (!uEntity) {
       self.unitEntity = { unitList: [], currentUnit: "" };
       self.getAllUnits();
     } else {
