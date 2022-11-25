@@ -220,7 +220,7 @@
                   </div>
                   <div
                     v-if="unitEntity.currentUnit"
-                    class="col-12 text-left form-group p-0"
+                    class="col-12 text-left form-group p-0 expand-ani"
                   >
                     <label>Description:</label>
                     <textarea
@@ -318,7 +318,7 @@
 
                   <div
                     v-if="baseUrl !== 'item' && unitEntity.currentUnit"
-                    class="col-12 p-0"
+                    class="col-12 p-0 expand-ani"
                   >
                     <div class="row">
                       <div class="col-3 text-left form-group">
@@ -396,7 +396,10 @@
                   </div>
                 </div>
 
-                <div v-if="unitEntity.currentUnit" class="w-100 text-right p-0">
+                <div
+                  v-if="unitEntity.currentUnit"
+                  class="w-100 text-right p-0 expand-ani"
+                >
                   <!-- <div v-if="!showEdit"> -->
                   <!-- <button
                     class="btn btn-outline btn-lg btn-edit mr-2"
@@ -441,7 +444,7 @@
             "
           >
             <!-- Title ends here -->
-            <b-card class="m-0 text-left">
+            <b-card class="m-0 text-left expand-ani">
               <!-- Title - Listing page -->
               <!-- <h3 v-if="baseUrl == 'unit' && !purpose">My Units</h3>
                             <h3 v-else-if="baseUrl == 'collection' && !purpose">My Collections</h3>-->
@@ -702,6 +705,13 @@ export default {
   methods: {
     onUnitChange() {
       const self = this;
+      //Removing expand animation css
+      const expandAniHtml = document.getElementsByClassName("expand-ani");
+      if (expandAniHtml.length === 4)
+        for (let i = 0; i < expandAniHtml.length; i++) {
+          expandAniHtml[i].classList.remove("expandOpen");
+        }
+
       sessionStorage.setItem(
         "unitEntity",
         JSON.stringify({ ...self.unitEntity })
@@ -812,6 +822,7 @@ export default {
     },
     async getUnitDetails() {
       const self = this;
+      self.showLoader = true;
       const unitDetails = await self.entityService.getUnitDetails(
         self.unitEntity.currentUnit,
         self
@@ -820,21 +831,29 @@ export default {
         self.selectedUnit = unitDetails.response;
         self.entity = unitDetails.response;
         this.getUnitCollections();
+        self.showLoader = false;
       } else {
         self.showLoader = false;
       }
     },
     async getUnitCollections() {
       const self = this;
+      self.showLoader = true;
       self.collectionService
         .getCollectionByUnitId(self.selectedUnit.id)
         .then((response) => {
-          self.showLoader = false;
           if (response && response && response._embedded) {
             self.records =
               response._embedded[Object.keys(response._embedded)[0]];
             self.records = self.sharedService.sortByAlphabatical(self.records);
             self.masterRecords = JSON.parse(JSON.stringify(self.records));
+          }
+          self.showLoader = false;
+
+          //Adding expand animation css
+          const expandAniHtml = document.getElementsByClassName("expand-ani");
+          for (let i = 0; i < expandAniHtml.length; i++) {
+            expandAniHtml[i].classList.add("expandOpen");
           }
         });
     },
@@ -1041,5 +1060,28 @@ video {
 }
 .switch {
   min-width: 45px;
+}
+
+.expandOpen,
+.trActive {
+  animation-name: expandOpen;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  visibility: visible !important;
+  max-width: 100%;
+}
+@keyframes expandOpen {
+  from {
+    transform: scale3d(1, 1, 1);
+    opacity: 0;
+  }
+  50% {
+    transform: scale3d(1.03, 1, 1.03);
+    opacity: 0.25;
+  }
+  to {
+    transform: scale3d(1, 1, 1);
+    opacity: 1;
+  }
 }
 </style>
