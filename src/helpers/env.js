@@ -15,10 +15,6 @@ export const env = {
 	  return this.getEnv('VUE_APP_AMP_URL')
   },
 
-  getAmpUnit() {
-	  return this.getEnv('VUE_APP_AMP_UNIT')
-  },
-
   getGalaxyWorkflowUrl() {
 	  return this.getEnv('VUE_APP_GALAXY_WORKFLOW_URL')
   },

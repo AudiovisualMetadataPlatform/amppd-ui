@@ -907,41 +907,6 @@ export default {
     onInputChange(ev) {
       this.isDataChanged = true;
     },
-    async getDefaultUnit() {
-      const self = this;
-      self.unitService
-        .getDefaultUnit()
-        .then((success) => {
-          self.showLoader = false;
-          if (
-            success &&
-            success._embedded &&
-            success._embedded.units &&
-            success._embedded.units.length
-          ) {
-            self.defaultUnitId = success._embedded.units[0].id;
-            if (success._embedded.units.length > 1) {
-              self.$bvToast.toast(
-                "Received more than one unit details. Please contact administrator",
-                self.sharedService.warningToastConfig
-              );
-            }
-            self.getData();
-          } else {
-            self.$bvToast.toast(
-              "Unable to retrive unit details. Please try again!",
-              self.sharedService.erorrToastConfig
-            );
-          }
-        })
-        .catch((err) => {
-          self.$bvToast.toast(
-            "Unable to retrive unit details. Please try again!",
-            self.sharedService.erorrToastConfig
-          );
-          self.showLoader = false;
-        });
-    },
     async getItemsConfig() {
       const self = this;
       self.entityService.getItemsConfig(self);
@@ -981,7 +946,6 @@ export default {
     if (self.baseUrl === "unit") {
       this.networkCalls(); //TODO: Need to move to "home" page once it'll be implemented.
     }
-    // self.getDefaultUnit();
 
     // For unit details page
     const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));

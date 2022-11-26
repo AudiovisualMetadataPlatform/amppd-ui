@@ -224,9 +224,17 @@ export default {
     },
   },
   mounted() {
-    this.unitName = env.getAmpUnit();
+    const self = this;
+    let unitEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+    if (unitEntity.currentUnit) {
+      self.unitName = unitEntity.unitList.filter(
+        (unit) => unit.id === unitEntity.currentUnit
+      )[0].name;
+    } else {
+      self.unitName = unitEntity.unitList[0].name; //Case - User hasn't select any UNIT: We are assuming the default unit is the first one of the unit list of 'Content > Navigation' page
+    }
     console.log("reached batchingest.vue");
-    console.log("unitName = " + this.unitName);
+    console.log("unitName = " + self.unitName);
   },
 };
 </script>
