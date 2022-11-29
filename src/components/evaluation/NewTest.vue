@@ -325,7 +325,15 @@ export default {
   methods: {
     onChangeSelect(paramName) {
       const self = this;
+
+      //Reset "Upload or Select Ground Truth Data"
+      for (let i = 0; i < self.mgmEvaluation.selectedRecords.length; i++) {
+        self.mgmEvaluation.selectedRecords[i].gtSupplement &&
+          delete self.mgmEvaluation.selectedRecords[i].gtSupplement;
+      }
       self.mgmEvaluation.selectedRecords = [];
+
+      //Reset multi select parameters on depending parameter change
       if (paramName === self.selectedMst.detailBody.dependencyParamName) {
         const multiSelectParameter = self.selectedMst.detailBody.parameters.filter(
           (param) => param.type === "MULTI_SELECT"
