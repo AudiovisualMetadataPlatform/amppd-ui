@@ -309,7 +309,6 @@ export default {
       selectedRecord: {},
       rightArrowSvg: config.common.icons["right_arrow"],
       visible: [],
-      selected: [],
     };
   },
   computed: {
@@ -325,11 +324,13 @@ export default {
   },
   methods: {
     onChangeSelect(paramName) {
-      if (paramName === this.selectedMst.detailBody.dependencyParamName) {
-        const multiSelectParameter = this.selectedMst.detailBody.parameters.filter(
+      const self = this;
+      self.mgmEvaluation.selectedRecords = [];
+      if (paramName === self.selectedMst.detailBody.dependencyParamName) {
+        const multiSelectParameter = self.selectedMst.detailBody.parameters.filter(
           (param) => param.type === "MULTI_SELECT"
         )[0];
-        delete this.testParams[multiSelectParameter.name]; //TODO: need to fix here
+        delete self.testParams[multiSelectParameter.name];
       }
     },
     options(parameter, type) {
