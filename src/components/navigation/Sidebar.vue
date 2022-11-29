@@ -51,6 +51,7 @@
               :key="menu.name"
             >
               <b-nav-item
+                :id="menu.url"
                 @click="routeTo(menu)"
                 v-if="!menu.children && menu.url !== '/mgm-evaluation'"
               >
@@ -158,6 +159,15 @@ export default {
         self.mgmCategories = JSON.parse(
           JSON.stringify(self.filteredMgmCategories)
         );
+
+        //BATCH INGEST: Disable batch ingest nav
+        const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+        if (!uEntity || (uEntity && !uEntity.currentUnit)) {
+          let batchIngestHtml = document.getElementById("/batch/ingest")
+            .childNodes[0];
+          batchIngestHtml.ariaDisabled = "true";
+          batchIngestHtml.classList.add("disabled");
+        }
       } catch (error) {
         console.log(error);
       }
