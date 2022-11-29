@@ -110,7 +110,7 @@
               v-model="testParams[par.name]"
               :options="JSON.parse(par.selections)"
               :name="`${par.id}-radios`"
-              :value="item"
+              @change="onChangeSelect(par.name)"
               class="mb-2 param-radio"
             ></b-form-radio-group>
           </div>
@@ -324,6 +324,14 @@ export default {
     },
   },
   methods: {
+    onChangeSelect(paramName) {
+      if (paramName === this.selectedMst.detailBody.dependencyParamName) {
+        const multiSelectParameter = this.selectedMst.detailBody.parameters.filter(
+          (param) => param.type === "MULTI_SELECT"
+        )[0];
+        delete this.testParams[multiSelectParameter.name]; //TODO: need to fix here
+      }
+    },
     options(parameter, type) {
       return JSON.parse(parameter.selections).filter(
         (selection) => selection[type]
