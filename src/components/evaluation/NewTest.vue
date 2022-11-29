@@ -260,6 +260,7 @@
       class="btn btn-primary btn-lg marg-tb-3 float-right"
       type="button"
       @click="onNewTestSubmit"
+      disabled
     >
       Submit
     </button>
@@ -362,7 +363,6 @@ export default {
       console.log("Selected mst: " + self.selectedMst);
       console.log("Selected records: " + self.mgmEvaluation.selectedRecords);
       console.log("Parameters: " + self.testParams);
-      debugger;
     },
     removeRow(record) {
       const self = this;
