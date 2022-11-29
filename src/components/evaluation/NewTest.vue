@@ -4,7 +4,7 @@
     <h3 class="m-b-0 m-t-2 mt-1">1) Select a Test</h3>
     <b-card
       class="mgm-card bg-light-gray-1"
-      v-for="(mst, i) in mgmCategory.msts"
+      v-for="(mst, i) in sharedService.sortByAlphabatical(mgmCategory.msts)"
       :key="i"
     >
       <h3
@@ -25,7 +25,7 @@
         <b-form-radio
           v-model="selectedMst.body"
           style="font-size:1.25rem;"
-          name="some-radios"
+          name="mst-radios"
           :value="mst"
           @change="onChangeMst(i, mst)"
           >&nbsp;select test</b-form-radio
@@ -52,12 +52,9 @@
     <div v-if="selectedMst.index.toString()">
       <div
         v-if="
-          (selectedMst.detailBody &&
+          selectedMst.detailBody &&
             selectedMst.detailBody.parameters &&
-            selectedMst.detailBody.parameters.length) ||
-            (selectedMst.body &&
-              selectedMst.body.name &&
-              selectedMst.body.name.includes('by seconds'))
+            selectedMst.detailBody.parameters.length
         "
       >
         <h3 class="m-b-0 m-t-2 mt-4">
@@ -67,77 +64,85 @@
           Set any necessary parameters for running your test
         </div>
       </div>
-
-      <!-- Parameter by seconds -->
       <div
-        v-if="
-          selectedMst.body &&
-            selectedMst.body.name &&
-            selectedMst.body.name.includes('by seconds')
-        "
         class="form-group marg-t-1"
+        v-if="
+          selectedMst.detailBody &&
+            selectedMst.detailBody.parameters &&
+            selectedMst.detailBody.parameters.length
+        "
       >
-        <p class="bg-light-gray mgm-h3 p-1 mb-2">
-          <strong>Analysis threshold:</strong> the number of seconds buffer
-          (float) for counting a true positive (match between the ground truth
-          and MGM output). For example, a 2-second threshold will consider a GT
-          and MGM segment a match if both the start and end times for each fall
-          within 2 seconds of each other.
-        </p>
-        <div class="input-group mb-3">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="Parameters"
-            aria-label="description"
-            aria-describedby="basic-addon2"
-            step="0.25"
-            v-model="testParams.parameter"
-          />
-          <div class="input-group-append">
-            <span class="input-group-text" id="basic-addon2">seconds</span>
+        <div
+          v-for="par in sharedService
+            .sortByAlphabatical(
+              JSON.parse(JSON.stringify(selectedMst.detailBody.parameters))
+            )
+            .reverse()"
+          :key="par.id"
+        >
+          <p
+            class="bg-light-gray mgm-h3 p-1 mb-2"
+            v-if="
+              par.type !== 'MULTI_SELECT' ||
+                (par.type === 'MULTI_SELECT' &&
+                  selectedMst.detailBody.dependencyParamName &&
+                  testParams[selectedMst.detailBody.dependencyParamName])
+            "
+          >
+            <strong>{{ par.name }}:</strong> {{ par.description }}
+          </p>
+          <div class="input-group mb-3" v-if="par.type === 'FLOAT'">
+            <input
+              type="number"
+              class="form-control"
+              placeholder="Parameters"
+              aria-label="description"
+              aria-describedby="basic-addon2"
+              step="0.25"
+              v-model="testParams[par.name]"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon2">seconds</span>
+            </div>
+          </div>
+          <div class="mb-3" v-else-if="par.type === 'SINGLE_SELECT'">
+            <b-form-radio-group
+              v-model="testParams[par.name]"
+              :options="JSON.parse(par.selections)"
+              :name="`${par.id}-radios`"
+              @change="onChangeSelect(par.name)"
+              class="mb-2 param-radio"
+            ></b-form-radio-group>
+          </div>
+          <div
+            class="mb-3"
+            v-else-if="
+              par.type === 'MULTI_SELECT' &&
+                selectedMst.detailBody.dependencyParamName &&
+                testParams[selectedMst.detailBody.dependencyParamName]
+            "
+          >
+            <b-form-group>
+              <b-form-checkbox-group
+                v-model="testParams[par.name]"
+                :options="
+                  options(
+                    par,
+                    testParams[selectedMst.detailBody.dependencyParamName]
+                  )
+                "
+                name="multiselect-checkbox"
+              ></b-form-checkbox-group>
+            </b-form-group>
           </div>
         </div>
-      </div>
-
-      <!-- Other parameters -->
-      <div v-else class="form-group marg-t-1">
-        <select
-          v-if="
-            selectedMst.detailBody &&
-              selectedMst.detailBody.parameters &&
-              selectedMst.detailBody.parameters.length
-          "
-          class="select custom-select w-100"
-          v-model="testParams.parameter"
-          required
-          ><option value="default" disabled selected
-            >Select a parameter...</option
-          >
-          <option
-            v-for="option in selectedMst.detailBody.parameters"
-            :key="option.id"
-            :value="option.id"
-            >{{ option.name }}</option
-          >
-        </select>
-        <!-- <textarea
-        v-else
-        id="descriptiona"
-        class="form-control"
-        spellcheck="false"
-        v-model="testParams.parameter"
-      ></textarea> -->
       </div>
       <div>
         <h3 class="m-b-0 m-t-2 mt-4">
           {{
-            (selectedMst.detailBody &&
-              selectedMst.detailBody.parameters &&
-              selectedMst.detailBody.parameters.length) ||
-            (selectedMst.body &&
-              selectedMst.body.name &&
-              selectedMst.body.name.includes("by seconds"))
+            selectedMst.detailBody &&
+            selectedMst.detailBody.parameters &&
+            selectedMst.detailBody.parameters.length
               ? "3"
               : "2"
           }}) Select MGM Outputs to Test
@@ -152,12 +157,9 @@
       </div>
       <h3 class="m-b-0 m-t-2 mt-4">
         {{
-          (selectedMst.detailBody &&
-            selectedMst.detailBody.parameters &&
-            selectedMst.detailBody.parameters.length) ||
-          (selectedMst.body &&
-            selectedMst.body.name &&
-            selectedMst.body.name.includes("by seconds"))
+          selectedMst.detailBody &&
+          selectedMst.detailBody.parameters &&
+          selectedMst.detailBody.parameters.length
             ? "4"
             : "3"
         }}) Upload or Select Ground Truth Data
@@ -221,6 +223,10 @@
                     data-toggle="modal"
                     data-target=".upload-modal"
                     @click="handleGroundTruthModal(record)"
+                    :disabled="
+                      selectedMst.detailBody.dependencyParamName &&
+                        !testParams[selectedMst.detailBody.dependencyParamName]
+                    "
                   >
                     Upload/Select Ground Truth
                   </button>
@@ -270,6 +276,7 @@
       :showModal="showModal"
       :mstDetails="selectedMst.detailBody"
       :selectedRecord="selectedRecord"
+      :selectedParams="testParams"
       @close="handleGroundTruthModal"
     />
   </div>
@@ -297,11 +304,12 @@ export default {
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
       selectedMst: { index: "", body: {}, detailBody: {} },
-      testParams: { parameter: "default" },
+      testParams: {},
       showModal: false,
       selectedRecord: {},
       rightArrowSvg: config.common.icons["right_arrow"],
       visible: [],
+      selected: [],
     };
   },
   computed: {
@@ -316,6 +324,19 @@ export default {
     },
   },
   methods: {
+    onChangeSelect(paramName) {
+      if (paramName === this.selectedMst.detailBody.dependencyParamName) {
+        const multiSelectParameter = this.selectedMst.detailBody.parameters.filter(
+          (param) => param.type === "MULTI_SELECT"
+        )[0];
+        delete this.testParams[multiSelectParameter.name]; //TODO: need to fix here
+      }
+    },
+    options(parameter, type) {
+      return JSON.parse(parameter.selections).filter(
+        (selection) => selection[type]
+      )[0][type];
+    },
     handleVisibility(index, open = "") {
       const self = this;
       if (open) {
@@ -346,10 +367,10 @@ export default {
     },
     onNewTestSubmit() {
       const self = this;
-      console.log("Selected mgm Category:" + self.mgmCategory);
-      console.log("Selected mst:" + self.selectedMst);
-      console.log("Selected records:" + self.mgmEvaluation.selectedRecords);
-      console.log("Parameters:" + self.testParams);
+      console.log("Selected mgm Category: " + self.mgmCategory);
+      console.log("Selected mst: " + self.selectedMst);
+      console.log("Selected records: " + self.mgmEvaluation.selectedRecords);
+      console.log("Parameters: " + self.testParams);
     },
     removeRow(record) {
       const self = this;
@@ -386,7 +407,7 @@ export default {
       self.selectedMst.index = mstIndex;
       self.selectedMst.body = mstObj;
       self.getDetailsMgmScoringTool(mstObj.id);
-      self.testParams = { parameter: "default" };
+      this.testParams = {};
     },
     onGroundtruthInfo(ev, mstObj) {
       console.log("Clicked on onGroundtruthInfo!!" + mstObj);
@@ -402,7 +423,7 @@ export default {
       if (self.mgmCategory.msts.length) {
         self.selectedMst.body = self.mgmCategory.msts[0];
         self.getDetailsMgmScoringTool(self.mgmCategory.msts[0].id);
-        self.testParams = { parameter: "default" };
+        self.testParams = {};
       }
     },
     mgmCategoryLoading: function() {
@@ -595,6 +616,42 @@ a:hover {
   height: 1.25rem !important;
 }
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+.custom-control-label {
+  cursor: pointer !important;
+}
+
+.param-radio
+  > .custom-radio
+  .custom-control-input:checked
+  ~ .custom-control-label::after {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+.param-radio
+  > .custom-radio
+  .custom-control-input:checked
+  ~ .custom-control-label::before {
+  width: 1rem !important;
+  height: 1rem !important;
+  background-color: #153c4d !important;
+  border-color: #153c4d !important;
+}
+.param-radio > .custom-control-label::after {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+.param-radio > div > .custom-control-label::before {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+.param-radio
+  > div
+  > .custom-control-input:checked
+  ~ .custom-control-label::after {
   width: 1rem !important;
   height: 1rem !important;
 }

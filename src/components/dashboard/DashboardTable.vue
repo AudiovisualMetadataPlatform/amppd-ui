@@ -257,7 +257,7 @@
             <td v-if="workflowDashboard.loading" colspan="8" class="no-results">
               <i class="fas fa-cog fa-spin"></i> Loading
             </td>
-            <td v-else colspan="8" class="no-results">No results</td>
+            <td v-else colspan="13" class="no-results">No results</td>
           </tr>
         </tbody>
       </table>
