@@ -784,6 +784,16 @@ export default {
                         "unitEntity",
                         JSON.stringify({ ...uEntity })
                       );
+
+                      //BATCH INGEST: Enable batch ingest nav
+                      let batchIngestHtml = document.getElementById(
+                        "/batch/ingest"
+                      );
+                      if (batchIngestHtml) {
+                        batchIngestHtml = batchIngestHtml.childNodes[0];
+                        batchIngestHtml.ariaDisabled = null;
+                        batchIngestHtml.classList.remove("disabled");
+                      }
                     });
 
                   const res = JSON.parse(JSON.stringify(response));

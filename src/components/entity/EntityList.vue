@@ -717,6 +717,14 @@ export default {
         JSON.stringify({ ...self.unitEntity })
       );
       self.getData();
+
+      //BATCH INGEST: Enable batch ingest nav
+      let batchIngestHtml = document.getElementById("/batch/ingest");
+      if (batchIngestHtml) {
+        batchIngestHtml = batchIngestHtml.childNodes[0];
+        batchIngestHtml.ariaDisabled = null;
+        batchIngestHtml.classList.remove("disabled");
+      }
     },
     async toggleCollectionActive(collection) {
       collection.active = !collection.active;
@@ -949,6 +957,26 @@ export default {
 
     // For unit details page
     const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+
+    //BATCH INGEST: Disable batch ingest nav
+    if (!uEntity || (uEntity && !uEntity.currentUnit)) {
+      let batchIngestHtml = document.getElementById("/batch/ingest");
+      if (batchIngestHtml) {
+        batchIngestHtml = batchIngestHtml.childNodes[0];
+        batchIngestHtml.ariaDisabled = "true";
+        batchIngestHtml.classList.add("disabled");
+      }
+    }
+    //BATCH INGEST: Enable batch ingest nav
+    if (uEntity && uEntity.currentUnit) {
+      let batchIngestHtml = document.getElementById("/batch/ingest");
+      if (batchIngestHtml) {
+        batchIngestHtml = batchIngestHtml.childNodes[0];
+        batchIngestHtml.ariaDisabled = null;
+        batchIngestHtml.classList.remove("disabled");
+      }
+    }
+
     if (!uEntity) {
       self.unitEntity = { unitList: [], currentUnit: "" };
       self.getAllUnits();

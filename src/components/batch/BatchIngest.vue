@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-ingest">
+  <div class="batch-ingest w-100">
     <loader :show="inProgress" />
     <div class="container col-12">
       <div class="row expand-h">
@@ -231,7 +231,7 @@ export default {
         (unit) => unit.id === unitEntity.currentUnit
       )[0].name;
     } else {
-      self.unitName = unitEntity.unitList[0].name; //Case - User hasn't select any UNIT: We are assuming the default unit is the first one of the unit list of 'Content > Navigation' page
+      self.unitName = "";
     }
     console.log("reached batchingest.vue");
     console.log("unitName = " + self.unitName);
