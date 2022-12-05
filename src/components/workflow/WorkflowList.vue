@@ -222,7 +222,9 @@ export default {
       self.workflowService
         .getAllWorkflows()
         .then((response) => {
-          self.listOfWorkflows = response.data.rows;
+          self.listOfWorkflows = self.sharedService.sortByAlphabatical(
+            response.data.rows
+          );
         })
         .catch((e) => {
           console.log(e, "error");
