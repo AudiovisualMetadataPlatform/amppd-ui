@@ -304,7 +304,7 @@ export default {
         detailBody: {},
         mgmScoringParameters: [],
       },
-      testParams: {},
+      testParams: { "Match types": "Yes" },
       showModal: false,
       selectedRecord: {},
       rightArrowSvg: config.common.icons["right_arrow"],
@@ -431,7 +431,7 @@ export default {
       self.selectedMst.index = mstIndex;
       self.selectedMst.body = mstObj;
       self.getDetailsMgmScoringTool(mstObj.id);
-      this.testParams = {};
+      this.testParams = { "Match types": "Yes" };
       self.clearSelectedRecords();
     },
     onGroundtruthInfo(ev, mstObj) {
@@ -448,7 +448,7 @@ export default {
       if (self.mgmCategory.msts.length) {
         self.selectedMst.body = self.mgmCategory.msts[0];
         self.getDetailsMgmScoringTool(self.mgmCategory.msts[0].id);
-        self.testParams = {};
+        self.testParams = { "Match types": "Yes" };
       }
     },
     mgmCategoryLoading: function() {
