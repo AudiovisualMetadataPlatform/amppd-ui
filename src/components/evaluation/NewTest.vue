@@ -53,8 +53,8 @@
       <div
         v-if="
           selectedMst.detailBody &&
-            selectedMst.detailBody.parameters &&
-            selectedMst.detailBody.parameters.length
+            selectedMst.mgmScoringParameters &&
+            selectedMst.mgmScoringParameters.length
         "
       >
         <h3 class="m-b-0 m-t-2 mt-4">
@@ -68,14 +68,14 @@
         class="form-group marg-t-1"
         v-if="
           selectedMst.detailBody &&
-            selectedMst.detailBody.parameters &&
-            selectedMst.detailBody.parameters.length
+            selectedMst.mgmScoringParameters &&
+            selectedMst.mgmScoringParameters.length
         "
       >
         <div
           v-for="par in sharedService
             .sortByAlphabatical(
-              JSON.parse(JSON.stringify(selectedMst.detailBody.parameters))
+              JSON.parse(JSON.stringify(selectedMst.mgmScoringParameters))
             )
             .reverse()"
           :key="par.id"
@@ -119,18 +119,13 @@
             v-else-if="
               par.type === 'MULTI_SELECT' &&
                 selectedMst.detailBody.dependencyParamName &&
-                testParams[selectedMst.detailBody.dependencyParamName]
+                testParams[par.dependencyName]
             "
           >
             <b-form-group>
               <b-form-checkbox-group
                 v-model="testParams[par.name]"
-                :options="
-                  options(
-                    par,
-                    testParams[selectedMst.detailBody.dependencyParamName]
-                  )
-                "
+                :options="options(par, testParams[par.dependencyName])"
                 name="multiselect-checkbox"
               ></b-form-checkbox-group>
             </b-form-group>
@@ -141,8 +136,8 @@
         <h3 class="m-b-0 m-t-2 mt-4">
           {{
             selectedMst.detailBody &&
-            selectedMst.detailBody.parameters &&
-            selectedMst.detailBody.parameters.length
+            selectedMst.mgmScoringParameters &&
+            selectedMst.mgmScoringParameters.length
               ? "3"
               : "2"
           }}) Select MGM Outputs to Test
@@ -158,8 +153,8 @@
       <h3 class="m-b-0 m-t-2 mt-4">
         {{
           selectedMst.detailBody &&
-          selectedMst.detailBody.parameters &&
-          selectedMst.detailBody.parameters.length
+          selectedMst.mgmScoringParameters &&
+          selectedMst.mgmScoringParameters.length
             ? "4"
             : "3"
         }}) Upload or Select Ground Truth Data
@@ -303,7 +298,12 @@ export default {
       loading: false,
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
-      selectedMst: { index: "", body: {}, detailBody: {} },
+      selectedMst: {
+        index: "",
+        body: {},
+        detailBody: {},
+        mgmScoringParameters: [],
+      },
       testParams: {},
       showModal: false,
       selectedRecord: {},
@@ -323,19 +323,22 @@ export default {
     },
   },
   methods: {
-    onChangeSelect(paramName) {
+    clearSelectedRecords() {
       const self = this;
-
       //Reset "Upload or Select Ground Truth Data"
       for (let i = 0; i < self.mgmEvaluation.selectedRecords.length; i++) {
         self.mgmEvaluation.selectedRecords[i].gtSupplement &&
           delete self.mgmEvaluation.selectedRecords[i].gtSupplement;
       }
       self.mgmEvaluation.selectedRecords = [];
+    },
+    onChangeSelect(paramName) {
+      const self = this;
+      self.clearSelectedRecords();
 
       //Reset multi select parameters on depending parameter change
       if (paramName === self.selectedMst.detailBody.dependencyParamName) {
-        const multiSelectParameter = self.selectedMst.detailBody.parameters.filter(
+        const multiSelectParameter = self.selectedMst.mgmScoringParameters.filter(
           (param) => param.type === "MULTI_SELECT"
         )[0];
         delete self.testParams[multiSelectParameter.name];
@@ -385,7 +388,10 @@ export default {
       const self = this;
       let index;
       self.mgmEvaluation.selectedRecords.map((el, i) => {
-        if (el.id === record.id) index = i;
+        if (el.id === record.id) {
+          index = i;
+          delete record.gtSupplement;
+        }
       });
       self.mgmEvaluation.selectedRecords.splice(index, 1);
     },
@@ -398,6 +404,15 @@ export default {
         );
         self.selectedMst.detailBody = JSON.parse(
           JSON.stringify(mgmScoringToolDetailsResponse.data)
+        );
+        const mgmScoringToolParametersDetailsResponse = await this.evaluationService.getDetailParametersMgmScoringTool(
+          mstId
+        );
+        self.selectedMst.mgmScoringParameters = JSON.parse(
+          JSON.stringify(
+            mgmScoringToolParametersDetailsResponse.data._embedded
+              .mgmScoringParameters
+          )
         );
         self.mgmEvaluation.selectedRecords = [];
         self.loading = false;
@@ -417,6 +432,7 @@ export default {
       self.selectedMst.body = mstObj;
       self.getDetailsMgmScoringTool(mstObj.id);
       this.testParams = {};
+      self.clearSelectedRecords();
     },
     onGroundtruthInfo(ev, mstObj) {
       console.log("Clicked on onGroundtruthInfo!!" + mstObj);
