@@ -9,6 +9,7 @@
       aria-haspopup="true"
       aria-expanded="this.workflowDashboard.filtersEnabled.dateFilter ? 'true' : 'false'"
       v-on:click="setFilterFlags"
+      :disabled="parent === 'TestResults'"
     >
       Date range
     </button>
@@ -84,6 +85,11 @@ export default {
       },
     };
   },
+  props: {
+    parent: {
+      default: "",
+    },
+  },
   computed: {
     workflowDashboard: sync("workflowDashboard"),
   },
@@ -148,5 +154,15 @@ input {
 }
 .my-datepicker {
   border: none;
+}
+#dropdownMenuButton:hover {
+  background: #153c4d !important;
+  border-color: #153c4d;
+  color: #fff !important;
+}
+#dropdownMenuButton:hover:disabled {
+  background: rgba(187, 187, 187, 0.856) !important;
+  border-color: rgba(187, 187, 187, 0.856) !important;
+  color: #153c4d !important;
 }
 </style>

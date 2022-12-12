@@ -4,14 +4,14 @@
     <div
       class="container col-12"
       :class="{
-        'p-0': parent === 'NewTest',
+        'p-0': parent === 'NewTest' || parent === 'TestResults',
       }"
     >
       <div class="row">
         <div
           class="col-12"
           :class="{
-            'bg-light-gray-1': parent !== 'NewTest',
+            'bg-light-gray-1': parent !== 'NewTest' && parent !== 'TestResults',
           }"
         >
           <main class="m-0">
@@ -19,18 +19,24 @@
               <div
                 class="card"
                 :class="{
-                  'mb-0': parent === 'NewTest',
+                  'mb-0': parent === 'NewTest' || parent === 'TestResults',
                 }"
               >
                 <div class="card-body">
-                  <h1 v-if="parent !== 'NewTest'" class="card-title">
+                  <h1
+                    v-if="parent !== 'NewTest' && parent !== 'TestResults'"
+                    class="card-title"
+                  >
                     AMP Dashboard
                   </h1>
                   <div
                     class="container-fluid"
                     v-if="
-                      (parent === 'NewTest' && filterCount > 1) ||
-                        (parent !== 'NewTest' && filterCount > 0)
+                      ((parent === 'NewTest' || parent === 'TestResults') &&
+                        filterCount > 1) ||
+                        (parent !== 'NewTest' &&
+                          parent !== 'TestResults' &&
+                          filterCount > 0)
                     "
                   >
                     <div class="row selected-filters-row">
@@ -387,7 +393,9 @@
                           </div>
                         </div>
                       </button>
-                      <span v-if="parent !== 'NewTest'">
+                      <span
+                        v-if="parent !== 'NewTest' && parent !== 'TestResults'"
+                      >
                         <button
                           class="btn btn-outline col-sm-2 selected-filter-button"
                           v-for="(status, index) in workflowDashboard
@@ -493,27 +501,32 @@
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('unit')"
+                        :disabled="parent === 'TestResults'"
                         >Unit</b-button
                       >
                       <b-button
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('collection')"
+                        :disabled="parent === 'TestResults'"
                         >Collection</b-button
                       >
                       <b-button
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('workflow')"
+                        :disabled="parent === 'TestResults'"
                         >Workflow</b-button
                       >
                       <b-button
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('output')"
+                        :disabled="parent === 'TestResults'"
                         >Output</b-button
                       >
                       <DateFilter
+                        :parent="parent"
                         @displayChanged="
                           changeDisplayedFilter(
                             workflowDashboard.filtersEnabled.dateFilter
@@ -524,28 +537,32 @@
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('submitter')"
+                        :disabled="parent === 'TestResults'"
                         >Submitter</b-button
                       >
                       <b-button
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('item')"
+                        :disabled="parent === 'TestResults'"
                         >Item</b-button
                       >
                       <b-button
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('primaryfile')"
+                        :disabled="parent === 'TestResults'"
                         >Content File</b-button
                       >
                       <b-button
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('step')"
+                        :disabled="parent === 'TestResults'"
                         >Step</b-button
                       >
                       <b-button
-                        v-if="parent !== 'NewTest'"
+                        v-if="parent !== 'NewTest' && parent !== 'TestResults'"
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('status')"
@@ -577,7 +594,22 @@
                           <b-dropdown-form>
                             <b-form-checkbox
                               v-for="column in dashboardColumns.filter(
-                                (item) => item.field !== 'addToTest'
+                                (item) => {
+                                  if (parent === 'TestResults')
+                                    return (
+                                      item.field !== 'dateCreated' &&
+                                      item.field !== 'status' &&
+                                      item.field !== 'actions'
+                                    );
+                                  else
+                                    return (
+                                      item.field !== 'testDate' &&
+                                      item.field !== 'outputDate' &&
+                                      item.field !== 'groundTruth' &&
+                                      item.field !== 'outputTest' &&
+                                      item.field !== 'addToTest'
+                                    );
+                                }
                               )"
                               :key="column.field"
                               :value="column"
@@ -591,7 +623,10 @@
                         </b-dropdown>
                       </div>
 
-                      <div v-if="parent !== 'NewTest'" class="relevant-togggle">
+                      <div
+                        v-if="parent !== 'NewTest' && parent !== 'TestResults'"
+                        class="relevant-togggle"
+                      >
                         <span class="txt-v pr-2"
                           >Show Relevant Results Only</span
                         >
@@ -609,7 +644,11 @@
                     </div>
                     <div
                       class="row spacer"
-                      :class="parent === 'NewTest' ? 'filter-gap' : ''"
+                      :class="
+                        parent === 'NewTest' || parent === 'TestResults'
+                          ? 'filter-gap'
+                          : ''
+                      "
                     ></div>
                   </div>
                   <DashboardTable
@@ -739,31 +778,35 @@ export default {
       item = !item;
     },
     clearAll() {
-      this.workflowDashboard.searchQuery.filterByDates = [];
-      this.workflowDashboard.searchQuery.filterBySubmitters = [];
-      this.workflowDashboard.searchQuery.filterByCollections = [];
-      this.workflowDashboard.searchQuery.filterByUnits = [];
-      this.workflowDashboard.searchQuery.filterByExternalIds = [];
-      this.workflowDashboard.searchQuery.filterByItems = [];
-      this.workflowDashboard.searchQuery.filterByFiles = [];
-      this.workflowDashboard.searchQuery.filterByWorkflows = [];
-      this.workflowDashboard.searchQuery.filterBySteps = [];
-      this.workflowDashboard.searchQuery.filterByOutputs = [];
-      this.workflowDashboard.searchQuery.filterBySearchTerms = [];
-      if (this.parent !== "NewTest") {
-        this.workflowDashboard.searchQuery.filterByStatuses = [];
-      }
-      // Clear selected search on popup
-      this.selectedFilters["items"] = [];
-      this.selectedFilters["primaryfiles"] = [];
-      this.selectedFilters["collections"] = [];
-      this.selectedFilters["units"] = [];
-      this.selectedFilters["workflows"] = [];
-      this.selectedFilters["outputs"] = [];
-      this.selectedFilters["submitters"] = [];
-      this.selectedFilters["steps"] = [];
-      if (this.parent !== "NewTest") {
-        this.selectedFilters["statuses"] = [];
+      if (this.parent === "TestResults") {
+        this.workflowDashboard.searchQuery.sortRule.columnName = "id";
+      } else {
+        this.workflowDashboard.searchQuery.filterByDates = [];
+        this.workflowDashboard.searchQuery.filterBySubmitters = [];
+        this.workflowDashboard.searchQuery.filterByCollections = [];
+        this.workflowDashboard.searchQuery.filterByUnits = [];
+        this.workflowDashboard.searchQuery.filterByExternalIds = [];
+        this.workflowDashboard.searchQuery.filterByItems = [];
+        this.workflowDashboard.searchQuery.filterByFiles = [];
+        this.workflowDashboard.searchQuery.filterByWorkflows = [];
+        this.workflowDashboard.searchQuery.filterBySteps = [];
+        this.workflowDashboard.searchQuery.filterByOutputs = [];
+        this.workflowDashboard.searchQuery.filterBySearchTerms = [];
+        if (this.parent !== "NewTest") {
+          this.workflowDashboard.searchQuery.filterByStatuses = [];
+        }
+        // Clear selected search on popup
+        this.selectedFilters["items"] = [];
+        this.selectedFilters["primaryfiles"] = [];
+        this.selectedFilters["collections"] = [];
+        this.selectedFilters["units"] = [];
+        this.selectedFilters["workflows"] = [];
+        this.selectedFilters["outputs"] = [];
+        this.selectedFilters["submitters"] = [];
+        this.selectedFilters["steps"] = [];
+        if (this.parent !== "NewTest") {
+          this.selectedFilters["statuses"] = [];
+        }
       }
     },
     removeDateFilter() {
@@ -1072,25 +1115,55 @@ export default {
   },
   mounted() {
     this.columns = this.dashboardColumns;
-    if (this.parent === "NewTest") {
+    if (this.parent === "TestResults") {
       this.clearAll();
-      this.columns = this.columns.filter(
-        (column) => column.field !== "status" && column.field !== "actions"
-      );
+      this.columns = this.columns.filter((column) => {
+        if (column.field === "addToTest") {
+          column.label = "Visualize";
+        }
+
+        return (
+          column.field !== "dateCreated" &&
+          column.field !== "status" &&
+          column.field !== "actions"
+        );
+      });
+      this.workflowDashboard.searchQuery.pageNum = 1;
+    } else if (this.parent === "NewTest") {
+      this.clearAll();
+      this.columns = this.columns.filter((column) => {
+        if (column.field === "addToTest") {
+          column.label = "Add to Test";
+        }
+
+        return (
+          column.field !== "testDate" &&
+          column.field !== "outputDate" &&
+          column.field !== "groundTruth" &&
+          column.field !== "outputTest" &&
+          column.field !== "status" &&
+          column.field !== "actions"
+        );
+      });
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.workflowDashboard.searchQuery.filterByTypes = [
         this.workflowResultType,
       ];
       this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
     } else {
-      this.columns = this.columns.filter(
-        (column) =>
-          column.field !== "addToTest" &&
+      this.columns = this.columns.filter((column) => {
+        return (
+          column.field !== "testDate" &&
+          column.field !== "outputDate" &&
           column.field !== "unit" &&
-          column.field !== "actions" &&
           column.field !== "externalSource" &&
-          column.field !== "workflowStep"
-      );
+          column.field !== "workflowStep" &&
+          column.field !== "groundTruth" &&
+          column.field !== "outputTest" &&
+          column.field !== "actions" &&
+          column.field !== "addToTest"
+        );
+      });
       this.workflowDashboard.searchQuery.filterByTypes = [];
       this.clearAll();
     }
