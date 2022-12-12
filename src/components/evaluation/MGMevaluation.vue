@@ -95,7 +95,10 @@
                         class="d-flex col-12 mt-3 mb-0 pr-0"
                         v-if="selectedTab === 0"
                       >
-                        <TestResults :mgmCategory="mgmCategoryDetails" />
+                        <TestResults
+                          :mgmCategory="mgmCategoryDetails"
+                          :mgmCategoryId="mgmCategoryId"
+                        />
                       </dl>
                       <dl class="d-flex col-12 mt-3 mb-0 pr-0" v-else>
                         <div class="w-100 row div-test">

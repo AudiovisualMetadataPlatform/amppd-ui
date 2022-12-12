@@ -1,23 +1,41 @@
 <template>
-  <div>
+  <div class="w-100">
     <loader :show="loading" />
-    <h3 class="m-b-0 m-t-2 mt-1">All {{ mgmCategory.name }} Test Results</h3>
-
+    <h3 class="m-b-0 m-t-2 mt-1">
+      {{
+        selectedMst.detailBody && selectedMst.detailBody.name
+          ? selectedMst.detailBody.name
+          : "All " + mgmCategory.name
+      }}
+      Test Results
+    </h3>
     <select
-      class="select custom-select mb-4 w-100 select-test"
+      class="select custom-select mb-4 select-test"
       v-model="selectedMst.id"
       @change="onInputChange($event)"
       required
-      disabled
       ><option value="default" disabled selected>Select a test...</option>
-      <option v-for="(mst, i) in mgmCategory.msts" :key="i" :value="mst.id">{{
-        mst.name
-      }}</option>
+      <option
+        v-for="(mst, i) in sharedService.sortByAlphabatical(mgmCategory.msts)"
+        :key="i"
+        :value="mst.id"
+        >{{ mst.name }}</option
+      >
     </select>
+    <WorkflowDashboard parent="TestResults" workflowResultType="segment" />
+    <button
+      class="btn btn-primary btn-lg marg-tb-3 float-right mt-3 mb-3"
+      type="button"
+      @click="onVisualize"
+      disabled
+    >
+      Visualize
+    </button>
   </div>
 </template>
 
 <script>
+import { sync } from "vuex-pathify";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "../../service/shared-service";
 import EvaluationService from "../../service/evaluation-service";
@@ -37,25 +55,63 @@ export default {
       selectedMst: { id: "default", detailBody: {} },
     };
   },
-  computed: {},
+  computed: {
+    mgmEvaluation: sync("mgmEvaluation"),
+    workflowDashboard: sync("workflowDashboard"),
+  },
   props: {
     mgmCategory: {
       default: {},
     },
-  },
-  methods: {
-    onInputChange(ev) {
-      const self = this;
-      console.log("Selected MST: " + self.selectedMst.id);
+    mgmCategoryId: {
+      default: null,
     },
   },
-  mounted() {},
+  methods: {
+    onVisualize() {
+      const self = this;
+      console.log(
+        "Selected test results: " + self.mgmEvaluation.selectedRecords
+      );
+    },
+    async onInputChange(ev) {
+      const self = this;
+      self.workflowDashboard.loading = true;
+      try {
+        this.workflowDashboard.searchQuery.pageNum = 1;
+        self.workflowDashboard.searchQuery.filterByMstTools = [
+          self.selectedMst.id,
+        ];
+        self.workflowDashboard.searchResult = await self.evaluationService.getMgmEvaluationTestResults(
+          self.workflowDashboard.searchQuery
+        );
+        self.selectedMst.detailBody = self.mgmCategory.msts.filter(
+          (mst) => mst.id === this.selectedMst.id
+        )[0];
+      } catch (error) {
+        self.$bvToast.toast(
+          "Oops! Something went wrong.",
+          self.sharedService.erorrToastConfig
+        );
+        console.error(error.message);
+      }
+      self.workflowDashboard.loading = false;
+    },
+  },
+  mounted() {
+    this.mgmEvaluation.selectedRecords = [];
+    this.workflowDashboard.searchQuery.pageNum = 1;
+    this.workflowDashboard.searchQuery.filterByMstTools = [];
+    this.workflowDashboard.searchQuery.filterByCategories = [
+      this.mgmCategoryId,
+    ];
+  },
 };
 </script>
 
 <style lang="css">
 @import "/amppd-ui/src/styles/style.css";
-/* .select-test {
-  width: 30% !important;
-} */
+.select-test {
+  width: 33% !important;
+}
 </style>

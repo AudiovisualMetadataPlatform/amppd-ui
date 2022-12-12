@@ -38,4 +38,18 @@ export default class EvaluationService extends BaseService {
       `/mgmScoringTools/${id}/parameters?projection=detail`
     );
   }
+
+  /***
+   * To get all the MGM Evaluation test results
+   * @method POST
+   */
+
+  async getMgmEvaluationTestResults(searchQuery) {
+    var data = await super
+      .post_auth("/mgm-evaluation-test/query", searchQuery)
+      .then((result) => {
+        return result.data;
+      });
+    return data;
+  }
 }
