@@ -2,11 +2,7 @@
   <div class="w-100">
     <loader :show="loading" />
     <h3 class="m-b-0 m-t-2 mt-1">
-      {{
-        selectedMst.detailBody && selectedMst.detailBody.name
-          ? selectedMst.detailBody.name
-          : "All " + mgmCategory.name
-      }}
+      {{ mgmCategory.name }}
       Test Results
     </h3>
     <select
@@ -15,7 +11,6 @@
       @change="onInputChange($event)"
       required
       ><option value="default" disabled selected>Select a test...</option>
-      ><option value="allTests">All Tests</option>
       <option
         v-for="(mst, i) in sharedService.sortByAlphabatical(mgmCategory.msts)"
         :key="i"
@@ -23,15 +18,17 @@
         >{{ mst.name }}</option
       >
     </select>
-    <WorkflowDashboard parent="TestResults" workflowResultType="segment" />
-    <button
-      class="btn btn-primary btn-lg marg-tb-3 float-right mt-3 mb-3"
-      type="button"
-      @click="onVisualize"
-      disabled
-    >
-      Visualize
-    </button>
+    <div class="w-100" v-if="showTestResults">
+      <WorkflowDashboard parent="TestResults" />
+      <button
+        class="btn btn-primary btn-lg marg-tb-3 float-right mt-3 mb-3"
+        type="button"
+        @click="onVisualize"
+        disabled
+      >
+        Visualize
+      </button>
+    </div>
   </div>
 </template>
 
@@ -54,6 +51,7 @@ export default {
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
       selectedMst: { id: "default", detailBody: {} },
+      showTestResults: false,
     };
   },
   computed: {
@@ -79,20 +77,20 @@ export default {
       const self = this;
       self.workflowDashboard.loading = true;
       try {
+        this.mgmEvaluation.selectedRecords = [];
         this.workflowDashboard.searchQuery.pageNum = 1;
-        if (ev.target.value === "allTests") {
-          self.workflowDashboard.searchQuery.filterByMstTools = [];
-        } else {
-          self.workflowDashboard.searchQuery.filterByMstTools = [
-            self.selectedMst.id,
-          ];
-        }
+        this.workflowDashboard.searchQuery.sortRule.columnName = "id";
+        this.workflowDashboard.searchQuery.sortRule.orderByDescending = true;
+        this.workflowDashboard.searchQuery.filterByCategories = [
+          this.mgmCategoryId,
+        ];
+        self.workflowDashboard.searchQuery.filterByMstTools = [
+          self.selectedMst.id,
+        ];
         self.workflowDashboard.searchResult = await self.evaluationService.getMgmEvaluationTestResults(
           self.workflowDashboard.searchQuery
         );
-        self.selectedMst.detailBody = self.mgmCategory.msts.filter(
-          (mst) => mst.id === this.selectedMst.id
-        )[0];
+        self.showTestResults = true;
       } catch (error) {
         self.$bvToast.toast(
           "Oops! Something went wrong.",
@@ -103,13 +101,11 @@ export default {
       self.workflowDashboard.loading = false;
     },
   },
-  mounted() {
-    this.mgmEvaluation.selectedRecords = [];
+  mounted() {},
+  beforeDestroy() {
+    this.workflowDashboard.searchQuery.sortRule.columnName = "dateCreated";
+    this.workflowDashboard.searchQuery.sortRule.orderByDescending = true;
     this.workflowDashboard.searchQuery.pageNum = 1;
-    this.workflowDashboard.searchQuery.filterByMstTools = [];
-    this.workflowDashboard.searchQuery.filterByCategories = [
-      this.mgmCategoryId,
-    ];
   },
 };
 </script>

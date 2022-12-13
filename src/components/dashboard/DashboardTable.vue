@@ -88,7 +88,12 @@
       <table id="myTable" class="table dataTable no-footer">
         <thead>
           <tr v-if="parent === 'NewTest' || parent === 'TestResults'">
-            <th scope="col" v-for="column in columns" :key="column.field">
+            <th
+              scope="col"
+              v-for="column in columns"
+              :key="column.field"
+              :class="{ 'text-center': column.field === 'addToTest' }"
+            >
               <span class="col-title new-test-column">{{ column.label }}</span>
             </th>
           </tr>
