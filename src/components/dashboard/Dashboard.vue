@@ -599,7 +599,8 @@
                                     return (
                                       item.field !== 'dateCreated' &&
                                       item.field !== 'status' &&
-                                      item.field !== 'actions'
+                                      item.field !== 'actions' &&
+                                      item.field !== 'addToTest'
                                     );
                                   else
                                     return (

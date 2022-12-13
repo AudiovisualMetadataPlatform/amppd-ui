@@ -1,6 +1,8 @@
 <template>
   <div class="w-100 new-test">
-    <loader :show="loading" />
+    <loader
+      :show="workflowDashboard.loading ? workflowDashboard.loading : loading"
+    />
     <h3 class="m-b-0 m-t-2 mt-1">1) Select a Test</h3>
     <b-card
       class="mgm-card bg-light-gray-1"
@@ -313,6 +315,7 @@ export default {
   },
   computed: {
     mgmEvaluation: sync("mgmEvaluation"),
+    workflowDashboard: sync("workflowDashboard"),
   },
   props: {
     mgmCategory: {
