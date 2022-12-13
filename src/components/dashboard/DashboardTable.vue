@@ -2,7 +2,11 @@
   <div class="dataTables_wrapper no-footer">
     <loader :show="workflowDashboard.loading" />
     <div
-      v-if="parent !== 'NewTest' && parent !== 'TestResults'"
+      v-if="
+        parent !== 'NewTest' &&
+          parent !== 'TestResults' &&
+          parent !== 'Deliverables'
+      "
       class="export-row"
     >
       <input
@@ -14,7 +18,7 @@
       />
     </div>
 
-    <div class="row col-12 p-0 m-0">
+    <div v-if="parent !== 'Deliverables'" class="row col-12 p-0 m-0">
       <div
         class="
           col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12
@@ -22,10 +26,6 @@
           mt-1
         "
       >
-        <!-- <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
-      <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
-      Entries
-        </label>-->
         <label>
           Show
           <select
@@ -45,11 +45,6 @@
           </select>
           Entries
         </label>
-        <!-- <span class="txt-v"> Show Relevant Results Only </span>
-    <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
-      <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
-      <span class="slider round"></span>
-        </label>-->
       </div>
       <b-pagination
         class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100 mt-1"
@@ -66,23 +61,20 @@
         next-text="Next"
       ></b-pagination>
       <search-filter
+        v-if="parent !== 'Deliverables'"
         :parent="parent"
         class="col-xl-3 col-md-3 col-sm-12 col-xs-12 pr-0 justify-content-right"
       />
     </div>
-    <!-- <div class="relevant-togggle"><span class="txt-v">Show Relevant Results Only</span>
-    <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
-      <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
-      <span class="slider round"></span>
-    </label>
-    </div>-->
-
-    <br />
-
+    <br v-if="parent !== 'Deliverables'" />
     <div
       class="table-responsive"
       :class="
-        parent === 'NewTest' || parent === 'TestResults' ? 'table-gap' : ''
+        parent === 'NewTest' ||
+        parent === 'TestResults' ||
+        parent === 'Deliverables'
+          ? 'table-gap'
+          : ''
       "
     >
       <table id="myTable" class="table dataTable no-footer">
@@ -287,6 +279,20 @@
                 :value="rec"
               />
             </td>
+            <td
+              v-if="parent === 'Deliverables' && checkAvailability('isFinal')"
+              class="slim-col-14"
+            >
+              <label class="switch" title="Final Result">
+                <span class="sr-only">Final Result</span>
+                <input
+                  type="checkbox"
+                  v-model="rec.isFinal"
+                  v-on:click="setWorkflowResultFinal(rec.id)"
+                />
+                <span class="slider round"></span>
+              </label>
+            </td>
           </tr>
         </tbody>
         <tbody v-else>
@@ -304,13 +310,7 @@
           </tr>
         </tbody>
       </table>
-      <!-- <pagination v-if="this.workflowDashboard.searchQuery"
-          :pageNum="workflowDashboard.searchQuery.pageNum"
-          :resultsPerPage="resultsPerPage"
-          :totalResults="filteredRows.length"
-          :maxPages="1"
-      @paginate="paginate" />-->
-      <div class="row col-12 p-0 m-0">
+      <div v-if="parent !== 'Deliverables'" class="row col-12 p-0 m-0">
         <div class="col-2 col-md-2 col-sm-2 col-xs-12">
           <div class="dataTables_info">
             <label>{{ totalText }}</label>
@@ -460,6 +460,28 @@ export default {
     },
   },
   methods: {
+    async setWorkflowResultFinal(workflowResultId) {
+      for (
+        var r = 0;
+        r < this.workflowDashboard.searchResult.rows.length;
+        r++
+      ) {
+        if (
+          this.workflowDashboard.searchResult.rows[r].id == workflowResultId
+        ) {
+          var thisRow = this.workflowDashboard.searchResult.rows[r];
+          if (!thisRow.isFinal) {
+            thisRow.isFinal = false;
+          }
+          thisRow.isFinal = !thisRow.isFinal;
+          this.workflowResultService.setWorkflowResultFinal(
+            workflowResultId,
+            thisRow.isFinal
+          );
+          break;
+        }
+      }
+    },
     checkAvailability(fieldName) {
       const search = this.columns.find((column) => column.field === fieldName);
       if (!search) return false;
@@ -503,10 +525,15 @@ export default {
       }
     },
     async sortQuery(sortRule) {
-      if (sortRule.columnName !== "actions") {
+      if (this.parent === "Deliverables") {
         this.workflowDashboard.searchQuery.sortRule = sortRule;
-        this.workflowDashboard.searchQuery.pageNum = 1;
-        this.refreshData();
+        this.$emit("deliverableSortQuery");
+      } else {
+        if (sortRule.columnName !== "actions") {
+          this.workflowDashboard.searchQuery.sortRule = sortRule;
+          this.workflowDashboard.searchQuery.pageNum = 1;
+          this.refreshData();
+        }
       }
     },
     getDateString() {
@@ -538,11 +565,11 @@ export default {
       const self = this;
       self.workflowDashboard.loading = true;
       try {
-        if (self.parent === "TestResults") {
+        if (self.parent === "TestResults" && self.parent !== "Deliverables") {
           self.workflowDashboard.searchResult = await this.evaluationService.getMgmEvaluationTestResults(
             this.workflowDashboard.searchQuery
           );
-        } else {
+        } else if (self.parent !== "Deliverables") {
           self.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(
             this.workflowDashboard.searchQuery
           );
