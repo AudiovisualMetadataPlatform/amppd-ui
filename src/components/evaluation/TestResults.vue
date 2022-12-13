@@ -15,6 +15,7 @@
       @change="onInputChange($event)"
       required
       ><option value="default" disabled selected>Select a test...</option>
+      ><option value="allTests">All Tests</option>
       <option
         v-for="(mst, i) in sharedService.sortByAlphabatical(mgmCategory.msts)"
         :key="i"
@@ -79,9 +80,13 @@ export default {
       self.workflowDashboard.loading = true;
       try {
         this.workflowDashboard.searchQuery.pageNum = 1;
-        self.workflowDashboard.searchQuery.filterByMstTools = [
-          self.selectedMst.id,
-        ];
+        if (ev.target.value === "allTests") {
+          self.workflowDashboard.searchQuery.filterByMstTools = [];
+        } else {
+          self.workflowDashboard.searchQuery.filterByMstTools = [
+            self.selectedMst.id,
+          ];
+        }
         self.workflowDashboard.searchResult = await self.evaluationService.getMgmEvaluationTestResults(
           self.workflowDashboard.searchQuery
         );
