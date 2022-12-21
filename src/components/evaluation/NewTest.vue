@@ -348,10 +348,13 @@ export default {
             self.testParams[self.selectedMst.mgmScoringParameters[i].name]
           ) {
             if (
-              self.selectedMst.mgmScoringParameters[i].name ===
-                "Entity types" &&
-              !!self.testParams["Entity types"] &&
-              !self.testParams["Entity types"].length
+              self.selectedMst.mgmScoringParameters[i].type ===
+                "MULTI_SELECT" &&
+              !!self.testParams[
+                self.selectedMst.mgmScoringParameters[i].name
+              ] &&
+              !self.testParams[self.selectedMst.mgmScoringParameters[i].name]
+                .length
             ) {
               availableParameters = false;
               break;
