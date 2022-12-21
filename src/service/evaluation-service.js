@@ -52,4 +52,18 @@ export default class EvaluationService extends BaseService {
       });
     return data;
   }
+
+  /***
+   * To submit a MGM new test
+   * @method POST
+   */
+
+  async mgmSubmitNewTest(body) {
+    var data = await super
+      .post_auth("/mgm-evaluation-test/new", body)
+      .then((result) => {
+        return result.data;
+      });
+    return data;
+  }
 }

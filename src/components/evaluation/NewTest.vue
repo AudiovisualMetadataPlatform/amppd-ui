@@ -1,8 +1,6 @@
 <template>
   <div class="w-100 new-test">
-    <loader
-      :show="workflowDashboard.loading ? workflowDashboard.loading : loading"
-    />
+    <loader :show="workflowDashboard.loading ? false : loading" />
     <h3 class="m-b-0 m-t-2 mt-1">1) Select a Test</h3>
     <b-card
       class="mgm-card bg-light-gray-1"
@@ -101,6 +99,7 @@
               aria-label="description"
               aria-describedby="basic-addon2"
               step="0.25"
+              min="0"
               v-model="testParams[par.name]"
             />
             <div class="input-group-append">
@@ -257,7 +256,7 @@
       class="btn btn-primary btn-lg marg-tb-3 float-right"
       type="button"
       @click="onNewTestSubmit"
-      disabled
+      :disabled="activeSubmitButton()"
     >
       Submit
     </button>
@@ -326,6 +325,68 @@ export default {
     },
   },
   methods: {
+    activeSubmitButton() {
+      const self = this;
+
+      // Checking values for all the parameters
+      let availableParameters = false;
+      if (
+        self.selectedMst.detailBody.id &&
+        !self.selectedMst.mgmScoringParameters.length
+      )
+        availableParameters = true;
+      if (
+        self.selectedMst.mgmScoringParameters.length === 1 &&
+        self.selectedMst.mgmScoringParameters[0].name &&
+        self.testParams[self.selectedMst.mgmScoringParameters[0].name]
+      )
+        availableParameters = true;
+      if (self.selectedMst.mgmScoringParameters.length > 1) {
+        for (let i = 0; i < self.selectedMst.mgmScoringParameters.length; i++) {
+          if (
+            self.selectedMst.mgmScoringParameters[i].name &&
+            self.testParams[self.selectedMst.mgmScoringParameters[i].name]
+          ) {
+            if (
+              self.selectedMst.mgmScoringParameters[i].type ===
+                "MULTI_SELECT" &&
+              !!self.testParams[
+                self.selectedMst.mgmScoringParameters[i].name
+              ] &&
+              !self.testParams[self.selectedMst.mgmScoringParameters[i].name]
+                .length
+            ) {
+              availableParameters = false;
+              break;
+            } else availableParameters = true;
+          } else {
+            availableParameters = false;
+            break;
+          }
+        }
+      }
+
+      // Checking groundtruth for all the selected files
+      let availableGtSupplement = false;
+      for (let i = 0; i < self.mgmEvaluation.selectedRecords.length; i++) {
+        if (
+          self.mgmEvaluation.selectedRecords[i] &&
+          self.mgmEvaluation.selectedRecords[i].gtSupplement
+        )
+          availableGtSupplement = true;
+        else {
+          availableGtSupplement = false;
+          break;
+        }
+      }
+
+      return (
+        !self.mgmCategory.id ||
+        !self.selectedMst.detailBody.id ||
+        !availableParameters ||
+        !availableGtSupplement
+      );
+    },
     clearSelectedRecords() {
       const self = this;
       //Reset "Upload or Select Ground Truth Data"
@@ -344,7 +405,8 @@ export default {
         const multiSelectParameter = self.selectedMst.mgmScoringParameters.filter(
           (param) => param.type === "MULTI_SELECT"
         )[0];
-        delete self.testParams[multiSelectParameter.name];
+        if (multiSelectParameter && multiSelectParameter.name)
+          delete self.testParams[multiSelectParameter.name];
       }
     },
     options(parameter, type) {
@@ -380,12 +442,66 @@ export default {
       const self = this;
       this.$emit("changeTab", 0);
     },
-    onNewTestSubmit() {
+    async onNewTestSubmit() {
       const self = this;
-      console.log("Selected mgm Category: " + self.mgmCategory);
-      console.log("Selected mst: " + self.selectedMst);
-      console.log("Selected records: " + self.mgmEvaluation.selectedRecords);
-      console.log("Parameters: " + self.testParams);
+      // console.log("Selected mgm Category: " + self.mgmCategory);
+      // console.log("Selected mst: " + self.selectedMst);
+      // console.log("Selected records: " + self.mgmEvaluation.selectedRecords);
+      // console.log("Parameters: " + self.testParams);
+      self.loading = true;
+      let parameters = [];
+      for (let i = 0; i < self.selectedMst.mgmScoringParameters.length; i++) {
+        parameters.push({
+          id: self.selectedMst.mgmScoringParameters[i].id,
+          value: self.testParams[self.selectedMst.mgmScoringParameters[i].name],
+        });
+      }
+      let files = [];
+      for (let i = 0; i < self.mgmEvaluation.selectedRecords.length; i++) {
+        if (self.mgmEvaluation.selectedRecords[i].gtSupplement)
+          files.push({
+            groundtruthFileId:
+              self.mgmEvaluation.selectedRecords[i].gtSupplement.id,
+            workflowResultId: self.mgmEvaluation.selectedRecords[i].id,
+          });
+      }
+
+      let body;
+      body = {
+        categoryId: self.mgmCategory.id,
+        mstId: self.selectedMst.detailBody.id,
+        parameters: parameters,
+        files: files,
+      };
+
+      try {
+        await this.evaluationService
+          .mgmSubmitNewTest(body)
+          .then((response) => {
+            self.loading = false;
+            if (response.success) {
+              this.$emit("changeTab", 0);
+              return response;
+            } else {
+              response.validationErrors.map((el) =>
+                self.$bvToast.toast(el, self.sharedService.erorrToastConfig)
+              );
+            }
+          })
+          .then((res) => {
+            if (res && res.success)
+              self.$bvToast.toast(
+                "Test has been successfully submitted.",
+                self.sharedService.successToastConfig
+              );
+          });
+      } catch (error) {
+        self.loading = false;
+        self.$bvToast.toast(
+          "Something went wrong. Please try again!",
+          self.sharedService.erorrToastConfig
+        );
+      }
     },
     removeRow(record) {
       const self = this;
