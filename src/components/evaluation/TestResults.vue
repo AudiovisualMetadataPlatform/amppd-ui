@@ -24,7 +24,7 @@
         class="btn btn-primary btn-lg marg-tb-3 float-right mt-3 mb-3"
         type="button"
         @click="onVisualize"
-        disabled
+        :disabled="!mgmEvaluation.selectedRecords.length"
       >
         Visualize
       </button>
@@ -67,10 +67,17 @@ export default {
     },
   },
   methods: {
-    onVisualize() {
+    async onVisualize() {
       const self = this;
-      console.log(
-        "Selected test results: " + self.mgmEvaluation.selectedRecords
+      let testResultIds = "";
+      for (let testResult of self.mgmEvaluation.selectedRecords) {
+        testResultIds =
+          testResultIds === ""
+            ? testResult.id
+            : testResultIds + "," + testResult.id;
+      }
+      self.$router.push(
+        `/mgm-evaluation/${self.mgmCategoryId}/${testResultIds}`
       );
     },
     async onInputChange(ev) {
@@ -79,6 +86,8 @@ export default {
       try {
         this.mgmEvaluation.selectedRecords = [];
         this.workflowDashboard.searchQuery.pageNum = 1;
+        this.workflowDashboard.searchQuery.filterByStatuses = [];
+        this.workflowDashboard.searchQuery.filterByTestStatus = ["SUCCESS"];
         this.workflowDashboard.searchQuery.sortRule.columnName = "id";
         this.workflowDashboard.searchQuery.sortRule.orderByDescending = true;
         this.workflowDashboard.searchQuery.filterByCategories = [
@@ -103,6 +112,7 @@ export default {
   },
   mounted() {},
   beforeDestroy() {
+    this.workflowDashboard.searchQuery.filterByTestStatus = [];
     this.workflowDashboard.searchQuery.sortRule.columnName = "dateCreated";
     this.workflowDashboard.searchQuery.sortRule.orderByDescending = true;
     this.workflowDashboard.searchQuery.pageNum = 1;
