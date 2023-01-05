@@ -448,59 +448,62 @@ export default {
       // console.log("Selected mst: " + self.selectedMst);
       // console.log("Selected records: " + self.mgmEvaluation.selectedRecords);
       // console.log("Parameters: " + self.testParams);
-      self.loading = true;
-      let parameters = [];
-      for (let i = 0; i < self.selectedMst.mgmScoringParameters.length; i++) {
-        parameters.push({
-          id: self.selectedMst.mgmScoringParameters[i].id,
-          value: self.testParams[self.selectedMst.mgmScoringParameters[i].name],
-        });
-      }
-      let files = [];
-      for (let i = 0; i < self.mgmEvaluation.selectedRecords.length; i++) {
-        if (self.mgmEvaluation.selectedRecords[i].gtSupplement)
-          files.push({
-            groundtruthFileId:
-              self.mgmEvaluation.selectedRecords[i].gtSupplement.id,
-            workflowResultId: self.mgmEvaluation.selectedRecords[i].id,
+      if (!self.activeSubmitButton()) {
+        self.loading = true;
+        let parameters = [];
+        for (let i = 0; i < self.selectedMst.mgmScoringParameters.length; i++) {
+          parameters.push({
+            id: self.selectedMst.mgmScoringParameters[i].id,
+            value:
+              self.testParams[self.selectedMst.mgmScoringParameters[i].name],
           });
-      }
+        }
+        let files = [];
+        for (let i = 0; i < self.mgmEvaluation.selectedRecords.length; i++) {
+          if (self.mgmEvaluation.selectedRecords[i].gtSupplement)
+            files.push({
+              groundtruthFileId:
+                self.mgmEvaluation.selectedRecords[i].gtSupplement.id,
+              workflowResultId: self.mgmEvaluation.selectedRecords[i].id,
+            });
+        }
 
-      let body;
-      body = {
-        categoryId: self.mgmCategory.id,
-        mstId: self.selectedMst.detailBody.id,
-        parameters: parameters,
-        files: files,
-      };
+        let body;
+        body = {
+          categoryId: self.mgmCategory.id,
+          mstId: self.selectedMst.detailBody.id,
+          parameters: parameters,
+          files: files,
+        };
 
-      try {
-        await this.evaluationService
-          .mgmSubmitNewTest(body)
-          .then((response) => {
-            self.loading = false;
-            if (response.success) {
-              this.$emit("changeTab", 0);
-              return response;
-            } else {
-              response.validationErrors.map((el) =>
-                self.$bvToast.toast(el, self.sharedService.erorrToastConfig)
-              );
-            }
-          })
-          .then((res) => {
-            if (res && res.success)
-              self.$bvToast.toast(
-                "Test has been successfully submitted.",
-                self.sharedService.successToastConfig
-              );
-          });
-      } catch (error) {
-        self.loading = false;
-        self.$bvToast.toast(
-          "Something went wrong. Please try again!",
-          self.sharedService.erorrToastConfig
-        );
+        try {
+          await this.evaluationService
+            .mgmSubmitNewTest(body)
+            .then((response) => {
+              self.loading = false;
+              if (response.success) {
+                this.$emit("changeTab", 0);
+                return response;
+              } else {
+                response.validationErrors.map((el) =>
+                  self.$bvToast.toast(el, self.sharedService.erorrToastConfig)
+                );
+              }
+            })
+            .then((res) => {
+              if (res && res.success)
+                self.$bvToast.toast(
+                  "Test has been successfully submitted.",
+                  self.sharedService.successToastConfig
+                );
+            });
+        } catch (error) {
+          self.loading = false;
+          self.$bvToast.toast(
+            "Something went wrong. Please try again!",
+            self.sharedService.erorrToastConfig
+          );
+        }
       }
     },
     removeRow(record) {
