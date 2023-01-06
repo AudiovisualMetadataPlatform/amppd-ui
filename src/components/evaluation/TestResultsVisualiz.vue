@@ -21,18 +21,178 @@
                         :key="i"
                       >
                         <b-nav-item
-                          :class="selectedTab === i ? 'active' : ''"
-                          @click="onChangeTab(i)"
+                          :class="selectedResultTab === i ? 'active' : ''"
+                          @click="onChangeResultTab(i)"
                           >{{ item }}</b-nav-item
                         >
                       </span>
                     </b-navbar>
 
                     <dl
-                      class="d-flex col-12 mt-3 mb-0 pr-0"
-                      v-if="selectedTab === 0"
+                      class="d-flex col-12 mt-3 mb-0 pr-0 pl-0"
+                      v-if="selectedResultTab === 0"
                     >
-                      <div>Review Scores</div>
+                      <div class="w-100">
+                        <div>
+                          <h2>{{ selectedTestResult.categoryName }}</h2>
+                          <p>
+                            Precision, recall, F1, and accuracy scores for
+                            speech, music, noise, and silence segments found by
+                            INA Speech Segmenter, scored by comparison of
+                            segments considering a given threshold of seconds
+                            before or after each segment.
+                          </p>
+                        </div>
+                        <div class="row">
+                          <div class="col-3">
+                            <h2>Files</h2>
+                            <div class="scroll-div bg-white h-300">
+                              <ul class="list-unstyled">
+                                <li
+                                  class="mt-3"
+                                  v-for="testResult in mgmEvaluationTests"
+                                  :key="testResult.id"
+                                >
+                                  <h5>{{ testResult.primaryFilename }}</h5>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="col-9">
+                            <div class="">
+                              <b-navbar
+                                id="pills-tab-1"
+                                toggleable="lg"
+                                type="dark"
+                                class="mb-3 nav-pills"
+                              >
+                                <span
+                                  v-for="(item, i) in ['Bar chart', 'Table']"
+                                  :key="i"
+                                  class="nav-item mr-3"
+                                >
+                                  <button
+                                    class="nav-link"
+                                    id="pills-table-tab"
+                                    :class="
+                                      selectedScoreTab === i
+                                        ? 'active-score'
+                                        : ''
+                                    "
+                                    @click="onChangeScoreTab(i)"
+                                  >
+                                    {{ item }}
+                                  </button>
+                                </span>
+                              </b-navbar>
+                              <dl
+                                class="col-12 mt-4 mb-0 pr-0"
+                                v-if="selectedScoreTab === 0"
+                              >
+                                <BarChart
+                                  v-if="barChartData.labels.length"
+                                  :data="barChartData"
+                                />
+                              </dl>
+                              <dl class="col-12 mt-4 mb-0 pr-0" v-else>
+                                <div class="table-responsive scrollingTable">
+                                  <table
+                                    class="table table-bordered review-scores-table p-0 small-text"
+                                  >
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">File</th>
+                                        <th
+                                          scope="col"
+                                          v-for="parameter in JSON.parse(
+                                            selectedTestResult.parameters
+                                          )"
+                                          :key="parameter.id"
+                                        >
+                                          Parameter<br />({{
+                                            parameter.shortName
+                                          }})
+                                        </th>
+                                        <th
+                                          scope="col"
+                                          v-for="[key] of Object.entries(
+                                            JSON.parse(
+                                              selectedTestResult.scores
+                                            ).scores
+                                          )"
+                                          :key="key"
+                                        >
+                                          {{ key }}
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr
+                                        v-for="testResult in mgmEvaluationTests"
+                                        :key="testResult.id"
+                                      >
+                                        <th scope="row">
+                                          {{ testResult.primaryFilename }}
+                                        </th>
+                                        <td
+                                          v-for="parameter in JSON.parse(
+                                            testResult.parameters
+                                          )"
+                                          :key="parameter.id"
+                                        >
+                                          {{ parameter.value }}
+                                        </td>
+                                        <td
+                                          v-for="(score, index) in JSON.parse(
+                                            testResult.scores
+                                          ).scores"
+                                          :key="index"
+                                        >
+                                          {{
+                                            typeof score === "number" &&
+                                            !Number.isInteger(score)
+                                              ? score.toFixed(2)
+                                              : score
+                                          }}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </dl>
+                            </div>
+                            <div class="tab-content" id="pills-tabContent-2">
+                              <!-- <div class="card">
+                                <div class="card-body">
+                                  <h3>
+                                    Tools<a href="#" class="float-right small"
+                                      ><svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        fill="currentColor"
+                                        class="bi bi-cloud-arrow-down-fill"
+                                        viewBox="0 0 16 16"
+                                      >
+                                        <path
+                                          d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2zm2.354 6.854-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5a.5.5 0 0 1 1 0v3.793l1.146-1.147a.5.5 0 0 1 .708.708z"
+                                        />
+                                      </svg>
+                                      Download</a
+                                    >
+                                  </h3>
+                                  <ul>
+                                    <li>
+                                      INA Speech Segmenter (Threshold = 2
+                                      second)
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div> -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </dl>
                     <dl class="col-12 mt-3 mb-0 pr-0" v-else>
                       <div class="row">
@@ -289,12 +449,14 @@ import { sync } from "vuex-pathify";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 import EvaluationService from "@/service/evaluation-service";
+import BarChart from "./BarChart.vue";
 import SortableHeader from "@/components/shared/SortableHeader";
 
 export default {
   name: "TestResultsVisualiz",
   components: {
     Loader,
+    BarChart,
     SortableHeader,
   },
   data() {
@@ -302,10 +464,16 @@ export default {
       loading: false,
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
-      selectedTab: 0,
-      activeTab: "review-scores",
+      selectedResultTab: 0,
+      selectedScoreTab: 0,
+      activeResultTab: "review-scores",
+      activeScoreTab: "bar-chart",
       mgmEvaluationTests: [],
       selectedTestResult: {},
+      barChartData: {
+        labels: [],
+        datasets: [],
+      },
       sortRule: {
         columnName: "",
         orderByDescending: true,
@@ -331,12 +499,22 @@ export default {
       this.sortRule = sortRule;
       this.refreshData();
     },
+    onChangeScoreTab(index) {
       const self = this;
-      self.selectedTab = index;
+      self.selectedScoreTab = index;
       if (index === 1) {
-        self.activeTab = "review-ouputs";
+        self.activeScoreTab = "table";
       } else {
-        self.activeTab = "review-scores";
+        self.activeScoreTab = "bar-chart";
+      }
+    },
+    onChangeResultTab(index) {
+      const self = this;
+      self.selectedResultTab = index;
+      if (index === 1) {
+        self.activeResultTab = "review-ouputs";
+      } else {
+        self.activeResultTab = "review-scores";
       }
     },
     async networkCalls(testResultIds) {
@@ -349,6 +527,28 @@ export default {
         self.mgmEvaluationTests =
           mgmReviewOutput.data._embedded.mgmEvaluationTests;
         self.selectedTestResult = self.mgmEvaluationTests[0];
+
+        //Structure of bar chart data
+        self.barChartData = {
+          labels: Object.keys(
+            JSON.parse(self.selectedTestResult.scores).scores
+          ),
+          datasets: [],
+        };
+        for (let i = 0; i < self.mgmEvaluationTests.length; i++) {
+          self.barChartData.datasets.push({
+            label: self.mgmEvaluationTests[i].primaryFilename,
+            backgroundColor: `rgba(${Math.floor(
+              Math.random() * 256
+            )}, ${Math.floor(Math.random() * 256)}, ${Math.floor(
+              Math.random() * 256
+            )}, 0.66)`,
+            data: Object.values(
+              JSON.parse(self.mgmEvaluationTests[i].scores).scores
+            ),
+          });
+        }
+
         //Set sorting order
         self.sortRule.columnName = JSON.parse(
           self.selectedTestResult.scores
@@ -387,6 +587,10 @@ nav.nav-pills {
   background: #153c4d !important;
   color: white !important;
 }
+.active-score {
+  background: #153c4d !important;
+  color: white !important;
+}
 .nav-item.active .a:link,
 .nav-item.active a {
   color: white !important;
@@ -422,7 +626,11 @@ a:hover {
 }
 .scrollingDiv {
   height: 600px;
-  overflow-y: scroll;
+  overflow-y: auto;
+}
+.scrollingTable {
+  height: 48vh;
+  overflow-y: auto;
 }
 .side-div {
   height: 15rem;
