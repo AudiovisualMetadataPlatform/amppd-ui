@@ -60,11 +60,11 @@
                           <h2 class="mt-4">Scores</h2>
                           <div class="scroll-div bg-white side-div">
                             <table class="table small-text">
-                              <tbody>
-                                <tr>
+                              <tbody class="scores">
+                                <!-- <tr>
                                   <td>&nbsp;Tool</td>
                                   <td>&nbsp;INA Speech Segmenter</td>
-                                </tr>
+                                </tr> -->
                                 <tr
                                   v-for="[key, value] of Object.entries(
                                     JSON.parse(selectedTestResult.scores).scores
@@ -74,9 +74,10 @@
                                   <td>&nbsp;{{ key }}</td>
                                   <td>
                                     &nbsp;{{
-                                      Number.isInteger(value)
-                                        ? value
-                                        : value.toFixed(2)
+                                      typeof value === "number" &&
+                                      !Number.isInteger(value)
+                                        ? value.toFixed(2)
+                                        : value
                                     }}
                                   </td>
                                 </tr>
@@ -99,6 +100,41 @@
                               >
                                 <thead>
                                   <tr role="row">
+                                    <sortable-header
+                                      v-for="header in JSON.parse(
+                                        selectedTestResult.scores
+                                      ).headers"
+                                      :key="header.field"
+                                      v-bind:id="header.field"
+                                      :property-name="header.field"
+                                      :sort-rule="sortRule"
+                                      @sort="sortQuery"
+                                      :label="header.label"
+                                    >
+                                      <!-- <button
+                                        type="button"
+                                        class="btn btn-link float-right data-pop"
+                                        data-title="Filter GT Start"
+                                        data-container="body"
+                                        data-toggle="popover"
+                                        data-placement="top"
+                                      >
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="16"
+                                          height="16"
+                                          fill="currentColor"
+                                          class="bi bi-funnel-fill"
+                                          viewBox="0 0 16 16"
+                                        >
+                                          <path
+                                            d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"
+                                          />
+                                        </svg>
+                                      </button> -->
+                                    </sortable-header>
+                                  </tr>
+                                  <!-- <tr role="row">
                                     <th
                                       data-sortable="true"
                                       data-field="file"
@@ -137,7 +173,7 @@
                                         </svg>
                                       </button>
                                     </th>
-                                  </tr>
+                                  </tr> -->
                                 </thead>
                                 <tbody>
                                   <tr
@@ -253,11 +289,13 @@ import { sync } from "vuex-pathify";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 import EvaluationService from "@/service/evaluation-service";
+import SortableHeader from "@/components/shared/SortableHeader";
 
 export default {
   name: "TestResultsVisualiz",
   components: {
     Loader,
+    SortableHeader,
   },
   data() {
     return {
@@ -268,6 +306,10 @@ export default {
       activeTab: "review-scores",
       mgmEvaluationTests: [],
       selectedTestResult: {},
+      sortRule: {
+        columnName: "",
+        orderByDescending: true,
+      },
     };
   },
   computed: {
@@ -275,7 +317,20 @@ export default {
   },
   props: {},
   methods: {
-    onChangeTab(index) {
+    refreshData() {
+      const self = this;
+      let scores = JSON.parse(self.selectedTestResult.scores);
+      scores.comparison = this.sharedService.multiTypeSorting(
+        scores.comparison,
+        self.sortRule.columnName,
+        self.sortRule.orderByDescending
+      );
+      self.selectedTestResult.scores = JSON.stringify(scores);
+    },
+    async sortQuery(sortRule) {
+      this.sortRule = sortRule;
+      this.refreshData();
+    },
       const self = this;
       self.selectedTab = index;
       if (index === 1) {
@@ -294,6 +349,10 @@ export default {
         self.mgmEvaluationTests =
           mgmReviewOutput.data._embedded.mgmEvaluationTests;
         self.selectedTestResult = self.mgmEvaluationTests[0];
+        //Set sorting order
+        self.sortRule.columnName = JSON.parse(
+          self.selectedTestResult.scores
+        ).headers[0].field;
       } catch (error) {
         self.$bvToast.toast(
           "Oops! Something went wrong.",
@@ -370,5 +429,8 @@ a:hover {
 }
 .small-text {
   font-size: 0.85em;
+}
+.scores > tr:first-child > td {
+  border: none;
 }
 </style>
