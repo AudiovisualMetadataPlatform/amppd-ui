@@ -36,11 +36,7 @@
                         <div>
                           <h2>{{ selectedTestResult.categoryName }}</h2>
                           <p>
-                            Precision, recall, F1, and accuracy scores for
-                            speech, music, noise, and silence segments found by
-                            INA Speech Segmenter, scored by comparison of
-                            segments considering a given threshold of seconds
-                            before or after each segment.
+                            {{ selectedTestResult.scoreDescription }}
                           </p>
                         </div>
                         <div class="row">

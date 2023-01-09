@@ -89,10 +89,14 @@ export default class SharedService {
 
     //Filtering an array based on a string, time and number
     multiTypeSorting(arrayObj, orderProperty = "name", isDesc = false) {
-        let tempArrayObj = arrayObj.sort((a, b) => {
+        let tempArrayObj1 = arrayObj.filter(
+            (item) => item[orderProperty] === undefined
+        );
+        let tempArrayObj2 = arrayObj.filter(
+            (item) => item[orderProperty] !== undefined
+        );
+        tempArrayObj2 = tempArrayObj2.sort((a, b) => {
             if (typeof a[orderProperty] === "string") {
-                if (a[orderProperty] === undefined) return -1;
-                if (b[orderProperty] === undefined) return -1;
                 if (a[orderProperty].toLowerCase()) {
                     if (!isDesc) {
                         let fa = a[orderProperty].toLowerCase(),
@@ -119,8 +123,6 @@ export default class SharedService {
                     return b[orderProperty].localeCompare(a[orderProperty]);
                 }
             } else if (typeof a[orderProperty] === "number") {
-                if (a[orderProperty] === undefined) return -1;
-                if (b[orderProperty] === undefined) return -1;
                 if (!isDesc) {
                     return a[orderProperty] - b[orderProperty];
                 } else {
@@ -129,6 +131,12 @@ export default class SharedService {
             }
         });
 
+        let tempArrayObj = [];
+        if (!isDesc) {
+            tempArrayObj = [...tempArrayObj1, ...tempArrayObj2];
+        } else {
+            tempArrayObj = [...tempArrayObj2, ...tempArrayObj1];
+        }
         return tempArrayObj;
     }
 
