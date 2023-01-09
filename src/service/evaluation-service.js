@@ -66,4 +66,15 @@ export default class EvaluationService extends BaseService {
       });
     return data;
   }
+
+  /***
+   * To get details of mgm review output
+   * @method GET
+   */
+
+  async getMgmReviewOutput(ids) {
+    return super.get_auth(
+      `/mgmEvaluationTests/search/findByIds?ids=${ids}&projection=detail`
+    );
+  }
 }

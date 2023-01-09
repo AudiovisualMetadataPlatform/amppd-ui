@@ -20,6 +20,7 @@ import WorkflowList from "./components/workflow/WorkflowList.vue";
 import EntityList from "./components/entity/EntityList.vue";
 import ItemSearch from "./components/entity/ItemSearch.vue";
 import MGMevaluation from "./components/evaluation/MGMevaluation.vue";
+import TestResultsVisualiz from "./components/evaluation/TestResultsVisualiz.vue";
 import SupplementList from "./components/supplement/SupplementList.vue";
 Vue.use(Router);
 
@@ -252,6 +253,20 @@ var router = new Router({
           { text: "Home", href: "#/" },
           { text: "MGM Evaluation", href: "#/mgm-evaluation" },
           { text: "MGM Category" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    {
+      path: "/mgm-evaluation/:mgmCategoryId/:testResultIds",
+      name: "mgm-evaluation",
+      component: TestResultsVisualiz,
+      meta: {
+        authorize: [],
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "MGM Evaluation", href: "#/mgm-evaluation" },
+          { text: "Test Results" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
