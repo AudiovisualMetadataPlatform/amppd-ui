@@ -100,14 +100,16 @@
                                         <th scope="col">File</th>
                                         <th
                                           scope="col"
-                                          v-for="parameter in JSON.parse(
-                                            selectedTestResult.parameters
-                                          )"
+                                          v-for="parameter in sharedService
+                                            .sortByAlphabatical(
+                                              JSON.parse(
+                                                selectedTestResult.parameters
+                                              )
+                                            )
+                                            .reverse()"
                                           :key="parameter.id"
                                         >
-                                          Parameter<br />({{
-                                            parameter.shortName
-                                          }})
+                                          Parameter<br />({{ parameter.name }})
                                         </th>
                                         <th
                                           scope="col"
@@ -131,12 +133,23 @@
                                           {{ testResult.primaryFilename }}
                                         </th>
                                         <td
-                                          v-for="parameter in JSON.parse(
-                                            testResult.parameters
-                                          )"
+                                          v-for="parameter in sharedService
+                                            .sortByAlphabatical(
+                                              JSON.parse(testResult.parameters)
+                                            )
+                                            .reverse()"
                                           :key="parameter.id"
                                         >
-                                          {{ parameter.value }}
+                                          {{
+                                            typeof parameter.value !== "string"
+                                              ? parameter.value.reduce(
+                                                  (accumulator, currentValue) =>
+                                                    accumulator +
+                                                    ", " +
+                                                    currentValue
+                                                )
+                                              : parameter.value
+                                          }}
                                         </td>
                                         <td
                                           v-for="(score, index) in JSON.parse(
@@ -221,6 +234,26 @@
                                   <td>&nbsp;Tool</td>
                                   <td>&nbsp;INA Speech Segmenter</td>
                                 </tr> -->
+                                <tr
+                                  v-for="parameter in sharedService
+                                    .sortByAlphabatical(
+                                      JSON.parse(selectedTestResult.parameters)
+                                    )
+                                    .reverse()"
+                                  :key="parameter.id"
+                                >
+                                  <td>&nbsp;{{ parameter.name }}</td>
+                                  <td>
+                                    &nbsp;{{
+                                      typeof parameter.value !== "string"
+                                        ? parameter.value.reduce(
+                                            (accumulator, currentValue) =>
+                                              accumulator + ", " + currentValue
+                                          )
+                                        : parameter.value
+                                    }}
+                                  </td>
+                                </tr>
                                 <tr
                                   v-for="[key, value] of Object.entries(
                                     JSON.parse(selectedTestResult.scores).scores
