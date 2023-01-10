@@ -344,10 +344,11 @@ export default {
       if (self.selectedMst.mgmScoringParameters.length > 1) {
         for (let i = 0; i < self.selectedMst.mgmScoringParameters.length; i++) {
           if (
-            self.selectedMst.mgmScoringParameters[i].name &&
-            self.testParams[self.selectedMst.mgmScoringParameters[i].name]
+            self.selectedMst.mgmScoringParameters[i].type === "MULTI_SELECT" ||
+            (self.selectedMst.mgmScoringParameters[i].name &&
+              self.testParams[self.selectedMst.mgmScoringParameters[i].name])
           ) {
-            if (
+            /* if (
               self.selectedMst.mgmScoringParameters[i].type ===
                 "MULTI_SELECT" &&
               !!self.testParams[
@@ -358,7 +359,8 @@ export default {
             ) {
               availableParameters = false;
               break;
-            } else availableParameters = true;
+            } else  */
+            availableParameters = true;
           } else {
             availableParameters = false;
             break;
