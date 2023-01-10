@@ -17,7 +17,7 @@
                       class="mb-3 nav-pills"
                     >
                       <span
-                        v-for="(item, i) in ['Review Scores', 'Review Ouputs']"
+                        v-for="(item, i) in ['Review Scores', 'Review Outputs']"
                         :key="i"
                       >
                         <b-nav-item

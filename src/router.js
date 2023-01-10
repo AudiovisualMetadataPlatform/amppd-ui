@@ -240,7 +240,7 @@ var router = new Router({
       meta: {
         authorize: [],
         breadCrumb: [{ text: "Home", href: "#/" }, { text: "MGM Evaluation" }],
-        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_MGM_EVALUATION"),
       },
     },
     {
@@ -254,7 +254,7 @@ var router = new Router({
           { text: "MGM Evaluation", href: "#/mgm-evaluation" },
           { text: "MGM Category" },
         ],
-        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_MGM_EVALUATION"),
       },
     },
     {
@@ -268,7 +268,7 @@ var router = new Router({
           { text: "MGM Evaluation", href: "#/mgm-evaluation" },
           { text: "Test Results" },
         ],
-        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_MGM_EVALUATION"),
       },
     },
     {
