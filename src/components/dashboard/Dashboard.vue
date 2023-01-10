@@ -1130,6 +1130,7 @@ export default {
         );
       });
       this.workflowDashboard.searchQuery.pageNum = 1;
+      this.workflowDashboard.searchQuery.filterByTypes = [];
     } else if (this.parent === "NewTest") {
       this.clearAll();
       this.columns = this.columns.filter((column) => {
