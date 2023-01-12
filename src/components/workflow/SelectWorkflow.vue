@@ -56,7 +56,7 @@
                 data-toggle="modal"
                 data-target=".save-modal"
               >
-                Submit to workflow
+                Run Workflow
               </button>
               <button
                 v-on:click="workflowSubmission.showSaveBundle = true"
