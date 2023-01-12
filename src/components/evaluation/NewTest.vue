@@ -43,7 +43,7 @@
           data-toggle="modal"
           data-target=".upload-modal"
           @click="downloadGTTemplate($event, mst)"
-          disabled
+          :disabled="!mst.groundtruthTemplate"
         >
           Download Ground Truth Template
         </button>
@@ -561,8 +561,20 @@ export default {
     onGroundtruthInfo(ev, mstObj) {
       console.log("Clicked on onGroundtruthInfo!!" + mstObj);
     },
-    downloadGTTemplate(ev, mstObj) {
-      console.log("Clicked on onGroundtruthInfo!!" + mstObj);
+    async downloadGTTemplate(ev, mstObj) {
+      let fileName = mstObj.groundtruthTemplate;
+      await this.evaluationService
+        .downloadFile(fileName)
+        .then((x) => {
+          var uriContent = encodeURIComponent(x);
+          var link = document.createElement("a");
+          link.download = fileName;
+          link.href = "data:text/csv," + uriContent;
+          link.click();
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
     },
   },
   watch: {

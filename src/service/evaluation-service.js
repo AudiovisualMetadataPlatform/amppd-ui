@@ -77,4 +77,10 @@ export default class EvaluationService extends BaseService {
       `/mgmEvaluationTests/search/findByIds?ids=${ids}&projection=detail`
     );
   }
+
+  // To download any file by it's name
+  downloadFile(fileName) {
+    const url = `/` + fileName;
+    return super.get_auth(url).then((x) => x.data);
+  }
 }
