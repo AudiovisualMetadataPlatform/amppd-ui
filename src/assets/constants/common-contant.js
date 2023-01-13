@@ -71,12 +71,12 @@ const menus = [
     dropdownIcon: icons["drop_down"],
     children: [
       {
-        name: "Listings",
+        name: "Edit",
         class: "workflows, workflows",
         url: "/workflows",
       },
       {
-        name: "Submissions",
+        name: "Run",
         class: "workflows, workflows",
         url: "/workflow/submit",
       },
