@@ -1,10 +1,10 @@
 <template>
   <div class="w-100 new-test">
-    <loader :show="loading" />
+    <loader :show="workflowDashboard.loading ? false : loading" />
     <h3 class="m-b-0 m-t-2 mt-1">1) Select a Test</h3>
     <b-card
       class="mgm-card bg-light-gray-1"
-      v-for="(mst, i) in mgmCategory.msts"
+      v-for="(mst, i) in sharedService.sortByAlphabatical(mgmCategory.msts)"
       :key="i"
     >
       <h3
@@ -25,7 +25,7 @@
         <b-form-radio
           v-model="selectedMst.body"
           style="font-size:1.25rem;"
-          name="some-radios"
+          name="mst-radios"
           :value="mst"
           @change="onChangeMst(i, mst)"
           >&nbsp;select test</b-form-radio
@@ -43,7 +43,7 @@
           data-toggle="modal"
           data-target=".upload-modal"
           @click="downloadGTTemplate($event, mst)"
-          disabled
+          :disabled="!mst.groundtruthTemplate"
         >
           Download Ground Truth Template
         </button>
@@ -52,12 +52,9 @@
     <div v-if="selectedMst.index.toString()">
       <div
         v-if="
-          (selectedMst.detailBody &&
-            selectedMst.detailBody.parameters &&
-            selectedMst.detailBody.parameters.length) ||
-            (selectedMst.body &&
-              selectedMst.body.name &&
-              selectedMst.body.name.includes('by seconds'))
+          selectedMst.detailBody &&
+            selectedMst.mgmScoringParameters &&
+            selectedMst.mgmScoringParameters.length
         "
       >
         <h3 class="m-b-0 m-t-2 mt-4">
@@ -67,77 +64,81 @@
           Set any necessary parameters for running your test
         </div>
       </div>
-
-      <!-- Parameter by seconds -->
       <div
-        v-if="
-          selectedMst.body &&
-            selectedMst.body.name &&
-            selectedMst.body.name.includes('by seconds')
-        "
         class="form-group marg-t-1"
+        v-if="
+          selectedMst.detailBody &&
+            selectedMst.mgmScoringParameters &&
+            selectedMst.mgmScoringParameters.length
+        "
       >
-        <p class="bg-light-gray mgm-h3 p-1 mb-2">
-          <strong>Analysis threshold:</strong> the number of seconds buffer
-          (float) for counting a true positive (match between the ground truth
-          and MGM output). For example, a 2-second threshold will consider a GT
-          and MGM segment a match if both the start and end times for each fall
-          within 2 seconds of each other.
-        </p>
-        <div class="input-group mb-3">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="Parameters"
-            aria-label="description"
-            aria-describedby="basic-addon2"
-            step="0.25"
-            v-model="testParams.parameter"
-          />
-          <div class="input-group-append">
-            <span class="input-group-text" id="basic-addon2">seconds</span>
+        <div
+          v-for="par in sharedService
+            .sortByAlphabatical(
+              JSON.parse(JSON.stringify(selectedMst.mgmScoringParameters))
+            )
+            .reverse()"
+          :key="par.id"
+        >
+          <p
+            class="bg-light-gray mgm-h3 p-1 mb-2"
+            v-if="
+              par.type !== 'MULTI_SELECT' ||
+                (par.type === 'MULTI_SELECT' &&
+                  selectedMst.detailBody.dependencyParamName &&
+                  testParams[selectedMst.detailBody.dependencyParamName])
+            "
+          >
+            <strong>{{ par.name }}:</strong> {{ par.description }}
+          </p>
+          <div class="input-group mb-3" v-if="par.type === 'FLOAT'">
+            <input
+              type="number"
+              class="form-control"
+              placeholder="Parameters"
+              aria-label="description"
+              aria-describedby="basic-addon2"
+              step="0.25"
+              min="0"
+              v-model="testParams[par.name]"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon2">seconds</span>
+            </div>
+          </div>
+          <div class="mb-3" v-else-if="par.type === 'SINGLE_SELECT'">
+            <b-form-radio-group
+              v-model="testParams[par.name]"
+              :options="JSON.parse(par.selections)"
+              :name="`${par.id}-radios`"
+              @change="onChangeSelect(par.name)"
+              class="mb-2 param-radio"
+            ></b-form-radio-group>
+          </div>
+          <div
+            class="mb-3"
+            v-else-if="
+              par.type === 'MULTI_SELECT' &&
+                selectedMst.detailBody.dependencyParamName &&
+                testParams[par.dependencyName]
+            "
+          >
+            <b-form-group>
+              <b-form-checkbox-group
+                v-model="testParams[par.name]"
+                :options="options(par, testParams[par.dependencyName])"
+                name="multiselect-checkbox"
+              ></b-form-checkbox-group>
+            </b-form-group>
           </div>
         </div>
-      </div>
-
-      <!-- Other parameters -->
-      <div v-else class="form-group marg-t-1">
-        <select
-          v-if="
-            selectedMst.detailBody &&
-              selectedMst.detailBody.parameters &&
-              selectedMst.detailBody.parameters.length
-          "
-          class="select custom-select w-100"
-          v-model="testParams.parameter"
-          required
-          ><option value="default" disabled selected
-            >Select a parameter...</option
-          >
-          <option
-            v-for="option in selectedMst.detailBody.parameters"
-            :key="option.id"
-            :value="option.id"
-            >{{ option.name }}</option
-          >
-        </select>
-        <!-- <textarea
-        v-else
-        id="descriptiona"
-        class="form-control"
-        spellcheck="false"
-        v-model="testParams.parameter"
-      ></textarea> -->
       </div>
       <div>
         <h3 class="m-b-0 m-t-2 mt-4">
           {{
-            (selectedMst.detailBody &&
-              selectedMst.detailBody.parameters &&
-              selectedMst.detailBody.parameters.length) ||
-            (selectedMst.body &&
-              selectedMst.body.name &&
-              selectedMst.body.name.includes("by seconds"))
+            selectedMst.detailBody &&
+            selectedMst.mgmScoringParameters &&
+            selectedMst.mgmScoringParameters.length
               ? "3"
               : "2"
           }}) Select MGM Outputs to Test
@@ -152,12 +153,9 @@
       </div>
       <h3 class="m-b-0 m-t-2 mt-4">
         {{
-          (selectedMst.detailBody &&
-            selectedMst.detailBody.parameters &&
-            selectedMst.detailBody.parameters.length) ||
-          (selectedMst.body &&
-            selectedMst.body.name &&
-            selectedMst.body.name.includes("by seconds"))
+          selectedMst.detailBody &&
+          selectedMst.mgmScoringParameters &&
+          selectedMst.mgmScoringParameters.length
             ? "4"
             : "3"
         }}) Upload or Select Ground Truth Data
@@ -221,6 +219,10 @@
                     data-toggle="modal"
                     data-target=".upload-modal"
                     @click="handleGroundTruthModal(record)"
+                    :disabled="
+                      selectedMst.detailBody.dependencyParamName &&
+                        !testParams[selectedMst.detailBody.dependencyParamName]
+                    "
                   >
                     Upload/Select Ground Truth
                   </button>
@@ -254,7 +256,7 @@
       class="btn btn-primary btn-lg marg-tb-3 float-right"
       type="button"
       @click="onNewTestSubmit"
-      disabled
+      :disabled="activeSubmitButton()"
     >
       Submit
     </button>
@@ -270,6 +272,7 @@
       :showModal="showModal"
       :mstDetails="selectedMst.detailBody"
       :selectedRecord="selectedRecord"
+      :selectedParams="testParams"
       @close="handleGroundTruthModal"
     />
   </div>
@@ -296,8 +299,13 @@ export default {
       loading: false,
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
-      selectedMst: { index: "", body: {}, detailBody: {} },
-      testParams: { parameter: "default" },
+      selectedMst: {
+        index: "",
+        body: {},
+        detailBody: {},
+        mgmScoringParameters: [],
+      },
+      testParams: { "Match types": "Yes" },
       showModal: false,
       selectedRecord: {},
       rightArrowSvg: config.common.icons["right_arrow"],
@@ -306,6 +314,7 @@ export default {
   },
   computed: {
     mgmEvaluation: sync("mgmEvaluation"),
+    workflowDashboard: sync("workflowDashboard"),
   },
   props: {
     mgmCategory: {
@@ -316,6 +325,97 @@ export default {
     },
   },
   methods: {
+    activeSubmitButton() {
+      const self = this;
+
+      // Checking values for all the parameters
+      let availableParameters = false;
+      if (
+        self.selectedMst.detailBody.id &&
+        !self.selectedMst.mgmScoringParameters.length
+      )
+        availableParameters = true;
+      if (
+        self.selectedMst.mgmScoringParameters.length === 1 &&
+        self.selectedMst.mgmScoringParameters[0].name &&
+        self.testParams[self.selectedMst.mgmScoringParameters[0].name]
+      )
+        availableParameters = true;
+      if (self.selectedMst.mgmScoringParameters.length > 1) {
+        for (let i = 0; i < self.selectedMst.mgmScoringParameters.length; i++) {
+          if (
+            self.selectedMst.mgmScoringParameters[i].type === "MULTI_SELECT" ||
+            (self.selectedMst.mgmScoringParameters[i].name &&
+              self.testParams[self.selectedMst.mgmScoringParameters[i].name])
+          ) {
+            /* if (
+              self.selectedMst.mgmScoringParameters[i].type ===
+                "MULTI_SELECT" &&
+              !!self.testParams[
+                self.selectedMst.mgmScoringParameters[i].name
+              ] &&
+              !self.testParams[self.selectedMst.mgmScoringParameters[i].name]
+                .length
+            ) {
+              availableParameters = false;
+              break;
+            } else  */
+            availableParameters = true;
+          } else {
+            availableParameters = false;
+            break;
+          }
+        }
+      }
+
+      // Checking groundtruth for all the selected files
+      let availableGtSupplement = false;
+      for (let i = 0; i < self.mgmEvaluation.selectedRecords.length; i++) {
+        if (
+          self.mgmEvaluation.selectedRecords[i] &&
+          self.mgmEvaluation.selectedRecords[i].gtSupplement
+        )
+          availableGtSupplement = true;
+        else {
+          availableGtSupplement = false;
+          break;
+        }
+      }
+
+      return (
+        !self.mgmCategory.id ||
+        !self.selectedMst.detailBody.id ||
+        !availableParameters ||
+        !availableGtSupplement
+      );
+    },
+    clearSelectedRecords() {
+      const self = this;
+      //Reset "Upload or Select Ground Truth Data"
+      for (let i = 0; i < self.mgmEvaluation.selectedRecords.length; i++) {
+        self.mgmEvaluation.selectedRecords[i].gtSupplement &&
+          delete self.mgmEvaluation.selectedRecords[i].gtSupplement;
+      }
+      self.mgmEvaluation.selectedRecords = [];
+    },
+    onChangeSelect(paramName) {
+      const self = this;
+      self.clearSelectedRecords();
+
+      //Reset multi select parameters on depending parameter change
+      if (paramName === self.selectedMst.detailBody.dependencyParamName) {
+        const multiSelectParameter = self.selectedMst.mgmScoringParameters.filter(
+          (param) => param.type === "MULTI_SELECT"
+        )[0];
+        if (multiSelectParameter && multiSelectParameter.name)
+          delete self.testParams[multiSelectParameter.name];
+      }
+    },
+    options(parameter, type) {
+      return JSON.parse(parameter.selections).filter(
+        (selection) => selection[type]
+      )[0][type];
+    },
     handleVisibility(index, open = "") {
       const self = this;
       if (open) {
@@ -344,18 +444,78 @@ export default {
       const self = this;
       this.$emit("changeTab", 0);
     },
-    onNewTestSubmit() {
+    async onNewTestSubmit() {
       const self = this;
-      console.log("Selected mgm Category:" + self.mgmCategory);
-      console.log("Selected mst:" + self.selectedMst);
-      console.log("Selected records:" + self.mgmEvaluation.selectedRecords);
-      console.log("Parameters:" + self.testParams);
+      // console.log("Selected mgm Category: " + self.mgmCategory);
+      // console.log("Selected mst: " + self.selectedMst);
+      // console.log("Selected records: " + self.mgmEvaluation.selectedRecords);
+      // console.log("Parameters: " + self.testParams);
+      if (!self.activeSubmitButton()) {
+        self.loading = true;
+        let parameters = [];
+        for (let i = 0; i < self.selectedMst.mgmScoringParameters.length; i++) {
+          parameters.push({
+            id: self.selectedMst.mgmScoringParameters[i].id,
+            value:
+              self.testParams[self.selectedMst.mgmScoringParameters[i].name],
+          });
+        }
+        let files = [];
+        for (let i = 0; i < self.mgmEvaluation.selectedRecords.length; i++) {
+          if (self.mgmEvaluation.selectedRecords[i].gtSupplement)
+            files.push({
+              groundtruthFileId:
+                self.mgmEvaluation.selectedRecords[i].gtSupplement.id,
+              workflowResultId: self.mgmEvaluation.selectedRecords[i].id,
+            });
+        }
+
+        let body;
+        body = {
+          categoryId: self.mgmCategory.id,
+          mstId: self.selectedMst.detailBody.id,
+          parameters: parameters,
+          files: files,
+        };
+
+        try {
+          await this.evaluationService
+            .mgmSubmitNewTest(body)
+            .then((response) => {
+              self.loading = false;
+              if (response.success) {
+                this.$emit("changeTab", 0);
+                return response;
+              } else {
+                response.validationErrors.map((el) =>
+                  self.$bvToast.toast(el, self.sharedService.erorrToastConfig)
+                );
+              }
+            })
+            .then((res) => {
+              if (res && res.success)
+                self.$bvToast.toast(
+                  "Test has been successfully submitted.",
+                  self.sharedService.successToastConfig
+                );
+            });
+        } catch (error) {
+          self.loading = false;
+          self.$bvToast.toast(
+            "Something went wrong. Please try again!",
+            self.sharedService.erorrToastConfig
+          );
+        }
+      }
     },
     removeRow(record) {
       const self = this;
       let index;
       self.mgmEvaluation.selectedRecords.map((el, i) => {
-        if (el.id === record.id) index = i;
+        if (el.id === record.id) {
+          index = i;
+          delete record.gtSupplement;
+        }
       });
       self.mgmEvaluation.selectedRecords.splice(index, 1);
     },
@@ -368,6 +528,15 @@ export default {
         );
         self.selectedMst.detailBody = JSON.parse(
           JSON.stringify(mgmScoringToolDetailsResponse.data)
+        );
+        const mgmScoringToolParametersDetailsResponse = await this.evaluationService.getDetailParametersMgmScoringTool(
+          mstId
+        );
+        self.selectedMst.mgmScoringParameters = JSON.parse(
+          JSON.stringify(
+            mgmScoringToolParametersDetailsResponse.data._embedded
+              .mgmScoringParameters
+          )
         );
         self.mgmEvaluation.selectedRecords = [];
         self.loading = false;
@@ -386,13 +555,26 @@ export default {
       self.selectedMst.index = mstIndex;
       self.selectedMst.body = mstObj;
       self.getDetailsMgmScoringTool(mstObj.id);
-      self.testParams = { parameter: "default" };
+      this.testParams = { "Match types": "Yes" };
+      self.clearSelectedRecords();
     },
     onGroundtruthInfo(ev, mstObj) {
       console.log("Clicked on onGroundtruthInfo!!" + mstObj);
     },
-    downloadGTTemplate(ev, mstObj) {
-      console.log("Clicked on onGroundtruthInfo!!" + mstObj);
+    async downloadGTTemplate(ev, mstObj) {
+      let fileName = mstObj.groundtruthTemplate;
+      await this.evaluationService
+        .downloadFile(fileName)
+        .then((x) => {
+          var uriContent = encodeURIComponent(x);
+          var link = document.createElement("a");
+          link.download = fileName;
+          link.href = "data:text/csv," + uriContent;
+          link.click();
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
     },
   },
   watch: {
@@ -402,7 +584,7 @@ export default {
       if (self.mgmCategory.msts.length) {
         self.selectedMst.body = self.mgmCategory.msts[0];
         self.getDetailsMgmScoringTool(self.mgmCategory.msts[0].id);
-        self.testParams = { parameter: "default" };
+        self.testParams = { "Match types": "Yes" };
       }
     },
     mgmCategoryLoading: function() {
@@ -595,6 +777,42 @@ a:hover {
   height: 1.25rem !important;
 }
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+.custom-control-label {
+  cursor: pointer !important;
+}
+
+.param-radio
+  > .custom-radio
+  .custom-control-input:checked
+  ~ .custom-control-label::after {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+.param-radio
+  > .custom-radio
+  .custom-control-input:checked
+  ~ .custom-control-label::before {
+  width: 1rem !important;
+  height: 1rem !important;
+  background-color: #153c4d !important;
+  border-color: #153c4d !important;
+}
+.param-radio > .custom-control-label::after {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+.param-radio > div > .custom-control-label::before {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+.param-radio
+  > div
+  > .custom-control-input:checked
+  ~ .custom-control-label::after {
   width: 1rem !important;
   height: 1rem !important;
 }

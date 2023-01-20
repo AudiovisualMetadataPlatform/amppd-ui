@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-ingest">
+  <div class="batch-ingest w-100">
     <loader :show="inProgress" />
     <div class="container col-12">
       <div class="row expand-h">
@@ -224,9 +224,17 @@ export default {
     },
   },
   mounted() {
-    this.unitName = env.getAmpUnit();
+    const self = this;
+    let unitEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+    if (unitEntity.currentUnit) {
+      self.unitName = unitEntity.unitList.filter(
+        (unit) => unit.id === unitEntity.currentUnit
+      )[0].name;
+    } else {
+      self.unitName = "";
+    }
     console.log("reached batchingest.vue");
-    console.log("unitName = " + this.unitName);
+    console.log("unitName = " + self.unitName);
   },
 };
 </script>

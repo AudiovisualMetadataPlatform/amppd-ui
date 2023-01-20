@@ -1,7 +1,14 @@
 <template>
   <div class="dataTables_wrapper no-footer">
     <loader :show="workflowDashboard.loading" />
-    <div v-if="parent !== 'NewTest'" class="export-row">
+    <div
+      v-if="
+        parent !== 'NewTest' &&
+          parent !== 'TestResults' &&
+          parent !== 'Deliverables'
+      "
+      class="export-row"
+    >
       <input
         id="export-results"
         type="button"
@@ -11,7 +18,7 @@
       />
     </div>
 
-    <div class="row col-12 p-0 m-0">
+    <div v-if="parent !== 'Deliverables'" class="row col-12 p-0 m-0">
       <div
         class="
           col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12
@@ -19,10 +26,6 @@
           mt-1
         "
       >
-        <!-- <label>Show <select name="myTable_length" v-model="workflowDashboard.searchQuery.resultsPerPage" aria-controls="myTable" class="">
-      <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
-      Entries
-        </label>-->
         <label>
           Show
           <select
@@ -42,11 +45,6 @@
           </select>
           Entries
         </label>
-        <!-- <span class="txt-v"> Show Relevant Results Only </span>
-    <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
-      <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
-      <span class="slider round"></span>
-        </label>-->
       </div>
       <b-pagination
         class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100 mt-1"
@@ -63,26 +61,31 @@
         next-text="Next"
       ></b-pagination>
       <search-filter
+        v-if="parent !== 'Deliverables'"
+        :parent="parent"
         class="col-xl-3 col-md-3 col-sm-12 col-xs-12 pr-0 justify-content-right"
       />
     </div>
-    <!-- <div class="relevant-togggle"><span class="txt-v">Show Relevant Results Only</span>
-    <label class="switch" title="Relevant Result"><span class="sr-only">Relevant Result</span>
-      <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant">
-      <span class="slider round"></span>
-    </label>
-    </div>-->
-
-    <br />
-
+    <br v-if="parent !== 'Deliverables'" />
     <div
       class="table-responsive"
-      :class="parent === 'NewTest' ? 'table-gap' : ''"
+      :class="
+        parent === 'NewTest' ||
+        parent === 'TestResults' ||
+        parent === 'Deliverables'
+          ? 'table-gap'
+          : ''
+      "
     >
       <table id="myTable" class="table dataTable no-footer">
         <thead>
-          <tr v-if="parent === 'NewTest'">
-            <th scope="col" v-for="column in columns" :key="column.field">
+          <tr v-if="parent === 'NewTest' || parent === 'TestResults'">
+            <th
+              scope="col"
+              v-for="column in columns"
+              :key="column.field"
+              :class="{ 'text-center': column.field === 'addToTest' }"
+            >
               <span class="col-title new-test-column">{{ column.label }}</span>
             </th>
           </tr>
@@ -104,11 +107,18 @@
             :key="rec.id"
             :class="{
               'selected-mgm-outputs':
-                parent === 'NewTest' && isSelected(rec.id),
+                (parent === 'NewTest' || parent === 'TestResults') &&
+                isSelected(rec.id),
             }"
           >
             <td v-if="checkAvailability('dateCreated')">
               {{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}
+            </td>
+            <td v-if="checkAvailability('testDate')">
+              {{ new Date(rec.testDate) | LOCAL_DATE_VALUE }}
+            </td>
+            <td v-if="checkAvailability('outputDate')">
+              {{ new Date(rec.outputDate) | LOCAL_DATE_VALUE }}
             </td>
             <td v-if="checkAvailability('submitter')">{{ rec.submitter }}</td>
             <td v-if="checkAvailability('unit')">{{ rec.unitName }}</td>
@@ -152,7 +162,36 @@
             <td v-else-if="checkAvailability('outputName')">
               {{ rec.outputName }}
             </td>
-            <td v-if="parent !== 'NewTest' && checkAvailability('status')">
+            <td
+              v-if="
+                rec.outputPath != null &&
+                  rec.status == 'COMPLETE' &&
+                  checkAvailability('outputLabel')
+              "
+            >
+              <a
+                v-bind:href="workflowResultService.getOutputUrl(rec.id)"
+                target="_blank"
+                class="complete-output"
+                >{{ rec.outputLabel }}</a
+              >
+            </td>
+            <td v-else-if="checkAvailability('outputLabel')">
+              {{ rec.outputLabel }}
+            </td>
+            <td v-if="checkAvailability('groundTruth')">
+              {{ rec.groundTruth }}
+            </td>
+            <td v-if="checkAvailability('outputTest')">
+              {{ rec.outputTest }}
+            </td>
+            <td
+              v-if="
+                parent !== 'NewTest' &&
+                  parent !== 'TestResults' &&
+                  checkAvailability('status')
+              "
+            >
               <button
                 v-if="rec.status === 'COMPLETE'"
                 type="button"
@@ -197,7 +236,11 @@
               </button>
             </td>
             <td
-              v-if="parent !== 'NewTest' && checkAvailability('actions')"
+              v-if="
+                parent !== 'NewTest' &&
+                  parent !== 'TestResults' &&
+                  checkAvailability('actions')
+              "
               class="toggleActions"
             >
               <a
@@ -223,7 +266,10 @@
               </a>
             </td>
             <td
-              v-if="parent === 'NewTest' && checkAvailability('addToTest')"
+              v-if="
+                (parent === 'NewTest' || parent === 'TestResults') &&
+                  checkAvailability('addToTest')
+              "
               class="text-center slim-col-14"
             >
               <input
@@ -233,24 +279,38 @@
                 :value="rec"
               />
             </td>
+            <td
+              v-if="parent === 'Deliverables' && checkAvailability('isFinal')"
+              class="slim-col-14"
+            >
+              <label class="switch" title="Final Result">
+                <span class="sr-only">Final Result</span>
+                <input
+                  type="checkbox"
+                  v-model="rec.isFinal"
+                  v-on:click="setWorkflowResultFinal(rec.id)"
+                />
+                <span class="slider round"></span>
+              </label>
+            </td>
           </tr>
         </tbody>
         <tbody v-else>
           <tr>
-            <td v-if="workflowDashboard.loading" colspan="8" class="no-results">
+            <td
+              v-if="workflowDashboard.loading"
+              :colspan="columns.length"
+              class="no-results"
+            >
               <i class="fas fa-cog fa-spin"></i> Loading
             </td>
-            <td v-else colspan="8" class="no-results">No results</td>
+            <td v-else :colspan="columns.length" class="no-results">
+              No results
+            </td>
           </tr>
         </tbody>
       </table>
-      <!-- <pagination v-if="this.workflowDashboard.searchQuery"
-          :pageNum="workflowDashboard.searchQuery.pageNum"
-          :resultsPerPage="resultsPerPage"
-          :totalResults="filteredRows.length"
-          :maxPages="1"
-      @paginate="paginate" />-->
-      <div class="row col-12 p-0 m-0">
+      <div v-if="parent !== 'Deliverables'" class="row col-12 p-0 m-0">
         <div class="col-2 col-md-2 col-sm-2 col-xs-12">
           <div class="dataTables_info">
             <label>{{ totalText }}</label>
@@ -310,6 +370,7 @@ import SearchFilter from "./DashboardFilters/SearchFilter";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "../../service/shared-service";
 import { accountService } from "@/service/account-service.js";
+import EvaluationService from "@/service/evaluation-service";
 
 export default {
   name: "DashboardTable",
@@ -322,6 +383,7 @@ export default {
   data() {
     return {
       workflowResultService: new WorkflowResultService(),
+      evaluationService: new EvaluationService(),
       sharedService: new SharedService(),
       showModal: false,
       currentUser: "",
@@ -398,6 +460,28 @@ export default {
     },
   },
   methods: {
+    async setWorkflowResultFinal(workflowResultId) {
+      for (
+        var r = 0;
+        r < this.workflowDashboard.searchResult.rows.length;
+        r++
+      ) {
+        if (
+          this.workflowDashboard.searchResult.rows[r].id == workflowResultId
+        ) {
+          var thisRow = this.workflowDashboard.searchResult.rows[r];
+          if (!thisRow.isFinal) {
+            thisRow.isFinal = false;
+          }
+          thisRow.isFinal = !thisRow.isFinal;
+          this.workflowResultService.setWorkflowResultFinal(
+            workflowResultId,
+            thisRow.isFinal
+          );
+          break;
+        }
+      }
+    },
     checkAvailability(fieldName) {
       const search = this.columns.find((column) => column.field === fieldName);
       if (!search) return false;
@@ -425,8 +509,10 @@ export default {
     },
     deleteRow(record) {
       const self = this;
-      self.showModal = true;
-      self.selectedRecord = record;
+      if (self.currentUser.username === record.submitter) {
+        self.showModal = true;
+        self.selectedRecord = record;
+      }
     },
     isSelected(recId) {
       const selctedRecordIds = this.mgmEvaluation.selectedRecords.map(
@@ -439,10 +525,15 @@ export default {
       }
     },
     async sortQuery(sortRule) {
-      if (sortRule.columnName !== "actions") {
+      if (this.parent === "Deliverables") {
         this.workflowDashboard.searchQuery.sortRule = sortRule;
-        this.workflowDashboard.searchQuery.pageNum = 1;
-        this.refreshData();
+        this.$emit("deliverableSortQuery");
+      } else {
+        if (sortRule.columnName !== "actions") {
+          this.workflowDashboard.searchQuery.sortRule = sortRule;
+          this.workflowDashboard.searchQuery.pageNum = 1;
+          this.refreshData();
+        }
       }
     },
     getDateString() {
@@ -474,9 +565,15 @@ export default {
       const self = this;
       self.workflowDashboard.loading = true;
       try {
-        self.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(
-          this.workflowDashboard.searchQuery
-        );
+        if (self.parent === "TestResults" && self.parent !== "Deliverables") {
+          self.workflowDashboard.searchResult = await this.evaluationService.getMgmEvaluationTestResults(
+            this.workflowDashboard.searchQuery
+          );
+        } else if (self.parent !== "Deliverables") {
+          self.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(
+            this.workflowDashboard.searchQuery
+          );
+        }
         self.workflowDashboard.loading = false;
       } catch (error) {
         self.workflowDashboard.loading = false;
@@ -662,6 +759,7 @@ th {
 }
 .table-gap {
   margin-top: -20px !important;
+  margin-bottom: 0px;
   overflow-y: hidden;
 }
 .add-to-test-checkbox {

@@ -11,7 +11,9 @@
         >
           <option value="" selected disabled>Select a workflow...</option>
           <option
-            v-for="(workflow, index) in workflows.rows"
+            v-for="(workflow, index) in sharedService.sortByAlphabatical(
+              workflows.rows
+            )"
             v-bind:key="index"
             v-bind:value="workflow.id"
             >{{ workflow.name }}</option
@@ -54,7 +56,7 @@
                 data-toggle="modal"
                 data-target=".save-modal"
               >
-                Submit to workflow
+                Run Workflow
               </button>
               <button
                 v-on:click="workflowSubmission.showSaveBundle = true"
@@ -243,6 +245,7 @@ import { requestOptions } from "@/helpers/request-options";
 import Modal from "@/components/shared/Modal.vue";
 import SaveBundle from "@/components/workflow/SaveBundle.vue";
 import WorkflowService from "../../service/workflow-service";
+import SharedService from "@/service/shared-service";
 
 export default {
   name: "SelectWorkflow",
@@ -252,6 +255,7 @@ export default {
       workflows: [],
       jobs: {},
       workflowService: new WorkflowService(),
+      sharedService: new SharedService(),
       modalHeader: "",
       modalTextList: [],
       showModal: false,

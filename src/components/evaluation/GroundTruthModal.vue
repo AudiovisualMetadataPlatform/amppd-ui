@@ -216,6 +216,9 @@ export default {
     selectedRecord: {
       default: {},
     },
+    selectedParams: {
+      default: {},
+    },
   },
   methods: {
     async networkCalls() {
@@ -225,8 +228,19 @@ export default {
         self.loading = true;
         const primaryfileId = self.selectedRecord.primaryfileId;
         const name = "";
-        const category = `Groudtruth-${self.mstDetails.workflowResultType}`;
         const format = self.mstDetails.groundtruthFormat;
+
+        let category = "";
+        if (self.mstDetails.dependencyParamName) {
+          const dependencyParamName = self.mstDetails.dependencyParamName;
+          const selectedParamValue = self.selectedParams[dependencyParamName];
+          const groundtruthSubcategory = JSON.parse(
+            self.mstDetails.groundtruthSubcategory
+          );
+          category = `Groundtruth-${groundtruthSubcategory[selectedParamValue]}`;
+        } else
+          category = `Groundtruth-${self.mstDetails.groundtruthSubcategory}`;
+
         await self.workflowService
           .getSupplementsForPrimaryfiles(primaryfileId, name, category, format)
           .then((response) => {
@@ -285,6 +299,18 @@ export default {
       }
       try {
         self.loading = true;
+        let category = "";
+        if (self.mstDetails.dependencyParamName) {
+          const dependencyParamName = self.mstDetails.dependencyParamName;
+          const selectedParamValue = self.selectedParams[dependencyParamName];
+          const groundtruthSubcategory = JSON.parse(
+            self.mstDetails.groundtruthSubcategory
+          );
+
+          category = `Groundtruth-${groundtruthSubcategory[selectedParamValue]}`;
+        } else
+          category = `Groundtruth-${self.mstDetails.groundtruthSubcategory}`;
+
         let formData = new FormData();
         formData.append(
           "primaryfileSupplement",
@@ -294,7 +320,7 @@ export default {
                 name: data.name,
                 originalFilename: data.originalFilename,
                 description: data.description,
-                category: `Groudtruth-${self.mstDetails.workflowResultType}`,
+                category: category,
               }),
             ],
             {

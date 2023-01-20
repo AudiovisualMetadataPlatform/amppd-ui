@@ -6,10 +6,8 @@
       v-bind:class="[{ modalOpen: showModal }, 'container', 'col-12']"
     >
       <div class="row">
-        <!-- <Sidebar/>     -->
         <div class="col-12 bg-light-gray-1">
           <main class="m-0">
-            <!-- <Logout/> -->
             <div class="pad-all-3">
               <div class="card">
                 <div class="card-body">
@@ -81,59 +79,12 @@
                           entries</label
                         >
                       </div>
-
-                      <table id="myTable" class="table dataTable no-footer">
-                        <thead>
-                          <tr>
-                            <sortable-header
-                              v-for="column in columns"
-                              :key="column.field"
-                              :property-name="column.field"
-                              :sort-rule="searchQuery.sortRule"
-                              @sort="sortQuery"
-                              :label="column.label"
-                            />
-                          </tr>
-                        </thead>
-                        <tbody v-if="rows && rows.length > 0">
-                          <tr v-for="rec in rows" :key="rec.id">
-                            <td>
-                              {{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}
-                            </td>
-                            <td>{{ rec.submitter }}</td>
-                            <td>{{ rec.workflowName }}</td>
-                            <td>{{ rec.workflowStep }}</td>
-                            <td v-if="rec.outputPath == null">
-                              {{ rec.outputName }}
-                            </td>
-                            <td v-else-if="rec.outputPath != null">
-                              <a
-                                v-bind:href="
-                                  workflowResultService.getOutputUrl(rec.id)
-                                "
-                                target="_blank"
-                                >{{ rec.outputName }}</a
-                              >
-                            </td>
-                            <td>
-                              <label class="switch" title="Final Result">
-                                <span class="sr-only">Final Result</span>
-                                <input
-                                  type="checkbox"
-                                  v-model="rec.isFinal"
-                                  v-on:click="setWorkflowResultFinal(rec.id)"
-                                />
-                                <span class="slider round"></span>
-                              </label>
-                            </td>
-                          </tr>
-                        </tbody>
-                        <tbody v-else>
-                          <tr>
-                            <td colspan="8" class="no-results">No results</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                      <DashboardTable
+                        v-if="columns.length"
+                        :columns="columns"
+                        parent="Deliverables"
+                        @deliverableSortQuery="sortQuery()"
+                      />
                       <pagination
                         v-if="searchQuery"
                         :pageNum="searchQuery.pageNum"
@@ -205,6 +156,7 @@
                     </thead>
                     <tbody>
                       <tr
+                        class="deliverables-search"
                         v-for="(pfile, index) in searchedPfiles"
                         v-bind:key="index"
                         :ref="'row' + index"
@@ -221,7 +173,11 @@
                         <td>{{ pfile.externalSource }}</td>
                         <td>{{ pfile.externalId }}</td>
                         <td>{{ pfile.primaryfileName }}</td>
-                        <td>{{ pfile.primaryfileOriginalname }}</td>
+                        <td
+                          style="max-width: 30px !important; overflow-wrap: break-word;"
+                        >
+                          {{ pfile.primaryfileOriginalname }}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -253,27 +209,28 @@
   </div>
 </template>
 <script>
-import Sidebar from "@/components/navigation/Sidebar.vue";
-import Logout from "@/components/shared/Logout.vue";
+import { sync } from "vuex-pathify";
 import Modal from "@/components/shared/Modal.vue";
+import SharedService from "@/service/shared-service";
 import WorkflowService from "../../service/workflow-service";
 import WorkflowResultService from "../../service/workflow-result-service";
 import SortableHeader from "../shared/SortableHeader";
 import Pagination from "../shared/Pagination";
 import Loader from "@/components/shared/Loader.vue";
+import DashboardTable from "@/components/dashboard/DashboardTable.vue";
 
 export default {
   name: "Deliverables",
   components: {
-    Sidebar,
-    Logout,
     Modal,
     SortableHeader,
     Pagination,
     Loader,
+    DashboardTable,
   },
   data() {
     return {
+      sharedService: new SharedService(),
       workflowService: new WorkflowService(),
       workflowResultService: new WorkflowResultService(),
       pfile: {
@@ -322,17 +279,10 @@ export default {
       },
     };
   },
+  computed: {
+    workflowDashboard: sync("workflowDashboard"),
+  },
   methods: {
-    reset() {
-      this.pfile = {
-        collectionName: "None",
-        itemName: "None",
-        externalSource: "None",
-        externalId: "None",
-        primaryfileName: "None",
-        primaryfileOriginalname: "None",
-      };
-    },
     async paginate(page_number) {
       this.searchQuery.pageNum = page_number;
       await this.getResults();
@@ -342,8 +292,8 @@ export default {
       this.searchQuery.filterByFinal = !this.searchQuery.filterByFinal;
       await this.getResults();
     },
-    async sortQuery(sortRule) {
-      this.searchQuery.sortRule = sortRule;
+    async sortQuery() {
+      this.searchQuery.sortRule = this.workflowDashboard.searchQuery.sortRule;
       this.searchQuery.pageNum = 1;
       await this.getResults();
     },
@@ -400,22 +350,6 @@ export default {
         await this.getResults();
       }
     },
-    async setWorkflowResultFinal(workflowResultId) {
-      for (var r = 0; r < this.rows.length; r++) {
-        if (this.rows[r].id == workflowResultId) {
-          var thisRow = this.rows[r];
-          if (!thisRow.isFinal) {
-            thisRow.isFinal = false;
-          }
-          thisRow.isFinal = !thisRow.isFinal;
-          this.workflowResultService.setWorkflowResultFinal(
-            workflowResultId,
-            thisRow.isFinal
-          );
-          break;
-        }
-      }
-    },
     async searchKeyUp(e) {
       if (e.keyCode === 13) {
         this.searchFiles();
@@ -439,7 +373,9 @@ export default {
               var thisPrimaryFile = thisItem.primaryfiles[p];
               self.searchedPfiles.push({
                 collectionName: thisItem.collectionName,
+                collectionId: thisItem.collectionId,
                 itemName: thisItem.itemName,
+                itemId: thisItem.itemId,
                 externalSource: thisItem.externalSource,
                 externalId: thisItem.externalId,
                 primaryfileId: thisPrimaryFile.id,
@@ -456,6 +392,7 @@ export default {
     },
     setPfiles() {
       let self = this;
+      this.workflowDashboard.searchQuery.sortRule = self.searchQuery.sortRule;
       this.searchQuery.filterByCollections = [];
       this.searchQuery.filterByItems = [];
       this.searchQuery.filterByFiles = [];
@@ -463,9 +400,9 @@ export default {
         for (var i = 0; i < this.searchedPfiles.length; i++) {
           var thisPfile = this.searchedPfiles[i];
           if (thisPfile.primaryfileId === this.selectedPfileIds[s]) {
-            this.searchQuery.filterByCollections.push(thisPfile.collectionName);
-            this.searchQuery.filterByItems.push(thisPfile.itemName);
-            this.searchQuery.filterByFiles.push(thisPfile.primaryfileName);
+            this.searchQuery.filterByCollections.push(thisPfile.collectionId);
+            this.searchQuery.filterByItems.push(thisPfile.itemId);
+            this.searchQuery.filterByFiles.push(thisPfile.primaryfileId);
             this.pfile = thisPfile;
           }
         }
@@ -473,15 +410,24 @@ export default {
     },
     async getResults() {
       let self = this;
-      if (self.pfile.itemName == "None") {
-        return;
+      try {
+        if (self.pfile.itemName == "None") {
+          return;
+        }
+        self.loading = true;
+        var response = await this.workflowResultService.getWorkflowResults(
+          self.searchQuery
+        );
+        self.rows = response.rows;
+        self.workflowDashboard.searchResult.rows = response.rows;
+        self.totalResults = response.totalResults;
+      } catch (error) {
+        self.$bvToast.toast(
+          "Oops! Something went wrong.",
+          self.sharedService.erorrToastConfig
+        );
+        console.error(error.message);
       }
-      self.loading = true;
-      var response = await this.workflowResultService.getWorkflowResults(
-        self.searchQuery
-      );
-      self.rows = response.rows;
-      self.totalResults = response.totalResults;
       self.loading = false;
     },
     searchModal() {
@@ -491,12 +437,25 @@ export default {
       self.$nextTick(() => self.$refs.searchInput.focus());
     },
   },
-  mounted() {},
+  mounted() {
+    this.workflowDashboard.searchQuery.sortRule.columnName = "outputName";
+    this.workflowDashboard.searchQuery.sortRule.orderByDescending = false;
+  },
+  beforeDestroy() {
+    this.workflowDashboard.searchQuery.rows = [];
+    this.workflowDashboard.searchQuery.filterByStatuses = [];
+    this.workflowDashboard.searchQuery.sortRule.columnName = "dateCreated";
+    this.workflowDashboard.searchQuery.sortRule.orderByDescending = true;
+    this.workflowDashboard.searchQuery.pageNum = 1;
+  },
 };
 </script>
 
 <style scoped>
 @import "/amppd-ui/src/styles/style.css";
+.deliverables-search {
+  cursor: pointer;
+}
 .sub-title {
   font-size: 1.2em;
   float: left;
@@ -559,9 +518,5 @@ export default {
     float: none;
     text-align: left !important;
   }
-}
-.no-results {
-  text-align: center;
-  font-weight: 700;
 }
 </style>

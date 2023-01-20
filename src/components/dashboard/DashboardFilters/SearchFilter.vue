@@ -15,6 +15,7 @@
         placeholder="Search"
         v-model="userValue"
         class="form-control customSearchWidth"
+        :disabled="parent === 'TestResults'"
       />
     </form>
   </div>
@@ -48,7 +49,11 @@ export default {
       return this.workflowDashboard.searchQuery.filterBySearchTerms;
     },
   },
-  props: {},
+  props: {
+    parent: {
+      default: "",
+    },
+  },
   methods: {
     addSearchTerm(term) {
       if (this.searchTerms.length > 0) {
