@@ -267,6 +267,7 @@ export default {
         pageNum: 1,
         resultsPerPage: 10,
         filterByDates: [],
+        filterByTestDates: [],
         filterBySubmitters: [],
         filterByCollections: [],
         filterByItems: [],
