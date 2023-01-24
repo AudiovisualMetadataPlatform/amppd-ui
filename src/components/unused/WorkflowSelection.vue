@@ -42,9 +42,10 @@ export default {
     async selection(event) {
       let self = this;
       self.selectedWorkflow = event.target.value;
-      self.parameters = await this.workflowService.getWorkflowDetails(
+      let wfDetails = await this.workflowService.getWorkflowDetails(
         self.selectedWorkflow
       );
+      self.parameters = wfDetails.tempParams;
       console.log(self.parameters);
     },
   },
