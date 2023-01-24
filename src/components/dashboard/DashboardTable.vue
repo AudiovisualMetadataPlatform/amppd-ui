@@ -408,6 +408,7 @@ export default {
       "workflowDashboard.searchQuery.filterByExternalIds"
     ),
     filterByDates: sync("workflowDashboard.searchQuery.filterByDates"),
+    filterByTestDates: sync("workflowDashboard.searchQuery.filterByTestDates"),
     filterBySubmitters: sync(
       "workflowDashboard.searchQuery.filterBySubmitters"
     ),
@@ -612,6 +613,10 @@ export default {
   watch: {
     filterByDates: function() {
       // console.log("inside watcher for filterByDates",this.filterByDates[0]," ",this.filterByDates[1]);
+      this.workflowDashboard.searchQuery.pageNum = 1;
+      this.refreshData();
+    },
+    filterByTestDates: function() {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },

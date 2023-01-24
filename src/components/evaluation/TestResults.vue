@@ -110,9 +110,35 @@ export default {
       self.workflowDashboard.loading = false;
     },
   },
-  mounted() {},
+  mounted() {
+    this.workflowDashboard.searchQuery = {
+      sortRule: {
+        columnName: "dateCreated",
+        orderByDescending: true,
+      },
+      pageNum: 1,
+      resultsPerPage: 10,
+      filterByDates: [],
+      filterByTestDates: [],
+      filterBySubmitters: [],
+      filterByCollections: [],
+      filterByUnits: [],
+      filterByExternalIds: [],
+      filterByItems: [],
+      filterByFiles: [],
+      filterByWorkflows: [],
+      filterBySteps: [],
+      filterByOutputs: [],
+      filterByStatuses: [],
+      filterBySearchTerms: [],
+      filterByRelevant: true,
+    };
+  },
   beforeDestroy() {
+    this.workflowDashboard.searchQuery.filterByMstTools = [];
+    this.workflowDashboard.searchQuery.filterByTestDates = [];
     this.workflowDashboard.searchQuery.filterByTestStatus = [];
+    this.workflowDashboard.searchQuery.filterByCategories = [];
     this.workflowDashboard.searchQuery.sortRule.columnName = "dateCreated";
     this.workflowDashboard.searchQuery.sortRule.orderByDescending = true;
     this.workflowDashboard.searchQuery.pageNum = 1;
