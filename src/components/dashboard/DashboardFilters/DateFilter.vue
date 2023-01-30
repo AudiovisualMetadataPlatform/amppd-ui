@@ -9,9 +9,10 @@
       aria-haspopup="true"
       aria-expanded="this.workflowDashboard.filtersEnabled.dateFilter ? 'true' : 'false'"
       v-on:click="setFilterFlags"
-      :disabled="parent === 'TestResults'"
     >
-      Date range
+      {{
+        label ? label : parent === "TestResults" ? "Output Date" : "Date range"
+      }}
     </button>
     <div
       v-click-outside="closeFilter"
@@ -89,6 +90,9 @@ export default {
     parent: {
       default: "",
     },
+    label: {
+      default: "",
+    },
   },
   computed: {
     workflowDashboard: sync("workflowDashboard"),
@@ -111,13 +115,23 @@ export default {
       let self = this;
       self.fromDate.setHours(0, 0, 0, 0);
       self.toDate.setHours(23, 59, 59, 999);
-      self.workflowDashboard.searchQuery.filterByDates = [];
-      self.workflowDashboard.searchQuery.filterByDates.push(
-        new Date(self.fromDate)
-      );
-      self.workflowDashboard.searchQuery.filterByDates.push(
-        new Date(self.toDate)
-      );
+      if (self.label === "Test Date") {
+        self.workflowDashboard.searchQuery.filterByTestDates = [];
+        self.workflowDashboard.searchQuery.filterByTestDates.push(
+          new Date(self.fromDate)
+        );
+        self.workflowDashboard.searchQuery.filterByTestDates.push(
+          new Date(self.toDate)
+        );
+      } else {
+        self.workflowDashboard.searchQuery.filterByDates = [];
+        self.workflowDashboard.searchQuery.filterByDates.push(
+          new Date(self.fromDate)
+        );
+        self.workflowDashboard.searchQuery.filterByDates.push(
+          new Date(self.toDate)
+        );
+      }
       this.displayFilter = false;
       this.$emit("displayChanged", this.displayFilter);
     },
