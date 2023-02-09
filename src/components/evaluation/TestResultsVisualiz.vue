@@ -70,9 +70,7 @@
                                       "
                                       target="_blank"
                                       >{{
-                                        humanize(
-                                          testResult.workflowResult.workflowStep
-                                        )
+                                        testResult.workflowResult.workflowStep
                                       }}</a
                                     >)
                                   </h6>
@@ -161,10 +159,8 @@
                                         </th>
                                         <td>
                                           {{
-                                            humanize(
-                                              testResult.workflowResult
-                                                .workflowStep
-                                            )
+                                            testResult.workflowResult
+                                              .workflowStep
                                           }}
                                         </td>
                                         <td
@@ -269,10 +265,8 @@
                                   <td>&nbsp;Tool</td>
                                   <td>
                                     {{
-                                      humanize(
-                                        selectedTestResult.workflowResult
-                                          .workflowStep
-                                      )
+                                      selectedTestResult.workflowResult
+                                        .workflowStep
                                     }}
                                   </td>
                                 </tr>
@@ -518,14 +512,6 @@ export default {
   },
   props: {},
   methods: {
-    humanize(str) {
-      let i,
-        frags = str.split("_");
-      for (i = 0; i < frags.length; i++) {
-        frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
-      }
-      return frags.join(" ");
-    },
     refreshData() {
       const self = this;
       let scores = JSON.parse(self.selectedTestResult.scores);
