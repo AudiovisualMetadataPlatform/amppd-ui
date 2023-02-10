@@ -1,5 +1,6 @@
 <template>
   <div class="col-lg-7">
+    <loader :show="loading" />
     <h1>Workflow Submission</h1>
     <div
       v-if="
@@ -18,9 +19,15 @@
         v-on:submit.prevent
         v-on:keyup.enter="searchFiles()"
       >
-        <div class="container-fluid">
+        <div
+          class="container-fluid"
+          v-if="
+            !workflowSubmission.workflowDetails.inputWprkflowResultFormats
+              .length
+          "
+        >
           <div class="row">
-            <div class="col-xl-6 col-md-12">
+            <!-- <div class="col-xl-6 col-md-12">
               <div id="limiter">
                 <strong>Limit results to </strong>
                 <div class="form-check form-check-inline">
@@ -60,15 +67,8 @@
                   >
                 </div>
               </div>
-            </div>
-            <div
-              class="col-xl-6 col-md-12"
-              :class="{
-                'mt-5':
-                  workflowSubmission.workflowDetails.inputWprkflowResultFormats
-                    .length,
-              }"
-            >
+            </div> -->
+            <div class="mb-3" style="margin-left: -0.25rem; margin-top: -15px">
               <button
                 v-if="
                   !workflowSubmission.workflowDetails.inputWprkflowResultFormats
@@ -143,11 +143,11 @@
         <hr class="w-100" />
         <div
           id="accordion"
-          v-if="searchedItems.rows && searchedItems.rows.length > 0"
+          v-if="searchedItems.items && searchedItems.items.length > 0"
         >
           <div
             class="card"
-            v-for="(item, index) in searchedItems.rows"
+            v-for="(item, index) in searchedItems.items"
             v-bind:key="index"
           >
             <div class="card-header" id="headingTwo">
@@ -206,7 +206,7 @@
                     <path
                       class="circle-stroke"
                       d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
-                           M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
+                          M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
                     ></path>
                     <path
                       class="minus-stroke"
@@ -317,58 +317,52 @@
       </div>
       <SelectBundle />
     </div>
-    <!-- ----------------------------------------------------- -->
     <div
       id="av-intermediary-results"
       class="hide  search-results"
       v-if="
         workflowSubmission.workflowDetails.inputWprkflowResultFormats.length &&
-          workflowSubmission.updateSelectedFiles
+          workflowSubmission.updateSelectedFiles &&
+          intermediaryWorkflowResults.length
       "
     >
       <div class="card pad-all-2 marg-t-0">
-        <h4>Select the files to be used as input for the selected workflow</h4>
+        <div class="d-flex" style="justify-content: space-between;">
+          <h4>
+            Select the files to be used as input for the selected workflow
+          </h4>
+          <button
+            v-on:click="
+              removeFile(
+                Array.from(workflowSubmission.selectedFiles.values())[0].id
+              )
+            "
+            type="button"
+            class="btn btn-primary btn-md ml-2"
+            data-toggle="modal"
+            data-target=".save-modal"
+            style="height: 2.5rem;"
+          >
+            Go back
+          </button>
+        </div>
         <div class="col-lg-12 marg-t-3 marg-b-2">
           <h5>
             Primary File:
             {{ Array.from(workflowSubmission.selectedFiles.values())[0].name }}
-            <span class="btn btn-light float-right">{{
+            <span class="btn btn-light float-right mb-2 mt-1 al-cursor">{{
               Array.from(workflowSubmission.selectedFiles.values())[0]
                 .originalFilename
             }}</span>
           </h5>
         </div>
-        <!-- ////////////////////////// -->
-        <!-- <b-card
-          class="mgm-card bg-light-gray-1 m-0"
-          v-for="(mst, i) in ['abc', 'pqr', 'xyz']"
-          :key="i"
-        >
-          <h3
-            class="w-100 d-flex justify-content-between align-items-center mgm-h3 card-title bg-light-gray"
-          >
-            <button
-              class="btn"
-              :class="accordionVisible.includes(i) ? null : 'collapsed'"
-              :aria-expanded="accordionVisible.includes(i) ? 'true' : 'false'"
-              :aria-controls="'mgm' + i"
-              style="font-size:24px; font-weight:400"
-              @click="handleVisibility(i)"
-            >
-              <span class="sr-only">{{ mst }}</span>
-            </button>
-          </h3>
-          <b-collapse
-            :id="'mgm' + i"
-            class="mgm-content"
-            :visible="accordionVisible.includes(i)"
-          >
-            {{ mst }}
-          </b-collapse>
-        </b-card> -->
-        <!-- ////////////////////////// -->
         <div class="accordion" id="accordionExample">
-          <div class="card">
+          <div
+            class="card m-0"
+            v-for="(resultLabels, resultLabelIndex) in workflowSubmission
+              .workflowDetails.inputWprkflowResultLabels"
+            :key="resultLabelIndex"
+          >
             <div class="card-header" id="headingOne">
               <h2 class="mb-0">
                 <button
@@ -376,27 +370,32 @@
                   type="button"
                   data-toggle="collapse"
                   data-target="#collapseOne"
-                  aria-expanded="true"
+                  :aria-expanded="
+                    accordionVisible.includes(resultLabelIndex)
+                      ? 'true'
+                      : 'false'
+                  "
                   aria-controls="collapseOne"
+                  @click="handleVisibility(resultLabelIndex)"
                 >
-                  Diarization Files
+                  {{ resultLabels }}
                 </button>
               </h2>
             </div>
             <div
               id="collapseOne"
-              class="collapse show"
+              :class="accordionVisible.includes(resultLabelIndex) ? 'show' : ''"
+              class="collapse"
               aria-labelledby="headingOne"
               data-parent="#accordionExample"
             >
               <div class="card-body">
-                <!-- -->
                 <div id="group1">
                   <div class="table-responsive">
-                    <table id="tableOne" class="table table-striped">
+                    <table id="myTable" class="table table-striped">
                       <thead>
                         <tr>
-                          <th scope="col">Name</th>
+                          <th scope="col">Alias</th>
                           <th scope="col">Submission Date</th>
                           <th scope="col">Submmitter</th>
                           <th scope="col">Workflow</th>
@@ -408,181 +407,31 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr class="row-1">
-                          <td>A Name</td>
-                          <td class="">3/24/2022 16:53:17</td>
-                          <td class="">amp@iu.edu</td>
-                          <td class="">
-                            MW - Transcription and NER with HMGM for NER
+                        <tr
+                          class="row-1"
+                          v-for="(res, index) in intermediaryWorkflowResults[
+                            resultLabelIndex
+                          ]"
+                          :key="index"
+                        >
+                          <td>{{ res.outputLabel }}</td>
+                          <td>
+                            {{ new Date(res.dateCreated) | LOCAL_DATE_VALUE }}
                           </td>
-                          <td>ina_speech_segmenter</td>
-                          <td>amp_segments</td>
+                          <td>{{ res.submitter }}</td>
+                          <td>{{ res.workflowName }}</td>
+                          <td>{{ res.workflowStep }}</td>
+                          <td>{{ res.outputName }}</td>
                           <td class="text-center slim-col-12 slim-col-4 ">
-                            <span>
-                              <span class="text-center addFile">
-                                <label>
-                                  <span class="ui"></span>
-                                  <input
-                                    type="radio"
-                                    name="radio1"
-                                    value="row-1"
-                                    class="ck-lg radioBtn"
-                                  />
-                                  <span class="sr-only">Add Ground Truth</span>
-                                </label>
-                              </span>
-                            </span>
-                            <span class="text-center hideTillSelected">
-                              <button
-                                class="btn btn-link removeFile"
-                                data-remove="row-1"
-                              >
-                                <svg
-                                  class="icon-minus"
-                                  version="1.1"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                                  x="0px"
-                                  y="0px"
-                                  viewBox="0 0 311.5 311.5"
-                                  style="enable-background:new 0 0 311.5 311.5;"
-                                  xml:space="preserve"
-                                >
-                                  <path
-                                    class="circle-stroke"
-                                    d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
-          M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
-                                  ></path>
-                                  <path
-                                    class="minus-stroke"
-                                    d="M220.7,164.9H92.8c-5,0-9.1-4.1-9.1-9.1s4.1-9.1,9.1-9.1h127.9c5,0,9.1,4.1,9.1,9.1S225.8,164.9,220.7,164.9z"
-                                  ></path>
-                                  <path
-                                    class="plus-stroke"
-                                    d="M165.9,91.8v127.9c0,5-4.1,9.1-9.1,9.1s-9.1-4.1-9.1-9.1V91.8c0-5,4.1-9.1,9.1-9.1S165.9,86.8,165.9,91.8z"
-                                  ></path>
-                                </svg>
-                                Remove file
-                              </button>
-                            </span>
-                          </td>
-                        </tr>
-                        <tr class="row-2">
-                          <td>Another Name</td>
-                          <td class="">5/11/2022 9:57:17</td>
-                          <td class="">amp@iu.edu</td>
-                          <td class="">
-                            Segmentation, Speech Transcription and NER
-                          </td>
-                          <td>ina_speech_segmenter</td>
-                          <td>gamp_segments</td>
-                          <td class="text-center slim-col-12 slim-col-4">
-                            <span>
-                              <span class="text-center  addFile">
-                                <label>
-                                  <span class="ui"></span>
-                                  <input
-                                    type="radio"
-                                    name="radio1"
-                                    value="row-2 "
-                                    class="ck-lg radioBtn"
-                                  />
-                                  <span class="sr-only">Add Ground Truth</span>
-                                </label>
-                              </span>
-                            </span>
-                            <span class="text-center hideTillSelected">
-                              <button
-                                class="btn btn-link removeFile float-right"
-                                data-remove="row-2"
-                              >
-                                <svg
-                                  class="icon-minus"
-                                  version="1.1"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                                  x="0px"
-                                  y="0px"
-                                  viewBox="0 0 311.5 311.5"
-                                  style="enable-background:new 0 0 311.5 311.5;"
-                                  xml:space="preserve"
-                                >
-                                  <path
-                                    class="circle-stroke"
-                                    d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
-            M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
-                                  ></path>
-                                  <path
-                                    class="minus-stroke"
-                                    d="M220.7,164.9H92.8c-5,0-9.1-4.1-9.1-9.1s4.1-9.1,9.1-9.1h127.9c5,0,9.1,4.1,9.1,9.1S225.8,164.9,220.7,164.9z"
-                                  ></path>
-                                  <path
-                                    class="plus-stroke"
-                                    d="M165.9,91.8v127.9c0,5-4.1,9.1-9.1,9.1s-9.1-4.1-9.1-9.1V91.8c0-5,4.1-9.1,9.1-9.1S165.9,86.8,165.9,91.8z"
-                                  ></path>
-                                </svg>
-                                Remove file
-                              </button>
-                            </span>
-                          </td>
-                        </tr>
-                        <tr class="row-3">
-                          <td>Some Other Name</td>
-                          <td class="">6/2/2022 12:33:35</td>
-                          <td class="">amp@iu.edu</td>
-                          <td class="">
-                            Demo - Transcription and NER with HMGM for STT
-                          </td>
-                          <td>ina_speech_segmenter</td>
-                          <td>gamp_segments</td>
-                          <td class="text-center slim-col-12 slim-col-4">
-                            <span>
-                              <span class="text-center  addFile">
-                                <label>
-                                  <span class="ui"></span>
-                                  <input
-                                    type="radio"
-                                    name="radio1"
-                                    value="row-3"
-                                    class="ck-lg radioBtn"
-                                  />
-                                  <span class="sr-only">Add Ground Truth</span>
-                                </label>
-                              </span>
-                            </span>
-                            <span class="text-center hideTillSelected">
-                              <button
-                                class="btn btn-link removeFile float-right "
-                                data-remove="row-3"
-                              >
-                                <svg
-                                  class="icon-minus"
-                                  version="1.1"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                                  x="0px"
-                                  y="0px"
-                                  viewBox="0 0 311.5 311.5"
-                                  style="enable-background:new 0 0 311.5 311.5;"
-                                  xml:space="preserve"
-                                >
-                                  <path
-                                    class="circle-stroke"
-                                    d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
-            M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
-                                  ></path>
-                                  <path
-                                    class="minus-stroke"
-                                    d="M220.7,164.9H92.8c-5,0-9.1-4.1-9.1-9.1s4.1-9.1,9.1-9.1h127.9c5,0,9.1,4.1,9.1,9.1S225.8,164.9,220.7,164.9z"
-                                  ></path>
-                                  <path
-                                    class="plus-stroke"
-                                    d="M165.9,91.8v127.9c0,5-4.1,9.1-9.1,9.1s-9.1-4.1-9.1-9.1V91.8c0-5,4.1-9.1,9.1-9.1S165.9,86.8,165.9,91.8z"
-                                  ></path>
-                                </svg>
-                                Remove file
-                              </button>
-                            </span>
+                            <b-form-radio
+                              v-model="localSelIntWfResult[resultLabelIndex]"
+                              style="font-size:1.25rem;"
+                              name="workflowResult-radios"
+                              :value="res"
+                              @change="
+                                onChangeIntWfResult(resultLabelIndex, res)
+                              "
+                            />
                           </td>
                         </tr>
                       </tbody>
@@ -591,248 +440,12 @@
                   <button
                     type="button"
                     id="saveSelection"
-                    class="btn btn-md btn-outline-primary float-right marg-b-3"
+                    class="btn btn-md btn-outline-primary float-right mb-3"
+                    @click="handleAddToSelection(resultLabelIndex)"
+                    disabled
                   >
                     Add to selection
                   </button>
-                </div>
-                <!-- -->
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header" id="headingTwo">
-              <h2 class="mb-0">
-                <button
-                  class="btn btn-link btn-block text-left collapsed"
-                  type="button"
-                  data-toggle="collapse"
-                  data-target="#collapseTwo"
-                  aria-expanded="false"
-                  aria-controls="collapseTwo"
-                >
-                  Transcription Files
-                </button>
-              </h2>
-            </div>
-            <div
-              id="collapseTwo"
-              class="collapse"
-              aria-labelledby="headingTwo"
-              data-parent="#accordionExample"
-            >
-              <div class="card-body">
-                <div id="group2" class="">
-                  <!-- <div class="alert alert-success text-center " role="alert">
-                  Selection was added, choose another file.
-                   </div> -->
-                  <div class="table-responsive">
-                    <table
-                      id="tableTwo"
-                      class="table table-striped hideTillRadio1"
-                    >
-                      <thead>
-                        <tr>
-                          <th scope="col">Name</th>
-                          <th scope="col">Submission Date</th>
-                          <th scope="col">Submmitter</th>
-                          <th scope="col">Workflow</th>
-                          <th scope="col">Step</th>
-                          <th scope="col">Output</th>
-                          <th scope="col">
-                            <span class="sr-only">actions</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr class="row-4">
-                          <td>Another Name</td>
-                          <td class="">8/14/2022 13:23:18</td>
-                          <td class="">amp@iu.edu</td>
-                          <td class="">
-                            Noframes - Transcription and NER with HMGM for NER
-                          </td>
-                          <td>ina_speech_segmenter</td>
-                          <td>amp_segments</td>
-                          <td class="text-center slim-col-12 slim-col-4 ">
-                            <span>
-                              <span class="text-center addFile">
-                                <label>
-                                  <span class="ui"></span>
-                                  <input
-                                    type="radio"
-                                    name="radio1"
-                                    value="row-4"
-                                    class="ck-lg radioBtn"
-                                  />
-                                  <span class="sr-only">Add Ground Truth</span>
-                                </label>
-                              </span>
-                            </span>
-                            <span class="text-center hideTillSelected">
-                              <button
-                                class="btn btn-link removeFile2 float-right"
-                                data-remove="row-1"
-                              >
-                                <svg
-                                  class="icon-minus"
-                                  version="1.1"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                                  x="0px"
-                                  y="0px"
-                                  viewBox="0 0 311.5 311.5"
-                                  style="enable-background:new 0 0 311.5 311.5;"
-                                  xml:space="preserve"
-                                >
-                                  <path
-                                    class="circle-stroke"
-                                    d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
-            M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
-                                  ></path>
-                                  <path
-                                    class="minus-stroke"
-                                    d="M220.7,164.9H92.8c-5,0-9.1-4.1-9.1-9.1s4.1-9.1,9.1-9.1h127.9c5,0,9.1,4.1,9.1,9.1S225.8,164.9,220.7,164.9z"
-                                  ></path>
-                                  <path
-                                    class="plus-stroke"
-                                    d="M165.9,91.8v127.9c0,5-4.1,9.1-9.1,9.1s-9.1-4.1-9.1-9.1V91.8c0-5,4.1-9.1,9.1-9.1S165.9,86.8,165.9,91.8z"
-                                  ></path>
-                                </svg>
-                                Remove file
-                              </button>
-                            </span>
-                          </td>
-                        </tr>
-                        <tr class="row-5">
-                          <td>Some Other Name</td>
-                          <td class="">06/03/2022 05:17:01</td>
-                          <td class="">amp@iu.edu</td>
-                          <td class="">
-                            Linked Segmentation, Speech Transcription and NER
-                          </td>
-                          <td>ina_speech_segmenter</td>
-                          <td>gamp_segments</td>
-                          <td class="text-center slim-col-12 slim-col-4">
-                            <span>
-                              <span class="text-center  addFile">
-                                <label>
-                                  <span class="ui"></span>
-                                  <input
-                                    type="radio"
-                                    name="radio1"
-                                    value="row-5 "
-                                    class="ck-lg radioBtn"
-                                  />
-                                  <span class="sr-only">Add Ground Truth</span>
-                                </label>
-                              </span>
-                            </span>
-                            <span class="text-center hideTillSelected">
-                              <button
-                                class="btn btn-link removeFile2 float-right"
-                                data-remove="row-2"
-                              >
-                                <svg
-                                  class="icon-minus"
-                                  version="1.1"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                                  x="0px"
-                                  y="0px"
-                                  viewBox="0 0 311.5 311.5"
-                                  style="enable-background:new 0 0 311.5 311.5;"
-                                  xml:space="preserve"
-                                >
-                                  <path
-                                    class="circle-stroke"
-                                    d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
-              M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
-                                  ></path>
-                                  <path
-                                    class="minus-stroke"
-                                    d="M220.7,164.9H92.8c-5,0-9.1-4.1-9.1-9.1s4.1-9.1,9.1-9.1h127.9c5,0,9.1,4.1,9.1,9.1S225.8,164.9,220.7,164.9z"
-                                  ></path>
-                                  <path
-                                    class="plus-stroke"
-                                    d="M165.9,91.8v127.9c0,5-4.1,9.1-9.1,9.1s-9.1-4.1-9.1-9.1V91.8c0-5,4.1-9.1,9.1-9.1S165.9,86.8,165.9,91.8z"
-                                  ></path>
-                                </svg>
-                                Remove file
-                              </button>
-                            </span>
-                          </td>
-                        </tr>
-                        <tr class="row-6">
-                          <td>Yet Another Name</td>
-                          <td class="">09/02/2021 15:11:19</td>
-                          <td class="">amp@iu.edu</td>
-                          <td class="">
-                            Another Demo - Transcription and NER with HMGM for
-                            STT
-                          </td>
-                          <td>ina_speech_segmenter</td>
-                          <td>gamp_segments</td>
-                          <td class="text-center slim-col-12 slim-col-4">
-                            <span>
-                              <span class="text-center  addFile">
-                                <label>
-                                  <span class="ui"></span>
-                                  <input
-                                    type="radio"
-                                    name="radio1"
-                                    value="row-6"
-                                    class="ck-lg radioBtn"
-                                  />
-                                  <span class="sr-only">Add Ground Truth</span>
-                                </label>
-                              </span>
-                            </span>
-                            <span class="text-center hideTillSelected">
-                              <button
-                                class="btn btn-link removeFile2 float-right "
-                                data-remove="row-3"
-                              >
-                                <svg
-                                  class="icon-minus"
-                                  version="1.1"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                                  x="0px"
-                                  y="0px"
-                                  viewBox="0 0 311.5 311.5"
-                                  style="enable-background:new 0 0 311.5 311.5;"
-                                  xml:space="preserve"
-                                >
-                                  <path
-                                    class="circle-stroke"
-                                    d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
-              M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
-                                  ></path>
-                                  <path
-                                    class="minus-stroke"
-                                    d="M220.7,164.9H92.8c-5,0-9.1-4.1-9.1-9.1s4.1-9.1,9.1-9.1h127.9c5,0,9.1,4.1,9.1,9.1S225.8,164.9,220.7,164.9z"
-                                  ></path>
-                                  <path
-                                    class="plus-stroke"
-                                    d="M165.9,91.8v127.9c0,5-4.1,9.1-9.1,9.1s-9.1-4.1-9.1-9.1V91.8c0-5,4.1-9.1,9.1-9.1S165.9,86.8,165.9,91.8z"
-                                  ></path>
-                                </svg>
-                                Remove file
-                              </button>
-                            </span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <button
-                      type="button"
-                      id="saveSelection2"
-                      class="btn btn-md btn-outline-primary float-right marg-b-3"
-                    >
-                      Add to selection
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -840,33 +453,39 @@
         </div>
       </div>
     </div>
-    <!-- ------------------------------------------------------ -->
   </div>
 </template>
 
 <script>
 import { sync } from "vuex-pathify";
+import SharedService from "@/service/shared-service";
 import WorkflowService from "../../service/workflow-service";
 import SelectBundle from "@/components/workflow/SelectBundle.vue";
+import Loader from "@/components/shared/Loader.vue";
 export default {
   name: "SelectFiles",
   data() {
     return {
+      loading: false,
       searchAudio: false,
       searchVideo: false,
       searchOther: false,
       visible: -1,
       searchWord: "",
       searchedItems: [],
+      sharedService: new SharedService(),
       workflowService: new WorkflowService(),
       errors: {
         search_error: "",
       },
-      // accordionVisible: [],
+      accordionVisible: [0],
+      intermediaryWorkflowResults: [],
+      localSelIntWfResult: [],
     };
   },
   components: {
     SelectBundle,
+    Loader,
   },
   computed: {
     workflowSubmission: sync("workflowSubmission"),
@@ -889,24 +508,61 @@ export default {
         inputWprkflowResultFormats: [],
         inputWprkflowResultLabels: [],
       },
+      intermediaryWorkflowResults: [],
+      selectedIntWfResult: [],
     };
   },
   methods: {
-    // handleVisibility(index, open = "") {
-    //   const self = this;
-    //   if (open) {
-    //     self.accordionVisible = [];
-    //     self.accordionVisible.push(index);
-    //   } else {
-    //     if (self.accordionVisible.includes(index)) {
-    //       self.accordionVisible = self.accordionVisible.filter((ele) => {
-    //         return ele !== index;
-    //       });
-    //     } else {
-    //       self.accordionVisible.push(index);
-    //     }
-    //   }
-    // },
+    handleAddToSelection(accordionIndex) {
+      const self = this;
+      let availableObj = false;
+      for (
+        let i = 0;
+        i < self.workflowSubmission.selectedIntWfResult.length;
+        i++
+      ) {
+        if (
+          self.workflowSubmission.selectedIntWfResult[i] &&
+          self.workflowSubmission.selectedIntWfResult[i].hasOwnProperty(
+            accordionIndex
+          )
+        ) {
+          availableObj = true;
+          self.workflowSubmission.selectedIntWfResult[i][
+            accordionIndex
+          ] = this.localSelIntWfResult[accordionIndex];
+        }
+      }
+
+      if (!availableObj)
+        self.workflowSubmission.selectedIntWfResult.push({
+          [accordionIndex]: this.localSelIntWfResult[accordionIndex],
+        });
+    },
+    onChangeIntWfResult(indexResultLabel, row) {
+      const self = this;
+      // console.log(indexResultLabel, row);
+    },
+    removeFile(id) {
+      let self = this;
+      self.selectedFiles.delete(id);
+      self.workflowSubmission.updateSelectedFiles =
+        self.workflowSubmission.updateSelectedFiles - 1;
+      self.workflowSubmission.selectedIntWfResult = [];
+      self.localSelIntWfResult = [];
+      console.log("Removed selected file " + id);
+    },
+    handleVisibility(index) {
+      const self = this;
+      if (self.accordionVisible.includes(index)) {
+        self.accordionVisible = self.accordionVisible.filter((ele) => {
+          return ele !== index;
+        });
+      } else {
+        self.accordionVisible = [];
+        self.accordionVisible.push(index);
+      }
+    },
     itemClicked(index) {
       if (this.visible == index) {
         this.visible = -1;
@@ -918,39 +574,57 @@ export default {
       self.visible = -1;
       console.log("the search word is:" + self.searchWord);
       self.errors.search_error = "";
-      var media_type = "";
-      if (self.searchAudio) media_type += "1";
-      else media_type += "0";
-      if (self.searchVideo) media_type += "1";
-      else media_type += "0";
-      if (self.searchOther) media_type += "1";
-      else media_type += "0";
-      if (self.searchWord.length > 0) {
+      var mime_type = "";
+      if (self.searchAudio) mime_type += "1";
+      else mime_type += "0";
+      if (self.searchVideo) mime_type += "1";
+      else mime_type += "0";
+      if (self.searchOther) mime_type += "1";
+      else mime_type += "0";
+      if (
+        self.searchWord.length > 0 &&
+        !self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
+          .length
+      ) {
         self.searchedItems = await self.workflowService.searchFiles(
           this.searchWord,
-          media_type
+          mime_type
         );
         self.workflowSubmissionsearchResults = true;
-        // we dont require two conditions needs to be checked for displaying accrodian on result section. so commenting the below part.
-        // if(self.searchedItems.rows!=null)
-        // {
-        //    self.workflowSubmissionsearchResults = true;
-        // }
-        // else
-        // {
-        //    self.workflowSubmissionsearchResults = false;
-        // }
+      } else if (
+        self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
+          .length
+      ) {
+        try {
+          self.loading = true;
+          let outputTypesArr =
+            self.workflowSubmission.workflowDetails.inputWprkflowResultFormats;
+          let outputTypes = String(outputTypesArr);
+          self.searchedItems = await self.workflowService.searchIntermediateFiles(
+            this.searchWord,
+            outputTypes
+          );
+          self.workflowSubmissionsearchResults = true;
+          self.loading = false;
+        } catch (error) {
+          console.log(error);
+          self.$bvToast.toast(
+            "Oops! Something went wrong.",
+            self.sharedService.erorrToastConfig
+          );
+          self.loading = false;
+        }
       } else {
         self.errors.search_error = "Please enter a search keyword";
       }
     },
-    addFile(index, file_index) {
+    async addFile(index, file_index) {
       let self = this;
-      let key = self.searchedItems.rows[index].primaryfiles[file_index].id;
+      let key = self.searchedItems.items[index].primaryfiles[file_index].id;
       if (!self.hasValue(key)) {
         self.selectedFiles.set(
           key,
-          self.searchedItems.rows[index].primaryfiles[file_index]
+          self.searchedItems.items[index].primaryfiles[file_index]
         );
         self.workflowSubmission.updateSelectedFiles =
           self.updateSelectedFiles + 1;
@@ -958,7 +632,39 @@ export default {
           self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
             .length
         ) {
-          console.log("Intermediary - Workflow Submissions");
+          try {
+            self.loading = true;
+            let outputTypesArr =
+              self.workflowSubmission.workflowDetails
+                .inputWprkflowResultFormats;
+            let outputTypes = String(outputTypesArr);
+            self.intermediaryWorkflowResults = await self.workflowService.getCompleteWorkflowResultsForPrimaryfileOutputTypes(
+              outputTypes,
+              key
+            );
+            if (
+              self.workflowSubmission.selectedIntWfResult &&
+              self.workflowSubmission.selectedIntWfResult.length
+            ) {
+              for (
+                let i = 0;
+                i < self.workflowSubmission.selectedIntWfResult.length;
+                i++
+              ) {
+                self.workflowSubmission.selectedIntWfResult[i] &&
+                  delete self.workflowSubmission.selectedIntWfResult[i];
+              }
+            }
+            self.workflowSubmission.selectedIntWfResult = [];
+            self.loading = false;
+          } catch (error) {
+            console.log(error);
+            self.$bvToast.toast(
+              "Oops! Something went wrong.",
+              self.sharedService.erorrToastConfig
+            );
+            self.loading = false;
+          }
         }
         console.log(
           "Added selected primaryfile " +
@@ -983,7 +689,7 @@ export default {
       let self = this;
       for (
         var key = 0;
-        key < self.searchedItems.rows[index].primaryfiles.length;
+        key < self.searchedItems.items[index].primaryfiles.length;
         key++
       ) {
         self.addFile(index, key);
@@ -997,11 +703,11 @@ export default {
       var result = true;
       for (
         var key = 0;
-        key < self.searchedItems.rows[index].primaryfiles.length;
+        key < self.searchedItems.items[index].primaryfiles.length;
         key++
       ) {
         if (
-          !self.hasValue(self.searchedItems.rows[index].primaryfiles[key].id)
+          !self.hasValue(self.searchedItems.items[index].primaryfiles[key].id)
         ) {
           result = false;
           break;
@@ -1061,5 +767,8 @@ export default {
 }
 .bg-transparent {
   background: transparent;
+}
+.al-cursor {
+  cursor: alias !important;
 }
 </style>

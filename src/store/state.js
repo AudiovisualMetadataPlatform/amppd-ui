@@ -13,6 +13,8 @@ const state = {
       inputWprkflowResultFormats: [],
       inputWprkflowResultLabels: [],
     },
+    intermediaryWorkflowResults: [],
+    selectedIntWfResult: [],
   },
   workflowSubmissionsearchResults: false,
   workflowDashboard: {
