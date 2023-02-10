@@ -1,8 +1,23 @@
 
 import BaseService from './base-service.js';
-export default class WorkflowService extends BaseService{
-    async searchFiles(searchWord, media_type){
-        return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + encodeURIComponent(searchWord) +'&mediaType=' + media_type).then(response => response.data);
+export default class WorkflowService extends BaseService {
+    async searchFiles(searchWord, mime_type) {
+        return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + encodeURIComponent(searchWord) + '&mediaType=' + mime_type).then(response => response.data);
+    }
+    
+    async searchIntermediateFiles(searchWord, outputTypes) {
+        return await super
+        .get_auth(
+            // '/workflow-results/intermediate/primaryfiles?outputTypes=transcript,segment&mediaType=av&keyword=MW'
+            "/workflow-results/intermediate/primaryfiles?outputTypes=" + outputTypes + "&keyword=" + encodeURIComponent(searchWord)
+        ).then((response) => response.data);
+    }
+
+    async getCompleteWorkflowResultsForPrimaryfileOutputTypes(outputTypes, primaryfileId) {
+        return await super
+        .get_auth(
+            "/workflow-results/intermediate/outputs?outputTypes=" + outputTypes + "&primaryfileId=" + primaryfileId
+        ).then((response) => response.data);
     }
 
     isAudioFile(primaryfile) {
@@ -11,29 +26,29 @@ export default class WorkflowService extends BaseService{
             return primaryfile.mimeType.startsWith("audio");
         else if (primaryfile.originalFilename)
             return (
-            primaryfile.originalFilename.endsWith(".mp3") ||
-            primaryfile.originalFilename.endsWith(".wav") ||
-            primaryfile.originalFilename.endsWith(".flac")
+                primaryfile.originalFilename.endsWith(".mp3") ||
+                primaryfile.originalFilename.endsWith(".wav") ||
+                primaryfile.originalFilename.endsWith(".flac")
             );
     }
 
     // concatenate IDs of selected primaryfiles into a query string
-    getSelectedPrimaryfileIds(selectedFiles, emptyPFileIndexes){
+    getSelectedPrimaryfileIds(selectedFiles, emptyPFileIndexes) {
         if (selectedFiles === null || selectedFiles.size === 0)
             return "";
-        if(emptyPFileIndexes){
+        if (emptyPFileIndexes) {
             let primaryfileIds = "";
             const sortedEmptyIndexes = Array.from(emptyPFileIndexes).sort(
                 (a, b) => a - b
             );
             const selectedFilesList = Array.from(selectedFiles.values());
-            const files = selectedFilesList.filter((file,index) =>{
+            const files = selectedFilesList.filter((file, index) => {
                 let isFound = false;
                 for (let i = 0; i < sortedEmptyIndexes.length; i++) {
-                    if(index === sortedEmptyIndexes[i]){
+                    if (index === sortedEmptyIndexes[i]) {
                         isFound = true;
                         break;
-                    }else{
+                    } else {
                         isFound = false;
                     }
                 }
@@ -60,51 +75,52 @@ export default class WorkflowService extends BaseService{
         return super.get_auth(`/bundles/search/findNamedByCurrentUser?name=${name}`);
     }
 
-    updateBundle(bundleId, description, primaryfileIds){
+    updateBundle(bundleId, description, primaryfileIds) {
         return super.post_auth(`/bundles/${bundleId}/update?description=${description}&primaryfileIds=${primaryfileIds}`);
     }
 
-    createBundle(name, description, primaryfileIds){
+    createBundle(name, description, primaryfileIds) {
         return super.post_auth(`/bundles/create?name=${name}&description=${description}&primaryfileIds=${primaryfileIds}`);
     }
 
-    getSupplementsForPrimaryfiles(primaryfileIds, name, category, format){
+    getSupplementsForPrimaryfiles(primaryfileIds, name, category, format) {
         return super.get_auth('/primaryfiles/supplements?primaryfileIds=' + primaryfileIds + '&category=' + category + '&format=' + format);
     }
 
-    submitWorkflow(selectedWorkflow, primaryfileIds, body = null){
-        console.log('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds);
-        return super.post_auth('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + primaryfileIds, body);
+    submitWorkflow(selectedWorkflow, ids, isIntermediary = false, body = null) {
+        if(isIntermediary)
+            return super.post_auth('/jobs/submitResults?workflowId=' + selectedWorkflow + '&resultIdss=' + ids + '&resultIdss=');
+        else
+            return super.post_auth('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + ids, body);
     }
 
-    cleanParameterName(name){
-        if(!name) return "";
+    cleanParameterName(name) {
+        if (!name) return "";
         var tempName = name.replace(/(_)/g, ' ');
         tempName = tempName.replace(/(^\w)|(\s+\w)/g, match => match.toUpperCase());
         return tempName;
     }
-    getWorkflows(){
+    getWorkflows() {
         return super.get_auth('/workflows?showPublished=true');
     }
 
-    getAllWorkflows(){
+    getAllWorkflows() {
         return super.get_auth('/workflows');
     }
-    async getWorkflowDetails(id){
+    async getWorkflowDetails(id) {
         var tempParams = [];
-        return await super.get_auth('/workflows/' + id).then(response=>
-            {
-                // Get the steps from the response
-                var data = response.data.steps;
+        return await super.get_auth('/workflows/' + id).then(response => {
+            // Get the steps from the response
+            var data = response.data.steps;
 
-                // If we didn't get an steps, return empty list
-                if(!response.data.steps) {
-                    return tempParams;
-                }
+            // If we didn't get an steps, return empty list
+            if (!response.data.steps) {
+                return tempParams;
+            }
 
-                // Get the node keys
-                var nodeKeys = Object.keys(data);
-                for(var nodeKey in nodeKeys){
+            // Get the node keys
+            var nodeKeys = Object.keys(data);
+            for (var nodeKey in nodeKeys) {
                 var thisNode = data[nodeKey];
 
                 // Create a new node object
@@ -113,20 +129,20 @@ export default class WorkflowService extends BaseService{
                     node_id: thisNode.toolId,
                     nodeName: this.cleanParameterName(thisNode.toolName),
                     annotation: thisNode.annotation,
-                    params:[]
+                    params: []
                 };
 
                 // Iterate over the tool inputs and add appropriate
                 var toolInputKeys = Object.keys(thisNode.toolInputs);
-                for(var input = 0; input < toolInputKeys.length; input++){
+                for (var input = 0; input < toolInputKeys.length; input++) {
                     // Get the input
                     var toolInputKey = toolInputKeys[input];
                     var thisInput = thisNode.toolInputs[toolInputKey];
 
                     // If we don't have an input, skip it
-                    if(!thisInput) continue;
+                    if (!thisInput) continue;
                     // __class__ as far as I can tell, is an indication it is not a parameter
-                    if(thisInput.__class__) continue;
+                    if (thisInput.__class__) continue;
 
                     // Add the parameter
                     newNode.params.push({
@@ -137,11 +153,11 @@ export default class WorkflowService extends BaseService{
 
                 }
                 // If we had any params, add it to the list of nodes with params
-                if(newNode.params.length>0){
+                if (newNode.params.length > 0) {
                     tempParams.push(newNode);
                 }
             }
-            return tempParams;
+            return { tempParams: tempParams, response: response.data };
         });
     }
 

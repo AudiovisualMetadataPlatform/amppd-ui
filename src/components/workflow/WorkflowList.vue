@@ -238,9 +238,10 @@ export default {
       }
 
       if (!self.listOfWorkflows[index].details) {
-        const workflowDetails = await this.workflowService.getWorkflowDetails(
+        let wfDetails = await this.workflowService.getWorkflowDetails(
           self.listOfWorkflows[index].id
         );
+        const workflowDetails = wfDetails.tempParams;
         self.listOfWorkflows[index].details = workflowDetails;
         self.listOfWorkflows[index].selectedNode = 0;
         this.$set(self.listOfWorkflows, index, self.listOfWorkflows[index]);

@@ -9,6 +9,12 @@ const state = {
     updateSelectedFiles: 0, // flag to indicate changes in selectedFiles, a work-around to solve the issue that Vue does not watch Map
     selectedWorkflow: null,
     selectedWorkflowParameters: [],
+    workflowDetails: {
+      inputWprkflowResultFormats: [],
+      inputWprkflowResultLabels: [],
+    },
+    intermediaryWorkflowResults: [],
+    selectedIntWfResult: [],
   },
   workflowSubmissionsearchResults: false,
   workflowDashboard: {

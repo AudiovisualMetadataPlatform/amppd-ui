@@ -1,5 +1,6 @@
 <template>
   <div class="col-lg-5">
+    <loader :show="workflowSubmission.loading" />
     <div class="card pad-all-2">
       <h4>Select workflow</h4>
       <div class="form-group">
@@ -20,125 +21,205 @@
           >
         </select>
       </div>
-      <h4>Workflow Node Parameters</h4>
-      <div class="scroll-div">
-        <ul class="list-unstyled">
-          <li
-            v-for="(param,
-            index) in workflowSubmission.selectedWorkflowParameters"
-            v-bind:key="index"
-            class="node-li"
-          >
-            <h5 class="node-name">
-              Node {{ param.nodeId }}: {{ param.nodeName }}
-            </h5>
-            <div
-              v-for="(p, paramIndex) in param.params"
-              v-bind:key="paramIndex"
-              v-bind:value="p.name"
+      <div v-if="workflowSubmission.selectedWorkflow">
+        <h4>Workflow Node Parameters</h4>
+        <div class="scroll-div">
+          <ul class="list-unstyled">
+            <li
+              v-for="(param,
+              index) in workflowSubmission.selectedWorkflowParameters"
+              v-bind:key="index"
+              class="node-li"
             >
-              {{ p.name }}: {{ p.value }}
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="pad-all-2"></div>
-      <h4>Selected Files</h4>
-      <div class="container no-pad no-marg">
-        <div>
+              <h5 class="node-name">
+                Node {{ param.nodeId }}: {{ param.nodeName }}
+              </h5>
+              <div
+                v-for="(p, paramIndex) in param.params"
+                v-bind:key="paramIndex"
+                v-bind:value="p.name"
+              >
+                {{ p.name }}: {{ p.value }}
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="pad-all-2"></div>
+        <h4>Selected Files</h4>
+        <div class="container no-pad no-marg">
           <div>
-            <div class="eq-btns btn-columns">
-              <button
-                v-on:click="submitWorkflow"
-                :disabled="submissionEnabled === false"
-                type="button"
-                class="btn btn-primary btn-md"
-                data-toggle="modal"
-                data-target=".save-modal"
-              >
-                Run Workflow
-              </button>
-              <button
-                v-on:click="workflowSubmission.showSaveBundle = true"
-                :disabled="saveBundleEnabled === false"
-                type="button"
-                class="btn btn-outline-primary btn-md"
-                data-toggle="modal"
-                data-target=".bd-example-modal-lg"
-              >
-                Save selection as bundle
-              </button>
-            </div>
-            <ul class="list-unstyled file-list">
-              <li
-                v-for="(file, index) in selectedFilesArray"
-                v-bind:key="index"
-                v-bind:value="file.id"
-                class="file-list-item"
-                data-toggle="tooltip"
-                v-bind:title="file.name"
-              >
-                <button class="btn file-name no-bx-shadow">
-                  <svg
-                    v-if="!workflowService.isAudioFile(file)"
-                    class="icon-play  "
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 50 50"
-                  >
-                    <path
-                      class="icon-play"
-                      d="M25.7 8.8c2.7 0 5.3 0 7.8 0.1C35.9 8.9 37.8 9 39 9.1l1.8 0.1c0 0 0.2 0 0.4 0s0.4 0 0.6 0.1c0.1 0 0.3 0.1 0.6 0.1 0.3 0 0.5 0.1 0.7 0.2 0.2 0.1 0.4 0.2 0.7 0.3 0.3 0.1 0.5 0.3 0.7 0.5 0.2 0.2 0.5 0.4 0.7 0.6 0.1 0.1 0.2 0.2 0.4 0.4 0.2 0.2 0.4 0.7 0.7 1.4 0.3 0.7 0.5 1.5 0.6 2.4 0.1 1 0.2 2.1 0.3 3.3 0.1 1.2 0.1 2.1 0.1 2.7v1 3.3c0 2.3-0.1 4.6-0.4 7 -0.1 0.9-0.3 1.7-0.6 2.4s-0.5 1.2-0.8 1.5L45 36.7c-0.2 0.2-0.5 0.5-0.7 0.6 -0.2 0.2-0.5 0.3-0.7 0.5s-0.5 0.2-0.7 0.3c-0.2 0.1-0.4 0.1-0.7 0.2 -0.3 0-0.5 0.1-0.6 0.1 -0.1 0-0.3 0-0.6 0.1 -0.2 0-0.4 0-0.4 0 -4 0.3-9 0.5-15 0.5 -3.3 0-6.2-0.1-8.6-0.2 -2.4-0.1-4-0.1-4.8-0.2L11 38.6l-0.9-0.1c-0.6-0.1-1-0.2-1.3-0.2 -0.3-0.1-0.7-0.2-1.2-0.5s-1-0.6-1.4-1c-0.1-0.1-0.2-0.2-0.4-0.4 -0.2-0.2-0.4-0.7-0.7-1.4s-0.5-1.5-0.6-2.4c-0.1-1-0.2-2.1-0.3-3.3 -0.1-1.2-0.1-2.1-0.1-2.7v-1 -3.3c0-2.3 0.1-4.6 0.4-7 0.1-0.9 0.3-1.7 0.6-2.4s0.5-1.2 0.8-1.5L6.3 11c0.2-0.2 0.5-0.5 0.7-0.6 0.2-0.2 0.5-0.3 0.7-0.5C8 9.8 8.2 9.7 8.4 9.6s0.4-0.1 0.7-0.2c0.3 0 0.5-0.1 0.6-0.1 0.1 0 0.3 0 0.6-0.1s0.4 0 0.4 0C14.6 8.9 19.6 8.8 25.7 8.8zM21.2 29.4l11.6-6 -11.6-6.1V29.4z"
-                    ></path>
-                  </svg>
-                  <svg
-                    v-else
-                    class="icon-play-audio"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 50 50"
-                  >
-                    <path
-                      d="M24.3 11.2v26.1c0 0.4-0.2 0.8-0.5 1.1 -0.3 0.3-0.7 0.5-1.1 0.5s-0.8-0.2-1.1-0.5l-8-8H7.4c-0.4 0-0.8-0.2-1.1-0.5 -0.3-0.3-0.5-0.7-0.5-1.1v-9.2c0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.5 1.1-0.5h6.3l8-8c0.3-0.3 0.7-0.5 1.1-0.5s0.8 0.2 1.1 0.5C24.2 10.4 24.3 10.8 24.3 11.2zM32.5 20.9c0.7 1.1 1 2.2 1 3.4s-0.3 2.3-1 3.4 -1.6 1.8-2.7 2.2C29.6 30 29.4 30 29.2 30c-0.4 0-0.8-0.1-1.1-0.4s-0.5-0.7-0.5-1.1c0-0.3 0.1-0.6 0.3-0.9 0.2-0.2 0.4-0.4 0.7-0.6 0.3-0.2 0.5-0.4 0.8-0.6s0.5-0.5 0.7-0.9c0.2-0.4 0.3-0.8 0.3-1.4 0-0.5-0.1-1-0.3-1.4 -0.2-0.4-0.4-0.7-0.7-0.9 -0.3-0.2-0.5-0.4-0.8-0.6 -0.3-0.2-0.5-0.4-0.7-0.6s-0.3-0.5-0.3-0.9c0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.4 1.1-0.4 0.2 0 0.4 0 0.6 0.1C30.9 19.1 31.8 19.8 32.5 20.9zM37.6 17.5c1.4 2.1 2 4.3 2 6.8 0 2.4-0.7 4.7-2 6.8 -1.4 2.1-3.2 3.6-5.4 4.5 -0.2 0.1-0.4 0.1-0.6 0.1 -0.4 0-0.8-0.2-1.1-0.5 -0.3-0.3-0.5-0.7-0.5-1.1 0-0.6 0.3-1.1 0.9-1.4 0.9-0.5 1.5-0.8 1.8-1.1 1.2-0.9 2.1-1.9 2.8-3.3s1-2.7 1-4.2 -0.3-2.9-1-4.2c-0.7-1.3-1.6-2.4-2.8-3.3 -0.3-0.2-0.9-0.6-1.8-1.1 -0.6-0.3-0.9-0.8-0.9-1.4 0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.5 1.1-0.5 0.2 0 0.4 0 0.6 0.1C34.5 13.9 36.3 15.4 37.6 17.5zM42.8 14.1c2 3.1 3 6.5 3 10.1 0 3.7-1 7.1-3 10.1 -2 3.1-4.7 5.3-8.1 6.8 -0.2 0.1-0.4 0.1-0.6 0.1 -0.4 0-0.8-0.2-1.1-0.5 -0.3-0.3-0.5-0.7-0.5-1.1 0-0.6 0.3-1 0.9-1.4 0.1-0.1 0.3-0.1 0.5-0.3 0.2-0.1 0.4-0.2 0.5-0.3 0.7-0.4 1.4-0.8 2-1.2 2-1.5 3.5-3.3 4.6-5.4 1.1-2.2 1.7-4.5 1.7-6.9 0-2.4-0.6-4.8-1.7-6.9 -1.1-2.2-2.6-4-4.6-5.4 -0.6-0.4-1.2-0.8-2-1.2 -0.1-0.1-0.3-0.1-0.5-0.3s-0.4-0.2-0.5-0.3c-0.6-0.4-0.9-0.8-0.9-1.4 0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.5 1.1-0.5 0.2 0 0.4 0 0.6 0.1C38 8.8 40.7 11 42.8 14.1z"
-                    />
-                  </svg>
-                  {{ file.name }}
-                </button>
-                <button class="btn file-name no-bx-shadow">
-                  {{ file.originalFilename }}
+            <div>
+              <div class="eq-btns btn-columns">
+                <button
+                  v-on:click="submitWorkflow"
+                  :disabled="submissionEnabled === false"
+                  type="button"
+                  class="btn btn-primary btn-md"
+                  data-toggle="modal"
+                  data-target=".save-modal"
+                >
+                  Run Workflow
                 </button>
                 <button
-                  class="btn btn-link add-remove float-right file-list-item-add"
-                  v-on:click="removeFile(file.id)"
+                  v-if="
+                    !workflowSubmission.workflowDetails
+                      .inputWprkflowResultFormats.length
+                  "
+                  v-on:click="workflowSubmission.showSaveBundle = true"
+                  :disabled="saveBundleEnabled === false"
+                  type="button"
+                  class="btn btn-outline-primary btn-md"
+                  data-toggle="modal"
+                  data-target=".bd-example-modal-lg"
                 >
-                  <svg
-                    class="icon-minus"
-                    version="1.1"
-                    id="Layer_2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                    x="0px"
-                    y="0px"
-                    viewBox="0 0 311.5 311.5"
-                    style="enable-background:new 0 0 311.5 311.5;"
-                    xml:space="preserve"
-                  >
-                    <path
-                      class="circle-stroke"
-                      d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
-                              M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
-                    ></path>
-                    <path
-                      class="minus-stroke"
-                      d="M220.7,164.9H92.8c-5,0-9.1-4.1-9.1-9.1s4.1-9.1,9.1-9.1h127.9c5,0,9.1,4.1,9.1,9.1S225.8,164.9,220.7,164.9z"
-                    ></path>
-                    <path
-                      class="plus-stroke"
-                      d="M165.9,91.8v127.9c0,5-4.1,9.1-9.1,9.1s-9.1-4.1-9.1-9.1V91.8c0-5,4.1-9.1,9.1-9.1S165.9,86.8,165.9,91.8z"
-                    ></path>
-                  </svg>
-                  Remove file
+                  Save selection as bundle
                 </button>
-              </li>
-            </ul>
+              </div>
+              <div
+                class="table-responsive"
+                v-if="
+                  workflowSubmission.workflowDetails.inputWprkflowResultFormats
+                    .length && workflowSubmission.selectedIntWfResult.length
+                "
+              >
+                <table id="myTable" class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Alias</th>
+                      <th scope="col">Workflow</th>
+                      <th scope="col">Output</th>
+                      <th scope="col">
+                        <span class="sr-only">actions</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      class="row-1"
+                      v-for="(res,
+                      index) in workflowSubmission.selectedIntWfResult"
+                      :key="index"
+                    >
+                      <td>{{ res[index].outputLabel }}</td>
+                      <td>{{ res[index].workflowName }}</td>
+                      <td>{{ res[index].outputName }}</td>
+                      <td class="text-center slim-col-12 slim-col-4 ">
+                        <span class="text-center hideTillSelected">
+                          <button
+                            class="btn btn-link removeFile"
+                            data-remove="row-1"
+                            v-on:click="removeSelectedResult(index)"
+                          >
+                            <svg
+                              class="icon-minus"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              xmlns:xlink="http://www.w3.org/1999/xlink"
+                              x="0px"
+                              y="0px"
+                              viewBox="0 0 311.5 311.5"
+                              style="enable-background:new 0 0 311.5 311.5;"
+                              xml:space="preserve"
+                            >
+                              <path
+                                class="circle-stroke"
+                                d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
+                                    M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
+                              ></path>
+                              <path
+                                class="minus-stroke"
+                                d="M220.7,164.9H92.8c-5,0-9.1-4.1-9.1-9.1s4.1-9.1,9.1-9.1h127.9c5,0,9.1,4.1,9.1,9.1S225.8,164.9,220.7,164.9z"
+                              ></path>
+                              <path
+                                class="plus-stroke"
+                                d="M165.9,91.8v127.9c0,5-4.1,9.1-9.1,9.1s-9.1-4.1-9.1-9.1V91.8c0-5,4.1-9.1,9.1-9.1S165.9,86.8,165.9,91.8z"
+                              ></path>
+                            </svg>
+                            Remove file
+                          </button>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <ul
+                class="list-unstyled file-list"
+                v-else-if="
+                  !workflowSubmission.workflowDetails.inputWprkflowResultFormats
+                    .length
+                "
+              >
+                <li
+                  v-for="(file, index) in selectedFilesArray"
+                  v-bind:key="index"
+                  v-bind:value="file.id"
+                  class="file-list-item"
+                  data-toggle="tooltip"
+                  v-bind:title="file.name"
+                >
+                  <button class="btn file-name no-bx-shadow">
+                    <svg
+                      v-if="!workflowService.isAudioFile(file)"
+                      class="icon-play  "
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 50 50"
+                    >
+                      <path
+                        class="icon-play"
+                        d="M25.7 8.8c2.7 0 5.3 0 7.8 0.1C35.9 8.9 37.8 9 39 9.1l1.8 0.1c0 0 0.2 0 0.4 0s0.4 0 0.6 0.1c0.1 0 0.3 0.1 0.6 0.1 0.3 0 0.5 0.1 0.7 0.2 0.2 0.1 0.4 0.2 0.7 0.3 0.3 0.1 0.5 0.3 0.7 0.5 0.2 0.2 0.5 0.4 0.7 0.6 0.1 0.1 0.2 0.2 0.4 0.4 0.2 0.2 0.4 0.7 0.7 1.4 0.3 0.7 0.5 1.5 0.6 2.4 0.1 1 0.2 2.1 0.3 3.3 0.1 1.2 0.1 2.1 0.1 2.7v1 3.3c0 2.3-0.1 4.6-0.4 7 -0.1 0.9-0.3 1.7-0.6 2.4s-0.5 1.2-0.8 1.5L45 36.7c-0.2 0.2-0.5 0.5-0.7 0.6 -0.2 0.2-0.5 0.3-0.7 0.5s-0.5 0.2-0.7 0.3c-0.2 0.1-0.4 0.1-0.7 0.2 -0.3 0-0.5 0.1-0.6 0.1 -0.1 0-0.3 0-0.6 0.1 -0.2 0-0.4 0-0.4 0 -4 0.3-9 0.5-15 0.5 -3.3 0-6.2-0.1-8.6-0.2 -2.4-0.1-4-0.1-4.8-0.2L11 38.6l-0.9-0.1c-0.6-0.1-1-0.2-1.3-0.2 -0.3-0.1-0.7-0.2-1.2-0.5s-1-0.6-1.4-1c-0.1-0.1-0.2-0.2-0.4-0.4 -0.2-0.2-0.4-0.7-0.7-1.4s-0.5-1.5-0.6-2.4c-0.1-1-0.2-2.1-0.3-3.3 -0.1-1.2-0.1-2.1-0.1-2.7v-1 -3.3c0-2.3 0.1-4.6 0.4-7 0.1-0.9 0.3-1.7 0.6-2.4s0.5-1.2 0.8-1.5L6.3 11c0.2-0.2 0.5-0.5 0.7-0.6 0.2-0.2 0.5-0.3 0.7-0.5C8 9.8 8.2 9.7 8.4 9.6s0.4-0.1 0.7-0.2c0.3 0 0.5-0.1 0.6-0.1 0.1 0 0.3 0 0.6-0.1s0.4 0 0.4 0C14.6 8.9 19.6 8.8 25.7 8.8zM21.2 29.4l11.6-6 -11.6-6.1V29.4z"
+                      ></path>
+                    </svg>
+                    <svg
+                      v-else
+                      class="icon-play-audio"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 50 50"
+                    >
+                      <path
+                        d="M24.3 11.2v26.1c0 0.4-0.2 0.8-0.5 1.1 -0.3 0.3-0.7 0.5-1.1 0.5s-0.8-0.2-1.1-0.5l-8-8H7.4c-0.4 0-0.8-0.2-1.1-0.5 -0.3-0.3-0.5-0.7-0.5-1.1v-9.2c0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.5 1.1-0.5h6.3l8-8c0.3-0.3 0.7-0.5 1.1-0.5s0.8 0.2 1.1 0.5C24.2 10.4 24.3 10.8 24.3 11.2zM32.5 20.9c0.7 1.1 1 2.2 1 3.4s-0.3 2.3-1 3.4 -1.6 1.8-2.7 2.2C29.6 30 29.4 30 29.2 30c-0.4 0-0.8-0.1-1.1-0.4s-0.5-0.7-0.5-1.1c0-0.3 0.1-0.6 0.3-0.9 0.2-0.2 0.4-0.4 0.7-0.6 0.3-0.2 0.5-0.4 0.8-0.6s0.5-0.5 0.7-0.9c0.2-0.4 0.3-0.8 0.3-1.4 0-0.5-0.1-1-0.3-1.4 -0.2-0.4-0.4-0.7-0.7-0.9 -0.3-0.2-0.5-0.4-0.8-0.6 -0.3-0.2-0.5-0.4-0.7-0.6s-0.3-0.5-0.3-0.9c0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.4 1.1-0.4 0.2 0 0.4 0 0.6 0.1C30.9 19.1 31.8 19.8 32.5 20.9zM37.6 17.5c1.4 2.1 2 4.3 2 6.8 0 2.4-0.7 4.7-2 6.8 -1.4 2.1-3.2 3.6-5.4 4.5 -0.2 0.1-0.4 0.1-0.6 0.1 -0.4 0-0.8-0.2-1.1-0.5 -0.3-0.3-0.5-0.7-0.5-1.1 0-0.6 0.3-1.1 0.9-1.4 0.9-0.5 1.5-0.8 1.8-1.1 1.2-0.9 2.1-1.9 2.8-3.3s1-2.7 1-4.2 -0.3-2.9-1-4.2c-0.7-1.3-1.6-2.4-2.8-3.3 -0.3-0.2-0.9-0.6-1.8-1.1 -0.6-0.3-0.9-0.8-0.9-1.4 0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.5 1.1-0.5 0.2 0 0.4 0 0.6 0.1C34.5 13.9 36.3 15.4 37.6 17.5zM42.8 14.1c2 3.1 3 6.5 3 10.1 0 3.7-1 7.1-3 10.1 -2 3.1-4.7 5.3-8.1 6.8 -0.2 0.1-0.4 0.1-0.6 0.1 -0.4 0-0.8-0.2-1.1-0.5 -0.3-0.3-0.5-0.7-0.5-1.1 0-0.6 0.3-1 0.9-1.4 0.1-0.1 0.3-0.1 0.5-0.3 0.2-0.1 0.4-0.2 0.5-0.3 0.7-0.4 1.4-0.8 2-1.2 2-1.5 3.5-3.3 4.6-5.4 1.1-2.2 1.7-4.5 1.7-6.9 0-2.4-0.6-4.8-1.7-6.9 -1.1-2.2-2.6-4-4.6-5.4 -0.6-0.4-1.2-0.8-2-1.2 -0.1-0.1-0.3-0.1-0.5-0.3s-0.4-0.2-0.5-0.3c-0.6-0.4-0.9-0.8-0.9-1.4 0-0.4 0.2-0.8 0.5-1.1 0.3-0.3 0.7-0.5 1.1-0.5 0.2 0 0.4 0 0.6 0.1C38 8.8 40.7 11 42.8 14.1z"
+                      />
+                    </svg>
+                    {{ file.name }}
+                  </button>
+                  <button class="btn file-name no-bx-shadow">
+                    {{ file.originalFilename }}
+                  </button>
+                  <button
+                    class="btn btn-link add-remove float-right file-list-item-add"
+                    v-on:click="removeFile(file.id)"
+                  >
+                    <svg
+                      class="icon-minus"
+                      version="1.1"
+                      id="Layer_2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      x="0px"
+                      y="0px"
+                      viewBox="0 0 311.5 311.5"
+                      style="enable-background:new 0 0 311.5 311.5;"
+                      xml:space="preserve"
+                    >
+                      <path
+                        class="circle-stroke"
+                        d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
+                              M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
+                      ></path>
+                      <path
+                        class="minus-stroke"
+                        d="M220.7,164.9H92.8c-5,0-9.1-4.1-9.1-9.1s4.1-9.1,9.1-9.1h127.9c5,0,9.1,4.1,9.1,9.1S225.8,164.9,220.7,164.9z"
+                      ></path>
+                      <path
+                        class="plus-stroke"
+                        d="M165.9,91.8v127.9c0,5-4.1,9.1-9.1,9.1s-9.1-4.1-9.1-9.1V91.8c0-5,4.1-9.1,9.1-9.1S165.9,86.8,165.9,91.8z"
+                      ></path>
+                    </svg>
+                    Remove file
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -246,6 +327,7 @@ import Modal from "@/components/shared/Modal.vue";
 import SaveBundle from "@/components/workflow/SaveBundle.vue";
 import WorkflowService from "../../service/workflow-service";
 import SharedService from "@/service/shared-service";
+import Loader from "@/components/shared/Loader.vue";
 
 export default {
   name: "SelectWorkflow",
@@ -271,9 +353,11 @@ export default {
   components: {
     Modal,
     SaveBundle,
+    Loader,
   },
   computed: {
     workflowSubmission: sync("workflowSubmission"),
+    workflowDetails: sync("workflowSubmission.workflowDetails"),
     selectedFiles: sync("workflowSubmission.selectedFiles"),
     updateSelectedFiles: sync("workflowSubmission.updateSelectedFiles"),
     workflowSubmissionsearchResults: sync("workflowSubmissionsearchResults"),
@@ -285,10 +369,19 @@ export default {
           ", selectedWorkflow: " +
           self.workflowSubmission.selectedWorkflow
       );
-      return (
-        self.selectedFilesArray.length > 0 &&
-        self.workflowSubmission.selectedWorkflow != null
-      );
+      if (
+        self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
+          .length
+      ) {
+        return (
+          self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
+            .length === self.workflowSubmission.selectedIntWfResult.length
+        );
+      } else
+        return (
+          self.selectedFilesArray.length > 0 &&
+          self.workflowSubmission.selectedWorkflow != null
+        );
     },
     saveBundleEnabled() {
       console.log(
@@ -298,6 +391,10 @@ export default {
     },
   },
   methods: {
+    removeSelectedResult(index) {
+      const self = this;
+      self.workflowSubmission.selectedIntWfResult.splice(index, 1);
+    },
     handleSeeHelp(ev) {
       ev.preventDefault();
       const helpUrl = env.getEnv("VUE_APP_DOC_WORKFLOW_SUBMISSIONS_ERROR_HELP");
@@ -307,7 +404,10 @@ export default {
     handleSuccess() {
       let self = this;
       self.showModal = false;
-      if (self.modalTextList[0] === "Files submitted successfully.") {
+      if (
+        self.modalTextList[0] === "Files are submitted successfully." ||
+        self.modalTextList[0] === "File is submitted successfully."
+      ) {
         self.workflowSubmission.loading = false;
         self.workflowSubmission.showBundleError = false;
         self.workflowSubmission.showSelectBundle = false;
@@ -316,6 +416,9 @@ export default {
         self.workflowSubmission.selectedFiles = new Map();
         self.workflowSubmission.updateSelectedFiles = 0;
         self.workflowSubmissionsearchResults = false;
+        if (self.modalTextList[0] === "File is submitted successfully.") {
+          self.workflowSubmission.selectedIntWfResult = [];
+        }
       }
     },
     async getWorkflows() {
@@ -327,10 +430,28 @@ export default {
     },
     async selection(event) {
       let self = this;
-      self.workflowSubmission.selectedWorkflow = event.target.value;
-      self.workflowSubmission.selectedWorkflowParameters = await this.workflowService.getWorkflowDetails(
-        self.workflowSubmission.selectedWorkflow
-      );
+      self.workflowSubmission.loading = true;
+      try {
+        self.workflowSubmission.selectedWorkflow = event.target.value;
+        let wfDetails = await this.workflowService.getWorkflowDetails(
+          self.workflowSubmission.selectedWorkflow
+        );
+        self.workflowSubmission.selectedWorkflowParameters =
+          wfDetails.tempParams;
+        self.workflowSubmission.workflowDetails = wfDetails.response;
+
+        self.workflowSubmission.loading = false;
+        self.workflowSubmission.showBundleError = false;
+        self.workflowSubmission.showSelectBundle = false;
+        self.workflowSubmission.showSaveBundle = false;
+        self.workflowSubmission.bundles = [];
+        self.workflowSubmission.selectedFiles = new Map();
+        self.workflowSubmission.updateSelectedFiles = 0;
+        self.workflowSubmissionsearchResults = false;
+      } catch (error) {
+        console.log(error);
+      }
+      self.workflowSubmission.loading = false;
     },
 
     // we don't need to create anoynymous bundle upon workflow submission,
@@ -444,6 +565,7 @@ export default {
             this.selectedFiles,
             emptyPFileIndexes
           ),
+          false,
           body
         )
         .then((response) => {
@@ -486,7 +608,7 @@ export default {
                     `Number of jobs successfully created: ${success}`,
                     `Number of jobs failed to be created: ${failure}`,
                   ]
-              : ["Files submitted successfully."];
+              : ["Files are submitted successfully."];
           self.showModal = true;
           self.workflowSubmission.loading = false;
         })
@@ -501,117 +623,179 @@ export default {
         });
     },
 
+    getSelectedResultIds(selectedResults) {
+      let resultIds = "";
+      for (let i = 0; i < selectedResults.length; i++) {
+        resultIds =
+          resultIds === ""
+            ? selectedResults[i][i].id
+            : resultIds + "," + selectedResults[i][i].id;
+      }
+      return resultIds;
+    },
+
     async submitWorkflow() {
       let self = this;
       try {
-        self.workflowSubmission.loading = true;
-        self.errors = [];
-        console.log("Submitting workflow");
-
-        const workflowNodes =
-          self.workflowSubmission.selectedWorkflowParameters;
-        const supplementNodes = workflowNodes.filter(
-          (node) => node.node_id === "supplement"
-        );
-        if (supplementNodes.length) {
-          console.log("Facial recognition operation");
-          let supplements = await self.getSupplementsForPrimaryfiles(
-            supplementNodes
-          );
-
-          //Empty Content File listing
-          const emptySupplementalPFiles = {};
-          for (let i = 0; i < supplements.length; i++) {
-            for (let j = 0; j < supplements[i].length; j++) {
-              if (!supplements[i][j].length) {
-                if (Object.keys(emptySupplementalPFiles).length) {
-                  let matched = true;
-                  for (let key of Object.keys(emptySupplementalPFiles)) {
-                    if (key === supplements[i].category) {
-                      emptySupplementalPFiles[key].push(j);
-                      matched = true;
-                      break;
-                    } else {
-                      matched = false;
-                    }
-                  }
-                  if (!matched) {
-                    emptySupplementalPFiles[supplements[i].category] = [j];
-                  }
-                } else {
-                  emptySupplementalPFiles[supplements[i].category] = [j];
-                }
+        if (
+          self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
+            .length
+        ) {
+          //Submit intermediary file to workflows
+          self.workflowSubmission.loading = true;
+          await self.workflowService
+            .submitWorkflow(
+              self.workflowSubmission.selectedWorkflow,
+              self.getSelectedResultIds(
+                self.workflowSubmission.selectedIntWfResult
+              ),
+              true,
+              null
+            )
+            .then((response) => {
+              if (response.data[0].success) {
+                self.modalHeader = "Success";
+                self.modalTextList = ["File is submitted successfully."];
               } else {
-                for (let k = 0; k < supplements[i][j].length; k++) {
-                  supplements[i][j][k][
-                    "primaryFileName"
-                  ] = self.getPrimaryFileName(j);
-                }
+                self.modalHeader = "Error";
+                self.modalTextList = [
+                  "Some thing went wrong! Could not finish submission.",
+                ];
               }
-            }
-          }
-          let emptyPFileIndexArr = [];
-          for (let key in Object.values(emptySupplementalPFiles)) {
-            emptyPFileIndexArr = emptyPFileIndexArr.concat(
-              Object.values(emptySupplementalPFiles)[key]
-            );
-          }
-          const emptyPFileIndexes = new Set(emptyPFileIndexArr);
+              self.showModal = true;
+              self.workflowSubmission.loading = false;
+            })
+            .catch((e) => {
+              console.log(e);
+              self.modalHeader = "Error";
+              self.modalTextList = [
+                "Error submitting workflow:  Could not finish submission.",
+              ];
+              self.showModal = true;
+              self.workflowSubmission.loading = false;
+            });
+        } else {
+          // Submit normal files to workflows
+          self.workflowSubmission.loading = true;
+          self.errors = [];
+          console.log("Submitting workflow");
 
-          if (emptyPFileIndexes.size === supplements[0].length) {
-            //In case all supplement nodes have error
-            const total = this.selectedFilesArray.length;
-            const success = 0;
-            const failure = supplements[0].length;
-            const emptyPrimaryfileDetails = self.getEmptyPrimaryfileNameList(
-              emptySupplementalPFiles,
-              this.selectedFiles
+          const workflowNodes =
+            self.workflowSubmission.selectedWorkflowParameters;
+          const supplementNodes = workflowNodes.filter(
+            (node) => node.node_id === "supplement"
+          );
+          if (supplementNodes.length) {
+            console.log("Facial recognition operation");
+            let supplements = await self.getSupplementsForPrimaryfiles(
+              supplementNodes
             );
-            self.modalHeader = "Error";
-            self.modalTextList = [
-              `Total number of files submitted: ${total}`,
-              `Number of jobs successfully created: ${success}`,
-              `Number of jobs failed to be created: ${failure}`,
-              ...emptyPrimaryfileDetails,
-              "Please upload the necessary supplemental files.",
-            ];
-            self.showModal = true;
-            self.workflowSubmission.loading = false;
-          } else {
-            //Filtering error free supplement nodes
-            if (emptyPFileIndexes.size) {
-              const reverseEmptyPFileIndexes = new Set(
-                Array.from(emptyPFileIndexes).reverse()
-              );
-              reverseEmptyPFileIndexes.forEach(function(value) {
-                for (let i = 0; i < supplements.length; i++) {
-                  supplements[i].splice(value, 1);
-                }
-              });
-            }
 
-            let paths = [];
-            //User input in the case of multiple supplements are found
+            //Empty Content File listing
+            const emptySupplementalPFiles = {};
             for (let i = 0; i < supplements.length; i++) {
               for (let j = 0; j < supplements[i].length; j++) {
-                let oneSupplement = [];
-                if (supplements[i][j].length > 1) {
-                  self.supplementList = supplements[i][j];
-                  // Toggle button's activity
-                  if (self.defaultFacialRecognition.length) {
+                if (!supplements[i][j].length) {
+                  if (Object.keys(emptySupplementalPFiles).length) {
                     let matched = true;
-                    for (let frValue of self.defaultFacialRecognition) {
-                      for (let sup of self.supplementList) {
-                        if (frValue === sup.name) {
-                          oneSupplement = sup;
-                          matched = true;
-                          break;
-                        } else {
-                          matched = false;
-                        }
+                    for (let key of Object.keys(emptySupplementalPFiles)) {
+                      if (key === supplements[i].category) {
+                        emptySupplementalPFiles[key].push(j);
+                        matched = true;
+                        break;
+                      } else {
+                        matched = false;
                       }
                     }
                     if (!matched) {
+                      emptySupplementalPFiles[supplements[i].category] = [j];
+                    }
+                  } else {
+                    emptySupplementalPFiles[supplements[i].category] = [j];
+                  }
+                } else {
+                  for (let k = 0; k < supplements[i][j].length; k++) {
+                    supplements[i][j][k][
+                      "primaryFileName"
+                    ] = self.getPrimaryFileName(j);
+                  }
+                }
+              }
+            }
+            let emptyPFileIndexArr = [];
+            for (let key in Object.values(emptySupplementalPFiles)) {
+              emptyPFileIndexArr = emptyPFileIndexArr.concat(
+                Object.values(emptySupplementalPFiles)[key]
+              );
+            }
+            const emptyPFileIndexes = new Set(emptyPFileIndexArr);
+
+            if (emptyPFileIndexes.size === supplements[0].length) {
+              //In case all supplement nodes have error
+              const total = this.selectedFilesArray.length;
+              const success = 0;
+              const failure = supplements[0].length;
+              const emptyPrimaryfileDetails = self.getEmptyPrimaryfileNameList(
+                emptySupplementalPFiles,
+                this.selectedFiles
+              );
+              self.modalHeader = "Error";
+              self.modalTextList = [
+                `Total number of files submitted: ${total}`,
+                `Number of jobs successfully created: ${success}`,
+                `Number of jobs failed to be created: ${failure}`,
+                ...emptyPrimaryfileDetails,
+                "Please upload the necessary supplemental files.",
+              ];
+              self.showModal = true;
+              self.workflowSubmission.loading = false;
+            } else {
+              //Filtering error free supplement nodes
+              if (emptyPFileIndexes.size) {
+                const reverseEmptyPFileIndexes = new Set(
+                  Array.from(emptyPFileIndexes).reverse()
+                );
+                reverseEmptyPFileIndexes.forEach(function(value) {
+                  for (let i = 0; i < supplements.length; i++) {
+                    supplements[i].splice(value, 1);
+                  }
+                });
+              }
+
+              let paths = [];
+              //User input in the case of multiple supplements are found
+              for (let i = 0; i < supplements.length; i++) {
+                for (let j = 0; j < supplements[i].length; j++) {
+                  let oneSupplement = [];
+                  if (supplements[i][j].length > 1) {
+                    self.supplementList = supplements[i][j];
+                    // Toggle button's activity
+                    if (self.defaultFacialRecognition.length) {
+                      let matched = true;
+                      for (let frValue of self.defaultFacialRecognition) {
+                        for (let sup of self.supplementList) {
+                          if (frValue === sup.name) {
+                            oneSupplement = sup;
+                            matched = true;
+                            break;
+                          } else {
+                            matched = false;
+                          }
+                        }
+                      }
+                      if (!matched) {
+                        self.selectedSupplement = supplements[i][j][0];
+                        self.showFRModal = true;
+                        await self.pauser();
+                        oneSupplement = self.selectedSupplement;
+                        if (self.isActiveSupplementSwitch) {
+                          self.defaultFacialRecognition.push(
+                            oneSupplement.name
+                          );
+                          self.isActiveSupplementSwitch = false;
+                        }
+                      }
+                    } else {
                       self.selectedSupplement = supplements[i][j][0];
                       self.showFRModal = true;
                       await self.pauser();
@@ -622,46 +806,40 @@ export default {
                       }
                     }
                   } else {
-                    self.selectedSupplement = supplements[i][j][0];
-                    self.showFRModal = true;
-                    await self.pauser();
-                    oneSupplement = self.selectedSupplement;
-                    if (self.isActiveSupplementSwitch) {
-                      self.defaultFacialRecognition.push(oneSupplement.name);
-                      self.isActiveSupplementSwitch = false;
-                    }
+                    oneSupplement = supplements[i][j][0];
                   }
-                } else {
-                  oneSupplement = supplements[i][j][0];
+                  paths.push({ [j]: oneSupplement.absolutePathname });
                 }
-                paths.push({ [j]: oneSupplement.absolutePathname });
               }
-            }
-            self.showFRModal = false;
+              self.showFRModal = false;
 
-            //Filtering all absolute paths of each PFile
-            let submitFilesApiBody = [];
-            for (let i = 0; i < supplements[0].length; i++) {
-              const absolutePathList = self.getEachPFileAbsolutePaths(paths, i);
-              //Constructing submitWorkflow API body
-              const info = {
-                map: {},
-              };
-              for (let i = 0; i < absolutePathList.length; i++) {
-                info["map"][i + 1] = { path: absolutePathList[i] };
+              //Filtering all absolute paths of each PFile
+              let submitFilesApiBody = [];
+              for (let i = 0; i < supplements[0].length; i++) {
+                const absolutePathList = self.getEachPFileAbsolutePaths(
+                  paths,
+                  i
+                );
+                //Constructing submitWorkflow API body
+                const info = {
+                  map: {},
+                };
+                for (let i = 0; i < absolutePathList.length; i++) {
+                  info["map"][i + 1] = { path: absolutePathList[i] };
+                }
+                submitFilesApiBody.push(info);
               }
-              submitFilesApiBody.push(info);
-            }
 
-            //POST api call
-            self.submitWorkflowApi(
-              submitFilesApiBody,
-              emptyPFileIndexes,
-              emptySupplementalPFiles
-            );
+              //POST api call
+              self.submitWorkflowApi(
+                submitFilesApiBody,
+                emptyPFileIndexes,
+                emptySupplementalPFiles
+              );
+            }
+          } else {
+            self.submitWorkflowApi();
           }
-        } else {
-          self.submitWorkflowApi();
         }
       } catch (error) {
         console.log(error);
@@ -678,7 +856,7 @@ export default {
       let self = this;
       self.selectedFiles.delete(id);
       self.workflowSubmission.updateSelectedFiles =
-        self.workflowSubmission.updateSelectedFiles + 1;
+        self.workflowSubmission.updateSelectedFiles - 1;
       console.log("Removed selected file " + id);
     },
   },
@@ -699,6 +877,10 @@ export default {
     this.workflowSubmission = {
       selectedWorkflow: null,
       selectedWorkflowParameters: [],
+      workflowDetails: {
+        inputWprkflowResultFormats: [],
+        inputWprkflowResultLabels: [],
+      },
     };
   },
 };
