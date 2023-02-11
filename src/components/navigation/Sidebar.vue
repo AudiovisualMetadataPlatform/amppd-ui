@@ -22,12 +22,9 @@
                   <div class="dropdown-menu" :class="menu.show ? 'show' : ''" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="">
                     <a class="dropdown-item" href="/workflows/listings.html">Listings</a>
                     <a class="dropdown-item" href="/workflows/select-files-1.html">Submissions</a>
-
                   </div>
                 </div>
-                
               </template>
-              
             </li>
             <li>
               <Logout />
@@ -69,7 +66,7 @@
                 </template>
                 <span v-if="menu.url === '/mgm-evaluation'">
                   <b-dropdown-item
-                    class="p-0"
+                    class="p-0 custom-changes"
                     v-for="submenu in [{ name: 'All MGMs' }, ...mgmCategories]"
                     :key="submenu.name"
                     @click="routeTo(menu, submenu)"
@@ -88,19 +85,19 @@
                   <span class="submenu">{{ submenu.name }}</span>
                 </b-dropdown-item>
                 <!-- <b-dropdown id="dropdown-1" text="Dropdown Button">
-              <b-dropdown-item>First Action</b-dropdown-item>
-              <b-dropdown-item>Second Action</b-dropdown-item>
-              <b-dropdown-item>Third Action</b-dropdown-item>
-              <b-dropdown-divider></b-dropdown-divider>
-              <b-dropdown-item active>Active action</b-dropdown-item>
-              <b-dropdown-item disabled>Disabled action</b-dropdown-item>
+                <b-dropdown-item>First Action</b-dropdown-item>
+                <b-dropdown-item>Second Action</b-dropdown-item>
+                <b-dropdown-item>Third Action</b-dropdown-item>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-item active>Active action</b-dropdown-item>
+                <b-dropdown-item disabled>Disabled action</b-dropdown-item>
                 </b-dropdown>-->
               </b-nav-item-dropdown>
               <!-- <b-nav-item-dropdown text="Lang" right v-else>
-            <b-dropdown-item href="#">EN</b-dropdown-item>
-            <b-dropdown-item href="#">ES</b-dropdown-item>
-            <b-dropdown-item href="#">RU</b-dropdown-item>
-            <b-dropdown-item href="#">FA</b-dropdown-item>
+              <b-dropdown-item href="#">EN</b-dropdown-item>
+              <b-dropdown-item href="#">ES</b-dropdown-item>
+              <b-dropdown-item href="#">RU</b-dropdown-item>
+              <b-dropdown-item href="#">FA</b-dropdown-item>
               </b-nav-item-dropdown>-->
             </span>
             <b-nav-item class="nav-span">
@@ -313,5 +310,8 @@ nav ul li {
   .nav-bar-items {
     height: auto !important;
   }
+}
+.dropdown-menu {
+  min-width: 8rem !important;
 }
 </style>

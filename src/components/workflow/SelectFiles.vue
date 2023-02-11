@@ -426,7 +426,9 @@
                             <b-form-radio
                               v-model="localSelIntWfResult[resultLabelIndex]"
                               style="font-size:1.25rem;"
-                              name="workflowResult-radios"
+                              :name="
+                                'workflowResult-radios-' + [resultLabelIndex]
+                              "
                               :value="res"
                               @change="
                                 onChangeIntWfResult(resultLabelIndex, res)
@@ -554,7 +556,7 @@ export default {
           self.workflowSubmission.selectedIntWfResult[i] &&
           self.workflowSubmission.selectedIntWfResult[i].id
         ) {
-          console.log('');
+          console.log("");
         } else {
           self.workflowSubmission.selectedIntWfResult.splice(i, 1, {});
         }
