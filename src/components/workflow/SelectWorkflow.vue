@@ -12,9 +12,7 @@
         >
           <option value="" selected disabled>Select a workflow...</option>
           <option
-            v-for="(workflow, index) in sharedService.sortByAlphabatical(
-              workflows.rows
-            )"
+            v-for="(workflow, index) in workflows"
             v-bind:key="index"
             v-bind:value="workflow.id"
             >{{ workflow.name }}</option
@@ -99,10 +97,11 @@
                       v-for="(res,
                       index) in workflowSubmission.selectedIntWfResult"
                       :key="index"
+                      :class="{ 'hidden-row': !res.id }"
                     >
-                      <td>{{ res[index].outputLabel }}</td>
-                      <td>{{ res[index].workflowName }}</td>
-                      <td>{{ res[index].outputName }}</td>
+                      <td>{{ res.outputLabel }}</td>
+                      <td>{{ res.workflowName }}</td>
+                      <td>{{ res.outputName }}</td>
                       <td class="text-center slim-col-12 slim-col-4 ">
                         <span class="text-center hideTillSelected">
                           <button
@@ -373,6 +372,13 @@ export default {
         self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
           .length
       ) {
+        for (
+          let i = 0;
+          i < self.workflowSubmission.selectedIntWfResult.length;
+          i++
+        ) {
+          if (!self.workflowSubmission.selectedIntWfResult[i].id) return false;
+        }
         return (
           self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
             .length === self.workflowSubmission.selectedIntWfResult.length
@@ -393,7 +399,20 @@ export default {
   methods: {
     removeSelectedResult(index) {
       const self = this;
-      self.workflowSubmission.selectedIntWfResult.splice(index, 1);
+      if (
+        self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
+          .length !== self.workflowSubmission.selectedIntWfResult.length
+      ) {
+        for (
+          let i = 0;
+          i <
+          self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
+            .length;
+          i++
+        ) {
+          self.workflowSubmission.selectedIntWfResult.splice(i, 1, {});
+        }
+      } else self.workflowSubmission.selectedIntWfResult.splice(index, 1, {});
     },
     handleSeeHelp(ev) {
       ev.preventDefault();
@@ -423,9 +442,11 @@ export default {
     },
     async getWorkflows() {
       let self = this;
-
       this.workflowService.getWorkflows().then((response) => {
-        self.workflows = response.data;
+        let workflowResponse = response.data;
+        self.workflows = self.sharedService.sortByAlphabatical(
+          workflowResponse.rows
+        );
       });
     },
     async selection(event) {
@@ -448,6 +469,7 @@ export default {
         self.workflowSubmission.selectedFiles = new Map();
         self.workflowSubmission.updateSelectedFiles = 0;
         self.workflowSubmissionsearchResults = false;
+        self.workflowSubmission.selectedIntWfResult = [];
       } catch (error) {
         console.log(error);
       }
@@ -628,8 +650,8 @@ export default {
       for (let i = 0; i < selectedResults.length; i++) {
         resultIds =
           resultIds === ""
-            ? selectedResults[i][i].id
-            : resultIds + "," + selectedResults[i][i].id;
+            ? selectedResults[i].id
+            : resultIds + "," + selectedResults[i].id;
       }
       return resultIds;
     },
@@ -914,5 +936,8 @@ export default {
 }
 .spl-fr-btn {
   visibility: hidden;
+}
+.hidden-row {
+  display: none;
 }
 </style>

@@ -442,7 +442,6 @@
                     id="saveSelection"
                     class="btn btn-md btn-outline-primary float-right mb-3"
                     @click="handleAddToSelection(resultLabelIndex)"
-                    disabled
                   >
                     Add to selection
                   </button>
@@ -515,29 +514,51 @@ export default {
   methods: {
     handleAddToSelection(accordionIndex) {
       const self = this;
-      let availableObj = false;
       for (
         let i = 0;
-        i < self.workflowSubmission.selectedIntWfResult.length;
+        i <
+        self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
+          .length;
         i++
       ) {
-        if (
+        if (i === accordionIndex) {
+          if (
+            self.workflowSubmission.selectedIntWfResult[i] &&
+            self.workflowSubmission.selectedIntWfResult[i].id
+          ) {
+            self.workflowSubmission.selectedIntWfResult.splice(
+              i,
+              1,
+              this.localSelIntWfResult[accordionIndex]
+            );
+            break;
+          } else if (
+            self.workflowSubmission.selectedIntWfResult[i] &&
+            !self.workflowSubmission.selectedIntWfResult[i].id
+          ) {
+            self.workflowSubmission.selectedIntWfResult.splice(
+              i,
+              1,
+              this.localSelIntWfResult[accordionIndex]
+            );
+            break;
+          } else {
+            self.workflowSubmission.selectedIntWfResult.splice(
+              accordionIndex,
+              1,
+              this.localSelIntWfResult[accordionIndex]
+            );
+            break;
+          }
+        } else if (
           self.workflowSubmission.selectedIntWfResult[i] &&
-          self.workflowSubmission.selectedIntWfResult[i].hasOwnProperty(
-            accordionIndex
-          )
+          self.workflowSubmission.selectedIntWfResult[i].id
         ) {
-          availableObj = true;
-          self.workflowSubmission.selectedIntWfResult[i][
-            accordionIndex
-          ] = this.localSelIntWfResult[accordionIndex];
+          console.log('');
+        } else {
+          self.workflowSubmission.selectedIntWfResult.splice(i, 1, {});
         }
       }
-
-      if (!availableObj)
-        self.workflowSubmission.selectedIntWfResult.push({
-          [accordionIndex]: this.localSelIntWfResult[accordionIndex],
-        });
     },
     onChangeIntWfResult(indexResultLabel, row) {
       const self = this;
@@ -550,6 +571,7 @@ export default {
         self.workflowSubmission.updateSelectedFiles - 1;
       self.workflowSubmission.selectedIntWfResult = [];
       self.localSelIntWfResult = [];
+      self.accordionVisible = [0];
       console.log("Removed selected file " + id);
     },
     handleVisibility(index) {
@@ -634,6 +656,9 @@ export default {
         ) {
           try {
             self.loading = true;
+            self.accordionVisible = [0];
+            self.localSelIntWfResult = [];
+            self.workflowSubmission.selectedIntWfResult = [];
             let outputTypesArr =
               self.workflowSubmission.workflowDetails
                 .inputWprkflowResultFormats;
@@ -655,7 +680,6 @@ export default {
                   delete self.workflowSubmission.selectedIntWfResult[i];
               }
             }
-            self.workflowSubmission.selectedIntWfResult = [];
             self.loading = false;
           } catch (error) {
             console.log(error);
