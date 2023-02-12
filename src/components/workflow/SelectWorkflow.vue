@@ -424,8 +424,8 @@ export default {
       let self = this;
       self.showModal = false;
       if (
-        self.modalTextList[0] === "Files are submitted successfully." ||
-        self.modalTextList[0] === "File is submitted successfully."
+        self.modalTextList[0] === "Files have been submitted successfully." ||
+        self.modalTextList[0] === "File has been submitted successfully."
       ) {
         self.workflowSubmission.loading = false;
         self.workflowSubmission.showBundleError = false;
@@ -435,7 +435,7 @@ export default {
         self.workflowSubmission.selectedFiles = new Map();
         self.workflowSubmission.updateSelectedFiles = 0;
         self.workflowSubmissionsearchResults = false;
-        if (self.modalTextList[0] === "File is submitted successfully.") {
+        if (self.modalTextList[0] === "File has been submitted successfully.") {
           self.workflowSubmission.selectedIntWfResult = [];
         }
       }
@@ -630,7 +630,7 @@ export default {
                     `Number of jobs successfully created: ${success}`,
                     `Number of jobs failed to be created: ${failure}`,
                   ]
-              : ["Files are submitted successfully."];
+              : ["Files have been submitted successfully."];
           self.showModal = true;
           self.workflowSubmission.loading = false;
         })
@@ -677,7 +677,7 @@ export default {
             .then((response) => {
               if (response.data[0].success) {
                 self.modalHeader = "Success";
-                self.modalTextList = ["File is submitted successfully."];
+                self.modalTextList = ["File has been submitted successfully."];
               } else {
                 self.modalHeader = "Error";
                 self.modalTextList = [
