@@ -86,7 +86,8 @@
               par.type !== 'MULTI_SELECT' ||
                 (par.type === 'MULTI_SELECT' &&
                   selectedMst.detailBody.dependencyParamName &&
-                  testParams[selectedMst.detailBody.dependencyParamName])
+                  testParams[selectedMst.detailBody.dependencyParamName]) ||
+                (par.type === 'MULTI_SELECT' && !par.dependencyName)
             "
           >
             <strong>{{ par.name }}:</strong> {{ par.description }}
@@ -114,6 +115,18 @@
               @change="onChangeSelect(par.name)"
               class="mb-2 param-radio"
             ></b-form-radio-group>
+          </div>
+          <div
+            class="mb-3"
+            v-else-if="par.type === 'MULTI_SELECT' && !par.dependencyName"
+          >
+            <b-form-group>
+              <b-form-checkbox-group
+                v-model="testParams[par.name]"
+                :options="JSON.parse(par.selections)"
+                name="multiselect-checkbox"
+              ></b-form-checkbox-group>
+            </b-form-group>
           </div>
           <div
             class="mb-3"
@@ -407,7 +420,11 @@ export default {
         const multiSelectParameter = self.selectedMst.mgmScoringParameters.filter(
           (param) => param.type === "MULTI_SELECT"
         )[0];
-        if (multiSelectParameter && multiSelectParameter.name)
+        if (
+          multiSelectParameter &&
+          multiSelectParameter.name &&
+          multiSelectParameter.dependencyName
+        )
           delete self.testParams[multiSelectParameter.name];
       }
     },

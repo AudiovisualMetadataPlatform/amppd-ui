@@ -33,7 +33,7 @@ jest.mock('../../../../src/service/workflow-service',
                         
                     },
                     getWorkflowDetails(id) {
-                        return Promise.resolve([{id: 1, nodeName: "dummy-test"},{id: 2, nodeName: "test-name-2"}]);
+                        return Promise.resolve({tempParams: [{id: 1, nodeName: "dummy-test"},{id: 2, nodeName: "test-name-2"}], response: {}});
                     }
                 };
                 return superFn;

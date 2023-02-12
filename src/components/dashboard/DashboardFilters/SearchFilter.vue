@@ -15,7 +15,6 @@
         placeholder="Search"
         v-model="userValue"
         class="form-control customSearchWidth"
-        :disabled="parent === 'TestResults'"
       />
     </form>
   </div>

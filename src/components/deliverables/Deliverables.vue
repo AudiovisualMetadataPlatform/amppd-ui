@@ -267,6 +267,7 @@ export default {
         pageNum: 1,
         resultsPerPage: 10,
         filterByDates: [],
+        filterByTestDates: [],
         filterBySubmitters: [],
         filterByCollections: [],
         filterByItems: [],
@@ -366,9 +367,9 @@ export default {
           this.searchWord,
           "000"
         );
-        if (response && response.rows) {
-          for (var i = 0; i < response.rows.length; i++) {
-            var thisItem = response.rows[i];
+        if (response && response.items) {
+          for (var i = 0; i < response.items.length; i++) {
+            var thisItem = response.items[i];
             for (var p = 0; p < thisItem.primaryfiles.length; p++) {
               var thisPrimaryFile = thisItem.primaryfiles[p];
               self.searchedPfiles.push({

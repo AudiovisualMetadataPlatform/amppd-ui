@@ -49,7 +49,31 @@
                                   v-for="testResult in mgmEvaluationTests"
                                   :key="testResult.id"
                                 >
-                                  <h5>{{ testResult.primaryFilename }}</h5>
+                                  <h6>
+                                    <a
+                                      class="scores-files"
+                                      v-bind:href="
+                                        workflowResultService.getSourceUrl(
+                                          testResult.workflowResult
+                                            .primaryfileId
+                                        )
+                                      "
+                                      target="_blank"
+                                      >{{ testResult.primaryFilename }}</a
+                                    >
+                                    (<a
+                                      class="scores-files"
+                                      v-bind:href="
+                                        workflowResultService.getOutputUrl(
+                                          testResult.workflowResult.id
+                                        )
+                                      "
+                                      target="_blank"
+                                      >{{
+                                        testResult.workflowResult.workflowStep
+                                      }}</a
+                                    >)
+                                  </h6>
                                 </li>
                               </ul>
                             </div>
@@ -98,6 +122,7 @@
                                     <thead>
                                       <tr>
                                         <th scope="col">File</th>
+                                        <th scope="col">Tool</th>
                                         <th
                                           scope="col"
                                           v-for="parameter in sharedService
@@ -132,6 +157,12 @@
                                         <th scope="row">
                                           {{ testResult.primaryFilename }}
                                         </th>
+                                        <td>
+                                          {{
+                                            testResult.workflowResult
+                                              .workflowStep
+                                          }}
+                                        </td>
                                         <td
                                           v-for="parameter in sharedService
                                             .sortByAlphabatical(
@@ -230,10 +261,15 @@
                           <div class="scroll-div bg-white side-div">
                             <table class="table small-text">
                               <tbody class="scores">
-                                <!-- <tr>
+                                <tr>
                                   <td>&nbsp;Tool</td>
-                                  <td>&nbsp;INA Speech Segmenter</td>
-                                </tr> -->
+                                  <td>
+                                    {{
+                                      selectedTestResult.workflowResult
+                                        .workflowStep
+                                    }}
+                                  </td>
+                                </tr>
                                 <tr
                                   v-for="parameter in sharedService
                                     .sortByAlphabatical(
@@ -440,6 +476,7 @@ import SharedService from "@/service/shared-service";
 import EvaluationService from "@/service/evaluation-service";
 import BarChart from "./BarChart.vue";
 import SortableHeader from "@/components/shared/SortableHeader";
+import WorkflowResultService from "@/service/workflow-result-service";
 
 export default {
   name: "TestResultsVisualiz",
@@ -453,6 +490,7 @@ export default {
       loading: false,
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
+      workflowResultService: new WorkflowResultService(),
       selectedResultTab: 0,
       selectedScoreTab: 0,
       activeResultTab: "review-scores",
@@ -629,5 +667,13 @@ a:hover {
 }
 .scores > tr:first-child > td {
   border: none;
+}
+.scores-files {
+  color: black !important;
+}
+.scores-files:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #f4871e !important;
 }
 </style>
