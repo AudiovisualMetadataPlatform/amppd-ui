@@ -29,13 +29,7 @@
                   >
                     AMP Dashboard
                   </h1>
-                  <div
-                    class="container-fluid"
-                    v-if="
-                      (parent === 'NewTest' && filterCount > 2) ||
-                        (parent !== 'NewTest' && filterCount > 0)
-                    "
-                  >
+                  <div class="container-fluid" v-if="filterCount > 0">
                     <div class="row selected-filters-row">
                       <div class="col-sm-2 label-bold">
                         CURRENTLY FILTERED BY
@@ -778,6 +772,11 @@ export default {
         this.workflowDashboard.searchQuery.filterByTestDates.length > 0
       )
         dateFilter = 2;
+      if (this.parent !== "NewTest")
+        dateFilter =
+          dateFilter +
+          this.workflowDashboard.searchQuery.filterByOutputs.length +
+          this.workflowDashboard.searchQuery.filterByStatuses.length;
       return (
         dateFilter +
         this.workflowDashboard.searchQuery.filterBySubmitters.length +
@@ -788,8 +787,6 @@ export default {
         this.workflowDashboard.searchQuery.filterByItems.length +
         this.workflowDashboard.searchQuery.filterByFiles.length +
         this.workflowDashboard.searchQuery.filterBySteps.length +
-        this.workflowDashboard.searchQuery.filterByOutputs.length +
-        this.workflowDashboard.searchQuery.filterByStatuses.length +
         this.workflowDashboard.searchQuery.filterBySearchTerms.length
       );
     },
@@ -856,9 +853,9 @@ export default {
       this.workflowDashboard.searchQuery.filterByFiles = [];
       this.workflowDashboard.searchQuery.filterByWorkflows = [];
       this.workflowDashboard.searchQuery.filterBySteps = [];
-      this.workflowDashboard.searchQuery.filterByOutputs = [];
       this.workflowDashboard.searchQuery.filterBySearchTerms = [];
       if (this.parent !== "NewTest") {
+        this.workflowDashboard.searchQuery.filterByOutputs = [];
         this.workflowDashboard.searchQuery.filterByStatuses = [];
       } else if (this.parent === "TestResults") {
         this.workflowDashboard.searchQuery.sortRule.columnName = "id";
@@ -1226,7 +1223,7 @@ export default {
         this.workflowResultType,
       ];
       this.workflowDashboard.searchQuery.filterByOutputs = [
-        this.workflowResultOutput,
+        ...this.workflowResultOutput.split(/\s*,\s*/),
       ];
       this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
     } else {
