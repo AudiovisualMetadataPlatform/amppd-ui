@@ -680,12 +680,13 @@ export default {
         this.workflowResultType,
       ];
       this.workflowDashboard.searchQuery.filterByOutputs = [
-        this.workflowResultOutput,
+        ...this.workflowResultOutput.split(/\s*,\s*/),
       ];
       this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
     },
   },
   beforeDestroy() {
+    this.workflowDashboard.searchQuery.filterByOutputs = [];
     this.workflowDashboard.searchResult.rows = [];
     this.workflowDashboard.searchQuery.pageNum = 1;
   },
