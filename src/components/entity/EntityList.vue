@@ -226,7 +226,10 @@
                     <textarea
                       class="form-control w-100"
                       v-model="entity.description"
-                      :disabled="showEdit"
+                      :disabled="
+                        showEdit ||
+                          (baseUrl === 'unit' && !accessControl._unit._update)
+                      "
                       @change="onInputChange"
                     ></textarea>
                   </div>
@@ -397,7 +400,12 @@
                 </div>
 
                 <div
-                  v-if="unitEntity.currentUnit"
+                  v-if="
+                    (unitEntity.currentUnit &&
+                      baseUrl === 'unit' &&
+                      accessControl._unit._update) ||
+                      (unitEntity.currentUnit && baseUrl !== 'unit')
+                  "
                   class="w-100 text-right p-0 expand-ani"
                 >
                   <!-- <div v-if="!showEdit"> -->
@@ -457,6 +465,7 @@
                 <div class="col-9 text-right p0 btn-grp">
                   <button
                     class="btn btn-primary btn-lg btn-edit mr-2"
+                    v-if="accessControl._collection._create"
                     type="button"
                     @click="onCreateCollection()"
                   >
@@ -501,13 +510,35 @@
                 >
                   <div class="col-12 p-0">
                     <div class="row">
-                      <div class="col-11">
+                      <div
+                        :class="
+                          (baseUrl === 'unit' &&
+                            accessControl._collection._activate) ||
+                          (baseUrl === 'unit' &&
+                            accessControl._collection._read) ||
+                          baseUrl !== 'unit'
+                            ? 'col-11'
+                            : 'col-12'
+                        "
+                      >
                         <h3>{{ elem.name }}</h3>
                         <p>{{ elem.description }}</p>
                       </div>
-                      <div class="col-1 text-right">
+                      <div
+                        v-if="
+                          (baseUrl === 'unit' &&
+                            accessControl._collection._activate) ||
+                            (baseUrl === 'unit' &&
+                              accessControl._collection._read) ||
+                            baseUrl !== 'unit'
+                        "
+                        class="col-1 text-right"
+                      >
                         <div
-                          v-if="baseUrl == 'unit'"
+                          v-if="
+                            baseUrl === 'unit' &&
+                              accessControl._collection._activate
+                          "
                           class="d-flex float-right"
                         >
                           <span class="mr-1">Active</span>
@@ -525,7 +556,9 @@
                         </div>
                         <div
                           v-if="
-                            (elem.active && baseUrl == 'unit') ||
+                            (elem.active &&
+                              baseUrl === 'unit' &&
+                              accessControl._collection._read) ||
                               baseUrl !== 'unit'
                           "
                           class="float-right"
@@ -541,7 +574,17 @@
                     </div>
 
                     <!-- Reusing same components for details page, so based on condition we are displaying the data -->
-                    <div class="row w-100" v-if="purpose">
+                    <div
+                      class="row w-100"
+                      :class="
+                        accessControl._collection._activate ||
+                        accessControl._collection._read ||
+                        baseUrl !== 'unit'
+                          ? ''
+                          : 'justify-content-between'
+                      "
+                      v-if="purpose"
+                    >
                       <div class="col-3" v-if="baseUrl == 'unit'">
                         <label>Task Manager</label>
                         <p class="mb-0">{{ elem.taskManager }}</p>
@@ -616,6 +659,7 @@ import Mediaelement from "./Mediaelement.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
 import ConfigPropertiesService from "@/service/config-properties-service";
 import EvaluationService from "@/service/evaluation-service";
+import AccessControlService from "@/service/access-control-service";
 
 export default {
   name: "EntityList",
@@ -641,6 +685,7 @@ export default {
       workflowResultService: new WorkflowResultService(),
       configPropertiesService: new ConfigPropertiesService(),
       evaluationService: new EvaluationService(),
+      accessControlService: new AccessControlService(),
       records: [],
       masterRecords: [],
       showLoader: false,
@@ -662,6 +707,7 @@ export default {
     itemConfigs: sync("itemConfigs"),
     configProperties: sync("configProperties"),
     mgmCategories: sync("mgmCategories"),
+    accessControl: sync("accessControl"),
     baseUrl() {
       const self = this;
       if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
@@ -717,6 +763,9 @@ export default {
         JSON.stringify({ ...self.unitEntity })
       );
       self.getData();
+
+      //Checking Access Control
+      self.accessControlService.checkAccessControl(this);
 
       //BATCH INGEST: Enable batch ingest nav
       let batchIngestHtml = document.getElementById("/batch/ingest");
@@ -957,6 +1006,8 @@ export default {
 
     // For unit details page
     const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+    if (uEntity && uEntity.currentUnit)
+      self.accessControlService.checkAccessControl(this);
 
     let batchIngestHtml = document.getElementById("/batch/ingest");
     if (batchIngestHtml) {
