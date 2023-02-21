@@ -149,7 +149,7 @@ body,
   padding: 0rem 4rem !important;
 }
 .home-card {
-  height: 17rem;
+  min-height: 17rem;
 }
 .row-eq-height {
   padding-top: 0;
