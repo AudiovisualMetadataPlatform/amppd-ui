@@ -116,10 +116,54 @@ const OUTPUT_FILE_HEADERS = [
   { label: "Alias", field: "outputLabel" },
 ];
 
+//Home page cards
+const cards = [
+  {
+    header: "Dashboard",
+    icon: `<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="cog" class="svg-inline fill-bg" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" > <path d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z" ></path></svg >`,
+    desc: `AMP's dashboard offers access to the results of processing your items through the MGM tools; it provides you with multiple ways to filter the results to more easily find exactly the output you are looking for.`,
+    link: "VUE_APP_DOC_THE_DASHBOARD",
+  },
+  {
+    header: "Workflows",
+    icon: `<svg class="svg-inline fill-bg" role="img" enable-background="new 0 0 512 512" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" > <g focusable="false"> <path d="M0,24v160c0,13.26,9.32,24,20.81,24h166.5c11.49,0,20.81-10.74,20.81-24V24c0-13.26-9.32-24-20.81-24H20.81   C9.32,0,0,10.74,0,24z" ></path> </g> <circle cx="388.63" cy="391.3" r="121.02"></circle> <path d="m373.89 193.2c-0.56-0.13-1.13-0.35-1.7-0.38-10.2-0.48-20.4-1.04-30.61-1.33-3.08-0.09-6.28 0.17-9.24 0.95-6 1.59-8.18 6.24-5.61 11.89 1.18 2.6 2.83 5.12 4.75 7.24 14.59 16.13 29.26 32.18 43.97 48.2 10.5 11.44 28.15 12.7 40.21 2.96 0.08-0.07 0.17-0.13 0.25-0.2 17.01-15.58 34.06-31.12 50.98-46.8 1.8-1.67 3.17-3.99 4.19-6.26 2.02-4.49 0.43-8.34-3.99-10.57-3.28-1.66-6.84-2.12-10.46-2.28-9.88-0.45-19.77-0.9-29.65-1.33-0.58-0.03-1.16 0.08-1.89 0.13 0.24-1.87 0.44-3.43 0.63-5 2.58-21.79 0.19-43.05-6.9-63.8-6.92-20.25-18.06-37.94-32.82-53.31-12.5-13.02-27.02-23.38-43.55-30.67-36.33-16.01-73.24-17.38-110.57-3.64-14.69 5.41-20.87 22.2-13.43 35.96 5.89 10.89 18.98 15.85 30.81 11.5 10.11-3.72 20.49-5.95 31.28-6.17 20.08-0.42 38.43 5.03 55.02 16.33 9.14 6.22 16.83 13.91 23.27 22.91 8.17 11.42 13.49 24.01 15.9 37.81 2.03 11.8 1.96 23.59-0.84 35.86z" ></path> <path d="m113.52 285.6c0.55 0.17 1.1 0.43 1.67 0.49 10.14 1.19 20.28 2.47 30.44 3.48 3.06 0.31 6.28 0.27 9.29-0.3 6.1-1.17 8.59-5.65 6.43-11.47-1-2.68-2.47-5.31-4.23-7.56-13.42-17.11-26.94-34.15-40.48-51.16-9.67-12.15-27.19-14.64-39.9-5.77-0.09 0.06-0.18 0.11-0.26 0.18-18.06 14.35-36.15 28.65-54.13 43.11-1.91 1.54-3.44 3.76-4.62 5.95-2.33 4.34-1.01 8.29 3.24 10.83 3.16 1.88 6.68 2.59 10.27 3.01 9.83 1.14 19.66 2.28 29.49 3.41 0.57 0.07 1.16 0.01 1.89 0-0.37 1.85-0.68 3.39-0.98 4.94-4.1 21.56-3.2 42.93 2.41 64.12 5.48 20.69 15.36 39.11 29 55.48 11.56 13.86 25.32 25.22 41.29 33.64 35.11 18.52 71.84 22.47 110.04 11.38 15.03-4.36 22.38-20.68 15.91-34.93-5.11-11.27-17.82-17.14-29.93-13.63-10.35 3-20.86 4.49-31.63 3.96-20.05-0.99-37.98-7.71-53.74-20.15-8.68-6.85-15.81-15.06-21.61-24.49-7.35-11.96-11.78-24.9-13.21-38.83-1.21-11.9-0.31-23.66 3.35-35.69z" ></path> </svg>`,
+    desc: `You line up a series of MGM tools you want your content to go through using the the Workflow Editor. When your workflow is ready, you published it and it becomes available in the Workflow Submission page, where you pick the items/files you want to submit to that set of tools.`,
+    link: "VUE_APP_DOC_WORKFLOW_CREATING",
+  },
+  {
+    header: "MGM Evaluation",
+    icon: `<svg class="bi bi-tools bg-fill" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" > <path class="" d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2z" ></path> </svg>`,
+    desc: `AMP's MGM Evaluation module allows you to compare results from multiple MGMs of the same category (e.g., speech-to-text MGMs) to decide which one to use in the workflows you will submit your items through.`,
+    link: "VUE_APP_DOC_MGM_EVALUATION",
+  },
+  {
+    header: "Results",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-check2-square bg-fill bold" viewBox="0 0 22 22" > <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z" /> <path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" /></svg >`,
+    desc: `When you are ready to send the MGM results to your target system, AMP offers you an easy way to pick and choose which results to send for each content file.`,
+    linkText: "View",
+    link: "VUE_APP_DOC_DELIVERABLES",
+  },
+  {
+    header: "Contact",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16" > <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" /> </svg>`,
+    desc: `You may contact the AMP team via email using the button
+    below.`,
+    linkText: "Contact support",
+    link: "VUE_APP_DOC_AMP_MAIL_TO",
+  },
+  {
+    header: "Documentation",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-richtext" viewBox="0 0 16 16" > <path d="M7 4.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0zm-.861 1.542 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V7.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V7s1.54-1.274 1.639-1.208zM5 9a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z" /> <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z" /> </svg>`,
+    desc: `When you need to learn more about AMP, hop to the documentation wiki!`,
+    link: "VUE_APP_DOC_AMP_USER_GUIDE",
+  },
+];
+
 export default {
   common: {
     menus: menus,
     icons: icons,
   },
   OUTPUT_FILE_HEADERS: OUTPUT_FILE_HEADERS,
+  cards: cards,
 };

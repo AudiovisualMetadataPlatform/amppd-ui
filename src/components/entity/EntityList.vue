@@ -1001,7 +1001,7 @@ export default {
     const self = this;
     self.showLoader = true;
     if (self.baseUrl === "unit") {
-      this.networkCalls(); //TODO: Need to move to "home" page once it'll be implemented.
+      this.networkCalls();
     }
 
     // For unit details page
