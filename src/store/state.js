@@ -143,6 +143,27 @@ const state = {
     { order: "r", label: "Actions", field: "actions" },
     { order: "s", label: "Add to Test", field: "addToTest" },
   ],
+
+  accessControl: {
+    _unit: {
+      _create: false,
+      _read: false,
+      _list: false,
+      _update: false,
+      _delete: false,
+    },
+    _collection: {
+      _create: false,
+      _read: false,
+      _list: false,
+      _update: false,
+      _activate: false,
+      _delete: false,
+    },
+    _nav: {
+      _ingestBatch: true,
+    },
+  },
 };
 
 export default state;

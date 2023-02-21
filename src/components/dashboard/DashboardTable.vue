@@ -686,7 +686,6 @@ export default {
     },
   },
   beforeDestroy() {
-    this.workflowDashboard.searchQuery.filterByOutputs = [];
     this.workflowDashboard.searchResult.rows = [];
     this.workflowDashboard.searchQuery.pageNum = 1;
   },
