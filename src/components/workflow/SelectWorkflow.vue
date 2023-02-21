@@ -99,9 +99,9 @@
                       :key="index"
                       :class="{ 'hidden-row': !res.id }"
                     >
-                      <td>{{ res.outputLabel }}</td>
-                      <td>{{ res.workflowName }}</td>
-                      <td>{{ res.outputName }}</td>
+                      <td class="center-data">{{ res.outputLabel }}</td>
+                      <td class="center-data">{{ res.workflowName }}</td>
+                      <td class="center-data">{{ res.outputName }}</td>
                       <td class="text-center slim-col-12 slim-col-4 ">
                         <span class="text-center hideTillSelected">
                           <button
@@ -939,5 +939,8 @@ export default {
 }
 .hidden-row {
   display: none;
+}
+.center-data {
+  padding-top: 1.25rem !important;
 }
 </style>

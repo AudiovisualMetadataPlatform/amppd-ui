@@ -37,7 +37,7 @@ export default class AccessControlService extends BaseService {
         "VUE_APP_AC_ACTIONTYPE_EXECUTE",
         "VUE_APP_AC_TARGETTYPE_BATCH"
       );
-      self.accessControl._unit._create = await this.hasPermission(
+      /* self.accessControl._unit._create = await this.hasPermission(
         "VUE_APP_AC_ACTIONTYPE_CREATE",
         "VUE_APP_AC_TARGETTYPE_UNIT"
       );
@@ -48,15 +48,15 @@ export default class AccessControlService extends BaseService {
       self.accessControl._unit._list = await this.hasPermission(
         "VUE_APP_AC_ACTIONTYPE_LIST",
         "VUE_APP_AC_TARGETTYPE_UNIT"
-      );
+      ); */
       self.accessControl._unit._update = await this.hasPermission(
         "VUE_APP_AC_ACTIONTYPE_UPDATE",
         "VUE_APP_AC_TARGETTYPE_UNIT"
       );
-      self.accessControl._unit._delete = await this.hasPermission(
+      /* self.accessControl._unit._delete = await this.hasPermission(
         "VUE_APP_AC_ACTIONTYPE_DELETE",
         "VUE_APP_AC_TARGETTYPE_UNIT"
-      );
+      ); */
       self.accessControl._collection._create = await this.hasPermission(
         "VUE_APP_AC_ACTIONTYPE_CREATE",
         "VUE_APP_AC_TARGETTYPE_COLLECTION"
@@ -65,22 +65,22 @@ export default class AccessControlService extends BaseService {
         "VUE_APP_AC_ACTIONTYPE_READ",
         "VUE_APP_AC_TARGETTYPE_COLLECTION"
       );
-      self.accessControl._collection._list = await this.hasPermission(
+      /* self.accessControl._collection._list = await this.hasPermission(
         "VUE_APP_AC_ACTIONTYPE_LIST",
         "VUE_APP_AC_TARGETTYPE_COLLECTION"
       );
       self.accessControl._collection._update = await this.hasPermission(
         "VUE_APP_AC_ACTIONTYPE_UPDATE",
         "VUE_APP_AC_TARGETTYPE_COLLECTION"
-      );
+      ); */
       self.accessControl._collection._activate = await this.hasPermission(
         "VUE_APP_AC_ACTIONTYPE_ACTIVATE",
         "VUE_APP_AC_TARGETTYPE_COLLECTION"
       );
-      self.accessControl._collection._delete = await this.hasPermission(
+      /* self.accessControl._collection._delete = await this.hasPermission(
         "VUE_APP_AC_ACTIONTYPE_DELETE",
         "VUE_APP_AC_TARGETTYPE_COLLECTION"
-      );
+      ); */
       self.showLoader = false;
     } catch (error) {
       self.showLoader = false;
