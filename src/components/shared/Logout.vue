@@ -201,7 +201,7 @@ svg {
 
 .icon-dark-1,
 .svg-inline.dwn-arrow {
-  fill: #153c4d;
+  fill: #fff !important;
 }
 
 /* .workflows .workflows, .collections .collections {
