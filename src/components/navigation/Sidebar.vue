@@ -256,7 +256,7 @@ nav ul li {
 }
 .icon-dark-1[data-v-0028c4b4],
 .svg-inline.dwn-arrow[data-v-0028c4b4] {
-  fill: white;
+  fill: #fff !important;
 }
 
 .bg-dark-1 a:hover,
