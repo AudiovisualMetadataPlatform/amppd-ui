@@ -29,14 +29,7 @@
                   >
                     AMP Dashboard
                   </h1>
-                  <div
-                    class="container-fluid"
-                    v-if="
-                      ((parent === 'NewTest' || parent === 'TestResults') &&
-                        filterCount > 1) ||
-                        (parent !== 'NewTest' && filterCount > 0)
-                    "
-                  >
+                  <div class="container-fluid" v-if="filterCount > 0">
                     <div class="row selected-filters-row">
                       <div class="col-sm-2 label-bold">
                         CURRENTLY FILTERED BY
@@ -411,40 +404,42 @@
                           </div>
                         </div>
                       </button>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(output, index) in workflowDashboard.searchQuery
-                          .filterByOutputs"
-                        v-bind:output="output"
-                        v-bind:index="index"
-                        v-bind:key="index"
-                      >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeOutputFilter(index)"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col"
-                              >Output</label
+                      <span v-if="parent !== 'NewTest'">
+                        <button
+                          class="btn btn-outline col-sm-2 selected-filter-button"
+                          v-for="(output, index) in workflowDashboard
+                            .searchQuery.filterByOutputs"
+                          v-bind:output="output"
+                          v-bind:index="index"
+                          v-bind:key="index"
+                        >
+                          <div class="row">
+                            <svg
+                              class="col-auto"
+                              xmlns="http://www.w3.org/2000/svg"
+                              xmlns:xlink="http://www.w3.org/1999/xlink"
+                              version="1.1"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              @click="removeOutputFilter(index)"
                             >
-                            <label class="row no-padding-col">{{
-                              output
-                            }}</label>
+                              <path
+                                fill="#808080"
+                                d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
+                              ></path>
+                            </svg>
+                            <div class="col-sm-1">
+                              <label class="row label-bold no-padding-col"
+                                >Output</label
+                              >
+                              <label class="row no-padding-col">{{
+                                output
+                              }}</label>
+                            </div>
                           </div>
-                        </div>
-                      </button>
+                        </button>
+                      </span>
                       <span
                         v-if="parent !== 'NewTest' && parent !== 'TestResults'"
                       >
@@ -568,6 +563,7 @@
                         >Workflow</b-button
                       >
                       <b-button
+                        v-if="parent !== 'NewTest'"
                         class="btn btn-info dropdown"
                         v-b-modal.modal-lg
                         @click="onOpenModal('output')"
@@ -711,6 +707,7 @@
                     :columns="columns"
                     :parent="parent"
                     :workflowResultType="workflowResultType"
+                    :workflowResultOutput="workflowResultOutput"
                   />
                   <Search
                     :searchType="searchType"
@@ -775,6 +772,11 @@ export default {
         this.workflowDashboard.searchQuery.filterByTestDates.length > 0
       )
         dateFilter = 2;
+      if (this.parent !== "NewTest")
+        dateFilter =
+          dateFilter +
+          this.workflowDashboard.searchQuery.filterByOutputs.length +
+          this.workflowDashboard.searchQuery.filterByStatuses.length;
       return (
         dateFilter +
         this.workflowDashboard.searchQuery.filterBySubmitters.length +
@@ -785,8 +787,6 @@ export default {
         this.workflowDashboard.searchQuery.filterByItems.length +
         this.workflowDashboard.searchQuery.filterByFiles.length +
         this.workflowDashboard.searchQuery.filterBySteps.length +
-        this.workflowDashboard.searchQuery.filterByOutputs.length +
-        this.workflowDashboard.searchQuery.filterByStatuses.length +
         this.workflowDashboard.searchQuery.filterBySearchTerms.length
       );
     },
@@ -804,6 +804,9 @@ export default {
       default: "",
     },
     workflowResultType: {
+      default: "",
+    },
+    workflowResultOutput: {
       default: "",
     },
   },
@@ -850,9 +853,9 @@ export default {
       this.workflowDashboard.searchQuery.filterByFiles = [];
       this.workflowDashboard.searchQuery.filterByWorkflows = [];
       this.workflowDashboard.searchQuery.filterBySteps = [];
-      this.workflowDashboard.searchQuery.filterByOutputs = [];
       this.workflowDashboard.searchQuery.filterBySearchTerms = [];
       if (this.parent !== "NewTest") {
+        this.workflowDashboard.searchQuery.filterByOutputs = [];
         this.workflowDashboard.searchQuery.filterByStatuses = [];
       } else if (this.parent === "TestResults") {
         this.workflowDashboard.searchQuery.sortRule.columnName = "id";
@@ -1198,6 +1201,7 @@ export default {
       });
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.workflowDashboard.searchQuery.filterByTypes = [];
+      this.workflowDashboard.searchQuery.filterByOutputs = [];
     } else if (this.parent === "NewTest") {
       this.clearAll();
       this.columns = this.columns.filter((column) => {
@@ -1218,6 +1222,9 @@ export default {
       this.workflowDashboard.searchQuery.filterByTypes = [
         this.workflowResultType,
       ];
+      this.workflowDashboard.searchQuery.filterByOutputs = [
+        ...this.workflowResultOutput.split(/\s*,\s*/),
+      ];
       this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
     } else {
       this.columns = this.columns.filter((column) => {
@@ -1234,6 +1241,7 @@ export default {
         );
       });
       this.workflowDashboard.searchQuery.filterByTypes = [];
+      this.workflowDashboard.searchQuery.filterByOutputs = [];
       this.clearAll();
     }
   },

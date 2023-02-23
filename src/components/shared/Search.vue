@@ -491,10 +491,11 @@
 
 <script>
 import { sync } from "vuex-pathify";
-import SharedService from "../../service/shared-service";
+import SharedService from "@/service/shared-service";
 import Typeahead from "../shared/TypeAhead.vue";
-import ItemService from "../../service/item-service";
-import CollectionDetailsService from "../../service/collection-detail-service";
+import ItemService from "@/service/item-service";
+import CollectionDetailsService from "@/service/collection-detail-service";
+import AccessControlService from "@/service/access-control-service";
 
 export default {
   props: {
@@ -535,6 +536,7 @@ export default {
     selectedItem: sync("selectedItem"),
     selectedUnit: sync("selectedUnit"),
     selectedCollection: sync("selectedCollection"),
+    accessControl: sync("accessControl"),
   },
 
   data() {
@@ -542,6 +544,7 @@ export default {
       sharedService: new SharedService(),
       itemService: new ItemService(),
       collectionDetailsService: new CollectionDetailsService(),
+      accessControlService: new AccessControlService(),
       userSearchValue: "",
       typeaheadSearchItems: [],
       searchProps: [],
@@ -784,6 +787,10 @@ export default {
                         "unitEntity",
                         JSON.stringify({ ...uEntity })
                       );
+
+                      //BATCH INGEST: checking permission
+                      if (uEntity && uEntity.currentUnit)
+                        self.accessControlService.checkAccessControl(self);
 
                       //BATCH INGEST: Enable batch ingest nav
                       let batchIngestHtml = document.getElementById(

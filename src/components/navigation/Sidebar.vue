@@ -50,7 +50,18 @@
               <b-nav-item
                 :id="menu.url"
                 @click="routeTo(menu)"
-                v-if="!menu.children && menu.url !== '/mgm-evaluation'"
+                v-if="menu.url === '/batch/ingest'"
+                :class="{
+                  'd-none': !accessControl._nav._ingestBatch,
+                }"
+              >
+                <span v-html="menu.icon"></span>
+                <span class="pl-2 menu-name">{{ menu.name }}</span>
+              </b-nav-item>
+              <b-nav-item
+                :id="menu.url"
+                @click="routeTo(menu)"
+                v-else-if="!menu.children && menu.url !== '/mgm-evaluation'"
               >
                 <span v-html="menu.icon"></span>
                 <span class="pl-2 menu-name">{{ menu.name }}</span>
@@ -100,10 +111,13 @@
               <b-dropdown-item href="#">FA</b-dropdown-item>
               </b-nav-item-dropdown>-->
             </span>
-            <b-nav-item class="nav-span">
-              <Logout />
-            </b-nav-item>
           </b-navbar-nav>
+          <b-nav-item
+            class="nav-span"
+            :class="!isAuthenticated ? 'abs-position' : 'ini-position'"
+          >
+            <Logout />
+          </b-nav-item>
         </b-collapse>
       </b-navbar>
     </div>
@@ -118,6 +132,7 @@ import { accountService } from "../../service/account-service.js";
 import { sync } from "vuex-pathify";
 import SharedService from "../../service/shared-service.js";
 import EvaluationService from "@/service/evaluation-service";
+import AccessControlService from "@/service/access-control-service";
 
 export default {
   components: {
@@ -131,11 +146,13 @@ export default {
       accountService: accountService,
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
+      accessControlService: new AccessControlService(),
     };
   },
   computed: {
     isAuthenticated: sync("isAuthenticated"),
     mgmCategories: sync("mgmCategories"),
+    accessControl: sync("accessControl"),
     orderedMenuList() {
       let self = this;
       return this.sharedService.sortByNumber(self.menuList, "displayId");
@@ -156,9 +173,13 @@ export default {
         self.mgmCategories = JSON.parse(
           JSON.stringify(self.filteredMgmCategories)
         );
+        const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+
+        //BATCH INGEST: checking permission
+        if (uEntity && uEntity.currentUnit)
+          self.accessControlService.checkAccessControl(this);
 
         //BATCH INGEST: Disable batch ingest nav
-        const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
         if (!uEntity || (uEntity && !uEntity.currentUnit)) {
           let batchIngestHtml = document.getElementById("/batch/ingest")
             .childNodes[0];
@@ -235,7 +256,7 @@ nav ul li {
 }
 .icon-dark-1[data-v-0028c4b4],
 .svg-inline.dwn-arrow[data-v-0028c4b4] {
-  fill: white;
+  fill: #fff !important;
 }
 
 .bg-dark-1 a:hover,
@@ -313,5 +334,13 @@ nav ul li {
 }
 .dropdown-menu {
   min-width: 8rem !important;
+}
+.abs-position {
+  position: absolute;
+  right: 0px;
+}
+.ini-position {
+  position: initial;
+  right: 0px;
 }
 </style>

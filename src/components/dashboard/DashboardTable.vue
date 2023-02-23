@@ -456,6 +456,9 @@ export default {
     workflowResultType: {
       default: "",
     },
+    workflowResultOutput: {
+      default: "",
+    },
     columns: {
       default: [],
     },
@@ -675,6 +678,9 @@ export default {
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.workflowDashboard.searchQuery.filterByTypes = [
         this.workflowResultType,
+      ];
+      this.workflowDashboard.searchQuery.filterByOutputs = [
+        ...this.workflowResultOutput.split(/\s*,\s*/),
       ];
       this.workflowDashboard.searchQuery.filterByStatuses = ["COMPLETE"];
     },

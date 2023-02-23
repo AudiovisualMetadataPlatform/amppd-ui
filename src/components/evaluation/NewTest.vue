@@ -162,6 +162,7 @@
         <WorkflowDashboard
           parent="NewTest"
           :workflowResultType="selectedMst.detailBody.workflowResultType"
+          :workflowResultOutput="selectedMst.detailBody.workflowResultOutput"
         />
       </div>
       <h3 class="m-b-0 m-t-2 mt-4">

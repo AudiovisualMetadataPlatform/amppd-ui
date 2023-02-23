@@ -22,19 +22,17 @@ import ItemSearch from "./components/entity/ItemSearch.vue";
 import MGMevaluation from "./components/evaluation/MGMevaluation.vue";
 import TestResultsVisualiz from "./components/evaluation/TestResultsVisualiz.vue";
 import SupplementList from "./components/supplement/SupplementList.vue";
+import HomePage from "@/components/home";
 Vue.use(Router);
 
 var router = new Router({
   routes: [
     {
-      // TODO we may want to have a separate landing/welcome page with some greeting and a brief introduction to AMP
       path: "/",
-      redirect: "/unit/details",
       name: "home",
-      component: WorkflowDashboard,
+      component: HomePage,
       meta: {
         authorize: [],
-        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Dashboard" }],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
@@ -393,6 +391,10 @@ var router = new Router({
 });
 
 export default router;
+
+const currentUser = accountService.currentUserValue;
+if (!currentUser) router.push("/");
+
 router.beforeEach(async (to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const { authorize } = to.meta;
