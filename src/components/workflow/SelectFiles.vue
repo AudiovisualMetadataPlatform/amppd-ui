@@ -348,7 +348,7 @@
         </div>
         <div class="col-lg-12 marg-t-3 marg-b-2">
           <h5>
-            Primary File:
+            Content File:
             {{ Array.from(workflowSubmission.selectedFiles.values())[0].name }}
             <span class="btn btn-light float-right mb-2 mt-1 al-cursor">{{
               Array.from(workflowSubmission.selectedFiles.values())[0]

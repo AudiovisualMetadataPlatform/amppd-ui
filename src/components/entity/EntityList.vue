@@ -796,7 +796,7 @@ export default {
               );
               self.showLoader = false;
 
-              // self.unitEntity.unitList = [{ ...self.unitEntity.unitList[2] }]; //For single unit test scenario
+              // self.unitEntity.unitList = [{ ...self.unitEntity.unitList[0] }]; //For single unit test scenario
               if (
                 self.unitEntity.unitList &&
                 self.unitEntity.unitList.length === 1

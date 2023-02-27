@@ -3,7 +3,7 @@
     <!-- <Header/> -->
     <div class="jobs">
       <h3>
-        The following primaryfiles had AMPPD jobs successfully created and
+        The following content files had AMPPD jobs successfully created and
         scheduled to run workflow {{ selectedWorkflow }}:
       </h3>
       <div class="jobs-list">
@@ -33,7 +33,7 @@
         </table>
       </div>
       <h3 v-if="nFailed > 0" class="error">
-        The rest of the {{ nFailed }} primaryfiles failed to have AMPPD jobs
+        The rest of the {{ nFailed }} content files failed to have AMPPD jobs
         created to run workflow {{ selectedWorkflow }}:
       </h3>
     </div>
