@@ -6,7 +6,7 @@
       @close="workflowSubmission.showSelectBundle = false"
       class="my-modal"
     >
-      <h3 slot="header">Select Primaryfiles from saved bundles</h3>
+      <h3 slot="header">Select content files from saved bundles</h3>
       <div slot="body" class="input-group mb-3">
         <div
           id="accordion"
