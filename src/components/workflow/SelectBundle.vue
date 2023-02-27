@@ -21,7 +21,7 @@
             <div class="card-header" id="headingTwo">
               <h3 class="mb-0">
                 <div
-                  class="btn btn-link bundle"
+                  class="btn btn-link bundle d-flex justify-content-start"
                   :class="{ collapsed: visible !== index }"
                   :key="bundle.id"
                   v-on:click="expandBundle(index)"
@@ -70,7 +70,7 @@
                       <path
                         class="circle-stroke"
                         d="M156.8,302c-80.6,0-146.2-65.6-146.2-146.2S76.2,9.6,156.8,9.6S303,75.2,303,155.8S237.4,302,156.8,302z
-                           M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
+                          M156.8,27.9c-70.5,0-127.9,57.4-127.9,127.9s57.4,127.9,127.9,127.9s127.9-57.4,127.9-127.9S227.3,27.9,156.8,27.9z"
                       ></path>
                       <path
                         class="minus-stroke"
