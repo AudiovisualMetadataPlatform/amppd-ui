@@ -786,7 +786,31 @@ export default {
       const self = this;
       try {
         self.showLoader = true;
-        await self.unitService.getAllUnits().then(async (response) => {
+        await self.accessControlService.getPermissionsUnits().then((res) => {
+          self.allUnits = res.data;
+          self.unitEntity.unitList = self.sharedService.sortByAlphabatical(
+            this.allUnits
+          );
+          self.showLoader = false;
+          if (
+            self.unitEntity.unitList &&
+            self.unitEntity.unitList.length === 1
+          ) {
+            self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
+            self.onUnitChange();
+          } else {
+            let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+            if (!uEntity)
+              sessionStorage.setItem(
+                "unitEntity",
+                JSON.stringify({ ...self.unitEntity })
+              );
+            const unitSelectHtml = document.getElementById("unit-select");
+            if (unitSelectHtml) unitSelectHtml.focus();
+          }
+        });
+
+        /* await self.unitService.getAllUnits().then(async (response) => {
           await self.unitService
             .getAllUnits("0", response.data.page.totalElements)
             .then((res) => {
@@ -814,7 +838,7 @@ export default {
                 if (unitSelectHtml) unitSelectHtml.focus();
               }
             });
-        });
+        }); */
       } catch (error) {
         self.showLoader = false;
         console.log(error);

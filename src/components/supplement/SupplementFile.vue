@@ -270,6 +270,7 @@ import SupplementService from "@/service/supplement-service";
 import SharedService from "@/service/shared-service";
 import Loader from "@/components/shared/Loader.vue";
 import ConfigPropertiesService from "@/service/config-properties-service";
+import AccessControlService from "@/service/access-control-service";
 
 export default {
   name: "SupplementFile",
@@ -286,6 +287,7 @@ export default {
       fileService: new PrimaryFileService(),
       collectionService: new CollectionService(),
       supplementService: new SupplementService(),
+      accessControlService: new AccessControlService(),
       configPropertiesService: new ConfigPropertiesService(),
       supplement: {
         showCollectionList: false,
@@ -319,7 +321,14 @@ export default {
         self.loading = true;
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;
-        await self.unitService.getAllUnits().then(async (response) => {
+        await self.accessControlService.getPermissionsUnits().then((res) => {
+          self.allUnits = res.data;
+          self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
+            this.allUnits
+          );
+          self.loading = false;
+        });
+        /* await self.unitService.getAllUnits().then(async (response) => {
           await self.unitService
             .getAllUnits("0", response.data.page.totalElements)
             .then((res) => {
@@ -331,7 +340,7 @@ export default {
               );
               self.loading = false;
             });
-        });
+        }); */
       } catch (error) {
         self.loading = false;
         console.log(error);
@@ -423,8 +432,11 @@ export default {
         "allCategories"
       ] = this.configProperties.supplementCategories;
       self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
-        this.allUnits._embedded.units
+        this.allUnits
       );
+      // self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
+      //   this.allUnits._embedded.units
+      // );
       const uploadDetailsBody = document.getElementById("upload-details-body");
       uploadDetailsBody.style.display = "block";
 
