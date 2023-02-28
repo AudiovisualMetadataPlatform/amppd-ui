@@ -8,6 +8,10 @@ export default class AccessControlService extends BaseService {
     );
   }
 
+  async getPermissionsUnits() {
+    return super.get_auth("/permissions/units");
+  }
+
   async hasPermission(action_type, target_type) {
     const actionType = env.getEnv(action_type);
     const targetType = env.getEnv(target_type);
