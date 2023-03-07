@@ -179,7 +179,12 @@
                         type="text"
                         class="form-control w-100"
                         v-model="entity.name"
-                        :disabled="showEdit"
+                        :disabled="
+                          showEdit ||
+                            (baseUrl === 'collection' &&
+                              !accessControl._collection._update) ||
+                            (baseUrl === 'item' && !accessControl._item._update)
+                        "
                         :class="{ 'error-border': submitted && !entity.name }"
                         @change="onInputChange"
                       />
@@ -192,7 +197,11 @@
                       <select
                         class="select custom-select w-100"
                         v-model="entity.taskManager"
-                        :disabled="showEdit"
+                        :disabled="
+                          showEdit ||
+                            (baseUrl === 'collection' &&
+                              !accessControl._collection._update)
+                        "
                         :class="{
                           'error-border': submitted && !entity.taskManager,
                         }"
@@ -228,7 +237,11 @@
                       v-model="entity.description"
                       :disabled="
                         showEdit ||
-                          (baseUrl === 'unit' && !accessControl._unit._update)
+                          (baseUrl === 'unit' &&
+                            !accessControl._unit._update) ||
+                          (baseUrl === 'collection' &&
+                            !accessControl._collection._update) ||
+                          (baseUrl === 'item' && !accessControl._item._update)
                       "
                       @change="onInputChange"
                     ></textarea>
@@ -376,6 +389,9 @@
                     /> -->
                       <select
                         class="select custom-select w-100"
+                        :disabled="
+                          baseUrl === 'item' && !accessControl._item._update
+                        "
                         v-model="entity.externalSource"
                         @change="onInputChange"
                       >
@@ -392,7 +408,10 @@
                         type="text"
                         class="form-control w-100"
                         v-model="entity.externalId"
-                        :disabled="showEdit"
+                        :disabled="
+                          showEdit ||
+                            (baseUrl === 'item' && !accessControl._item._update)
+                        "
                         @change="onInputChange"
                       />
                     </div>
@@ -404,7 +423,10 @@
                     (unitEntity.currentUnit &&
                       baseUrl === 'unit' &&
                       accessControl._unit._update) ||
-                      (unitEntity.currentUnit && baseUrl !== 'unit')
+                      (baseUrl === 'collection' &&
+                        accessControl._collection._update) ||
+                      (baseUrl === 'item' && accessControl._item._update) ||
+                      baseUrl === 'file'
                   "
                   class="w-100 text-right p-0 expand-ani"
                 >
@@ -489,6 +511,7 @@
                   <button
                     class="btn btn-primary btn-lg btn-edit mr-2"
                     type="button"
+                    v-if="accessControl._item._create"
                     @click="onCreateItem"
                   >
                     Create New Item
@@ -559,7 +582,8 @@
                             (elem.active &&
                               baseUrl === 'unit' &&
                               accessControl._collection._read) ||
-                              baseUrl !== 'unit'
+                              (baseUrl === 'collection' &&
+                                accessControl._item._read)
                           "
                           class="float-right"
                         >

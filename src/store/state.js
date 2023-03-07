@@ -145,6 +145,9 @@ const state = {
   ],
 
   accessControl: {
+    permittedActions: [],
+    _isAdmin: false,
+
     _unit: {
       _create: false,
       _read: false,
@@ -158,6 +161,42 @@ const state = {
       _list: false,
       _update: false,
       _activate: false,
+      _delete: false,
+    },
+    _item: {
+      _create: false,
+      _read: false,
+      _list: false,
+      _update: false,
+      _delete: false,
+    },
+    _primaryfile: {
+      _create: false,
+      _read: false,
+      _list: false,
+      _update: false,
+      _delete: false,
+    },
+    _unitsupplement: {
+      _create: false,
+      _move: false,
+    },
+    _collectionsupplement: {
+      _create: false,
+      _move: false,
+    },
+    _itemsupplement: {
+      _create: false,
+      _move: false,
+    },
+    _primaryfilesupplement: {
+      _create: false,
+      _move: false,
+    },
+    _supplement: {
+      _read: false,
+      _list: false,
+      _update: false,
       _delete: false,
     },
     _nav: {

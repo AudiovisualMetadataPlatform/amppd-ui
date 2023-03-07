@@ -22,6 +22,12 @@
                 >
                   <button
                     class="btn btn-primary btn-lg btn-edit mr-2"
+                    v-if="
+                      accessControl._unitsupplement._create ||
+                        accessControl._collectionsupplement._create ||
+                        accessControl._itemsupplement._create ||
+                        accessControl._primaryfilesupplement._create
+                    "
                     type="button"
                     @click="onCreate()"
                   >
@@ -49,7 +55,10 @@
                         <h3>{{ elem.name }}</h3>
                         <p>{{ elem.description }}</p>
                       </div>
-                      <div class="col-1 text-right">
+                      <div
+                        class="col-1 text-right"
+                        v-if="accessControl._supplement._read"
+                      >
                         <div>
                           <button
                             class="btn btn-primary btn"
@@ -112,6 +121,7 @@
 </template>
 
 <script>
+import { sync } from "vuex-pathify";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 import SupplementService from "@/service/supplement-service";
@@ -137,6 +147,7 @@ export default {
     };
   },
   computed: {
+    accessControl: sync("accessControl"),
     baseUrl() {
       const self = this;
       if (
