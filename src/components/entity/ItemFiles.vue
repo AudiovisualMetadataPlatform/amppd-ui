@@ -62,7 +62,7 @@
               </button>
               <button
                 class="btn btn-link add-remove float-right mr-1"
-                v-if="accessControl._primaryfile._update"
+                v-if="accessControl._primaryfile._delete"
                 @click="removeFile(index)"
               >
                 <span v-html="removeIcon" class="pr-1"></span>Remove file
