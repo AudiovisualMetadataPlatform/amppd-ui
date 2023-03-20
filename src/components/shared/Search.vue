@@ -16,6 +16,8 @@
               ? "Items"
               : type === "primaryfiles"
               ? "Content Files"
+              : type === "workflow-search"
+              ? "Search Workflows"
               : type
           }}
         </h5>
@@ -79,7 +81,7 @@
         </div>
 
         <form
-          v-if="type !== 'item-search'"
+          v-if="type !== 'item-search' && type !== 'workflow-search'"
           class="mb-2 col-12 d-flex p-0"
           @submit.prevent="onFilterUserInput"
         >
@@ -442,12 +444,160 @@
             </tbody>
           </table>
         </div>
+        <template v-if="type === 'workflow-search'">
+          <div
+            id="cloneable"
+            class="form-row row cloneable"
+            v-for="(row, searchIndex) in searchFields['rows']"
+            :key="searchIndex"
+          >
+            <div class="form-group col-md-3" v-if="!searchIndex">
+              <select
+                id="selectOptions-"
+                class="inputFilter form-control"
+                v-model="searchFields['choosenField']"
+                @change="onSearchFieldChange"
+              >
+                <option value="" disabled selected>- Choose Field -</option>
+                <option
+                  v-for="option in fields"
+                  :key="option.name"
+                  :value="option.name"
+                  >{{ option.label }}</option
+                >
+              </select>
+            </div>
+            <div class="form-group col-md-3" v-else>
+              <select
+                id="selectOptions-"
+                class="inputFilter form-control"
+                :value="row"
+                disabled
+              >
+                <option value="" disabled selected>- Choose Field -</option>
+                <option
+                  v-for="option in allSearchFields"
+                  :key="option.name"
+                  :value="option.name"
+                  >{{ option.label }}</option
+                >
+              </select>
+            </div>
+            <div
+              class="form-group col-md-4 dateRange"
+              v-if="row === 'dateRange'"
+            >
+              <input
+                class="form-control"
+                type="date"
+                id="startDate-"
+                data-toggle="popover"
+                data-trigger="hover"
+                data-content="Start Date"
+                data-placement="top"
+                v-model="searchFields.dateRange.fromDate"
+                format="mm/dd/yyyy"
+                v-on:input="setDisabledDate()"
+              />
+            </div>
+            <div
+              class="form-group col-md-4 dateRange"
+              v-if="row === 'dateRange'"
+            >
+              <div></div>
+              <input
+                class="form-control"
+                type="date"
+                id="endDate-"
+                data-toggle="popover"
+                data-trigger="hover"
+                data-content="End Date"
+                data-placement="top"
+                v-model="searchFields.dateRange.toDate"
+                format="mm/dd/yyyy"
+                :min="
+                  `${searchFields.dateRange.state.disabledDates.to.getFullYear()}-${(
+                    '0' +
+                    (searchFields.dateRange.state.disabledDates.to.getMonth() +
+                      1)
+                  ).slice(-2)}-${(
+                    '0' +
+                    (searchFields.dateRange.state.disabledDates.to.getDate() +
+                      1)
+                  ).slice(-2)}`
+                "
+              />
+            </div>
+            <div id="" class="form-group col-md-8 searchWorkflows" v-else>
+              <input
+                type="text"
+                class="form-control"
+                id="searchWorkflowsInput-"
+                placeholder="Search Workflows"
+                v-model="searchFields[row]"
+                autocomplete="off"
+              />
+            </div>
+            <div
+              class=" col-md-1 addRowBtn"
+              v-if="searchIndex === 0 && searchFields['rows'].length !== 6"
+              @click="handleAddRowBtn(searchFields.choosenField)"
+            >
+              <button
+                id="addRow"
+                class="btn btn-link marg-t-0 pad-all-0 addRow"
+                data-toggle="popover"
+                data-trigger="hover"
+                data-content="Add a new row"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="34"
+                  height="34"
+                  fill="currentColor"
+                  class="bi bi-plus-square-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              class=" col-md-1 btnRemove"
+              v-if="searchFields['rows'].length > 1 && searchIndex !== 0"
+              @click="handleRemoveRowBtn(searchIndex, row)"
+            >
+              <button
+                class="btn btn-outline marg-t-0 pad-all-0 removeRow"
+                data-toggle="popover"
+                data-trigger="hover"
+                data-content="Remove this row"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="34"
+                  height="34"
+                  fill="#F4871E"
+                  class="bi bi-dash-square-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    class="black"
+                    d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </template>
       </template>
 
       <template #modal-footer="{ ok, hide }">
         <!-- Emulate built in modal footer ok and cancel button actions -->
         <button
-          v-if="type !== 'statuses'"
+          v-if="type !== 'statuses' && type !== 'workflow-search'"
           class="btn btn-outline"
           @click="
             hide();
@@ -457,7 +607,33 @@
           Cancel
         </button>
         <button
-          v-if="clonedDataSource.length && !loading"
+          v-if="type === 'workflow-search'"
+          size="sm"
+          class="btn btn-primary wf-search-btn"
+          @click="
+            ok();
+            onDone();
+          "
+        >
+          <svg
+            data-v-4ae6b2fb=""
+            data-v-6b33b2c4=""
+            role="img"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 50 50"
+            class="svg-search wf-search"
+          >
+            <title data-v-4ae6b2fb="" data-v-6b33b2c4="">search</title>
+            <path
+              data-v-4ae6b2fb=""
+              data-v-6b33b2c4=""
+              d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"
+            ></path>
+          </svg>
+          Search
+        </button>
+        <button
+          v-else-if="clonedDataSource.length && !loading"
           size="sm"
           class="btn btn-primary"
           :disabled="
@@ -554,6 +730,31 @@ export default {
       searchDataSourceMap: new Map(),
       selectedItemId: null,
       searchWord: "",
+      allSearchFields: [
+        { name: "annotations", label: "Annotations" },
+        { name: "dateRange", label: "Date Range" },
+        { name: "name", label: "Name" },
+        { name: "creator", label: "Owner" },
+        { name: "tags", label: "Tags" },
+      ],
+      fields: [],
+      searchFields: {
+        rows: [""],
+        choosenField: "",
+        annotations: "",
+        dateRange: {
+          fromDate: "",
+          toDate: "",
+          state: {
+            disabledDates: {
+              to: new Date(),
+            },
+          },
+        },
+        name: "",
+        creator: "",
+        tags: "",
+      },
       // type: JSON.parse(this.searchType)
     };
   },
@@ -566,7 +767,57 @@ export default {
     this.getTypeaheadSearchItems();
     this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
   },
+  mounted() {
+    const self = this;
+    self.fields = self.allSearchFields;
+  },
   methods: {
+    setDisabledDate() {
+      let self = this;
+      self.searchFields.dateRange.state.disabledDates.to = new Date(
+        self.searchFields.dateRange.fromDate
+      );
+    },
+    handleAddRowBtn(field) {
+      const self = this;
+      if (
+        self.searchFields["rows"].length < 6 &&
+        self.searchFields["choosenField"]
+      ) {
+        const selctedField = self.fields.filter((f) => f.name === field);
+        self.searchFields["rows"].push(selctedField[0].name);
+        self.searchFields["choosenField"] = "";
+        self.searchFields.rows[0] = "";
+        self.fields = self.fields.filter((f) => f.name !== field);
+        self.searchFields[""] = "";
+      }
+    },
+    handleRemoveRowBtn(index, field) {
+      const self = this;
+      self.searchFields["rows"].splice(index, 1);
+      const removedField = self.allSearchFields.filter((f) => f.name === field);
+      self.fields.push(removedField[0]);
+      self.fields = self.sharedService.sortByAlphabatical(self.fields, "label");
+
+      if (field !== "dateRange") self.searchFields[field] = "";
+      else {
+        self.searchFields.dateRange.fromDate = new Date(
+          "1970-01-01 00:00:00 UTC+00"
+        );
+        self.searchFields.dateRange.toDate = new Date();
+        self.searchFields.dateRange.state = {
+          disabledDates: {
+            to: new Date(),
+          },
+        };
+      }
+
+      this.$emit("handleSearchWorkflows", this.searchFields);
+    },
+    onSearchFieldChange() {
+      const self = this;
+      self.searchFields.rows[0] = self.searchFields.choosenField;
+    },
     async searchItems() {
       this.$emit("handleSearchItems", this.searchWord);
     },
@@ -826,6 +1077,20 @@ export default {
               });
             });
           break;
+        case "workflow-search":
+          this.$emit("handleSearchWorkflows", this.searchFields);
+          if (
+            this.searchFields["rows"].length < 6 &&
+            this.searchFields["choosenField"]
+          ) {
+            this.searchFields["rows"].push(this.searchFields["choosenField"]);
+            this.searchFields.rows[0] = "";
+            this.fields = this.fields.filter(
+              (f) => f.name !== this.searchFields["choosenField"]
+            );
+            this.searchFields["choosenField"] = "";
+          }
+          break;
       }
       this.userSearchValue = "";
       this.type = "";
@@ -941,5 +1206,15 @@ table tbody tr:nth-of-type(odd) {
 }
 .search-btn:hover > .svg-search {
   fill: #f4871e;
+}
+.wf-search-btn:hover > .wf-search {
+  fill: #fff;
+}
+.addRowBtn,
+.btnRemove {
+  margin-top: -0.3rem;
+}
+.removeRow {
+  border: none !important;
 }
 </style>

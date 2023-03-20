@@ -4,20 +4,20 @@ export default class WorkflowService extends BaseService {
     async searchFiles(searchWord, mime_type) {
         return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + encodeURIComponent(searchWord) + '&mediaType=' + mime_type).then(response => response.data);
     }
-    
+
     async searchIntermediateFiles(searchWord, outputTypes) {
         return await super
-        .get_auth(
-            // '/workflow-results/intermediate/primaryfiles?outputTypes=transcript,segment&mediaType=av&keyword=MW'
-            "/workflow-results/intermediate/primaryfiles?outputTypes=" + outputTypes + "&keyword=" + encodeURIComponent(searchWord)
-        ).then((response) => response.data);
+            .get_auth(
+                // '/workflow-results/intermediate/primaryfiles?outputTypes=transcript,segment&mediaType=av&keyword=MW'
+                "/workflow-results/intermediate/primaryfiles?outputTypes=" + outputTypes + "&keyword=" + encodeURIComponent(searchWord)
+            ).then((response) => response.data);
     }
 
     async getCompleteWorkflowResultsForPrimaryfileOutputTypes(outputTypes, primaryfileId) {
         return await super
-        .get_auth(
-            "/workflow-results/intermediate/outputs?outputTypes=" + outputTypes + "&primaryfileId=" + primaryfileId
-        ).then((response) => response.data);
+            .get_auth(
+                "/workflow-results/intermediate/outputs?outputTypes=" + outputTypes + "&primaryfileId=" + primaryfileId
+            ).then((response) => response.data);
     }
 
     isAudioFile(primaryfile) {
@@ -88,7 +88,7 @@ export default class WorkflowService extends BaseService {
     }
 
     submitWorkflow(selectedWorkflow, ids, isIntermediary = false, body = null) {
-        if(isIntermediary)
+        if (isIntermediary)
             return super.post_auth('/jobs/submitResults?workflowId=' + selectedWorkflow + '&resultIdss=' + ids + '&resultIdss=');
         else
             return super.post_auth('/jobs/submitFiles?workflowId=' + selectedWorkflow + '&primaryfileIds=' + ids, body);
@@ -107,6 +107,11 @@ export default class WorkflowService extends BaseService {
     getAllWorkflows() {
         return super.get_auth('/workflows');
     }
+
+    getFilteredWorkflows(name, creator, dateRange, annotations, tags) {
+        return super.get_auth(`/workflows?name=${name}&creator=${creator}&dateRange=${dateRange}&annotations=${annotations}&tags=${tags}`);
+    }
+
     async getWorkflowDetails(id) {
         var tempParams = [];
         return await super.get_auth('/workflows/' + id).then(response => {
