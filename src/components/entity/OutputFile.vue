@@ -7,6 +7,7 @@
           <h2 class="card-title">Output Files</h2>
         </div>
         <button
+          v-if="accessControl._workflowresult._update"
           class="btn btn-primary btn float-right"
           type="button"
           @click="onAliasSave"
@@ -38,45 +39,47 @@
               </td>
               <td>
                 <!-- <input
-                                    type="text"
-                                    :value="output.submitter"
-                                    class="form-control"
-                                    disabled
-                                /> -->
+                    type="text"
+                    :value="output.submitter"
+                    class="form-control"
+                    disabled
+                /> -->
                 {{ output.submitter }}
               </td>
               <td>
                 <!-- <input
-                                    type="text"
-                                    :value="output.workflowName"
-                                    class="form-control"
-                                    disabled
-                                /> -->
+                    type="text"
+                    :value="output.workflowName"
+                    class="form-control"
+                    disabled
+                /> -->
                 {{ output.workflowName }}
               </td>
 
               <td>
                 <!-- <input
-                                    type="text"
-                                    :value="output.workflowStep"
-                                    class="form-control"
-                                    disabled
-                                /> -->
+                    type="text"
+                    :value="output.workflowStep"
+                    class="form-control"
+                    disabled
+                /> -->
                 {{ output.workflowStep }}
               </td>
               <td>
                 <!-- <input
-                                    type="text"
-                                    :value="output.outputLink"
-                                    class="form-control"
-                                    disabled
-                                /> -->
+                    type="text"
+                    :value="output.outputLink"
+                    class="form-control"
+                    disabled
+                /> -->
                 <a
                   :href="workflowResultService.getOutputUrl(output.id)"
                   class="complete-output"
                   target="_blank"
                   v-if="
-                    output.outputPath != null && output.status == 'COMPLETE'
+                    output.outputPath != null &&
+                      output.status == 'COMPLETE' &&
+                      accessControl._workflowresult._read
                   "
                 >
                   {{ output.outputName }}</a
@@ -89,6 +92,7 @@
                   v-model="output.outputLabel"
                   class="form-control"
                   @change="onAliasChange($event, output.id, output.outputLabel)"
+                  :disabled="!accessControl._workflowresult._update"
                 />
               </td>
             </tr>
@@ -115,6 +119,7 @@ export default {
   },
   computed: {
     selectedFile: sync("selectedFile"),
+    accessControl: sync("accessControl"),
   },
   data() {
     return {

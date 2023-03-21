@@ -177,27 +177,26 @@ const state = {
       _update: false,
       _delete: false,
     },
-    _unitsupplement: {
-      _create: false,
-      _move: false,
-    },
-    _collectionsupplement: {
-      _create: false,
-      _move: false,
-    },
-    _itemsupplement: {
-      _create: false,
-      _move: false,
-    },
-    _primaryfilesupplement: {
-      _create: false,
-      _move: false,
+    _primaryfilemedia: {
+      _read: false,
     },
     _supplement: {
+      _create: false,
       _read: false,
       _list: false,
       _update: false,
+      _move: false,
       _delete: false,
+    },
+    _workflowresult: {
+      _create: false,
+      _read: false,
+      _export: false,
+      _update: false,
+      _delete: false,
+    },
+    _workflowresult_restricted: {
+      _create: false,
     },
     _nav: {
       _ingestBatch: true,

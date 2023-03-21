@@ -22,12 +22,7 @@
                 >
                   <button
                     class="btn btn-primary btn-lg btn-edit mr-2"
-                    v-if="
-                      accessControl._unitsupplement._create ||
-                        accessControl._collectionsupplement._create ||
-                        accessControl._itemsupplement._create ||
-                        accessControl._primaryfilesupplement._create
-                    "
+                    v-if="accessControl._supplement._create"
                     type="button"
                     @click="onCreate()"
                   >

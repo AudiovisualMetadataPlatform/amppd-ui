@@ -124,18 +124,19 @@ export default class AccessControlService extends BaseService {
         self.accessControl._primaryfile._list = true;
         self.accessControl._primaryfile._update = true;
         self.accessControl._primaryfile._delete = true;
-        self.accessControl._unitsupplement._create = true;
-        self.accessControl._unitsupplement._move = true;
-        self.accessControl._collectionsupplement._create = true;
-        self.accessControl._collectionsupplement._move = true;
-        self.accessControl._itemsupplement._create = true;
-        self.accessControl._itemsupplement._move = true;
-        self.accessControl._primaryfilesupplement._create = true;
-        self.accessControl._primaryfilesupplement._move = true;
+        self.accessControl._primaryfilemedia._read = true;
+        self.accessControl._supplement._create = true;
         self.accessControl._supplement._read = true;
         self.accessControl._supplement._list = true;
         self.accessControl._supplement._update = true;
+        self.accessControl._supplement._move = true;
         self.accessControl._supplement._delete = true;
+        self.accessControl._workflowresult._create = true;
+        self.accessControl._workflowresult._read = true;
+        self.accessControl._workflowresult._export = true;
+        self.accessControl._workflowresult._update = true;
+        self.accessControl._workflowresult._delete = true;
+        self.accessControl._workflowresult_restricted._create = true;
         self.accessControl._nav._ingestBatch = true;
       } else {
         self.accessControl._isAdmin = false;
@@ -160,18 +161,19 @@ export default class AccessControlService extends BaseService {
         self.accessControl._primaryfile._list = false;
         self.accessControl._primaryfile._update = false;
         self.accessControl._primaryfile._delete = false;
-        self.accessControl._unitsupplement._create = false;
-        self.accessControl._unitsupplement._move = false;
-        self.accessControl._collectionsupplement._create = false;
-        self.accessControl._collectionsupplement._move = false;
-        self.accessControl._itemsupplement._create = false;
-        self.accessControl._itemsupplement._move = false;
-        self.accessControl._primaryfilesupplement._create = false;
-        self.accessControl._primaryfilesupplement._move = false;
+        self.accessControl._primaryfilemedia._read = false;
+        self.accessControl._supplement._create = false;
         self.accessControl._supplement._read = false;
         self.accessControl._supplement._list = false;
         self.accessControl._supplement._update = false;
+        self.accessControl._supplement._move = false;
         self.accessControl._supplement._delete = false;
+        self.accessControl._workflowresult._create = false;
+        self.accessControl._workflowresult._read = false;
+        self.accessControl._workflowresult._export = false;
+        self.accessControl._workflowresult._update = false;
+        self.accessControl._workflowresult._delete = false;
+        self.accessControl._workflowresult_restricted._create = false;
         self.accessControl._nav._ingestBatch = false; //default value is true
       }
     } catch (error) {
@@ -277,6 +279,15 @@ export default class AccessControlService extends BaseService {
                 break;
             }
           } else if (
+            action.targetType ===
+            env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE_MEDIA")
+          ) {
+            switch (action.actionType) {
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
+                self.accessControl._primaryfilemedia._read = true;
+                break;
+            }
+          } else if (
             action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
           ) {
             switch (action.actionType) {
@@ -291,6 +302,36 @@ export default class AccessControlService extends BaseService {
                 break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_DELETE"):
                 self.accessControl._supplement._delete = true;
+                break;
+            }
+          } else if (
+            action.targetType ===
+            env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT")
+          ) {
+            switch (action.actionType) {
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
+                self.accessControl._workflowresult._create = true;
+                break;
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
+                self.accessControl._workflowresult._read = true;
+                break;
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_EXPORT"):
+                self.accessControl._workflowresult._export = true;
+                break;
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
+                self.accessControl._workflowresult._update = true;
+                break;
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_DELETE"):
+                self.accessControl._workflowresult._delete = true;
+                break;
+            }
+          } else if (
+            action.targetType ===
+            env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_RESTRICTED")
+          ) {
+            switch (action.actionType) {
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
+                self.accessControl._workflowresult_restricted._create = true;
                 break;
             }
           } else if (
