@@ -332,7 +332,7 @@ export default class AccessControlService extends BaseService {
           ) {
             switch (action.actionType) {
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
-                self.accessControl._workflow._create = false;
+                self.accessControl._workflow._create = true;
                 break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._workflow._read = true;
