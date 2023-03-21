@@ -35,7 +35,12 @@
               </button>
             </h1>
             <div class="primary-file">
-              <div class="media-player" v-if="baseUrl === 'file'">
+              <div
+                class="media-player"
+                v-if="
+                  baseUrl === 'file' && accessControl._primaryfilemedia._read
+                "
+              >
                 <div v-if="entity.mediaSource">
                   <mediaelement
                     ref="vPlay"
@@ -70,7 +75,13 @@
                   ></textarea>
                 </b-collapse>
               </div>
-              <form name="unitForm" class="form">
+              <form
+                name="unitForm"
+                class="form"
+                :class="{
+                  'w-100': !accessControl._primaryfilemedia._read,
+                }"
+              >
                 <div v-if="baseUrl === 'file'">
                   <div class="col-12 text-left form-group p-0 flex-div">
                     <div style="width: 48%">
@@ -82,7 +93,11 @@
                         type="text"
                         class="form-control w-100"
                         v-model="entity.name"
-                        :disabled="showEdit"
+                        :disabled="
+                          showEdit ||
+                            (baseUrl === 'file' &&
+                              !accessControl._primaryfile._update)
+                        "
                         :class="{ 'error-border': submitted && !entity.name }"
                         @change="onInputChange"
                       />
@@ -102,7 +117,11 @@
                     <textarea
                       class="form-control w-100"
                       v-model="entity.description"
-                      :disabled="showEdit"
+                      :disabled="
+                        showEdit ||
+                          (baseUrl === 'file' &&
+                            !accessControl._primaryfile._update)
+                      "
                       @change="onInputChange"
                     ></textarea>
                   </div>
@@ -426,7 +445,7 @@
                       (baseUrl === 'collection' &&
                         accessControl._collection._update) ||
                       (baseUrl === 'item' && accessControl._item._update) ||
-                      baseUrl === 'file'
+                      (baseUrl === 'file' && accessControl._primaryfile._update)
                   "
                   class="w-100 text-right p-0 expand-ani"
                 >
