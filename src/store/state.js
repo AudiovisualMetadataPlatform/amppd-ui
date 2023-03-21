@@ -151,14 +151,12 @@ const state = {
     _unit: {
       _create: false,
       _read: false,
-      _list: false,
       _update: false,
       _delete: false,
     },
     _collection: {
       _create: false,
       _read: false,
-      _list: false,
       _update: false,
       _activate: false,
       _delete: false,
@@ -166,14 +164,12 @@ const state = {
     _item: {
       _create: false,
       _read: false,
-      _list: false,
       _update: false,
       _delete: false,
     },
     _primaryfile: {
       _create: false,
       _read: false,
-      _list: false,
       _update: false,
       _delete: false,
     },
@@ -183,7 +179,6 @@ const state = {
     _supplement: {
       _create: false,
       _read: false,
-      _list: false,
       _update: false,
       _move: false,
       _delete: false,

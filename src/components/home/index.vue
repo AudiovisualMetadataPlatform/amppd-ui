@@ -85,6 +85,7 @@ export default {
         await self.accessControlService.permittedActions(self);
         let isAdminResponse = await self.accessControlService.getIsAdmin();
         self.accessControl._isAdmin = isAdminResponse.data;
+        self.accessControlService.isAdmin(self);
 
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;

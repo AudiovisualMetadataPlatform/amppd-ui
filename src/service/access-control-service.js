@@ -105,29 +105,24 @@ export default class AccessControlService extends BaseService {
         self.accessControl._isAdmin = true;
         self.accessControl._unit._create = true;
         self.accessControl._unit._read = true;
-        self.accessControl._unit._list = true;
         self.accessControl._unit._update = true;
         self.accessControl._unit._delete = true;
         self.accessControl._collection._create = true;
         self.accessControl._collection._read = true;
-        self.accessControl._collection._list = true;
         self.accessControl._collection._update = true;
         self.accessControl._collection._activate = true;
         self.accessControl._collection._delete = true;
         self.accessControl._item._create = true;
         self.accessControl._item._read = true;
-        self.accessControl._item._list = true;
         self.accessControl._item._update = true;
         self.accessControl._item._delete = true;
         self.accessControl._primaryfile._create = true;
         self.accessControl._primaryfile._read = true;
-        self.accessControl._primaryfile._list = true;
         self.accessControl._primaryfile._update = true;
         self.accessControl._primaryfile._delete = true;
         self.accessControl._primaryfilemedia._read = true;
         self.accessControl._supplement._create = true;
         self.accessControl._supplement._read = true;
-        self.accessControl._supplement._list = true;
         self.accessControl._supplement._update = true;
         self.accessControl._supplement._move = true;
         self.accessControl._supplement._delete = true;
@@ -142,29 +137,24 @@ export default class AccessControlService extends BaseService {
         self.accessControl._isAdmin = false;
         self.accessControl._unit._create = false;
         self.accessControl._unit._read = false;
-        self.accessControl._unit._list = false;
         self.accessControl._unit._update = false;
         self.accessControl._unit._delete = false;
         self.accessControl._collection._create = false;
         self.accessControl._collection._read = false;
-        self.accessControl._collection._list = false;
         self.accessControl._collection._update = false;
         self.accessControl._collection._activate = false;
         self.accessControl._collection._delete = false;
         self.accessControl._item._create = false;
         self.accessControl._item._read = false;
-        self.accessControl._item._list = false;
         self.accessControl._item._update = false;
         self.accessControl._item._delete = false;
         self.accessControl._primaryfile._create = false;
         self.accessControl._primaryfile._read = false;
-        self.accessControl._primaryfile._list = false;
         self.accessControl._primaryfile._update = false;
         self.accessControl._primaryfile._delete = false;
         self.accessControl._primaryfilemedia._read = false;
         self.accessControl._supplement._create = false;
         self.accessControl._supplement._read = false;
-        self.accessControl._supplement._list = false;
         self.accessControl._supplement._update = false;
         self.accessControl._supplement._move = false;
         self.accessControl._supplement._delete = false;
@@ -204,9 +194,6 @@ export default class AccessControlService extends BaseService {
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._unit._read = true;
                 break;
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_LIST"):
-                self.accessControl._unit._list = true;
-                break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
                 self.accessControl._unit._update = true;
                 break;
@@ -223,9 +210,6 @@ export default class AccessControlService extends BaseService {
                 break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._collection._read = true;
-                break;
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_LIST"):
-                self.accessControl._collection._list = true;
                 break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
                 self.accessControl._collection._update = true;
@@ -247,9 +231,6 @@ export default class AccessControlService extends BaseService {
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._item._read = true;
                 break;
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_LIST"):
-                self.accessControl._item._list = true;
-                break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
                 self.accessControl._item._update = true;
                 break;
@@ -267,9 +248,6 @@ export default class AccessControlService extends BaseService {
                 break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._primaryfile._read = true;
-                break;
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_LIST"):
-                self.accessControl._primaryfile._list = true;
                 break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
                 self.accessControl._primaryfile._update = true;
@@ -291,14 +269,17 @@ export default class AccessControlService extends BaseService {
             action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
           ) {
             switch (action.actionType) {
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
+                self.accessControl._supplement._create = true;
+                break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._supplement._read = true;
                 break;
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_LIST"):
-                self.accessControl._supplement._list = true;
-                break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
                 self.accessControl._supplement._update = true;
+                break;
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_MOVE"):
+                self.accessControl._supplement._move = true;
                 break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_DELETE"):
                 self.accessControl._supplement._delete = true;
