@@ -496,7 +496,7 @@
                 data-content="Start Date"
                 data-placement="top"
                 v-model="searchFields.dateRange.fromDate"
-                format="mm/dd/yyyy"
+                format="MM/dd/yyyy"
                 v-on:input="setDisabledDate()"
               />
             </div>
@@ -514,7 +514,7 @@
                 data-content="End Date"
                 data-placement="top"
                 v-model="searchFields.dateRange.toDate"
-                format="mm/dd/yyyy"
+                format="MM/dd/yyyy"
                 :min="
                   `${searchFields.dateRange.state.disabledDates.to.getFullYear()}-${(
                     '0' +
@@ -536,6 +536,7 @@
                 placeholder="Search Workflows"
                 v-model="searchFields[row]"
                 autocomplete="off"
+                v-on:keyup.enter="searchWfKeyUp"
               />
             </div>
             <div
@@ -607,6 +608,7 @@
           Cancel
         </button>
         <button
+          id="workflow-search-btn"
           v-if="type === 'workflow-search'"
           size="sm"
           class="btn btn-primary wf-search-btn"
@@ -772,6 +774,11 @@ export default {
     self.fields = self.allSearchFields;
   },
   methods: {
+    async searchWfKeyUp(e) {
+      if (e.keyCode === 13) {
+        document.getElementById("workflow-search-btn").click();
+      }
+    },
     setDisabledDate() {
       let self = this;
       self.searchFields.dateRange.state.disabledDates.to = new Date(
