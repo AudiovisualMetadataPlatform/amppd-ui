@@ -193,6 +193,13 @@ const state = {
     _workflowresult_restricted: {
       _create: false,
     },
+    _workflow: {
+      _create: false,
+      _read: false,
+      _update: false,
+      _restrict: false,
+      _delete: false,
+    },
     _nav: {
       _ingestBatch: true,
     },

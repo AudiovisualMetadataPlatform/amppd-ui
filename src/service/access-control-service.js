@@ -101,6 +101,7 @@ export default class AccessControlService extends BaseService {
     try {
       let adminResponse = await this.getIsAdmin();
       if (adminResponse.data) {
+        // Permissions for Admin User
         self.accessControl.permittedActions = [];
         self.accessControl._isAdmin = true;
         self.accessControl._unit._create = true;
@@ -132,6 +133,11 @@ export default class AccessControlService extends BaseService {
         self.accessControl._workflowresult._update = true;
         self.accessControl._workflowresult._delete = true;
         self.accessControl._workflowresult_restricted._create = true;
+        self.accessControl._workflow._create = true;
+        self.accessControl._workflow._read = true;
+        self.accessControl._workflow._update = true;
+        self.accessControl._workflow._restrict = true;
+        self.accessControl._workflow._delete = true;
         self.accessControl._nav._ingestBatch = true;
       } else {
         self.accessControl._isAdmin = false;
@@ -164,6 +170,11 @@ export default class AccessControlService extends BaseService {
         self.accessControl._workflowresult._update = false;
         self.accessControl._workflowresult._delete = false;
         self.accessControl._workflowresult_restricted._create = false;
+        self.accessControl._workflow._create = false;
+        self.accessControl._workflow._read = false;
+        self.accessControl._workflow._update = false;
+        self.accessControl._workflow._restrict = false;
+        self.accessControl._workflow._delete = false;
         self.accessControl._nav._ingestBatch = false; //default value is true
       }
     } catch (error) {
@@ -182,6 +193,7 @@ export default class AccessControlService extends BaseService {
       self.showLoader = true;
       await this.isAdmin(self);
       if (!self.accessControl._isAdmin) {
+        // Permissions for Non-admin User
         let allPermissions = await this.permittedActions(self);
         let actions = allPermissions[0].actions;
         for (let i = 0; i < actions.length; i++) {
@@ -313,6 +325,26 @@ export default class AccessControlService extends BaseService {
             switch (action.actionType) {
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
                 self.accessControl._workflowresult_restricted._create = true;
+                break;
+            }
+          } else if (
+            action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
+          ) {
+            switch (action.actionType) {
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
+                self.accessControl._workflow._create = false;
+                break;
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
+                self.accessControl._workflow._read = true;
+                break;
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
+                self.accessControl._workflow._update = true;
+                break;
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_RESTRICT"):
+                self.accessControl._workflow._restrict = true;
+                break;
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_DELETE"):
+                self.accessControl._workflow._delete = true;
                 break;
             }
           } else if (

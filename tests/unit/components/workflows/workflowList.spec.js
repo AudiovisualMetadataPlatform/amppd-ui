@@ -47,7 +47,16 @@ describe('WorkflowList.vue', () => {
     localVue.use(BootstrapVue);
     const $store = {
         state: {
-            listOfWorkflows: []
+            listOfWorkflows: [],
+            accessControl: {
+                _workflow: {
+                    _create: false,
+                    _read: false,
+                    _update: false,
+                    _restrict: false,
+                    _delete: false,
+                }
+            }
         }
     };
     beforeEach(() => {
