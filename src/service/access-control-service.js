@@ -59,14 +59,6 @@ export default class AccessControlService extends BaseService {
         "VUE_APP_AC_ACTIONTYPE_CREATE",
         "VUE_APP_AC_TARGETTYPE_COLLECTION"
       );
-      self.accessControl._collection._read = await this.hasPermission(
-        "VUE_APP_AC_ACTIONTYPE_READ",
-        "VUE_APP_AC_TARGETTYPE_COLLECTION"
-      );
-      self.accessControl._collection._activate = await this.hasPermission(
-        "VUE_APP_AC_ACTIONTYPE_ACTIVATE",
-        "VUE_APP_AC_TARGETTYPE_COLLECTION"
-      );
       self.showLoader = false;
     } catch (error) {
       self.showLoader = false;
@@ -77,6 +69,17 @@ export default class AccessControlService extends BaseService {
       console.error(error.message);
     }
   } */
+
+  async getGlobalPermission(instance, target, action) {
+    const self = instance;
+    const result = self.accessControl.permittedActions.find(({ actions }) =>
+      actions.find(
+        ({ targetType, actionType }) =>
+          targetType === target && actionType === action
+      )
+    );
+    return !!result;
+  }
 
   async permittedActions(instance) {
     const self = instance;
@@ -159,7 +162,11 @@ export default class AccessControlService extends BaseService {
         self.accessControl._primaryfile._update = false;
         self.accessControl._primaryfile._delete = false;
         self.accessControl._primaryfilemedia._read = false;
-        self.accessControl._supplement._create = false;
+        self.accessControl._supplement._create = await this.getGlobalPermission(
+          self,
+          env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT"),
+          env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE")
+        );
         self.accessControl._supplement._read = false;
         self.accessControl._supplement._update = false;
         self.accessControl._supplement._move = false;
@@ -170,9 +177,17 @@ export default class AccessControlService extends BaseService {
         self.accessControl._workflowresult._update = false;
         self.accessControl._workflowresult._delete = false;
         self.accessControl._workflowresult_restricted._create = false;
-        self.accessControl._workflow._create = false;
+        self.accessControl._workflow._create = await this.getGlobalPermission(
+          self,
+          env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW"),
+          env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE")
+        );
         self.accessControl._workflow._read = false;
-        self.accessControl._workflow._update = false;
+        self.accessControl._workflow._update = await this.getGlobalPermission(
+          self,
+          env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW"),
+          env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE")
+        );
         self.accessControl._workflow._restrict = false;
         self.accessControl._workflow._delete = false;
         self.accessControl._nav._ingestBatch = false; //default value is true
