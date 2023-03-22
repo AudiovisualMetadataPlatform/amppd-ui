@@ -734,7 +734,7 @@ export default {
       searchWord: "",
       allSearchFields: [
         { name: "annotations", label: "Annotations" },
-        { name: "dateRange", label: "Date Range" },
+        { name: "dateRange", label: "Updated Date Range" },
         { name: "name", label: "Name" },
         { name: "creator", label: "Owner" },
         { name: "tags", label: "Tags" },
