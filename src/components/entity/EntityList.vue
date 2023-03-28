@@ -966,13 +966,22 @@ export default {
                 self.sharedService.erorrToastConfig
               );
             }
-            self.showLoader = true;
-            self.assignedRoles = {};
           }
+          self.showLoader = true;
+          self.assignedRoles = {};
           const assignRolesResponse = await self.accessControlService.retrieveRoleAssignments(
             self.unitEntity.currentUnit
           );
           self.assignedRoles = assignRolesResponse.data;
+          self.idsExcluding = self.assignedRoles.users.map((user) => user.id);
+          self.accessControlService
+            .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
+            .then((response) => {
+              self.userList = self.sharedService.sortByAlphabatical(
+                response.data,
+                "username"
+              );
+            });
           self.newRoles = [];
           self.showLoader = false;
         })
