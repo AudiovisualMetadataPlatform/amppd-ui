@@ -16,7 +16,9 @@
               baseUrl === 'file' && entity.mediaType === 'video'
                 ? 'extra-padding mb-5'
                 : unitEntity.currentUnit
-                ? 'mb-5'
+                ? showRoles
+                  ? 'mb-3'
+                  : 'mb-5'
                 : 'mb-3'
             "
           >
@@ -436,39 +438,69 @@
                     </div>
                   </div>
                 </div>
-
-                <div
-                  v-if="
-                    (unitEntity.currentUnit &&
-                      baseUrl === 'unit' &&
-                      accessControl._unit._update) ||
-                      (baseUrl === 'collection' &&
-                        accessControl._collection._update) ||
-                      (baseUrl === 'item' && accessControl._item._update) ||
-                      (baseUrl === 'file' && accessControl._primaryfile._update)
-                  "
-                  class="w-100 text-right p-0 expand-ani"
-                >
-                  <!-- <div v-if="!showEdit"> -->
-                  <!-- <button
+                <div class="d-flex float-right">
+                  <a
+                    v-if="unitEntity.currentUnit && baseUrl === 'unit'"
+                    class="btn btn-lg btn-outline-primary mr-2"
+                    :class="{ activeBtn: showRoles }"
+                    id="pills-assign-tab"
+                    data-toggle="pill"
+                    role="tab"
+                    aria-controls="pills-assign"
+                    aria-selected="false"
+                    @click="handleAssignRolesButton"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-gear"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+                      />
+                      <path
+                        d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
+                      />
+                    </svg>
+                    Assign Roles
+                  </a>
+                  <div
+                    v-if="
+                      (unitEntity.currentUnit &&
+                        baseUrl === 'unit' &&
+                        accessControl._unit._update) ||
+                        (baseUrl === 'collection' &&
+                          accessControl._collection._update) ||
+                        (baseUrl === 'item' && accessControl._item._update) ||
+                        (baseUrl === 'file' &&
+                          accessControl._primaryfile._update)
+                    "
+                    class="w-100 text-right p-0 expand-ani"
+                  >
+                    <!-- <div v-if="!showEdit"> -->
+                    <!-- <button
                     class="btn btn-outline btn-lg btn-edit mr-2"
                     type="button"
                     @click="onCancel"
-                  >Cancel</button>-->
-                  <button
-                    class="btn btn-primary btn-lg btn-edit"
-                    type="button"
-                    @click="onUpdateEntityDetails"
-                  >
-                    Save
-                  </button>
-                  <!-- </div> -->
-                  <!-- <button
+                    >Cancel</button>-->
+                    <button
+                      class="btn btn-primary btn-lg btn-edit"
+                      type="button"
+                      @click="onUpdateEntityDetails"
+                    >
+                      Save
+                    </button>
+                    <!-- </div> -->
+                    <!-- <button
                     class="btn btn-primary btn-lg btn-edit"
                     type="button"
                     @click="showEdit = !showEdit"
                     v-if="showEdit"
-                  >Edit</button>-->
+                    >Edit</button>-->
+                  </div>
                 </div>
               </form>
             </div>
@@ -492,11 +524,107 @@
               baseUrl !== 'item' && baseUrl !== 'file' && unitEntity.currentUnit
             "
           >
-            <!-- Title ends here -->
+            <div
+              v-if="showRoles"
+              class="tab-pane expandOpen"
+              :class="{ 'mb-5': showRoles }"
+              id="pills-assign"
+              role="tabpanel"
+              aria-labelledby="pills-assign-tab"
+            >
+              <div class="card card-body marg-t-0 bg-light-gray-1 b-card-spl">
+                <div class="form-group">
+                  <label for="formGroupExampleInpu bold">Select User</label>
+                  <div data-v-4ae6b2fb="" class="">
+                    <div data-v-4ae6b2fb="" class="input-group mb-3">
+                      <input
+                        data-v-4ae6b2fb=""
+                        type="text"
+                        id="exampleFormControlInput100"
+                        placeholder="Select User"
+                        autocomplete="off"
+                        class="form-control"
+                        list="userInputList"
+                        v-model="selectedUser"
+                      />
+                      <datalist id="userInputList">
+                        <option
+                          v-for="user in userList"
+                          :key="user.id"
+                          :value="user.username"
+                          >{{ `${user.firstName} ${user.lastName}` }}</option
+                        >
+                      </datalist>
+
+                      <div data-v-4ae6b2fb="" class="input-group-append">
+                        <button
+                          class="btn add-btn"
+                          type="button"
+                          data-toggle="collapse"
+                          aria-expanded="false"
+                          aria-controls="collapseAddUser"
+                          v-on:click="handleAddUser"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <ul class="list-group marg-t-2 mb-2 role-assign-ul">
+                    <li
+                      class="list-group-item d-flex"
+                      v-for="(user, userIndex) in assignedRoles.users"
+                      :key="userIndex"
+                    >
+                      <div class="bold pad-r-3 u-width">
+                        {{ user.username }}
+                      </div>
+                      <div
+                        class="form-check form-check-inline mr-4"
+                        v-for="(role, roleIndex) in assignedRoles.roles"
+                        :key="role.id"
+                      >
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          :id="`inlineCheckbox-${userIndex}-${roleIndex}`"
+                          v-on:click="
+                            handleAssignRoles(user, role, userIndex, roleIndex)
+                          "
+                          :checked="
+                            (assignedRoles['assignments'] &&
+                              assignedRoles['assignments'][userIndex] &&
+                              assignedRoles['assignments'][userIndex][
+                                roleIndex
+                              ]) ||
+                              false
+                          "
+                          :disabled="role.level <= assignedRoles['level']"
+                        />
+                        <label
+                          class="form-check-label"
+                          :for="`inlineCheckbox-${userIndex}-${roleIndex}`"
+                          >{{ role.name }}</label
+                        >
+                      </div>
+                    </li>
+                  </ul>
+                  <div class="float-right">
+                    <button
+                      type="submit"
+                      class="marg-tb-1 btn btn-primary btn-save"
+                      @click="handleAssignRolesSaveBtn"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <b-card class="m-0 text-left expand-ani">
               <!-- Title - Listing page -->
               <!-- <h3 v-if="baseUrl == 'unit' && !purpose">My Units</h3>
-                            <h3 v-else-if="baseUrl == 'collection' && !purpose">My Collections</h3>-->
+                <h3 v-else-if="baseUrl == 'collection' && !purpose">My Collections</h3>-->
 
               <!-- Title - Unit Details page  -->
               <div class="d-flex w-100" v-if="baseUrl == 'unit'">
@@ -740,6 +868,12 @@ export default {
       isDataChanged: false,
       defaultUnitId: "",
       unitEntity: { unitList: [], currentUnit: "" },
+      showRoles: false,
+      assignedRoles: {},
+      newRoles: [],
+      userList: [],
+      idsExcluding: [],
+      selectedUser: "",
     };
   },
   computed: {
@@ -792,8 +926,91 @@ export default {
     },
   },
   methods: {
+    handleAddUser() {
+      const self = this;
+      self.assignedRoles.users.splice(0, 0, { username: self.selectedUser });
+      let role = [];
+      for (let i = 0; i < self.assignedRoles.roles.length; i++) {
+        role.push(false);
+      }
+      self.assignedRoles.assignments.splice(0, 0, role);
+      const getUser = self.userList.find(
+        ({ username }) => username === self.selectedUser
+      );
+      self.selectedUser = "";
+      self.idsExcluding.push(getUser.id);
+      self.accessControlService
+        .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
+        .then((response) => {
+          self.userList = self.sharedService.sortByAlphabatical(
+            response.data,
+            "username"
+          );
+        });
+    },
+    async handleAssignRolesSaveBtn() {
+      const self = this;
+      self.accessControlService
+        .updateRoleAssignments(self.unitEntity.currentUnit, self.newRoles)
+        .then(async (res) => {
+          if (res.added.length || res.deleted.length) {
+            self.$bvToast.toast(
+              "Assign roles have been updated successfully.",
+              self.sharedService.successToastConfig
+            );
+          }
+          if (res.failed.length) {
+            for (let i = 0; i < res.failed.length; i++) {
+              self.$bvToast.toast(
+                `Failed to update ${res.failed[i].roleName} role for ${res.failed[i].username}`,
+                self.sharedService.erorrToastConfig
+              );
+            }
+            self.showLoader = true;
+            self.assignedRoles = {};
+          }
+          const assignRolesResponse = await self.accessControlService.retrieveRoleAssignments(
+            self.unitEntity.currentUnit
+          );
+          self.assignedRoles = assignRolesResponse.data;
+          self.newRoles = [];
+          self.showLoader = false;
+        })
+        .catch((e) => {
+          self.showLoader = false;
+          self.$bvToast.toast(
+            "Oops! Something went wrong.",
+            self.sharedService.erorrToastConfig
+          );
+          console.log(e);
+        });
+    },
+    handleAssignRoles(user, role, userIndex, roleIndex) {
+      const self = this;
+      self.assignedRoles["assignments"][userIndex][roleIndex] = !self
+        .assignedRoles["assignments"][userIndex][roleIndex];
+      let indexNewRoles = self.newRoles.findIndex(
+        (element) =>
+          element.username === user.username && element.roleName === role.name
+      );
+      if (indexNewRoles > -1) {
+        self.newRoles[indexNewRoles]["assigned"] =
+          self.assignedRoles["assignments"][userIndex][roleIndex];
+      } else {
+        self.newRoles.push({
+          username: user.username,
+          roleName: role.name,
+          assigned: self.assignedRoles["assignments"][userIndex][roleIndex],
+        });
+      }
+    },
+    handleAssignRolesButton() {
+      const self = this;
+      self.showRoles = !self.showRoles;
+    },
     onUnitChange() {
       const self = this;
+      self.showRoles = false;
       //Removing expand animation css
       const expandAniHtml = document.getElementsByClassName("expand-ani");
       if (expandAniHtml.length === 4)
@@ -947,17 +1164,38 @@ export default {
     async getUnitDetails() {
       const self = this;
       self.showLoader = true;
-      const unitDetails = await self.entityService.getUnitDetails(
-        self.unitEntity.currentUnit,
-        self
-      );
-      if (unitDetails.response) {
-        self.selectedUnit = unitDetails.response;
-        self.entity = unitDetails.response;
-        this.getUnitCollections();
+      try {
+        const unitDetails = await self.entityService.getUnitDetails(
+          self.unitEntity.currentUnit,
+          self
+        );
+        //Assign Roles
+        const assignRolesResponse = await self.accessControlService.retrieveRoleAssignments(
+          self.unitEntity.currentUnit
+        );
+        self.assignedRoles = assignRolesResponse.data;
+        self.idsExcluding = self.assignedRoles.users.map((user) => user.id);
+        self.accessControlService
+          .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
+          .then((response) => {
+            self.userList = self.sharedService.sortByAlphabatical(
+              response.data,
+              "username"
+            );
+          });
+
+        if (unitDetails.response) {
+          self.selectedUnit = unitDetails.response;
+          self.entity = unitDetails.response;
+          this.getUnitCollections();
+          self.showLoader = false;
+        } else {
+          self.showLoader = false;
+        }
         self.showLoader = false;
-      } else {
+      } catch (error) {
         self.showLoader = false;
+        console.log(error);
       }
     },
     async getUnitCollections() {
@@ -1189,5 +1427,31 @@ video {
     transform: scale3d(1, 1, 1);
     opacity: 1;
   }
+}
+
+.activeBtn {
+  background: #153c4d !important;
+  border-color: #153c4d !important;
+  color: #fff !important;
+}
+.add-btn {
+  background-color: #efefef;
+  border: 1px solid #efefef;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.list-group .list-group-item:nth-child(2n) {
+  background-color: rgb(253, 234, 215);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+.list-group .list-group-item:nth-child(n) {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+.role-assign-ul {
+  max-height: 25rem !important;
+  overflow-y: auto;
+}
+.u-width {
+  min-width: 14rem;
 }
 </style>

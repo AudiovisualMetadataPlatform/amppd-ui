@@ -22,6 +22,22 @@ export default class AccessControlService extends BaseService {
     return super.get_auth(`/permissions/isAdmin`);
   }
 
+  async findActiveUsersByNameStartingIdsExcluding(keyword, idsExcluding) {
+    return super.get_auth(
+      `/users/active?nameStarting=${keyword}&idsExcluding=${idsExcluding}`
+    );
+  }
+
+  async retrieveRoleAssignments(unitId) {
+    return super.get_auth(`/roleAssignments?unitId=${unitId}`);
+  }
+
+  async updateRoleAssignments(unitId, body) {
+    return await super
+      .post_auth(`/roleAssignments?unitId=${unitId}`, body)
+      .then((result) => result.data);
+  }
+
   /* async hasPermission(action_type, target_type) {
     const actionType = env.getEnv(action_type);
     const targetType = env.getEnv(target_type);

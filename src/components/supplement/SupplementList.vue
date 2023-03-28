@@ -50,10 +50,7 @@
                         <h3>{{ elem.name }}</h3>
                         <p>{{ elem.description }}</p>
                       </div>
-                      <div
-                        class="col-1 text-right"
-                        v-if="accessControl._supplement._read"
-                      >
+                      <div class="col-1 text-right">
                         <div>
                           <button
                             class="btn btn-primary btn"
