@@ -278,6 +278,7 @@
 
 <script>
 import { sync } from "vuex-pathify";
+import { env } from "@/helpers/env";
 import UnitService from "@/service/unit-service";
 import ItemService from "@/service/item-service";
 import CollectionService from "@/service/collection-service";
@@ -433,6 +434,15 @@ export default {
                   default:
                     break;
                 }
+                self.accessControlService
+                  .getHasPermission(
+                    env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"),
+                    env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT"),
+                    self.supplement.fileDetails.unit
+                  )
+                  .then((response) => {
+                    self.accessControl._supplement._update = response.data;
+                  });
               });
           });
       } catch (error) {
