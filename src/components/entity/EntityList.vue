@@ -16,7 +16,7 @@
               baseUrl === 'file' && entity.mediaType === 'video'
                 ? 'extra-padding mb-5'
                 : unitEntity.currentUnit
-                ? showRoles
+                ? showAssignRoles || showRolesSettings
                   ? 'mb-3'
                   : 'mb-5'
                 : 'mb-3'
@@ -442,7 +442,36 @@
                   <a
                     v-if="unitEntity.currentUnit && baseUrl === 'unit'"
                     class="btn btn-lg btn-outline-primary mr-2"
-                    :class="{ activeBtn: showRoles }"
+                    :class="{ activeBtn: showRolesSettings }"
+                    id="pills-unit-roles-tab"
+                    data-toggle="pill"
+                    role="tab"
+                    aria-controls="pills-unit-roles-settings"
+                    aria-selected="false"
+                    @click="handleRolesSettingBtn"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-person-check-fill"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"
+                      />
+                      <path
+                        d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+                      />
+                    </svg>
+                    Unit Roles Settings
+                  </a>
+                  <a
+                    v-if="unitEntity.currentUnit && baseUrl === 'unit'"
+                    class="btn btn-lg btn-outline-primary mr-2"
+                    :class="{ activeBtn: showAssignRoles }"
                     id="pills-assign-tab"
                     data-toggle="pill"
                     role="tab"
@@ -525,9 +554,9 @@
             "
           >
             <div
-              v-if="showRoles"
+              v-if="showAssignRoles"
               class="tab-pane expandOpen"
-              :class="{ 'mb-5': showRoles }"
+              :class="{ 'mb-5': showAssignRoles }"
               id="pills-assign"
               role="tabpanel"
               aria-labelledby="pills-assign-tab"
@@ -614,6 +643,82 @@
                       type="submit"
                       class="marg-tb-1 btn btn-primary btn-save"
                       @click="handleAssignRolesSaveBtn"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              v-if="showRolesSettings"
+              :class="{ 'mb-5': showRolesSettings }"
+              class="tab-pane expandOpen"
+              id="pills-unit-roles-settings"
+              role="tabpanel"
+              aria-labelledby="pills-unit-roles-tab"
+            >
+              <div class="card card-body marg-t-0">
+                <div class="table-responsive-lg">
+                  <table id="myTable" class="table w-100 permissions">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="">Transaction</th>
+                        <th
+                          scope="col"
+                          class="checkbox slim-col-6 text-center"
+                          v-for="roleName in settingsRoles.unitRoleNames"
+                          :key="roleName"
+                        >
+                          {{ roleName }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody
+                      v-for="(actions, actionLabel, index) in settingsRoles[
+                        'groupedActions'
+                      ]"
+                      :key="index"
+                      class="action-table"
+                    >
+                      <tr>
+                        <td
+                          colspan="7"
+                          class="table-primary hdr-2 slim-col-1 font-weight-bold"
+                        >
+                          <span>{{ actionLabel }}</span>
+                        </td>
+                      </tr>
+                      <tr v-for="action in actions" :key="action.id">
+                        <td class="col-8">
+                          <span>{{ action.name }}</span>
+                        </td>
+                        <td
+                          v-for="(roleName,
+                          roleNameIndex) in settingsRoles.unitRoleNames"
+                          :key="roleNameIndex"
+                          :class="
+                            `checkbox col-${4 /
+                              settingsRoles.unitRoleNames.length} text-center`
+                          "
+                        >
+                          <span>
+                            <label class="visually-hidden"></label>
+                            <input
+                              class=""
+                              type="checkbox"
+                              :checked="getRoleValue(roleName, action)"
+                            />
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="float-right">
+                    <button
+                      type="submit"
+                      class="marg-tb-1 btn btn-primary btn-save"
+                      disabled
                     >
                       Save
                     </button>
@@ -868,8 +973,10 @@ export default {
       isDataChanged: false,
       defaultUnitId: "",
       unitEntity: { unitList: [], currentUnit: "" },
-      showRoles: false,
+      showAssignRoles: false,
+      showRolesSettings: false,
       assignedRoles: {},
+      settingsRoles: {},
       newRoles: [],
       userList: [],
       idsExcluding: [],
@@ -926,6 +1033,24 @@ export default {
     },
   },
   methods: {
+    getRoleValue(roleName, action) {
+      const self = this;
+      let actionRes = false;
+      self.settingsRoles.roles.find(({ name, actions }) => {
+        if (name === roleName) {
+          actions.find(({ targetType, actionType }) => {
+            if (
+              targetType === action.targetType &&
+              actionType === action.actionType
+            ) {
+              actionRes = true;
+            }
+          });
+        }
+      });
+
+      return actionRes;
+    },
     handleAddUser() {
       const self = this;
       self.assignedRoles.users.splice(0, 0, { username: self.selectedUser });
@@ -1015,11 +1140,18 @@ export default {
     },
     handleAssignRolesButton() {
       const self = this;
-      self.showRoles = !self.showRoles;
+      self.showRolesSettings = false;
+      self.showAssignRoles = !self.showAssignRoles;
+    },
+    handleRolesSettingBtn() {
+      const self = this;
+      self.showAssignRoles = false;
+      self.showRolesSettings = !self.showRolesSettings;
     },
     onUnitChange() {
       const self = this;
-      self.showRoles = false;
+      self.showAssignRoles = false;
+      self.showRolesSettings = false;
       //Removing expand animation css
       const expandAniHtml = document.getElementsByClassName("expand-ani");
       if (expandAniHtml.length === 4)
@@ -1192,6 +1324,22 @@ export default {
               "username"
             );
           });
+
+        //Roles Settings
+        const settingsRolesResponse = await self.accessControlService.retrieveRoleActionConfig(
+          self.unitEntity.currentUnit
+        );
+        self.settingsRoles = settingsRolesResponse.data;
+        let groupBy = function(xs, key) {
+          return xs.reduce(function(rv, x) {
+            (rv[x[key]] = rv[x[key]] || []).push(x);
+            return rv;
+          }, {});
+        };
+        self.settingsRoles["groupedActions"] = groupBy(
+          self.settingsRoles.actions,
+          "targetType"
+        );
 
         if (unitDetails.response) {
           self.selectedUnit = unitDetails.response;
@@ -1466,5 +1614,16 @@ video {
 }
 .u-width {
   min-width: 14rem;
+}
+.permissions td {
+  padding: 6px;
+}
+.table-primary,
+.table-primary > th,
+.table-primary > td {
+  background-color: #fdead7;
+}
+.action-table {
+  border-top: none !important;
 }
 </style>
