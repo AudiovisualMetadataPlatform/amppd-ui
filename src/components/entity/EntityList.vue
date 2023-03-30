@@ -1449,6 +1449,10 @@ video {
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
+.add-btn:hover {
+  color: #f4871e;
+  border: 1px solid #f4871e;
+}
 .list-group .list-group-item:nth-child(2n) {
   background-color: rgb(253, 234, 215);
   border: 1px solid rgba(0, 0, 0, 0.125);
