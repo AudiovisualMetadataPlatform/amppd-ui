@@ -38,6 +38,10 @@ export default class AccessControlService extends BaseService {
       .then((result) => result.data);
   }
 
+  async retrieveRoleActionConfig(unitId) {
+    return super.get_auth(`/roles/config?unitId=${unitId}`);
+  }
+
   /* async hasPermission(action_type, target_type) {
     const actionType = env.getEnv(action_type);
     const targetType = env.getEnv(target_type);
