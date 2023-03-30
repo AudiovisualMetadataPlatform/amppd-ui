@@ -587,11 +587,7 @@
 
                       <div data-v-4ae6b2fb="" class="input-group-append">
                         <button
-                          class="btn add-btn"
-                          type="button"
-                          data-toggle="collapse"
-                          aria-expanded="false"
-                          aria-controls="collapseAddUser"
+                          class="marg-tb-1 btn btn-primary btn-save add-btn"
                           v-on:click="handleAddUser"
                         >
                           Add
@@ -1592,15 +1588,10 @@ video {
   color: #fff !important;
 }
 .add-btn {
-  background-color: #efefef;
-  border: 1px solid #efefef;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
-.add-btn:hover {
-  color: #f4871e;
-  border: 1px solid #f4871e;
-}
+
 .list-group .list-group-item:nth-child(2n) {
   background-color: rgb(253, 234, 215);
   border: 1px solid rgba(0, 0, 0, 0.125);
