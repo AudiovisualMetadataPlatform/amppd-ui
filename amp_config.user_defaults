@@ -2,16 +2,31 @@
 ui:
     # UI configuration.
     user_guide_url: https://example.edu/AMP/
-    unit: AMP Pilot Unit
 
     user_guide:
+        AMP_MAIL_TO: mailto:amp@iu.edu
         AMP_USER_GUIDE: https://uisapp2.iu.edu/confluence-prd/display/AMP/AMP+User+Guide
-        COLLECTIONS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Collections 
-        DELIVERABLES: https://uisapp2.iu.edu/confluence-prd/display/AMP/Deliverables 
-        ITEMS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Items 
-        PRIMARY_FILE: https://uisapp2.iu.edu/confluence-prd/display/AMP/Primary+File 
-        THE_DASHBOARD: https://uisapp2.iu.edu/confluence-prd/display/AMP/The+Dashboard 
-        UNITS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Units 
-        UPLOADING_FILES_VIA_BATCH_INGEST: https://uisapp2.iu.edu/confluence-prd/display/AMP/Uploading+Files+via+Batch+Ingest 
-        WORKFLOW_SUBMISSIONS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Workflow+Submissions    
-
+        WORKFLOW_CREATING: https://uisapp2.iu.edu/confluence-prd/display/AMP/Tips+for+Creating+a+Workflow
+        WORKFLOW_SUBMISSIONS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Workflow+Submissions
+        THE_DASHBOARD: https://uisapp2.iu.edu/confluence-prd/display/AMP/Dashboard
+        UPLOADING_FILES_VIA_BATCH_INGEST: https://uisapp2.iu.edu/confluence-prd/display/AMP/Uploading+Files+via+Batch+Ingest
+        DELIVERABLES: https://uisapp2.iu.edu/confluence-prd/display/AMP/Deliverables
+        UNITS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Units
+        COLLECTIONS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Collections
+        ITEMS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Items
+        PRIMARY_FILE: https://uisapp2.iu.edu/confluence-prd/display/AMP/Primary+File
+        WORKFLOW_SUBMISSIONS_ERROR_HELP: https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId: 698746670
+        MGM_USER_GUIDE: https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId: 683706400
+        MGM_EXTRACT_AUDIO: https://uisapp2.iu.edu/confluence-prd/display/AMP/Extract+Audio
+        MGM_APPLAUSE_DETECTION: https://uisapp2.iu.edu/confluence-prd/display/AMP/Applause++Detection
+        MGM_AWS_TRANSCRIBE_STT: https://uisapp2.iu.edu/confluence-prd/display/AMP/Speech-to-text
+        MGM_AWS_COMPREHEND_NER: https://uisapp2.iu.edu/confluence-prd/display/AMP/Named+Entity+Recognition+-+NER
+        MGM_TESSERACT_VIDEO_OCR: https://uisapp2.iu.edu/confluence-prd/display/AMP/Video+Optical+Character+Recognition+-+VOCR
+        MGM_AZURE_VIDEO_INDEXER: https://uisapp2.iu.edu/confluence-prd/display/AMP/Azure+Video+Indexer
+        MGM_PYSCENEDETECT_SHOT_DETECTION: https://uisapp2.iu.edu/confluence-prd/display/AMP/Shot+Detection
+        MGM_DLIB_FACE_RECOGNITION: https://uisapp2.iu.edu/confluence-prd/display/AMP/Facial+Recognition
+        MGM_AZURE_VIDEO_OCR: https://uisapp2.iu.edu/confluence-prd/display/AMP/Video+Optical+Character+Recognition+-+VOCR
+        MGM_CONTACT_SHEETS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Contact+Sheets
+        MGM_SPACY_NER: https://uisapp2.iu.edu/confluence-prd/display/AMP/Named+Entity+Recognition+-+NER
+        MGM_GENTLE_FORCED_ALIGNMENT: https://uisapp2.iu.edu/confluence-prd/display/AMP/Forced+Alignment
+        MGM_EVALUATION: https://uisapp2.iu.edu/confluence-prd/display/AMP/MGM+Evaluation
