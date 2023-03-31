@@ -175,6 +175,13 @@ export default {
         );
         const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
 
+        //Access Control
+        await self.accessControlService.permittedActions(self);
+        let isAdminResponse = await self.accessControlService.getIsAdmin();
+        self.accessControl._isAdmin = isAdminResponse.data;
+        await self.accessControlService.isAdmin(self);
+        self.accessControl._nav._ingestBatch = true;
+
         //BATCH INGEST: checking permission
         if (uEntity && uEntity.currentUnit)
           self.accessControlService.checkAccessControl(this);

@@ -115,6 +115,36 @@ describe('EntityList.vue', () => {
             itemConfigs: {
                 externalSources: [],
                 taskManagers: []
+            },
+            accessControl:{
+                _unit: {
+                    _create: false,
+                    _read: false,
+                    _update: false,
+                    _delete: false,
+                },
+                _collection: {
+                    _create: false,
+                    _read: false,
+                    _update: false,
+                    _activate: false,
+                    _delete: false,
+                },
+                _item: {
+                    _create: false,
+                    _read: false,
+                    _update: false,
+                    _delete: false,
+                },
+                _primaryfile: {
+                    _create: false,
+                    _read: false,
+                    _update: false,
+                    _delete: false,
+                },
+                _primaryfilemedia: {
+                    _read: false,
+                },
             }
         }
     };

@@ -145,19 +145,59 @@ const state = {
   ],
 
   accessControl: {
+    permittedActions: [],
+    _isAdmin: false,
+
     _unit: {
       _create: false,
       _read: false,
-      _list: false,
       _update: false,
       _delete: false,
     },
     _collection: {
       _create: false,
       _read: false,
-      _list: false,
       _update: false,
       _activate: false,
+      _delete: false,
+    },
+    _item: {
+      _create: false,
+      _read: false,
+      _update: false,
+      _delete: false,
+    },
+    _primaryfile: {
+      _create: false,
+      _read: false,
+      _update: false,
+      _delete: false,
+    },
+    _primaryfilemedia: {
+      _read: false,
+    },
+    _supplement: {
+      _create: false,
+      _read: false,
+      _update: false,
+      _move: false,
+      _delete: false,
+    },
+    _workflowresult: {
+      _create: false,
+      _read: false,
+      _export: false,
+      _update: false,
+      _delete: false,
+    },
+    _workflowresult_restricted: {
+      _create: false,
+    },
+    _workflow: {
+      _create: false,
+      _read: false,
+      _update: false,
+      _restrict: false,
       _delete: false,
     },
     _nav: {

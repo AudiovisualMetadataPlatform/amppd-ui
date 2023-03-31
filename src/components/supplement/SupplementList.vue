@@ -22,6 +22,7 @@
                 >
                   <button
                     class="btn btn-primary btn-lg btn-edit mr-2"
+                    v-if="accessControl._supplement._create"
                     type="button"
                     @click="onCreate()"
                   >
@@ -112,6 +113,7 @@
 </template>
 
 <script>
+import { sync } from "vuex-pathify";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 import SupplementService from "@/service/supplement-service";
@@ -137,6 +139,7 @@ export default {
     };
   },
   computed: {
+    accessControl: sync("accessControl"),
     baseUrl() {
       const self = this;
       if (

@@ -25,6 +25,7 @@
               <input
                 type="text"
                 class="w-100 form-control"
+                :disabled="!accessControl._primaryfile._update"
                 v-model="file.name"
               />
             </td>
@@ -40,6 +41,7 @@
               <input
                 type="text"
                 class="w-100 form-control"
+                :disabled="!accessControl._primaryfile._update"
                 v-model="file.description"
               />
             </td>
@@ -47,7 +49,7 @@
               <button
                 class="btn btn-primary btn float-right"
                 @click="onView(file)"
-                v-if="!file.file"
+                v-if="!file.file && accessControl._primaryfile._read"
               >
                 View
               </button>
@@ -60,6 +62,7 @@
               </button>
               <button
                 class="btn btn-link add-remove float-right mr-1"
+                v-if="accessControl._primaryfile._delete"
                 @click="removeFile(index)"
               >
                 <span v-html="removeIcon" class="pr-1"></span>Remove file
@@ -85,7 +88,12 @@
         </div>
       </div>
 
-      <div class="mt-3 panel panel-default" @dragover.prevent @drop.prevent>
+      <div
+        class="mt-3 panel panel-default"
+        v-if="accessControl._item._update"
+        @dragover.prevent
+        @drop.prevent
+      >
         <div class="panel-heading">
           <strong>Upload files</strong>
         </div>
@@ -166,6 +174,7 @@ export default {
     selectedCollection: sync("selectedCollection"),
     primaryFiles: sync("primaryFiles"),
     selectedFile: sync("selectedFile"),
+    accessControl: sync("accessControl"),
     isCreatePage() {
       return window.location.hash.toLowerCase().indexOf("add-item") > -1;
     },

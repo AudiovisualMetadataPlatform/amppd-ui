@@ -9,11 +9,12 @@
             class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
             data-toggle="modal"
             data-target=".bd-example-modal-lg-2"
-            disabled
+            @click="handleWorkflowSearch()"
           >
             Search Workflows
           </button>
           <button
+            v-if="accessControl._workflow._create"
             id="btn-workflow-create"
             class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
             @click="handleWorkflowCreation()"
@@ -37,7 +38,10 @@
               <!-- <p contenteditable="true">{{ workflow.description }}</p> -->
               <span>{{ workflow.annotations[0] }}</span>
             </div>
-            <div class="col-lg-2 text-right">
+            <div
+              v-if="accessControl._workflow._update"
+              class="col-lg-2 text-right"
+            >
               <button
                 class="btn btn-primary btn marg-t-5"
                 href="#"
@@ -198,15 +202,25 @@
         <!-- end workflow // -->
       </b-card>
     </main>
+    <Search
+      searchType="workflow-search"
+      @handleSearchWorkflows="searchWorkflows"
+      :loading="loading"
+    />
   </div>
 </template>
 <script>
+import { sync } from "vuex-pathify";
 import WorkflowService from "../../service/workflow-service";
 import config from "../../assets/constants/common-contant.js";
 import SharedService from "../../service/shared-service";
 import { env } from "../../helpers/env.js";
+import Search from "@/components/shared/Search.vue";
 export default {
   name: "WorkflowList",
+  components: {
+    Search,
+  },
   data() {
     return {
       listOfWorkflows: [],
@@ -214,9 +228,39 @@ export default {
       sharedService: new SharedService(),
       rightArrowSvg: config.common.icons["right_arrow"],
       activeWorkflowSession: "",
+      loading: false,
     };
   },
+  computed: {
+    accessControl: sync("accessControl"),
+  },
   methods: {
+    searchWorkflows(searchFields) {
+      const self = this;
+      const name = searchFields.name;
+      const creator = searchFields.creator;
+      const fromDate = new Date(searchFields.dateRange.fromDate);
+      const toDate = new Date(searchFields.dateRange.toDate);
+      let dateRange = [];
+      if (searchFields.dateRange.fromDate || searchFields.dateRange.toDate) {
+        dateRange = [
+          new Date(fromDate.setHours(0, 0, 0, 0)).toISOString(),
+          new Date(toDate.setHours(23, 59, 59, 999)).toISOString(),
+        ];
+      }
+      const annotations = searchFields.annotations;
+      const tags = searchFields.tags;
+      self.workflowService
+        .getFilteredWorkflows(name, creator, dateRange, annotations, tags)
+        .then((response) => {
+          self.listOfWorkflows = self.sharedService.sortByAlphabatical(
+            response.data.rows
+          );
+        })
+        .catch((e) => {
+          console.log(e, "error");
+        });
+    },
     getWorkflowList() {
       const self = this;
       self.workflowService
@@ -255,6 +299,9 @@ export default {
         workflowIndex,
         self.listOfWorkflows[workflowIndex]
       );
+    },
+    async handleWorkflowSearch() {
+      this.$bvModal.show("modal-lg");
     },
     async handleWorkflowCreation() {
       const self = this;

@@ -257,6 +257,7 @@ export default {
         { label: "Workflow", field: "workflowName" },
         { label: "Step", field: "workflowStep" },
         { label: "Output", field: "outputName" },
+        { label: "Alias", field: "outputLabel" },
         { label: "Final", field: "isFinal" },
       ],
       searchQuery: {

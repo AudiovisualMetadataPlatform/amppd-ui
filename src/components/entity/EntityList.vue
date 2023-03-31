@@ -16,7 +16,9 @@
               baseUrl === 'file' && entity.mediaType === 'video'
                 ? 'extra-padding mb-5'
                 : unitEntity.currentUnit
-                ? 'mb-5'
+                ? showAssignRoles || showRolesSettings
+                  ? 'mb-3'
+                  : 'mb-5'
                 : 'mb-3'
             "
           >
@@ -35,7 +37,12 @@
               </button>
             </h1>
             <div class="primary-file">
-              <div class="media-player" v-if="baseUrl === 'file'">
+              <div
+                class="media-player"
+                v-if="
+                  baseUrl === 'file' && accessControl._primaryfilemedia._read
+                "
+              >
                 <div v-if="entity.mediaSource">
                   <mediaelement
                     ref="vPlay"
@@ -70,7 +77,13 @@
                   ></textarea>
                 </b-collapse>
               </div>
-              <form name="unitForm" class="form">
+              <form
+                name="unitForm"
+                class="form"
+                :class="{
+                  'w-100': !accessControl._primaryfilemedia._read,
+                }"
+              >
                 <div v-if="baseUrl === 'file'">
                   <div class="col-12 text-left form-group p-0 flex-div">
                     <div style="width: 48%">
@@ -82,7 +95,11 @@
                         type="text"
                         class="form-control w-100"
                         v-model="entity.name"
-                        :disabled="showEdit"
+                        :disabled="
+                          showEdit ||
+                            (baseUrl === 'file' &&
+                              !accessControl._primaryfile._update)
+                        "
                         :class="{ 'error-border': submitted && !entity.name }"
                         @change="onInputChange"
                       />
@@ -102,7 +119,11 @@
                     <textarea
                       class="form-control w-100"
                       v-model="entity.description"
-                      :disabled="showEdit"
+                      :disabled="
+                        showEdit ||
+                          (baseUrl === 'file' &&
+                            !accessControl._primaryfile._update)
+                      "
                       @change="onInputChange"
                     ></textarea>
                   </div>
@@ -179,7 +200,12 @@
                         type="text"
                         class="form-control w-100"
                         v-model="entity.name"
-                        :disabled="showEdit"
+                        :disabled="
+                          showEdit ||
+                            (baseUrl === 'collection' &&
+                              !accessControl._collection._update) ||
+                            (baseUrl === 'item' && !accessControl._item._update)
+                        "
                         :class="{ 'error-border': submitted && !entity.name }"
                         @change="onInputChange"
                       />
@@ -192,7 +218,11 @@
                       <select
                         class="select custom-select w-100"
                         v-model="entity.taskManager"
-                        :disabled="showEdit"
+                        :disabled="
+                          showEdit ||
+                            (baseUrl === 'collection' &&
+                              !accessControl._collection._update)
+                        "
                         :class="{
                           'error-border': submitted && !entity.taskManager,
                         }"
@@ -228,7 +258,11 @@
                       v-model="entity.description"
                       :disabled="
                         showEdit ||
-                          (baseUrl === 'unit' && !accessControl._unit._update)
+                          (baseUrl === 'unit' &&
+                            !accessControl._unit._update) ||
+                          (baseUrl === 'collection' &&
+                            !accessControl._collection._update) ||
+                          (baseUrl === 'item' && !accessControl._item._update)
                       "
                       @change="onInputChange"
                     ></textarea>
@@ -376,6 +410,9 @@
                     /> -->
                       <select
                         class="select custom-select w-100"
+                        :disabled="
+                          baseUrl === 'item' && !accessControl._item._update
+                        "
                         v-model="entity.externalSource"
                         @change="onInputChange"
                       >
@@ -392,42 +429,107 @@
                         type="text"
                         class="form-control w-100"
                         v-model="entity.externalId"
-                        :disabled="showEdit"
+                        :disabled="
+                          showEdit ||
+                            (baseUrl === 'item' && !accessControl._item._update)
+                        "
                         @change="onInputChange"
                       />
                     </div>
                   </div>
                 </div>
-
-                <div
-                  v-if="
-                    (unitEntity.currentUnit &&
-                      baseUrl === 'unit' &&
-                      accessControl._unit._update) ||
-                      (unitEntity.currentUnit && baseUrl !== 'unit')
-                  "
-                  class="w-100 text-right p-0 expand-ani"
-                >
-                  <!-- <div v-if="!showEdit"> -->
-                  <!-- <button
+                <div class="d-flex float-right">
+                  <a
+                    v-if="unitEntity.currentUnit && baseUrl === 'unit'"
+                    class="btn btn-lg btn-outline-primary mr-2"
+                    :class="{ activeBtn: showRolesSettings }"
+                    id="pills-unit-roles-tab"
+                    data-toggle="pill"
+                    role="tab"
+                    aria-controls="pills-unit-roles-settings"
+                    aria-selected="false"
+                    @click="handleRolesSettingBtn"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-person-check-fill"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"
+                      />
+                      <path
+                        d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+                      />
+                    </svg>
+                    Unit Roles Settings
+                  </a>
+                  <a
+                    v-if="unitEntity.currentUnit && baseUrl === 'unit'"
+                    class="btn btn-lg btn-outline-primary mr-2"
+                    :class="{ activeBtn: showAssignRoles }"
+                    id="pills-assign-tab"
+                    data-toggle="pill"
+                    role="tab"
+                    aria-controls="pills-assign"
+                    aria-selected="false"
+                    @click="handleAssignRolesButton"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-gear"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+                      />
+                      <path
+                        d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
+                      />
+                    </svg>
+                    Assign Roles
+                  </a>
+                  <div
+                    v-if="
+                      (unitEntity.currentUnit &&
+                        baseUrl === 'unit' &&
+                        accessControl._unit._update) ||
+                        (baseUrl === 'collection' &&
+                          accessControl._collection._update) ||
+                        (baseUrl === 'item' && accessControl._item._update) ||
+                        (baseUrl === 'file' &&
+                          accessControl._primaryfile._update)
+                    "
+                    class="w-100 text-right p-0 expand-ani"
+                  >
+                    <!-- <div v-if="!showEdit"> -->
+                    <!-- <button
                     class="btn btn-outline btn-lg btn-edit mr-2"
                     type="button"
                     @click="onCancel"
-                  >Cancel</button>-->
-                  <button
-                    class="btn btn-primary btn-lg btn-edit"
-                    type="button"
-                    @click="onUpdateEntityDetails"
-                  >
-                    Save
-                  </button>
-                  <!-- </div> -->
-                  <!-- <button
+                    >Cancel</button>-->
+                    <button
+                      class="btn btn-primary btn-lg btn-edit"
+                      type="button"
+                      @click="onUpdateEntityDetails"
+                    >
+                      Save
+                    </button>
+                    <!-- </div> -->
+                    <!-- <button
                     class="btn btn-primary btn-lg btn-edit"
                     type="button"
                     @click="showEdit = !showEdit"
                     v-if="showEdit"
-                  >Edit</button>-->
+                    >Edit</button>-->
+                  </div>
                 </div>
               </form>
             </div>
@@ -451,11 +553,179 @@
               baseUrl !== 'item' && baseUrl !== 'file' && unitEntity.currentUnit
             "
           >
-            <!-- Title ends here -->
+            <div
+              v-if="showAssignRoles"
+              class="tab-pane expandOpen"
+              :class="{ 'mb-5': showAssignRoles }"
+              id="pills-assign"
+              role="tabpanel"
+              aria-labelledby="pills-assign-tab"
+            >
+              <div class="card card-body marg-t-0 bg-light-gray-1 b-card-spl">
+                <div class="form-group">
+                  <label for="formGroupExampleInpu bold">Select User</label>
+                  <div data-v-4ae6b2fb="" class="">
+                    <div data-v-4ae6b2fb="" class="input-group mb-3">
+                      <input
+                        data-v-4ae6b2fb=""
+                        type="text"
+                        id="exampleFormControlInput100"
+                        placeholder="Select User"
+                        autocomplete="off"
+                        class="form-control"
+                        list="userInputList"
+                        v-model="selectedUser"
+                      />
+                      <datalist id="userInputList">
+                        <option
+                          v-for="user in userList"
+                          :key="user.id"
+                          :value="user.username"
+                          >{{ `${user.firstName} ${user.lastName}` }}</option
+                        >
+                      </datalist>
+
+                      <div data-v-4ae6b2fb="" class="input-group-append">
+                        <button
+                          class="marg-tb-1 btn btn-primary btn-save add-btn"
+                          v-on:click="handleAddUser"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <ul class="list-group marg-t-2 mb-2 role-assign-ul">
+                    <li
+                      class="list-group-item d-flex"
+                      v-for="(user, userIndex) in assignedRoles.users"
+                      :key="userIndex"
+                    >
+                      <div class="bold pad-r-3 u-width">
+                        {{ user.username }}
+                      </div>
+                      <div
+                        class="form-check form-check-inline mr-4"
+                        v-for="(role, roleIndex) in assignedRoles.roles"
+                        :key="role.id"
+                      >
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          :id="`inlineCheckbox-${userIndex}-${roleIndex}`"
+                          v-on:click="
+                            handleAssignRoles(user, role, userIndex, roleIndex)
+                          "
+                          :checked="
+                            (assignedRoles['assignments'] &&
+                              assignedRoles['assignments'][userIndex] &&
+                              assignedRoles['assignments'][userIndex][
+                                roleIndex
+                              ]) ||
+                              false
+                          "
+                          :disabled="role.level <= assignedRoles['level']"
+                        />
+                        <label
+                          class="form-check-label"
+                          :for="`inlineCheckbox-${userIndex}-${roleIndex}`"
+                          >{{ role.name }}</label
+                        >
+                      </div>
+                    </li>
+                  </ul>
+                  <div class="float-right">
+                    <button
+                      type="submit"
+                      class="marg-tb-1 btn btn-primary btn-save"
+                      @click="handleAssignRolesSaveBtn"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              v-if="showRolesSettings"
+              :class="{ 'mb-5': showRolesSettings }"
+              class="tab-pane expandOpen"
+              id="pills-unit-roles-settings"
+              role="tabpanel"
+              aria-labelledby="pills-unit-roles-tab"
+            >
+              <div class="card card-body marg-t-0">
+                <div class="table-responsive-lg">
+                  <table id="myTable" class="table w-100 permissions">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="">Transaction</th>
+                        <th
+                          scope="col"
+                          class="checkbox slim-col-6 text-center"
+                          v-for="roleName in settingsRoles.unitRoleNames"
+                          :key="roleName"
+                        >
+                          {{ roleName }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody
+                      v-for="(actions, actionLabel, index) in settingsRoles[
+                        'groupedActions'
+                      ]"
+                      :key="index"
+                      class="action-table"
+                    >
+                      <tr>
+                        <td
+                          colspan="7"
+                          class="table-primary hdr-2 slim-col-1 font-weight-bold"
+                        >
+                          <span>{{ actionLabel }}</span>
+                        </td>
+                      </tr>
+                      <tr v-for="action in actions" :key="action.id">
+                        <td class="col-8">
+                          <span>{{ action.name }}</span>
+                        </td>
+                        <td
+                          v-for="(roleName,
+                          roleNameIndex) in settingsRoles.unitRoleNames"
+                          :key="roleNameIndex"
+                          :class="
+                            `checkbox col-${4 /
+                              settingsRoles.unitRoleNames.length} text-center`
+                          "
+                        >
+                          <span>
+                            <label class="visually-hidden"></label>
+                            <input
+                              class=""
+                              type="checkbox"
+                              :checked="getRoleValue(roleName, action)"
+                            />
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="float-right">
+                    <button
+                      type="submit"
+                      class="marg-tb-1 btn btn-primary btn-save"
+                      disabled
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <b-card class="m-0 text-left expand-ani">
               <!-- Title - Listing page -->
               <!-- <h3 v-if="baseUrl == 'unit' && !purpose">My Units</h3>
-                            <h3 v-else-if="baseUrl == 'collection' && !purpose">My Collections</h3>-->
+                <h3 v-else-if="baseUrl == 'collection' && !purpose">My Collections</h3>-->
 
               <!-- Title - Unit Details page  -->
               <div class="d-flex w-100" v-if="baseUrl == 'unit'">
@@ -489,6 +759,7 @@
                   <button
                     class="btn btn-primary btn-lg btn-edit mr-2"
                     type="button"
+                    v-if="accessControl._item._create"
                     @click="onCreateItem"
                   >
                     Create New Item
@@ -559,7 +830,8 @@
                             (elem.active &&
                               baseUrl === 'unit' &&
                               accessControl._collection._read) ||
-                              baseUrl !== 'unit'
+                              (baseUrl === 'collection' &&
+                                accessControl._item._read)
                           "
                           class="float-right"
                         >
@@ -697,6 +969,14 @@ export default {
       isDataChanged: false,
       defaultUnitId: "",
       unitEntity: { unitList: [], currentUnit: "" },
+      showAssignRoles: false,
+      showRolesSettings: false,
+      assignedRoles: {},
+      settingsRoles: {},
+      newRoles: [],
+      userList: [],
+      idsExcluding: [],
+      selectedUser: "",
     };
   },
   computed: {
@@ -749,8 +1029,125 @@ export default {
     },
   },
   methods: {
+    getRoleValue(roleName, action) {
+      const self = this;
+      let actionRes = false;
+      self.settingsRoles.roles.find(({ name, actions }) => {
+        if (name === roleName) {
+          actions.find(({ targetType, actionType }) => {
+            if (
+              targetType === action.targetType &&
+              actionType === action.actionType
+            ) {
+              actionRes = true;
+            }
+          });
+        }
+      });
+
+      return actionRes;
+    },
+    handleAddUser() {
+      const self = this;
+      self.assignedRoles.users.splice(0, 0, { username: self.selectedUser });
+      let role = [];
+      for (let i = 0; i < self.assignedRoles.roles.length; i++) {
+        role.push(false);
+      }
+      self.assignedRoles.assignments.splice(0, 0, role);
+      const getUser = self.userList.find(
+        ({ username }) => username === self.selectedUser
+      );
+      self.selectedUser = "";
+      self.idsExcluding.push(getUser.id);
+      self.accessControlService
+        .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
+        .then((response) => {
+          self.userList = self.sharedService.sortByAlphabatical(
+            response.data,
+            "username"
+          );
+        });
+    },
+    async handleAssignRolesSaveBtn() {
+      const self = this;
+      self.accessControlService
+        .updateRoleAssignments(self.unitEntity.currentUnit, self.newRoles)
+        .then(async (res) => {
+          if (res.added.length || res.deleted.length) {
+            self.$bvToast.toast(
+              "Assign roles have been updated successfully.",
+              self.sharedService.successToastConfig
+            );
+          }
+          if (res.failed.length) {
+            for (let i = 0; i < res.failed.length; i++) {
+              self.$bvToast.toast(
+                `Failed to update ${res.failed[i].roleName} role for ${res.failed[i].username}`,
+                self.sharedService.erorrToastConfig
+              );
+            }
+          }
+          self.showLoader = true;
+          self.assignedRoles = {};
+          const assignRolesResponse = await self.accessControlService.retrieveRoleAssignments(
+            self.unitEntity.currentUnit
+          );
+          self.assignedRoles = assignRolesResponse.data;
+          self.idsExcluding = self.assignedRoles.users.map((user) => user.id);
+          self.accessControlService
+            .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
+            .then((response) => {
+              self.userList = self.sharedService.sortByAlphabatical(
+                response.data,
+                "username"
+              );
+            });
+          self.newRoles = [];
+          self.showLoader = false;
+        })
+        .catch((e) => {
+          self.showLoader = false;
+          self.$bvToast.toast(
+            "Oops! Something went wrong.",
+            self.sharedService.erorrToastConfig
+          );
+          console.log(e);
+        });
+    },
+    handleAssignRoles(user, role, userIndex, roleIndex) {
+      const self = this;
+      self.assignedRoles["assignments"][userIndex][roleIndex] = !self
+        .assignedRoles["assignments"][userIndex][roleIndex];
+      let indexNewRoles = self.newRoles.findIndex(
+        (element) =>
+          element.username === user.username && element.roleName === role.name
+      );
+      if (indexNewRoles > -1) {
+        self.newRoles[indexNewRoles]["assigned"] =
+          self.assignedRoles["assignments"][userIndex][roleIndex];
+      } else {
+        self.newRoles.push({
+          username: user.username,
+          roleName: role.name,
+          assigned: self.assignedRoles["assignments"][userIndex][roleIndex],
+        });
+      }
+    },
+    handleAssignRolesButton() {
+      const self = this;
+      self.showRolesSettings = false;
+      self.showAssignRoles = !self.showAssignRoles;
+    },
+    handleRolesSettingBtn() {
+      const self = this;
+      self.showAssignRoles = false;
+      self.showRolesSettings = !self.showRolesSettings;
+    },
     onUnitChange() {
       const self = this;
+      self.showAssignRoles = false;
+      self.showRolesSettings = false;
       //Removing expand animation css
       const expandAniHtml = document.getElementsByClassName("expand-ani");
       if (expandAniHtml.length === 4)
@@ -786,7 +1183,31 @@ export default {
       const self = this;
       try {
         self.showLoader = true;
-        await self.unitService.getAllUnits().then(async (response) => {
+        await self.accessControlService.getPermissionsUnits().then((res) => {
+          self.allUnits = res.data;
+          self.unitEntity.unitList = self.sharedService.sortByAlphabatical(
+            this.allUnits
+          );
+          self.showLoader = false;
+          if (
+            self.unitEntity.unitList &&
+            self.unitEntity.unitList.length === 1
+          ) {
+            self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
+            self.onUnitChange();
+          } else {
+            let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+            if (!uEntity)
+              sessionStorage.setItem(
+                "unitEntity",
+                JSON.stringify({ ...self.unitEntity })
+              );
+            const unitSelectHtml = document.getElementById("unit-select");
+            if (unitSelectHtml) unitSelectHtml.focus();
+          }
+        });
+
+        /* await self.unitService.getAllUnits().then(async (response) => {
           await self.unitService
             .getAllUnits("0", response.data.page.totalElements)
             .then((res) => {
@@ -796,7 +1217,7 @@ export default {
               );
               self.showLoader = false;
 
-              // self.unitEntity.unitList = [{ ...self.unitEntity.unitList[2] }]; //For single unit test scenario
+              // self.unitEntity.unitList = [{ ...self.unitEntity.unitList[0] }]; //For single unit test scenario
               if (
                 self.unitEntity.unitList &&
                 self.unitEntity.unitList.length === 1
@@ -814,7 +1235,7 @@ export default {
                 if (unitSelectHtml) unitSelectHtml.focus();
               }
             });
-        });
+        }); */
       } catch (error) {
         self.showLoader = false;
         console.log(error);
@@ -880,17 +1301,54 @@ export default {
     async getUnitDetails() {
       const self = this;
       self.showLoader = true;
-      const unitDetails = await self.entityService.getUnitDetails(
-        self.unitEntity.currentUnit,
-        self
-      );
-      if (unitDetails.response) {
-        self.selectedUnit = unitDetails.response;
-        self.entity = unitDetails.response;
-        this.getUnitCollections();
+      try {
+        const unitDetails = await self.entityService.getUnitDetails(
+          self.unitEntity.currentUnit,
+          self
+        );
+        //Assign Roles
+        const assignRolesResponse = await self.accessControlService.retrieveRoleAssignments(
+          self.unitEntity.currentUnit
+        );
+        self.assignedRoles = assignRolesResponse.data;
+        self.idsExcluding = self.assignedRoles.users.map((user) => user.id);
+        self.accessControlService
+          .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
+          .then((response) => {
+            self.userList = self.sharedService.sortByAlphabatical(
+              response.data,
+              "username"
+            );
+          });
+
+        //Roles Settings
+        const settingsRolesResponse = await self.accessControlService.retrieveRoleActionConfig(
+          self.unitEntity.currentUnit
+        );
+        self.settingsRoles = settingsRolesResponse.data;
+        let groupBy = function(xs, key) {
+          return xs.reduce(function(rv, x) {
+            (rv[x[key]] = rv[x[key]] || []).push(x);
+            return rv;
+          }, {});
+        };
+        self.settingsRoles["groupedActions"] = groupBy(
+          self.settingsRoles.actions,
+          "targetType"
+        );
+
+        if (unitDetails.response) {
+          self.selectedUnit = unitDetails.response;
+          self.entity = unitDetails.response;
+          this.getUnitCollections();
+          self.showLoader = false;
+        } else {
+          self.showLoader = false;
+        }
         self.showLoader = false;
-      } else {
+      } catch (error) {
         self.showLoader = false;
+        console.log(error);
       }
     },
     async getUnitCollections() {
@@ -1122,5 +1580,41 @@ video {
     transform: scale3d(1, 1, 1);
     opacity: 1;
   }
+}
+
+.activeBtn {
+  background: #153c4d !important;
+  border-color: #153c4d !important;
+  color: #fff !important;
+}
+.add-btn {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.list-group .list-group-item:nth-child(2n) {
+  background-color: rgb(253, 234, 215);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+.list-group .list-group-item:nth-child(n) {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+.role-assign-ul {
+  max-height: 25rem !important;
+  overflow-y: auto;
+}
+.u-width {
+  min-width: 14rem;
+}
+.permissions td {
+  padding: 6px;
+}
+.table-primary,
+.table-primary > th,
+.table-primary > td {
+  background-color: #fdead7;
+}
+.action-table {
+  border-top: none !important;
 }
 </style>

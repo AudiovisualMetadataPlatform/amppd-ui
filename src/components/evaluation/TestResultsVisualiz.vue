@@ -125,16 +125,21 @@
                                         <th scope="col">Tool</th>
                                         <th
                                           scope="col"
-                                          v-for="parameter in sharedService
-                                            .sortByAlphabatical(
-                                              JSON.parse(
-                                                selectedTestResult.parameters
-                                              )
-                                            )
-                                            .reverse()"
-                                          :key="parameter.id"
+                                          v-if="selectedTestResult.parameters"
                                         >
-                                          Parameter<br />({{ parameter.name }})
+                                          <span
+                                            v-for="parameter in sharedService
+                                              .sortByAlphabatical(
+                                                JSON.parse(
+                                                  selectedTestResult.parameters
+                                                )
+                                              )
+                                              .reverse()"
+                                            :key="parameter.id"
+                                            >Parameter<br />({{
+                                              parameter.name
+                                            }})</span
+                                          >
                                         </th>
                                         <th
                                           scope="col"
@@ -164,23 +169,33 @@
                                           }}
                                         </td>
                                         <td
-                                          v-for="parameter in sharedService
-                                            .sortByAlphabatical(
-                                              JSON.parse(testResult.parameters)
-                                            )
-                                            .reverse()"
-                                          :key="parameter.id"
+                                          v-if="selectedTestResult.parameters"
                                         >
-                                          {{
-                                            typeof parameter.value !== "string"
-                                              ? parameter.value.reduce(
-                                                  (accumulator, currentValue) =>
-                                                    accumulator +
-                                                    ", " +
-                                                    currentValue
+                                          <span
+                                            v-for="parameter in sharedService
+                                              .sortByAlphabatical(
+                                                JSON.parse(
+                                                  testResult.parameters
                                                 )
-                                              : parameter.value
-                                          }}
+                                              )
+                                              .reverse()"
+                                            :key="parameter.id"
+                                          >
+                                            {{
+                                              typeof parameter.value !==
+                                              "string"
+                                                ? parameter.value.reduce(
+                                                    (
+                                                      accumulator,
+                                                      currentValue
+                                                    ) =>
+                                                      accumulator +
+                                                      ", " +
+                                                      currentValue
+                                                  )
+                                                : parameter.value
+                                            }}
+                                          </span>
                                         </td>
                                         <td
                                           v-for="(score, index) in JSON.parse(
@@ -270,25 +285,32 @@
                                     }}
                                   </td>
                                 </tr>
-                                <tr
-                                  v-for="parameter in sharedService
-                                    .sortByAlphabatical(
-                                      JSON.parse(selectedTestResult.parameters)
-                                    )
-                                    .reverse()"
-                                  :key="parameter.id"
-                                >
-                                  <td>&nbsp;{{ parameter.name }}</td>
-                                  <td>
-                                    &nbsp;{{
-                                      typeof parameter.value !== "string"
-                                        ? parameter.value.reduce(
-                                            (accumulator, currentValue) =>
-                                              accumulator + ", " + currentValue
-                                          )
-                                        : parameter.value
-                                    }}
-                                  </td>
+                                <tr v-if="selectedTestResult.parameters">
+                                  <snap
+                                    style="display: contents;"
+                                    v-for="parameter in sharedService
+                                      .sortByAlphabatical(
+                                        JSON.parse(
+                                          selectedTestResult.parameters
+                                        )
+                                      )
+                                      .reverse()"
+                                    :key="parameter.id"
+                                  >
+                                    <td>&nbsp;{{ parameter.name }}</td>
+                                    <td>
+                                      &nbsp;{{
+                                        typeof parameter.value !== "string"
+                                          ? parameter.value.reduce(
+                                              (accumulator, currentValue) =>
+                                                accumulator +
+                                                ", " +
+                                                currentValue
+                                            )
+                                          : parameter.value
+                                      }}
+                                    </td>
+                                  </snap>
                                 </tr>
                                 <tr
                                   v-for="[key, value] of Object.entries(

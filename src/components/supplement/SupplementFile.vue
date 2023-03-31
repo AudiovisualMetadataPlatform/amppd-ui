@@ -46,7 +46,10 @@
                       v-model="supplement.fileDetails.originalFilename"
                       disabled
                     />
-                    <span class="input-group-btn">
+                    <span
+                      class="input-group-btn"
+                      v-if="accessControl._supplement._update"
+                    >
                       <button
                         class="btn btn-outline btn-right add-remove float-right button-replace"
                         id="replaceFile"
@@ -97,6 +100,7 @@
                     :class="{
                       'error-border': submitted && !supplement.fileDetails.name,
                     }"
+                    :disabled="!accessControl._supplement._update"
                   />
                 </div>
                 <div class="form-group col-6">
@@ -109,6 +113,7 @@
                       'error-border':
                         submitted && !supplement.fileDetails.category,
                     }"
+                    :disabled="!accessControl._supplement._update"
                   >
                     <option value="" disabled selected
                       >- Choose Category -</option
@@ -128,6 +133,7 @@
                     id="description"
                     class="form-control textArea"
                     v-model="supplement.fileDetails.description"
+                    :disabled="!accessControl._supplement._update"
                   ></textarea>
                 </div>
               </div>
@@ -145,6 +151,7 @@
               :class="{
                 'error-border': submitted && !supplement.fileDetails.unit,
               }"
+              :disabled="!accessControl._supplement._update"
               ><option value="" disabled selected>- Choose Unit -</option>
               <option
                 v-for="option in supplement.allUnits"
@@ -160,7 +167,10 @@
               class="select custom-select w-100"
               v-model="supplement.fileDetails.collection"
               @change="onInputChange('collection', true)"
-              :disabled="!supplement.showCollectionList"
+              :disabled="
+                !supplement.showCollectionList ||
+                  !accessControl._supplement._update
+              "
               ><option value="" disabled selected>- Choose Collection -</option>
               <option
                 v-for="option in supplement.collectionList"
@@ -178,7 +188,9 @@
               class="select custom-select w-100"
               v-model="supplement.fileDetails.item"
               @change="onInputChange('item', true)"
-              :disabled="!supplement.showItemList"
+              :disabled="
+                !supplement.showItemList || !accessControl._supplement._update
+              "
               ><option value="" disabled selected>- Choose Item -</option>
               <option
                 v-for="option in supplement.itemList"
@@ -194,7 +206,10 @@
               class="select custom-select w-100"
               v-model="supplement.fileDetails.primaryFile"
               @change="onInputChange('primaryFile', true)"
-              :disabled="!supplement.showPrimaryFileList"
+              :disabled="
+                !supplement.showPrimaryFileList ||
+                  !accessControl._supplement._update
+              "
               ><option value="" disabled selected
                 >- Choose Content File -</option
               >
@@ -250,6 +265,7 @@
           </div>
         </div>
         <button
+          v-if="accessControl._supplement._update"
           class="marg-tb-1 mt-2 float-right  btn btn-primary btn-lg btn-edit"
           @click="saveFile($event, supplement.fileDetails)"
         >
@@ -262,6 +278,7 @@
 
 <script>
 import { sync } from "vuex-pathify";
+import { env } from "@/helpers/env";
 import UnitService from "@/service/unit-service";
 import ItemService from "@/service/item-service";
 import CollectionService from "@/service/collection-service";
@@ -270,6 +287,7 @@ import SupplementService from "@/service/supplement-service";
 import SharedService from "@/service/shared-service";
 import Loader from "@/components/shared/Loader.vue";
 import ConfigPropertiesService from "@/service/config-properties-service";
+import AccessControlService from "@/service/access-control-service";
 
 export default {
   name: "SupplementFile",
@@ -286,6 +304,7 @@ export default {
       fileService: new PrimaryFileService(),
       collectionService: new CollectionService(),
       supplementService: new SupplementService(),
+      accessControlService: new AccessControlService(),
       configPropertiesService: new ConfigPropertiesService(),
       supplement: {
         showCollectionList: false,
@@ -309,6 +328,7 @@ export default {
   },
   computed: {
     allUnits: sync("allUnits"),
+    accessControl: sync("accessControl"),
     configProperties: sync("configProperties"),
   },
   props: {},
@@ -319,7 +339,14 @@ export default {
         self.loading = true;
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;
-        await self.unitService.getAllUnits().then(async (response) => {
+        await self.accessControlService.getPermissionsUnits().then((res) => {
+          self.allUnits = res.data;
+          self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
+            this.allUnits
+          );
+          self.loading = false;
+        });
+        /* await self.unitService.getAllUnits().then(async (response) => {
           await self.unitService
             .getAllUnits("0", response.data.page.totalElements)
             .then((res) => {
@@ -331,7 +358,7 @@ export default {
               );
               self.loading = false;
             });
-        });
+        }); */
       } catch (error) {
         self.loading = false;
         console.log(error);
@@ -407,6 +434,15 @@ export default {
                   default:
                     break;
                 }
+                self.accessControlService
+                  .getHasPermission(
+                    env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"),
+                    env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT"),
+                    self.supplement.fileDetails.unit
+                  )
+                  .then((response) => {
+                    self.accessControl._supplement._update = response.data;
+                  });
               });
           });
       } catch (error) {
@@ -423,8 +459,11 @@ export default {
         "allCategories"
       ] = this.configProperties.supplementCategories;
       self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
-        this.allUnits._embedded.units
+        this.allUnits
       );
+      // self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
+      //   this.allUnits._embedded.units
+      // );
       const uploadDetailsBody = document.getElementById("upload-details-body");
       uploadDetailsBody.style.display = "block";
 
