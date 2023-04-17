@@ -15,8 +15,8 @@ ui:
         COLLECTIONS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Collections
         ITEMS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Items
         PRIMARY_FILE: https://uisapp2.iu.edu/confluence-prd/display/AMP/Primary+File
-        WORKFLOW_SUBMISSIONS_ERROR_HELP: https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId: 698746670
-        MGM_USER_GUIDE: https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId: 683706400
+        WORKFLOW_SUBMISSIONS_ERROR_HELP: https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId:698746670
+        MGM_USER_GUIDE: https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId:683706400
         MGM_EXTRACT_AUDIO: https://uisapp2.iu.edu/confluence-prd/display/AMP/Extract+Audio
         MGM_APPLAUSE_DETECTION: https://uisapp2.iu.edu/confluence-prd/display/AMP/Applause++Detection
         MGM_AWS_TRANSCRIBE_STT: https://uisapp2.iu.edu/confluence-prd/display/AMP/Speech-to-text
