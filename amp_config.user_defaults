@@ -1,10 +1,7 @@
 
 ui:
     # UI configuration.
-    user_guide_url: https://example.edu/AMP/
-
     user_guide:
-        AMP_MAIL_TO: mailto:amp@iu.edu
         AMP_USER_GUIDE: https://uisapp2.iu.edu/confluence-prd/display/AMP/AMP+User+Guide
         WORKFLOW_CREATING: https://uisapp2.iu.edu/confluence-prd/display/AMP/Tips+for+Creating+a+Workflow
         WORKFLOW_SUBMISSIONS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Workflow+Submissions
@@ -15,8 +12,8 @@ ui:
         COLLECTIONS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Collections
         ITEMS: https://uisapp2.iu.edu/confluence-prd/display/AMP/Items
         PRIMARY_FILE: https://uisapp2.iu.edu/confluence-prd/display/AMP/Primary+File
-        WORKFLOW_SUBMISSIONS_ERROR_HELP: https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId:698746670
-        MGM_USER_GUIDE: https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId:683706400
+        WORKFLOW_SUBMISSIONS_ERROR_HELP: https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId=698746670
+        MGM_USER_GUIDE: https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId=683706400
         MGM_EXTRACT_AUDIO: https://uisapp2.iu.edu/confluence-prd/display/AMP/Extract+Audio
         MGM_APPLAUSE_DETECTION: https://uisapp2.iu.edu/confluence-prd/display/AMP/Applause++Detection
         MGM_AWS_TRANSCRIBE_STT: https://uisapp2.iu.edu/confluence-prd/display/AMP/Speech-to-text
@@ -30,3 +27,5 @@ ui:
         MGM_SPACY_NER: https://uisapp2.iu.edu/confluence-prd/display/AMP/Named+Entity+Recognition+-+NER
         MGM_GENTLE_FORCED_ALIGNMENT: https://uisapp2.iu.edu/confluence-prd/display/AMP/Forced+Alignment
         MGM_EVALUATION: https://uisapp2.iu.edu/confluence-prd/display/AMP/MGM+Evaluation
+
+
