@@ -1,31 +1,54 @@
 <template>
-  <div class="logout">
-    <a href="#" v-on:click="signout">
-      <svg
-        data-prefix="fas"
-        data-icon="user-circle"
-        class="float-right icon-user"
-        role="img"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 496 512"
+  <div class="logout"
+    :class="!isAuthenticated ? 'abs-position' : 'ini-position'">
+    <span
+      class="nav-span"
+      v-for="menu in filteredMenuList"
+      :key="menu.name"
+    >
+      <b-nav-item
+        @click="routeToSignIn(menu.url)"
+        v-if="!isAuthenticated"
       >
-        <path
-          class="icon-dark-1"
-          d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"
-        ></path></svg
-    ></a>
-
+        <span v-html="menu.icon"></span>
+      </b-nav-item>
+      <b-nav-item-dropdown v-else-if="isAuthenticated">
+        <template #button-content>
+          <span id="user-name">
+            {{userInitials}}
+          </span>
+          <span
+            v-if="menu.dropdownIcon"
+            v-html="menu.dropdownIcon"
+          ></span>
+        </template>
+        <b-dropdown-item
+          class="p-0"
+          v-for="submenu in menu.children"
+          :key="submenu.name"
+          @click="signout"
+        >
+          <span class="submenu">{{ submenu.name }}</span>
+        </b-dropdown-item>
+      </b-nav-item-dropdown>
+    </span>
     <!-- <div class="right-pane"><button type = "button" v-on:click="signout()">Logout</button></div> -->
     <br />
   </div>
 </template>
 
 <script>
+import config from "../../assets/constants/common-contant.js"
 import { accountService } from "@/service/account-service";
 import { sync } from "vuex-pathify";
 import defaultState from "../../store/state";
 export default {
   name: "logout",
+  data() {
+    return {
+      menuList: config.common.accessControl,
+    }
+  },
   methods: {
     signout() {
       const self = this;
@@ -44,15 +67,84 @@ export default {
         this.$store.replaceState(defaultState);
       }
     },
+    async loadUserInitials() {
+      console.log(this.$route)
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+      let self = this;
+      console.log(this.isAuthenticated)
+      if(self.isAuthenticated) {
+        await accountService
+          .getUser(currentUser.username)
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
+    },
+    routeToSignIn(url) {
+      this.$router.push(`${url}`);
+    },
   },
   computed: {
     isAuthenticated: sync("isAuthenticated"),
+    userInitials: function () {
+      console.log(this.$route)
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+      if (currentUser ) {
+        return "A";
+      } else {
+        return 'DW'
+      }
+    },
+    filteredMenuList() {
+      if(this.isAuthenticated) {
+        return this.menuList.filter((menu) => menu.name === "SignedIn")
+      } else {
+        return this.menuList.filter((menu) => menu.name === "SignedOut")
+      }
+    }
   },
-  mounted() {},
+  mounted() {
+    // this.loadUserInitials();
+  },
 };
 </script>
 
 <style scoped>
+
+#user-name {
+  background-color: orange;
+  color: #fff;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  display: inline-block;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0.35em;
+  border: 2px solid #fff;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: bold;
+  line-height: 1.3em;
+}
+
+.sign-out-options {
+  position: absolute;
+  will-change: transform;
+  top: 0px;
+  left: 0px;
+  transform: translate3d(-88px, 56px, 0px);
+}
+
+a .nav-item > .nav-link {
+  display: flex;
+  align-items: end;
+}
+
 .col,
 .col-12,
 .col-2,
@@ -296,18 +388,17 @@ nav ul li {
 }
 
 ul {
-  display: block;
-  list-style-type: disc;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  padding-inline-start: 40px;
+  position: absolute;
+  will-change: transform;
+  top: 0px;
+  left: 0px;
+  transform: translate3d(-88px, 56px, 0px);
 }
 
 li {
   display: list-item;
   text-align: -webkit-match-parent;
+  list-style: none;
 }
 
 h2 {

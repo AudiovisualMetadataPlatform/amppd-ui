@@ -112,12 +112,7 @@
               </b-nav-item-dropdown>-->
             </span>
           </b-navbar-nav>
-          <b-nav-item
-            class="nav-span"
-            :class="!isAuthenticated ? 'abs-position' : 'ini-position'"
-          >
-            <Logout />
-          </b-nav-item>
+          <Logout />
         </b-collapse>
       </b-navbar>
     </div>
