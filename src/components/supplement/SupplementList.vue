@@ -185,12 +185,7 @@ export default {
       const supplementalFilesResponse = await self.getSupplementalFiles(self);
 
       if (supplementalFilesResponse) {
-        let supplementalFiles = [];
-        for (const property in supplementalFilesResponse) {
-          supplementalFiles.push(
-            ...supplementalFilesResponse[property]
-          );
-        }
+        let supplementalFiles = supplementalFilesResponse;
         if (supplementalFiles.length) {
           self.records = self.sharedService.sortByAlphabatical(
             supplementalFiles
