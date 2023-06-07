@@ -19,7 +19,7 @@ export default class AccessControlService extends BaseService {
   }
 
   async getIsAdmin() {
-    return super.get_auth(`/permissions/isAdmin`);
+    return super.get_auth(`/roleAssignments/isAdmin`);
   }
 
   async findActiveUsersByNameStartingIdsExcluding(keyword, idsExcluding) {

@@ -2,7 +2,7 @@
 import BaseService from './base-service.js';
 export default class WorkflowService extends BaseService {
     async searchFiles(searchWord, mime_type) {
-        return await super.get_auth('/primaryfiles/search/findByItemOrFileName?keyword=' + encodeURIComponent(searchWord) + '&mediaType=' + mime_type).then(response => response.data);
+        return await super.get_auth('/primaryfiles/search/findByKeywordMediaType?keyword=' + encodeURIComponent(searchWord) + '&mediaType=' + mime_type).then(response => response.data);
     }
 
     async searchIntermediateFiles(searchWord, outputTypes) {
