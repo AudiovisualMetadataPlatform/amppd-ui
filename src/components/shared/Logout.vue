@@ -6,17 +6,13 @@
       v-for="menu in filteredMenuList"
       :key="menu.name"
     >
-      <b-nav-item
-        @click="routeToSignIn(menu.url)"
-        v-if="!isAuthenticated"
-      >
-        <span v-html="menu.icon"></span>
-      </b-nav-item>
-      <b-nav-item-dropdown v-else-if="isAuthenticated">
+      <b-nav-item-dropdown>
         <template #button-content>
-          <span id="user-name">
-            {{userInitials}}
+          <span v-if="isAuthenticated">
+            <div v-if="hasUserInitials" class="user-initials">{{userInitials}}</div>
+            <span v-else v-html="menu.icon"></span>
           </span>
+          <span v-else v-html="menu.icon"></span>
           <span
             v-if="menu.dropdownIcon"
             v-html="menu.dropdownIcon"
@@ -26,14 +22,13 @@
           class="p-0"
           v-for="submenu in menu.children"
           :key="submenu.name"
-          @click="signout"
+          @click="routeTo(submenu)"
         >
           <span class="submenu">{{ submenu.name }}</span>
         </b-dropdown-item>
       </b-nav-item-dropdown>
     </span>
     <!-- <div class="right-pane"><button type = "button" v-on:click="signout()">Logout</button></div> -->
-    <br />
   </div>
 </template>
 
@@ -42,11 +37,13 @@ import config from "../../assets/constants/common-contant.js"
 import { accountService } from "@/service/account-service";
 import { sync } from "vuex-pathify";
 import defaultState from "../../store/state";
+import SharedService from "@/service/shared-service";
 export default {
   name: "logout",
   data() {
     return {
       menuList: config.common.accessControl,
+      sharedService: new SharedService(),
     }
   },
   methods: {
@@ -62,41 +59,26 @@ export default {
       } else {
         accountService.logout();
         self.isAuthenticated = false;
-        this.$router.push("/account/login");
+        this.$router.push("/");
         // After successful logout we need to reset the state to prevent from showing old data
         this.$store.replaceState(defaultState);
       }
     },
-    async loadUserInitials() {
-      console.log(this.$route)
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'))
-      let self = this;
-      console.log(this.isAuthenticated)
-      if(self.isAuthenticated) {
-        await accountService
-          .getUser(currentUser.username)
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+    routeTo(submenu) {
+      if(!this.isAuthenticated) {
+        this.$router.push(`${submenu.url}`);
+      } else {
+        this.signout();
       }
-    },
-    routeToSignIn(url) {
-      this.$router.push(`${url}`);
-    },
+    }
   },
   computed: {
     isAuthenticated: sync("isAuthenticated"),
+    hasUserInitials: function () {
+      return this.userInitials.length > 0;
+    },
     userInitials: function () {
-      console.log(this.$route)
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'))
-      if (currentUser ) {
-        return "A";
-      } else {
-        return 'DW'
-      }
+      return this.sharedService.getUserInitials();
     },
     filteredMenuList() {
       if(this.isAuthenticated) {
@@ -106,25 +88,29 @@ export default {
       }
     }
   },
-  mounted() {
-    // this.loadUserInitials();
-  },
+  mounted() {},
 };
 </script>
 
-<style scoped>
+<style lang="css">
+.abs-position {
+  position: absolute;
+  right: 0px;
+}
+.ini-position {
+  position: initial;
+  right: 0px;
+}
 
-#user-name {
-  background-color: orange;
+.user-initials {
+  background-color: #f4871e;
   color: #fff;
   border-radius: 50%;
   height: 40px;
   width: 40px;
   text-align: center;
   display: inline-block;
-  justify-content: center;
-  font-family: Arial, Helvetica, sans-serif;
-  padding: 0.35em;
+  padding: 0.25em;
   border: 2px solid #fff;
   cursor: pointer;
   font-size: 1.2em;
@@ -132,61 +118,22 @@ export default {
   line-height: 1.3em;
 }
 
-.sign-out-options {
-  position: absolute;
-  will-change: transform;
-  top: 0px;
-  left: 0px;
-  transform: translate3d(-88px, 56px, 0px);
+.nav-link{
+  display: flex !important;
+  align-items: baseline;
 }
 
-a .nav-item > .nav-link {
-  display: flex;
-  align-items: end;
+li {
+  list-style: none;
+  padding: 1rem;
 }
 
-.col,
-.col-12,
-.col-2,
-.col-10,
-.col-lg-12,
-.col-lg-3,
-.col-lg-9 {
-  width: 100%;
-  min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
+.active-link {
+  color: #153c4d;
 }
 
-.col-12 {
-  padding: 0px;
-  flex: 0 0 100%;
-  max-width: 100%;
-}
-
-.container.expand-h,
-.expand-h,
-.row.expand-h {
-  height: 100%;
-  min-height: 100%;
-}
-
-/* .container {
-    margin:0px!important;
-    margin-top: -8px;
-  } */
-
-.expand-h .col-2 {
-  position: sticky;
-  left: 0;
-  top: 0;
-  padding: 0;
-}
-
-.bg-dark-1 a,
-.bg-dark-1 a:active,
-.bg-dark-1 a:visited {
-  color: #fff !important;
+.active-link:hover {
+  color: #f4871e;
 }
 
 a {
@@ -203,83 +150,13 @@ a:-webkit-any-link {
   cursor: pointer;
 }
 
-.expand-h .col-10 {
-  padding: 0;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.expand-h .col-10,
-.expand-h .col-2 {
-  margin-bottom: -9999px;
-  padding-bottom: 9999px;
-}
-
-.bg-dark-1 {
-  background-color: #153c4d;
-}
-
-.bg-light-gray-1 {
-  background-color: #fafafa;
-}
-
-.col-2 {
-  -ms-flex: 0 0 16.666667%;
-  flex: 0 0 16.666667%;
-  max-width: 16.666667%;
-}
-
-.col-10 {
-  flex: 0 0 83.333333%;
-  max-width: 83.333333%;
-}
-
-.bg-light-gray-1 header {
-  height: auto;
-  min-height: 4rem;
-  padding: 0.5rem;
-}
-
-.bg-white {
-  background: #fff;
-}
-
-/*.bg-white {
-    background-color: #fff!important;
-  }*/
-
-header,
-nav,
-main {
-  display: block;
-}
-
-/* @media screen and (max-width: 39em) #logo 
-  {
-    min-width: 100px;
-    padding: 0;
-  } */
-
-#logo {
-  max-width: 420px;
-  width: 100%;
-}
-
-.logo-bg {
-  fill: #153c4d;
-}
-
-.logo-fg {
-  fill: #f4871e;
-}
-
 svg {
   overflow: hidden;
   vertical-align: middle;
 }
 
 .svg-inline {
-  width: 20px;
+  width: 25px;
   height: auto;
 }
 
@@ -296,317 +173,15 @@ svg {
   fill: #fff !important;
 }
 
+.icon-light-1 {
+  fill: #f8ae67;
+}
+
 /* .workflows .workflows, .collections .collections {
     background: #22617d;
   } */
 
 svg.icon-user {
   width: 2.5rem;
-}
-
-.float-right {
-  float: right !important;
-}
-
-.pad-all-3 {
-  padding: 1.5rem;
-}
-
-.card {
-  margin: 2.5rem auto;
-}
-
-.card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  word-wrap: break-word;
-  background-color: #fff;
-  background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.25rem;
-}
-
-.card-body {
-  flex: 1 1 auto;
-  padding: 1.25rem;
-}
-
-.h1,
-h1 {
-  font-size: 2.5rem;
-}
-
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-bottom: 0.5rem;
-  font-family: inherit;
-  font-weight: 500;
-  line-height: 1.2;
-  color: inherit;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-}
-
-h1 {
-  display: block;
-  font-size: 2em;
-  margin-block-start: 0.67em;
-  margin-block-end: 0.67em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  font-weight: bold;
-}
-
-nav ul {
-  padding: 0;
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-nav ul li {
-  padding: 1rem;
-}
-
-ul {
-  position: absolute;
-  will-change: transform;
-  top: 0px;
-  left: 0px;
-  transform: translate3d(-88px, 56px, 0px);
-}
-
-li {
-  display: list-item;
-  text-align: -webkit-match-parent;
-  list-style: none;
-}
-
-h2 {
-  margin-bottom: 0.5rem;
-  font-size: 2rem;
-  font-weight: 500;
-  line-height: 1.2;
-  margin-top: 0;
-  display: block;
-  margin-block-start: 0.83em;
-  margin-block-end: 0.83em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  color: #000;
-}
-
-.marg-bot-4 {
-  margin-bottom: 2rem;
-}
-
-.marg-t-2 {
-  margin-top: 1rem;
-}
-
-.marg-t-5 {
-  margin-top: 2.5rem;
-}
-
-.marg-bot-3 {
-  margin-bottom: 1.5rem;
-}
-
-main {
-  margin: 2em;
-}
-
-.form-control-file {
-  display: block;
-  width: 100%;
-}
-
-.btn {
-  display: inline-block;
-  font-weight: 400;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  user-select: none;
-  border: 1px solid transparent;
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  border-radius: 0.25rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-btn:not(:disabled):not(.disabled) {
-  cursor: pointer;
-}
-.btn-light {
-  color: #212529;
-  background-color: #f8f9fa;
-  border-color: #f8f9fa;
-}
-.btn-group-lg > .btn,
-.btn-lg {
-  padding: 0.5rem 1rem;
-  font-size: 1.25rem;
-  line-height: 1.5;
-  border-radius: 0.3rem;
-}
-.btn-outline-primary {
-  background-color: transparent;
-  background-image: none;
-}
-
-button {
-  text-transform: none;
-  font-size: inherit;
-  line-height: inherit;
-}
-
-button,
-input {
-  overflow: visible;
-  margin: 0;
-  font-family: inherit;
-}
-
-button:hover {
-  color: #f4871e;
-  background-color: #153c4d;
-}
-
-input[type="file"] {
-  border-radius: 0.3em;
-  align-items: baseline;
-}
-
-.form-content {
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: -15px;
-  margin-left: -15px;
-}
-
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: -5px;
-  margin-left: -5px;
-}
-
-.form-row > .col,
-.form-row > [class*="col-"] {
-  padding-right: 5px;
-  padding-left: 5px;
-}
-
-.col {
-  flex-basis: 0;
-  flex-grow: 1;
-  max-width: 100%;
-}
-
-.text-muted {
-  color: #6c757d !important;
-}
-
-label {
-  display: inline-block;
-  margin-bottom: 0.5rem;
-  cursor: default;
-  width: 100%;
-}
-
-.form-control {
-  display: block;
-  width: 100%;
-  height: calc(2.25rem + 2px);
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #495057;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.active-link {
-  color: #153c4d;
-}
-
-.active-link:hover {
-  color: #f4871e;
-}
-
-input {
-  text-rendering: auto;
-  letter-spacing: normal;
-  word-spacing: normal;
-  text-transform: none;
-  text-indent: 0px;
-  text-shadow: none;
-  text-align: start;
-  cursor: text;
-  font: 400 13.3333px Arial;
-}
-
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-}
-
-p {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  display: block;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-}
-
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-
-body {
-  background: #fff;
-  height: 100%;
-  min-height: 100%;
-  margin-top: 0px !important;
-  background-color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #404040;
-  text-align: left;
-  display: block;
 }
 </style>

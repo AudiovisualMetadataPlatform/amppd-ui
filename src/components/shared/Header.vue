@@ -652,6 +652,7 @@ h6 {
 .svg-inline {
   width: 20px;
   height: auto;
+  vertical-align: bottom;
 }
 
 .icon-lg {

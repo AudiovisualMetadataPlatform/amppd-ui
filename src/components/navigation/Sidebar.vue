@@ -337,12 +337,4 @@ nav ul li {
 .dropdown-menu {
   min-width: 8rem !important;
 }
-.abs-position {
-  position: absolute;
-  right: 0px;
-}
-.ini-position {
-  position: initial;
-  right: 0px;
-}
 </style>
