@@ -163,11 +163,11 @@ export default {
     onSearchDone(records) {
       this.records = records && records.length ? records : this.masterRecords;
     },
-    async getSupplementalFiles(num, size) {
+    async getSupplementalFiles() {
       const self = this;
       let supplementalFiles = {};
       await self.supplementService
-        .getSupplementFiles(num, size)
+        .getSupplementFiles()
         .then((res) => {
           supplementalFiles = res;
         })
@@ -179,6 +179,30 @@ export default {
         });
       return supplementalFiles;
     },
+    async getSupplementData() {
+      const self = this;
+      self.showLoader = true;
+      const supplementalFilesResponse = await self.getSupplementalFiles(self);
+
+      if (supplementalFilesResponse) {
+        let supplementalFiles = [];
+        for (const property in supplementalFilesResponse) {
+          supplementalFiles.push(
+            ...supplementalFilesResponse[property]
+          );
+        }
+        if (supplementalFiles.length) {
+          self.records = self.sharedService.sortByAlphabatical(
+            supplementalFiles
+          );
+          self.masterRecords = JSON.parse(JSON.stringify(self.records));
+        }
+        self.showLoader = false;
+      } else {
+        self.showLoader = false;
+      }
+    },
+    /*
     async getSupplementData() {
       const self = this;
       self.showLoader = true;
@@ -212,6 +236,7 @@ export default {
         self.showLoader = false;
       }
     },
+    */
     async getData() {
       const self = this;
       if (self.baseUrl === "list-supplement") {

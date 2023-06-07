@@ -7,15 +7,19 @@ export default class SupplementService extends BaseService {
    *  @method GET
    */
 
-  async getSupplementFiles(num, size) {
-    if (num && size) {
-      return await super
-        .get_auth(`/supplements?page=${num}&size=${size}`)
-        .then((result) => result.data);
-    } else
-      return await super.get_auth("/supplements").then((result) => result.data);
-  }
+//  async getSupplementFiles(num, size) {
+//    if (num && size) {
+//      return await super
+//        .get_auth(`/supplements?page=${num}&size=${size}`)
+//        .then((result) => result.data);
+//    } else
+//      return await super.get_auth("/supplements").then((result) => result.data);
+//  }
 
+	async getSupplementFiles() {
+		return await super.get_auth("/supplements").then((result) => result.data);
+	}
+	
   /***
    * To add a supplemental file
    * @params entityId, formData
