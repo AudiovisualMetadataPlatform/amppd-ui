@@ -112,12 +112,7 @@
               </b-nav-item-dropdown>-->
             </span>
           </b-navbar-nav>
-          <b-nav-item
-            class="nav-span"
-            :class="!isAuthenticated ? 'abs-position' : 'ini-position'"
-          >
-            <Logout />
-          </b-nav-item>
+          <Logout />
         </b-collapse>
       </b-navbar>
     </div>
@@ -341,13 +336,5 @@ nav ul li {
 }
 .dropdown-menu {
   min-width: 8rem !important;
-}
-.abs-position {
-  position: absolute;
-  right: 0px;
-}
-.ini-position {
-  position: initial;
-  right: 0px;
 }
 </style>

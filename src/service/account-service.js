@@ -80,14 +80,14 @@ function sendRejectUserRequest(userid) {
 function login(username, password) {
   console.log("login");
   return baseService.post(`/account/authenticate`, { username, password })
-      .then(user => {
+      .then(response => {
+          const { token, user } = response.data;
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem(
             "currentUser",
-            JSON.stringify({ ...user.data, username })
+            JSON.stringify({ token, username, ...user })
           );
-          this.currentUser = user.data;
-          console.log(currentUser);
+          this.currentUser = response.data;
           return this.currentUser;
       })
       .catch(error => {

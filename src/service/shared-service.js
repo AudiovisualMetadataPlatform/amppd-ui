@@ -197,4 +197,16 @@ export default class SharedService {
         const userValues = sessionStorage.getItem("userValues");
         return userValues ? JSON.parse(userValues)[key] : null;
     }
+
+    /***
+     * To retrieve the logged in user's initials from local storage
+     */
+    getUserInitials() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const { firstName, lastName } = currentUser;
+        let userInits = [];
+        if (firstName != null && firstName.length > 0) {userInits.push(firstName[0].toUpperCase()); }
+        if (lastName != null && lastName.length > 0) { userInits.push(lastName[0].toUpperCase()); }
+        return userInits.join('');
+    }
 }
