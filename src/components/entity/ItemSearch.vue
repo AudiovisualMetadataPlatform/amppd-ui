@@ -81,7 +81,7 @@ export default {
           self.itemSource = await self.itemService.searchItemsByKeyword(
             searchWord
           );
-          self.searchSource = self.itemSource._embedded["items"];
+          self.searchSource = self.itemSource;
           if (!self.searchSource.length) {
             self.errors.no_data_error = "No data found";
           } else {

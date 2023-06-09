@@ -61,7 +61,7 @@ export default class ItemService extends BaseService{
      */
 
     async searchItemsByKeyword(keyword){        
-        return await super.get_auth(`/items/search/findByKeyword?keyword=${keyword}`).then(result => result.data)
+        return await super.get_auth(`/items/search?keyword=${keyword}`).then(result => result.data)
     }
 
      /***
