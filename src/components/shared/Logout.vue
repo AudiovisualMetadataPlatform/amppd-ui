@@ -6,7 +6,7 @@
       v-for="menu in filteredMenuList"
       :key="menu.name"
     >
-      <b-nav-item-dropdown>
+      <b-nav-item-dropdown class="logout-options">
         <template #button-content>
           <span v-if="isAuthenticated">
             <div v-if="hasUserInitials" class="user-initials">{{userInitials}}</div>
@@ -118,6 +118,10 @@ export default {
   line-height: 1.3em;
 }
 
+.logout-options ul {
+  margin-top: -0.925rem;
+}
+
 .nav-link{
   display: flex !important;
   align-items: baseline;
@@ -162,10 +166,6 @@ svg {
 
 :not(svg) {
   transform-origin: 0px 0px;
-}
-
-.icon-white {
-  fill: #fff;
 }
 
 .icon-dark-1,

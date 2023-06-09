@@ -50,18 +50,7 @@
               <b-nav-item
                 :id="menu.url"
                 @click="routeTo(menu)"
-                v-if="menu.url === '/batch/ingest'"
-                :class="{
-                  'd-none': !accessControl._nav._ingestBatch,
-                }"
-              >
-                <span v-html="menu.icon"></span>
-                <span class="pl-2 menu-name">{{ menu.name }}</span>
-              </b-nav-item>
-              <b-nav-item
-                :id="menu.url"
-                @click="routeTo(menu)"
-                v-else-if="!menu.children && menu.url !== '/mgm-evaluation'"
+                v-if="!menu.children && menu.url !== '/mgm-evaluation'"
               >
                 <span v-html="menu.icon"></span>
                 <span class="pl-2 menu-name">{{ menu.name }}</span>
@@ -89,11 +78,17 @@
                   v-else
                   class="p-0"
                   :disabled="!submenu.url"
+                  :id="submenu.url"
                   v-for="submenu in menu.children"
                   :key="submenu.name"
                   @click="routeTo(submenu)"
                 >
-                  <span class="submenu">{{ submenu.name }}</span>
+                  <span class="submenu"
+                    :class="submenu.url === '/batch/ingest' 
+                      ? { 'd-none': !accessControl._nav._ingestBatch } : ''"
+                  >
+                    {{ submenu.name }}
+                  </span>
                 </b-dropdown-item>
                 <!-- <b-dropdown id="dropdown-1" text="Dropdown Button">
                 <b-dropdown-item>First Action</b-dropdown-item>
@@ -183,8 +178,7 @@ export default {
 
         //BATCH INGEST: Disable batch ingest nav
         if (!uEntity || (uEntity && !uEntity.currentUnit)) {
-          let batchIngestHtml = document.getElementById("/batch/ingest")
-            .childNodes[0];
+          let batchIngestHtml = document.getElementById("/batch/ingest");
           batchIngestHtml.ariaDisabled = "true";
           batchIngestHtml.classList.add("disabled");
         }
