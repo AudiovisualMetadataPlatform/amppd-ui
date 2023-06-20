@@ -75,10 +75,10 @@ export default {
   computed: {
     isAuthenticated: sync("isAuthenticated"),
     hasUserInitials: function () {
-      return this.userInitials.length > 0;
+      return this.isAuthenticated ? this.userInitials.length > 0 : false;
     },
     userInitials: function () {
-      return this.sharedService.getUserInitials();
+      return this.isAuthenticated ? this.sharedService.getUserInitials() : '';
     },
     filteredMenuList() {
       if(this.isAuthenticated) {
