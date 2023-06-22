@@ -1183,6 +1183,7 @@ export default {
       const self = this;
       try {
         self.showLoader = true;
+        /*
         await self.accessControlService.getPermissionsUnits().then((res) => {
           self.allUnits = res.data;
           self.unitEntity.unitList = self.sharedService.sortByAlphabatical(
@@ -1206,8 +1207,9 @@ export default {
             if (unitSelectHtml) unitSelectHtml.focus();
           }
         });
+        */
 
-        /* await self.unitService.getAllUnits().then(async (response) => {
+        await self.unitService.getAllUnits().then(async (response) => {
           await self.unitService
             .getAllUnits("0", response.data.page.totalElements)
             .then((res) => {
@@ -1235,7 +1237,7 @@ export default {
                 if (unitSelectHtml) unitSelectHtml.focus();
               }
             });
-        }); */
+        }); 
       } catch (error) {
         self.showLoader = false;
         console.log(error);
