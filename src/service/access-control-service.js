@@ -9,7 +9,7 @@ export default class AccessControlService extends BaseService {
   }
 
   async getPermissionsUnits(actionType, targetType) {
-    return super.get_auth("/permissions/units?actionType=${actionType}&targetType=${targetType}");
+    return super.get_auth(`/permissions/units?actionType=${actionType}&targetType=${targetType}`);
   }
 
   async getPermittedActions(unitId) {
