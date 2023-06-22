@@ -341,9 +341,7 @@ export default {
         self.configProperties = configPropertiesResponse.data;
         await self.accessControlService.getPermissionsUnits("Create", "Supplement").then((res) => {
           self.allUnits = res.data;
-          self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
-            this.allUnits
-          );
+          self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(this.allUnits);
           self.loading = false;
         });
         /* await self.unitService.getAllUnits().then(async (response) => {
