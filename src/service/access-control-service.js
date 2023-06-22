@@ -8,8 +8,8 @@ export default class AccessControlService extends BaseService {
     );
   }
 
-  async getPermissionsUnits() {
-    return super.get_auth("/units");
+  async getPermissionsUnits(actionType, targetType) {
+    return super.get_auth("/permissions/units?actionType=${actionType}&targetType=${targetType}");
   }
 
   async getPermittedActions(unitId) {

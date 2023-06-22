@@ -339,7 +339,7 @@ export default {
         self.loading = true;
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;
-        await self.accessControlService.getPermissionsUnits().then((res) => {
+        await self.accessControlService.getPermissionsUnits("Create", "Supplement").then((res) => {
           self.allUnits = res.data;
           self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
             this.allUnits
