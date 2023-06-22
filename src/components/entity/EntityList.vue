@@ -1183,12 +1183,10 @@ export default {
       const self = this;
       try {
         self.showLoader = true;
-        /*
-        await self.accessControlService.getPermissionsUnits().then((res) => {
+        
+        await self.unitService.getAllUnits().then((res) => {
           self.allUnits = res.data;
-          self.unitEntity.unitList = self.sharedService.sortByAlphabatical(
-            this.allUnits
-          );
+          self.unitEntity.unitList = self.sharedService.sortByAlphabatical(this.allUnits);
           self.showLoader = false;
           if (
             self.unitEntity.unitList &&
@@ -1207,8 +1205,8 @@ export default {
             if (unitSelectHtml) unitSelectHtml.focus();
           }
         });
-        */
-
+        
+		/*
         await self.unitService.getAllUnits().then(async (response) => {
           await self.unitService
             .getAllUnits("0", response.data.page.totalElements)
@@ -1238,6 +1236,7 @@ export default {
               }
             });
         }); 
+        */
       } catch (error) {
         self.showLoader = false;
         console.log(error);
