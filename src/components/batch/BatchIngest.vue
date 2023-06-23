@@ -226,7 +226,7 @@ export default {
   mounted() {
     const self = this;
     let unitEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
-    if (unitEntity.currentUnit) {
+    if (unitEntity && unitEntity.currentUnit) {
       self.unitName = unitEntity.unitList.filter(
         (unit) => unit.id === unitEntity.currentUnit
       )[0].name;
