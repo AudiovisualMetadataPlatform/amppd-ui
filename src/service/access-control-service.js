@@ -386,7 +386,7 @@ export default class AccessControlService extends BaseService {
             action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_BATCH")
           ) {
             switch (action.actionType) {
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_EXECUTE"):
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
                 self.accessControl._nav._ingestBatch = true;
                 break;
             }

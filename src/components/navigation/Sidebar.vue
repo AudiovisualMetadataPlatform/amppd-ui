@@ -76,17 +76,17 @@
                 </span>
                 <b-dropdown-item
                   v-else
-                  class="p-0"
                   :disabled="!submenu.url"
+                  class="p-0"
+                  :class="{ 
+                    'd-none': !accessControl._nav._ingestBatch && submenu.url === '/batch/ingest' 
+                  }"
                   :id="submenu.url"
                   v-for="submenu in menu.children"
                   :key="submenu.name"
                   @click="routeTo(submenu)"
                 >
-                  <span class="submenu"
-                    :class="submenu.url === '/batch/ingest' 
-                      ? { 'd-none': !accessControl._nav._ingestBatch } : ''"
-                  >
+                  <span class="submenu">
                     {{ submenu.name }}
                   </span>
                 </b-dropdown-item>
@@ -176,12 +176,13 @@ export default {
         if (uEntity && uEntity.currentUnit)
           self.accessControlService.checkAccessControl(this);
 
-        //BATCH INGEST: Disable batch ingest nav
-        if (!uEntity || (uEntity && !uEntity.currentUnit)) {
-          let batchIngestHtml = document.getElementById("/batch/ingest");
-          batchIngestHtml.ariaDisabled = "true";
-          batchIngestHtml.classList.add("disabled");
-        }
+        // //BATCH INGEST: Disable batch ingest nav
+        // if (!uEntity || (uEntity && !uEntity.currentUnit)) {
+        //   let batchIngestHtml = document.getElementById("/batch/ingest")
+        //     .childNodes[0];
+        //   batchIngestHtml.ariaDisabled = "true";
+        //   batchIngestHtml.classList.add("disabled");
+        // }
       } catch (error) {
         console.log(error);
       }
