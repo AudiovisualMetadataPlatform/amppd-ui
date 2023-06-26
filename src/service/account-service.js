@@ -112,6 +112,7 @@ function logout() {
   localStorage.removeItem('currentUser');
   sessionStorage.removeItem('userValues');
   sessionStorage.removeItem('unitEntity');
+  sessionStorage.removeItem('batchUnits');
   this.currentUser = null;
 }
 

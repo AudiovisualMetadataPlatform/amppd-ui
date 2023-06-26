@@ -10,6 +10,37 @@
             <div class="pad-all-3">
               <div class="card">
                 <div class="card-body">
+                  <h1 class="text-left">
+                    <span>Unit Details</span>
+                  </h1>
+                  <div class="text-left form-group col-12">
+                    <label>
+                      <span>Unit Name:</span>
+                    </label>
+                    <select
+                      class="select custom-select w-100"
+                      v-model="batchUnits.currentUnit"
+                      @change="onUnitChange"
+                      required
+                      id="unit-select"
+                      ><option value="" disabled selected
+                        >- Choose Unit -</option
+                      >
+                      <option
+                        v-for="option in batchUnits.unitList"
+                        :key="option.id"
+                        :value="option.id"
+                        >{{ option.name }}</option
+                      >
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pad-all-3"
+              :class="unitName.length === 0 ? 'batch-disabled' : 'batch-enabled'">
+              <div class="card">
+                <div class="card-body">
                   <div class="row">
                     <h1 class="col-lg-12">
                       Batch Ingest
@@ -19,6 +50,7 @@
                           marg-bot-3
                           float-right
                         "
+                        :disabled="unitName.length === 0"
                         @click="batchIngestTemplate()"
                       >
                         Batch Manifest Template
@@ -44,7 +76,7 @@
                         id="exampleFormControlFile1"
                         ref="inputFile"
                         value="Upload batch manifest"
-                        :disabled="inProgress"
+                        :disabled="inProgress || unitName.length === 0"
                         v-bind="filename"
                         accept=".csv"
                         @change="
@@ -57,7 +89,7 @@
                       <button
                         class="btn btn-secondary btn-lg"
                         @click="save()"
-                        :disabled="inProgress"
+                        :disabled="inProgress || unitName.length === 0"
                       >
                         Upload
                       </button>
@@ -127,6 +159,8 @@ import Logout from "@/components/shared/Logout.vue";
 import Modal from "@/components/shared/Modal.vue";
 import Loader from "@/components/shared/Loader.vue";
 import { upload, downloadFile } from "@/service/batch-ingest-service";
+import AccessControlService from "@/service/access-control-service";
+import SharedService from "@/service/shared-service";
 import { env } from "../../helpers/env";
 
 export default {
@@ -151,6 +185,9 @@ export default {
       validationResponse: null,
       inProgress: false,
       errors: [],
+      batchUnits: { unitList: [], currentUnit: "" },
+      accessControlService: new AccessControlService(),
+      sharedService: new SharedService(),
     };
   },
   computed: {},
@@ -222,19 +259,49 @@ export default {
           console.log(err.response);
         });
     },
+    onUnitChange() {
+      const self = this;
+      sessionStorage.setItem(
+        "batchUnits",
+        JSON.stringify({ ...self.batchUnits })
+      );
+      self.unitName = self.batchUnits.unitList.filter(
+        (unit) => unit.id === self.batchUnits.currentUnit
+      )[0].name;
+    },
+    async getUnits() {
+      const self = this;
+      try {
+        await self.accessControlService.getPermissionsUnits("Create", "Batch")
+          .then((response) => {
+            if(response.data.length > 0) {
+              self.batchUnits.unitList = response.data;
+            }
+            sessionStorage.setItem(
+              "batchUnits",
+              JSON.stringify({ ...self.batchUnits })
+            );
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   mounted() {
     const self = this;
-    let unitEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
-    if (unitEntity && unitEntity.currentUnit) {
-      self.unitName = unitEntity.unitList.filter(
-        (unit) => unit.id === unitEntity.currentUnit
-      )[0].name;
+    let batchEntity = JSON.parse(sessionStorage.getItem("batchUnits"));
+    if(!batchEntity) {
+      self.batchUnits = { unitList: [], currentUnit: "" };
+      self.getUnits();
     } else {
-      self.unitName = "";
+      self.batchUnits = batchEntity;
+      self.unitName = batchEntity.unitList.length > 0
+      ? batchEntity.unitList.filter(
+          (unit) => unit.id === batchEntity.currentUnit
+          )[0].name
+      : "";
     }
     console.log("reached batchingest.vue");
-    console.log("unitName = " + self.unitName);
   },
 };
 </script>
@@ -267,4 +334,13 @@ export default {
 input[type="file"]::file-selector-button {
   margin-right: 5%;
 }
+
+.batch-disabled {
+  opacity: 0.5;
+}
+
+.batch-enabled {
+  opacity: 1;
+}
+
 </style>

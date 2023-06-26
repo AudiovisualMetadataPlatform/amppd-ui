@@ -1050,15 +1050,15 @@ export default {
                       if (uEntity && uEntity.currentUnit)
                         self.accessControlService.checkAccessControl(self);
 
-                      //BATCH INGEST: Enable batch ingest nav
-                      let batchIngestHtml = document.getElementById(
-                        "/batch/ingest"
-                      );
-                      if (batchIngestHtml) {
-                        batchIngestHtml = batchIngestHtml.childNodes[0];
-                        batchIngestHtml.ariaDisabled = null;
-                        batchIngestHtml.classList.remove("disabled");
-                      }
+                      // //BATCH INGEST: Enable batch ingest nav
+                      // let batchIngestHtml = document.getElementById(
+                      //   "/batch/ingest"
+                      // );
+                      // if (batchIngestHtml) {
+                      //   batchIngestHtml = batchIngestHtml.childNodes[0];
+                      //   batchIngestHtml.ariaDisabled = null;
+                      //   batchIngestHtml.classList.remove("disabled");
+                      // }
                     });
 
                   const res = JSON.parse(JSON.stringify(response));
