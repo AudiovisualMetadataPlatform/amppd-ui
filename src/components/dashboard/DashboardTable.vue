@@ -569,9 +569,15 @@ export default {
       const self = this;
       self.workflowDashboard.loading = true;
       try {
-        if (self.parent === "TestResults" && self.parent !== "Deliverables") {
+        if (self.parent === "TestResults") {
           self.workflowDashboard.searchResult = await this.evaluationService.getMgmEvaluationTestResults(
             this.workflowDashboard.searchQuery
+          );
+        } else if (self.parent === "NewTest") {
+          self.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(
+            this.workflowDashboard.searchQuery, 
+            env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"), 
+            env.getEnv("VUE_APP_AC_TARGETTYPE_MGMEVALUATIONTEST")
           );
         } else if (self.parent !== "Deliverables") {
           self.workflowDashboard.searchResult = await this.workflowResultService.getWorkflowResults(

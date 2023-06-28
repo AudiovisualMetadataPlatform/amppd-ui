@@ -152,7 +152,6 @@ export default class AccessControlService extends BaseService {
         self.accessControl._supplement._delete = true;
         self.accessControl._workflowresult._create = true;
         self.accessControl._workflowresult._read = true;
-        self.accessControl._workflowresult._export = true;
         self.accessControl._workflowresult._update = true;
         self.accessControl._workflowresult._delete = true;
         self.accessControl._workflowresult_restricted._create = true;
@@ -193,7 +192,6 @@ export default class AccessControlService extends BaseService {
         self.accessControl._supplement._delete = false;
         self.accessControl._workflowresult._create = false;
         self.accessControl._workflowresult._read = false;
-        self.accessControl._workflowresult._export = false;
         self.accessControl._workflowresult._update = false;
         self.accessControl._workflowresult._delete = false;
         self.accessControl._workflowresult_restricted._create = false;
@@ -342,10 +340,7 @@ export default class AccessControlService extends BaseService {
                 break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._workflowresult._read = true;
-                break;
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_EXPORT"):
-                self.accessControl._workflowresult._export = true;
-                break;
+                break;               
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
                 self.accessControl._workflowresult._update = true;
                 break;
