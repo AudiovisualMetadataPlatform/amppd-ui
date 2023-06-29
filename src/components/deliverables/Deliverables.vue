@@ -366,7 +366,9 @@ export default {
       if (self.searchWord.length > 0) {
         var response = await self.workflowService.searchFiles(
           this.searchWord,
-          "000"
+          "000",
+          env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"), 
+          env.getEnv("VUE_APP_AC_TARGETTYPE_BAG")      
         );
         if (response && response.items) {
           for (var i = 0; i < response.items.length; i++) {
@@ -418,7 +420,9 @@ export default {
         }
         self.loading = true;
         var response = await this.workflowResultService.getWorkflowResults(
-          self.searchQuery
+          self.searchQuery, 
+          env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"), 
+          env.getEnv("VUE_APP_AC_TARGETTYPE_BAG")
         );
         self.rows = response.rows;
         self.workflowDashboard.searchResult.rows = response.rows;

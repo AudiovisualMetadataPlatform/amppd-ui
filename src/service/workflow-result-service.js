@@ -2,9 +2,13 @@ import BaseService from "./base-service";
 import { env } from "../helpers/env";
 
 export default class WorkflowResultService extends BaseService {
-  async getWorkflowResults(searchQuery) {
+  async getWorkflowResults(searchQuery, actionType, targetType) {
+	var url = "/workflow-results/query";
+	if (actionType && targetType) {
+		url = url + "?actionType=" + actionType + "&targetType=" + targetType;
+	}	
     var data = await super
-      .post_auth("/workflow-results/query", searchQuery)
+      .post_auth(url, searchQuery)
       .then((result) => {
         return result.data;
       });

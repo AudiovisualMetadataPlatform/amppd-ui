@@ -612,7 +612,9 @@ export default {
       ) {
         self.searchedItems = await self.workflowService.searchFiles(
           this.searchWord,
-          mime_type
+          mime_type,
+          env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"), 
+          env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT")          
         );
         self.workflowSubmissionsearchResults = true;
       } else if (
