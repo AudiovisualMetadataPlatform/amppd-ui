@@ -459,6 +459,7 @@
 
 <script>
 import { sync } from "vuex-pathify";
+import { env } from "@/helpers/env";
 import SharedService from "@/service/shared-service";
 import WorkflowService from "../../service/workflow-service";
 import SelectBundle from "@/components/workflow/SelectBundle.vue";
