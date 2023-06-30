@@ -4,7 +4,7 @@ export default class WorkflowService extends BaseService {
     async searchFiles(searchWord, mime_type, actionType, targetType) {
 		var url = '/primaryfiles/search/findByKeywordMediaType?keyword=' + encodeURIComponent(searchWord) + '&mediaType=' + mime_type;
 		if (actionType && targetType) {
-			url = url + "?actionType=" + actionType + "&targetType=" + targetType;
+			url = url + "&actionType=" + actionType + "&targetType=" + targetType;
 		}	
         return await super.get_auth(url).then(response => response.data);
     }
