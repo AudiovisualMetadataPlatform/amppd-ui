@@ -210,6 +210,7 @@
 </template>
 <script>
 import { sync } from "vuex-pathify";
+import { env } from "@/helpers/env";
 import Modal from "@/components/shared/Modal.vue";
 import SharedService from "@/service/shared-service";
 import WorkflowService from "../../service/workflow-service";
