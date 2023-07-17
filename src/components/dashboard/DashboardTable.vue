@@ -130,14 +130,18 @@
             </td>
             <td v-if="checkAvailability('externalId')">{{ rec.externalId }}</td>
             <td v-if="checkAvailability('itemName')">{{ rec.itemName }}</td>
-            <td v-if="checkAvailability('primaryfileName')">
+            <td v-if="checkAvailability('primaryfileName') && accessControl._workflowresult_output._read">
               <a
                 v-bind:href="
                   workflowResultService.getSourceUrl(rec.primaryfileId)
                 "
                 target="_blank"
+                class="complete-output"
                 >{{ rec.primaryfileName }}</a
               >
+            </td>
+            <td v-else-if="checkAvailability('primaryfileName')">
+              {{ rec.primaryfileName }}
             </td>
             <td v-if="checkAvailability('workflowName')">
               {{ rec.workflowName }}
@@ -146,11 +150,9 @@
               {{ rec.workflowStep }}
             </td>
             <td
-              v-if="
-                rec.outputPath != null &&
-                  rec.status == 'COMPLETE' &&
-                  checkAvailability('outputName')
-              "
+              v-if="checkAvailability('outputName') && 
+                accessControl._workflowresult_output._read && 
+                outputReady(rec)"
             >
               <a
                 v-bind:href="workflowResultService.getOutputUrl(rec.id)"
@@ -159,15 +161,16 @@
                 >{{ rec.outputName }}</a
               >
             </td>
+            <td v-else-if="checkAvailability('outputName') && accessControl._workflowresult_output._read">
+              <a role="link" aria-disabled="true">{{ rec.outputName }}</a>
+            </td>            
             <td v-else-if="checkAvailability('outputName')">
               {{ rec.outputName }}
             </td>
             <td
-              v-if="
-                rec.outputPath != null &&
-                  rec.status == 'COMPLETE' &&
-                  checkAvailability('outputLabel')
-              "
+              v-if="checkAvailability('outputLabel') && 
+                accessControl._workflowresult_output._read && 
+                outputReady(rec)"
             >
               <a
                 v-bind:href="workflowResultService.getOutputUrl(rec.id)"
@@ -176,6 +179,9 @@
                 >{{ rec.outputLabel }}</a
               >
             </td>
+            <td v-else-if="checkAvailability('outputLabel') && accessControl._workflowresult_output._read">
+              <a role="link" aria-disabled="true">{{ rec.outputLabel }}</a>
+            </td>            
             <td v-else-if="checkAvailability('outputLabel')">
               {{ rec.outputLabel }}
             </td>
@@ -491,6 +497,9 @@ export default {
       const search = this.columns.find((column) => column.field === fieldName);
       if (!search) return false;
       else return true;
+    },
+    outputReady(wr) {
+      return wr.outputPath != null && wr.status == 'COMPLETE'
     },
     handleDeleteRow() {
       const self = this;
