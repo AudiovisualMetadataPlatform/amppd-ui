@@ -40,7 +40,7 @@
               <div
                 class="media-player"
                 v-if="
-                  baseUrl === 'file' && accessControl._primaryfilemedia._read
+                  baseUrl === 'file' && accessControl._primaryfile_media._read
                 "
               >
                 <div v-if="entity.mediaSource">
@@ -81,7 +81,7 @@
                 name="unitForm"
                 class="form"
                 :class="{
-                  'w-100': !accessControl._primaryfilemedia._read,
+                  'w-100': !accessControl._primaryfile_media._read,
                 }"
               >
                 <div v-if="baseUrl === 'file'">

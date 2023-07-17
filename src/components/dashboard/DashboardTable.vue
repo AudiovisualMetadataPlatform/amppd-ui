@@ -130,7 +130,7 @@
             </td>
             <td v-if="checkAvailability('externalId')">{{ rec.externalId }}</td>
             <td v-if="checkAvailability('itemName')">{{ rec.itemName }}</td>
-            <td v-if="checkAvailability('primaryfileName') && accessControl._workflowresult_output._read">
+            <td v-if="checkAvailability('primaryfileName') && accessControl._primaryfile_media._read">
               <a
                 v-bind:href="
                   workflowResultService.getSourceUrl(rec.primaryfileId)

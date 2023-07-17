@@ -144,7 +144,7 @@ export default class AccessControlService extends BaseService {
         self.accessControl._primaryfile._read = true;
         self.accessControl._primaryfile._update = true;
         self.accessControl._primaryfile._delete = true;
-        self.accessControl._primaryfilemedia._read = true;
+        self.accessControl._primaryfile_media._read = true;
         self.accessControl._supplement._create = true;
         self.accessControl._supplement._read = true;
         self.accessControl._supplement._update = true;
@@ -181,7 +181,7 @@ export default class AccessControlService extends BaseService {
         self.accessControl._primaryfile._read = false;
         self.accessControl._primaryfile._update = false;
         self.accessControl._primaryfile._delete = false;
-        self.accessControl._primaryfilemedia._read = false;
+        self.accessControl._primaryfile_media._read = false;
         self.accessControl._supplement._create = await this.getGlobalPermission(
           self,
           env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT"),
@@ -309,7 +309,7 @@ export default class AccessControlService extends BaseService {
           ) {
             switch (action.actionType) {
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
-                self.accessControl._primaryfilemedia._read = true;
+                self.accessControl._primaryfile_media._read = true;
                 break;
             }
           } else if (
