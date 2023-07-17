@@ -44,7 +44,8 @@ def main():
     subprocess.run(["./node_modules/.bin/vue-cli-service", "build"], check=True)
 
     if not args.package:
-        logging.info(f"UI code is in dist directory")
+        subprocess.run(["cp", "-av", sys.path[0] + "/dist/.", args.destdir], check=True)        
+        logging.info(f"UI code is in {args.destdir}")
         exit(0)
 
     with tempfile.TemporaryDirectory() as builddir:
