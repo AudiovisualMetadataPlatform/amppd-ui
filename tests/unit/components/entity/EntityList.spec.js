@@ -142,7 +142,7 @@ describe('EntityList.vue', () => {
                     _update: false,
                     _delete: false,
                 },
-                _primaryfilemedia: {
+                _primaryfile_media: {
                     _read: false,
                 },
             }

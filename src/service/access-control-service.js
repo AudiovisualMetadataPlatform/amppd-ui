@@ -144,7 +144,7 @@ export default class AccessControlService extends BaseService {
         self.accessControl._primaryfile._read = true;
         self.accessControl._primaryfile._update = true;
         self.accessControl._primaryfile._delete = true;
-        self.accessControl._primaryfilemedia._read = true;
+        self.accessControl._primaryfile_media._read = true;
         self.accessControl._supplement._create = true;
         self.accessControl._supplement._read = true;
         self.accessControl._supplement._update = true;
@@ -154,6 +154,7 @@ export default class AccessControlService extends BaseService {
         self.accessControl._workflowresult._read = true;
         self.accessControl._workflowresult._update = true;
         self.accessControl._workflowresult._delete = true;
+        self.accessControl._workflowresult_output._read = true;
         self.accessControl._workflowresult_restricted._create = true;
         self.accessControl._workflow._create = true;
         self.accessControl._workflow._read = true;
@@ -180,7 +181,7 @@ export default class AccessControlService extends BaseService {
         self.accessControl._primaryfile._read = false;
         self.accessControl._primaryfile._update = false;
         self.accessControl._primaryfile._delete = false;
-        self.accessControl._primaryfilemedia._read = false;
+        self.accessControl._primaryfile_media._read = false;
         self.accessControl._supplement._create = await this.getGlobalPermission(
           self,
           env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT"),
@@ -194,6 +195,7 @@ export default class AccessControlService extends BaseService {
         self.accessControl._workflowresult._read = false;
         self.accessControl._workflowresult._update = false;
         self.accessControl._workflowresult._delete = false;
+        self.accessControl._workflowresult_output._read = false;
         self.accessControl._workflowresult_restricted._create = false;
         self.accessControl._workflow._create = await this.getGlobalPermission(
           self,
@@ -307,7 +309,7 @@ export default class AccessControlService extends BaseService {
           ) {
             switch (action.actionType) {
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
-                self.accessControl._primaryfilemedia._read = true;
+                self.accessControl._primaryfile_media._read = true;
                 break;
             }
           } else if (
@@ -346,6 +348,15 @@ export default class AccessControlService extends BaseService {
                 break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_DELETE"):
                 self.accessControl._workflowresult._delete = true;
+                break;
+            }
+          } else if (
+            action.targetType ===
+            env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT")
+          ) {
+            switch (action.actionType) {
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
+                self.accessControl._workflowresult_output._read = true;
                 break;
             }
           } else if (

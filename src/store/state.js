@@ -173,7 +173,7 @@ const state = {
       _update: false,
       _delete: false,
     },
-    _primaryfilemedia: {
+    _primaryfile_media: {
       _read: false,
     },
     _supplement: {
@@ -186,9 +186,11 @@ const state = {
     _workflowresult: {
       _create: false,
       _read: false,
-      _export: false,
       _update: false,
       _delete: false,
+    },
+    _workflowresult_output: {
+      _read: false,
     },
     _workflowresult_restricted: {
       _create: false,
