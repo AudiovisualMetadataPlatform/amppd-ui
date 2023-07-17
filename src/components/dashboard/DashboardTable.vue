@@ -397,6 +397,7 @@ export default {
     };
   },
   computed: {
+    accessControl: sync("accessControl"),
     mgmEvaluation: sync("mgmEvaluation"),
     workflowDashboard: sync("workflowDashboard"),
     filterByCollections: sync(
