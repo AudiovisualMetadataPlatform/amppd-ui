@@ -42,54 +42,6 @@ export default class AccessControlService extends BaseService {
     return super.get_auth(`/roles/config?unitId=${unitId}`);
   }
 
-  /* async hasPermission(action_type, target_type) {
-    const actionType = env.getEnv(action_type);
-    const targetType = env.getEnv(target_type);
-    let unitId;
-    let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
-    if (uEntity && uEntity.currentUnit) {
-      unitId = uEntity.unitList.filter(
-        (unit) => unit.id === uEntity.currentUnit
-      )[0].id;
-    }
-    // console.log(actionType, targetType, unitId)
-    if (unitId) {
-      let permission = await this.getHasPermission(
-        actionType,
-        targetType,
-        unitId
-      );
-      return permission.data;
-    }
-  }
-
-  async checkAccessControl(instance) {
-    const self = instance;
-    try {
-      self.showLoader = true;
-      self.accessControl._nav._ingestBatch = await this.hasPermission(
-        "VUE_APP_AC_ACTIONTYPE_EXECUTE",
-        "VUE_APP_AC_TARGETTYPE_BATCH"
-      );
-      self.accessControl._unit._update = await this.hasPermission(
-        "VUE_APP_AC_ACTIONTYPE_UPDATE",
-        "VUE_APP_AC_TARGETTYPE_UNIT"
-      );
-      self.accessControl._collection._create = await this.hasPermission(
-        "VUE_APP_AC_ACTIONTYPE_CREATE",
-        "VUE_APP_AC_TARGETTYPE_COLLECTION"
-      );
-      self.showLoader = false;
-    } catch (error) {
-      self.showLoader = false;
-      self.$bvToast.toast(
-        "Oops! Something went wrong.",
-        self.sharedService.erorrToastConfig
-      );
-      console.error(error.message);
-    }
-  } */
-
   async getGlobalPermission(instance, target, action) {
     const self = instance;
     const result = self.accessControl.permittedActions.find(({ actions }) =>

@@ -1,37 +1,6 @@
 <template>
   <div class="w-100">
     <div class="col-12 bg-dark-1 nav-bar">
-      <!-- <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <div class="navbar-header d-flex">
-            <a class="navbar-brand" href="#"></a>
-            <span v-html="ampSvg"></span>
-          </div>
-          <ul class="nav navbar-nav">
-            <li class="marg-t-2" :class="menu.class" v-for="menu in menuList" :key="menu.name">
-              <a :href="'/#' + menu.url" v-if="!menu.children">
-                <span v-html="menu.icon"></span>
-                <span class="pl-2">{{ menu.name }}</span>
-              </a>
-              <template v-else>
-                <div class="dropdown">
-                  <a href="#" @click="$event.preventDefault();showDropdown(menu)" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                      <span v-html="menu.icon"></span>
-                      <span class="pl-2">{{ menu.name + menu.show}}</span>
-                  </a>
-                  <div class="dropdown-menu" :class="menu.show ? 'show' : ''" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="">
-                    <a class="dropdown-item" href="/workflows/listings.html">Listings</a>
-                    <a class="dropdown-item" href="/workflows/select-files-1.html">Submissions</a>
-                  </div>
-                </div>
-              </template>
-            </li>
-            <li>
-              <Logout />
-            </li>
-          </ul>
-        </div>
-      </nav>-->
       <b-navbar toggleable="lg nav-bar-items">
         <b-navbar-brand id="amp-logo" @click="routeToHome">
           <span v-html="ampSvg"></span>
@@ -90,21 +59,7 @@
                     {{ submenu.name }}
                   </span>
                 </b-dropdown-item>
-                <!-- <b-dropdown id="dropdown-1" text="Dropdown Button">
-                <b-dropdown-item>First Action</b-dropdown-item>
-                <b-dropdown-item>Second Action</b-dropdown-item>
-                <b-dropdown-item>Third Action</b-dropdown-item>
-                <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item active>Active action</b-dropdown-item>
-                <b-dropdown-item disabled>Disabled action</b-dropdown-item>
-                </b-dropdown>-->
               </b-nav-item-dropdown>
-              <!-- <b-nav-item-dropdown text="Lang" right v-else>
-              <b-dropdown-item href="#">EN</b-dropdown-item>
-              <b-dropdown-item href="#">ES</b-dropdown-item>
-              <b-dropdown-item href="#">RU</b-dropdown-item>
-              <b-dropdown-item href="#">FA</b-dropdown-item>
-              </b-nav-item-dropdown>-->
             </span>
           </b-navbar-nav>
           <Logout />
@@ -115,6 +70,7 @@
   </div>
 </template>
 <script>
+
 import config from "../../assets/constants/common-contant.js";
 import Logout from "@/components/shared/Logout.vue";
 import BreadCrumbs from "@/components/shared/BreadCrumbs.vue";
