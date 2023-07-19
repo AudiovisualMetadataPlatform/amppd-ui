@@ -343,6 +343,9 @@ export default {
           self.allUnits = res.data;
           self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(this.allUnits);
           self.loading = false;
+          if(res.data && res.data.length > 0) {
+            self.accessControl._supplement._update = true;
+          }
         });
         /* await self.unitService.getAllUnits().then(async (response) => {
           await self.unitService
