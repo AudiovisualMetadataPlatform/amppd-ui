@@ -180,7 +180,7 @@
               >
             </td>
             <td v-else-if="checkAvailability('outputLabel') && accessControl._workflowresult_output._read">
-              <a role="link" aria-disabled="true">{{ rec.outputLabel }}</a>
+              <a role="link" aria-disabled="true" class="complete-output">{{ rec.outputLabel }}</a>
             </td>            
             <td v-else-if="checkAvailability('outputLabel')">
               {{ rec.outputLabel }}

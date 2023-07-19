@@ -42,54 +42,6 @@ export default class AccessControlService extends BaseService {
     return super.get_auth(`/roles/config?unitId=${unitId}`);
   }
 
-  /* async hasPermission(action_type, target_type) {
-    const actionType = env.getEnv(action_type);
-    const targetType = env.getEnv(target_type);
-    let unitId;
-    let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
-    if (uEntity && uEntity.currentUnit) {
-      unitId = uEntity.unitList.filter(
-        (unit) => unit.id === uEntity.currentUnit
-      )[0].id;
-    }
-    // console.log(actionType, targetType, unitId)
-    if (unitId) {
-      let permission = await this.getHasPermission(
-        actionType,
-        targetType,
-        unitId
-      );
-      return permission.data;
-    }
-  }
-
-  async checkAccessControl(instance) {
-    const self = instance;
-    try {
-      self.showLoader = true;
-      self.accessControl._nav._ingestBatch = await this.hasPermission(
-        "VUE_APP_AC_ACTIONTYPE_EXECUTE",
-        "VUE_APP_AC_TARGETTYPE_BATCH"
-      );
-      self.accessControl._unit._update = await this.hasPermission(
-        "VUE_APP_AC_ACTIONTYPE_UPDATE",
-        "VUE_APP_AC_TARGETTYPE_UNIT"
-      );
-      self.accessControl._collection._create = await this.hasPermission(
-        "VUE_APP_AC_ACTIONTYPE_CREATE",
-        "VUE_APP_AC_TARGETTYPE_COLLECTION"
-      );
-      self.showLoader = false;
-    } catch (error) {
-      self.showLoader = false;
-      self.$bvToast.toast(
-        "Oops! Something went wrong.",
-        self.sharedService.erorrToastConfig
-      );
-      console.error(error.message);
-    }
-  } */
-
   async getGlobalPermission(instance, target, action) {
     const self = instance;
     const result = self.accessControl.permittedActions.find(({ actions }) =>
@@ -161,6 +113,11 @@ export default class AccessControlService extends BaseService {
         self.accessControl._workflow._update = true;
         self.accessControl._workflow._restrict = true;
         self.accessControl._workflow._delete = true;
+        self.accessControl._role._read = true;
+        self.accessControl._role._update = true;
+        self.accessControl._role_unit._update = true;
+        self.accessControl._roleassignment._read = true;
+        self.accessControl._roleassignment._update = true;
         self.accessControl._nav._ingestBatch = true;
       } else {
         self.accessControl._isAdmin = false;
@@ -210,6 +167,11 @@ export default class AccessControlService extends BaseService {
         );
         self.accessControl._workflow._restrict = false;
         self.accessControl._workflow._delete = false;
+        self.accessControl._role._read = false;
+        self.accessControl._role._update = false;
+        self.accessControl._role_unit._update = false;
+        self.accessControl._roleassignment._read = false;
+        self.accessControl._roleassignment._update = false;        
         self.accessControl._nav._ingestBatch = false; //default value is true
       }
     } catch (error) {
@@ -388,6 +350,36 @@ export default class AccessControlService extends BaseService {
                 self.accessControl._workflow._delete = true;
                 break;
             }
+          } else if (
+            action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_ROLE")
+          ) {
+            switch (action.actionType) {
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
+                self.accessControl._role._read = true;               
+                break;
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
+                self.accessControl._role._update = true;              
+                break;  
+            }          
+          } else if (
+            action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_ROLE_UNIT")
+          ) {
+            switch (action.actionType) {
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
+                self.accessControl._role_unit._update = true;               
+                break;  
+            }          
+          } else if (
+            action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_ROLEASSIGNMENT")
+          ) {
+            switch (action.actionType) {
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
+                self.accessControl._roleassignment._read = true;
+                break;
+              case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
+                self.accessControl._roleassignment._update = true;                
+                break;  
+            }          
           } else if (
             action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_BATCH")
           ) {

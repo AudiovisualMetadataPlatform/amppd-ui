@@ -440,7 +440,7 @@
                 </div>
                 <div class="d-flex float-right">
                   <a
-                    v-if="unitEntity.currentUnit && baseUrl === 'unit'"
+                    v-if="unitEntity.currentUnit && baseUrl === 'unit' && accessControl._role._read"
                     class="btn btn-lg btn-outline-primary mr-2"
                     :class="{ activeBtn: showRolesSettings }"
                     id="pills-unit-roles-tab"
@@ -469,7 +469,7 @@
                     Unit Roles Settings
                   </a>
                   <a
-                    v-if="unitEntity.currentUnit && baseUrl === 'unit'"
+                    v-if="unitEntity.currentUnit && baseUrl === 'unit' && accessControl._roleassignment._read"
                     class="btn btn-lg btn-outline-primary mr-2"
                     :class="{ activeBtn: showAssignRoles }"
                     id="pills-assign-tab"
@@ -509,12 +509,6 @@
                     "
                     class="w-100 text-right p-0 expand-ani"
                   >
-                    <!-- <div v-if="!showEdit"> -->
-                    <!-- <button
-                    class="btn btn-outline btn-lg btn-edit mr-2"
-                    type="button"
-                    @click="onCancel"
-                    >Cancel</button>-->
                     <button
                       class="btn btn-primary btn-lg btn-edit"
                       type="button"
@@ -522,13 +516,6 @@
                     >
                       Save
                     </button>
-                    <!-- </div> -->
-                    <!-- <button
-                    class="btn btn-primary btn-lg btn-edit"
-                    type="button"
-                    @click="showEdit = !showEdit"
-                    v-if="showEdit"
-                    >Edit</button>-->
                   </div>
                 </div>
               </form>
@@ -554,7 +541,7 @@
             "
           >
             <div
-              v-if="showAssignRoles"
+              v-if="showAssignRoles && accessControl._roleassignment._read"
               class="tab-pane expandOpen"
               :class="{ 'mb-5': showAssignRoles }"
               id="pills-assign"
@@ -563,8 +550,8 @@
             >
               <div class="card card-body marg-t-0 bg-light-gray-1 b-card-spl">
                 <div class="form-group">
-                  <label for="formGroupExampleInpu bold">Select User</label>
-                  <div data-v-4ae6b2fb="" class="">
+                  <label v-if="accessControl._roleassignment._update" for="formGroupExampleInpu bold">Select User</label>
+                  <div v-if="accessControl._roleassignment._update" data-v-4ae6b2fb="" class="">
                     <div data-v-4ae6b2fb="" class="input-group mb-3">
                       <input
                         data-v-4ae6b2fb=""
@@ -624,7 +611,7 @@
                               ]) ||
                               false
                           "
-                          :disabled="role.level <= assignedRoles['level']"
+                          :disabled="!accessControl._roleassignment._update || role.level <= assignedRoles['level']"
                         />
                         <label
                           class="form-check-label"
@@ -634,7 +621,7 @@
                       </div>
                     </li>
                   </ul>
-                  <div class="float-right">
+                  <div v-if="accessControl._roleassignment._update" class="float-right">
                     <button
                       type="submit"
                       class="marg-tb-1 btn btn-primary btn-save"
@@ -647,7 +634,7 @@
               </div>
             </div>
             <div
-              v-if="showRolesSettings"
+              v-if="showRolesSettings && accessControl._role._read"
               :class="{ 'mb-5': showRolesSettings }"
               class="tab-pane expandOpen"
               id="pills-unit-roles-settings"
@@ -659,7 +646,7 @@
                   <table id="myTable" class="table w-100 permissions">
                     <thead>
                       <tr>
-                        <th scope="col" class="">Transaction</th>
+                        <th scope="col" class="">Action</th>
                         <th
                           scope="col"
                           class="checkbox slim-col-6 text-center"
@@ -704,17 +691,17 @@
                               class=""
                               type="checkbox"
                               :checked="getRoleValue(roleName, action)"
+                              :disabled="!accessControl._role_unit._update"
                             />
                           </span>
                         </td>
                       </tr>
                     </tbody>
                   </table>
-                  <div class="float-right">
+                  <div v-if="accessControl._role_unit._update" class="float-right">
                     <button
                       type="submit"
                       class="marg-tb-1 btn btn-primary btn-save"
-                      disabled
                     >
                       Save
                     </button>

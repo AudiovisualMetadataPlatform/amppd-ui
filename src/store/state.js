@@ -202,6 +202,17 @@ const state = {
       _restrict: false,
       _delete: false,
     },
+    _role: {
+      _read: false,
+      _update: false,
+    },
+    _role_unit: {
+      _update: false,
+    },
+    _roleassignment: {
+      _read: false,
+      _update: false,
+    },
     _nav: {
       _ingestBatch: true,
     },
