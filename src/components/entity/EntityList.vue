@@ -698,7 +698,7 @@
                       </tr>
                     </tbody>
                   </table>
-                  <div v:if="accessControl._role_unit._update" class="float-right">
+                  <div v-if="accessControl._role_unit._update" class="float-right">
                     <button
                       type="submit"
                       class="marg-tb-1 btn btn-primary btn-save"
