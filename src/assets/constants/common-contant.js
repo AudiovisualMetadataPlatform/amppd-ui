@@ -39,27 +39,32 @@ const menus = [
   {
     displayId: 1,
     name: "Content",
+    id: "content",
     class: "units, units",
     icon: icons["unit"],
     dropdownIcon: icons["drop_down"],
     children: [
       {
         name: "Navigation",
+        id: "content_navigation",
         class: "units, units",
         url: "/unit/details",
       },
       {
         name: "Supplemental Files",
+        id: "content_supplement",
         class: "units, units",
         url: "/supplemental-files",
       },
       {
         name: "Item Search",
+        id: "content_search",
         class: "units, units",
         url: "/collections/items/item-search",
       },
       {
         name: "Batch Ingest",
+        id: "content_batch",
         class: "batch-ingest, batch-ingest",
         url: "/batch/ingest",
       }
@@ -68,6 +73,7 @@ const menus = [
   {
     displayId: 2,
     name: "Dashboard",
+    id: "dashboard",
     class: "collections, collections",
     icon: icons["dashboard"],
     url: "/dashboard",
@@ -75,17 +81,20 @@ const menus = [
   {
     displayId: 3,
     name: "Workflows",
+    id: "workflows",
     class: "workflows, workflows",
     icon: icons["new_workflow"],
     dropdownIcon: icons["drop_down"],
     children: [
       {
         name: "Edit",
+        id: "workflows_edit",
         class: "workflows, workflows",
         url: "/workflows",
       },
       {
         name: "Run",
+        id: "workflows_run",
         class: "workflows, workflows",
         url: "/workflow/submit",
       },
@@ -94,6 +103,7 @@ const menus = [
   {
     displayId: 4,
     name: "Deliverables",
+    id: "deliverables",
     class: "deliverables, deliverables",
     icon: icons["deliverables"],
     url: "/deliverables",
@@ -101,6 +111,7 @@ const menus = [
   {
     displayId: 5,
     name: "MGM Evaluation",
+    id: "mgmEvaluation",
     class: "evaluations, evaluations",
     icon: icons["mgm_evaluation"],
     url: "/mgm-evaluation",
@@ -109,12 +120,14 @@ const menus = [
   {
     displayId: 6,
     name: "Configuration",
+    id: "configuration",
     dropdownIcon: icons["drop_down"],
     icon: icons["configuration"],
     class: "configuration, configuration",
     children: [
       {
         name: "User Role Permissions",
+        id: "configuration",
         class: "configuration, configuration",
         url: "/configuration/permissions"
       }

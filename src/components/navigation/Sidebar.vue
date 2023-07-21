@@ -19,12 +19,20 @@
               <b-nav-item
                 :id="menu.url"
                 @click="routeTo(menu)"
+                :class="{ 
+                  'd-none': !navPermissions[menu.id] 
+                }"
                 v-if="!menu.children && menu.url !== '/mgm-evaluation'"
               >
                 <span v-html="menu.icon"></span>
                 <span class="pl-2 menu-name">{{ menu.name }}</span>
               </b-nav-item>
-              <b-nav-item-dropdown v-else>
+              <b-nav-item-dropdown
+                :class="{ 
+                  'd-none': !navPermissions[menu.id] 
+                }"
+                v-else
+              >
                 <template #button-content>
                   <span v-html="menu.icon"></span>
                   <span class="pl-2  menu-name">{{ menu.name }}</span>
@@ -48,7 +56,7 @@
                   :disabled="!submenu.url"
                   class="p-0"
                   :class="{ 
-                    'd-none': !accessControl._nav._ingestBatch && submenu.url === '/batch/ingest' 
+                    'd-none': !navPermissions[submenu.id] 
                   }"
                   :id="submenu.url"
                   v-for="submenu in menu.children"
@@ -99,9 +107,13 @@ export default {
     isAuthenticated: sync("isAuthenticated"),
     mgmCategories: sync("mgmCategories"),
     accessControl: sync("accessControl"),
+    navPermissions: sync("navPermissions"),
     orderedMenuList() {
       let self = this;
-      return this.sharedService.sortByNumber(self.menuList, "displayId");
+      let navMenus = self.isAuthenticated 
+        ? this.sharedService.sortByNumber(self.menuList, "displayId")
+        : [];
+      return navMenus;
     },
   },
   methods: {
@@ -177,13 +189,12 @@ export default {
         }
       }
     },
-    convertToSvg(value) {
-      var parser = new DOMParser();
-      return parser.parseFromString(value, "image/svg+xml");
-    },
-    showDropdown(menu) {
-      menu.show = !menu.show;
-    },
+  },
+  beforeUpdate() {
+    const self = this;
+    if (self.isAuthenticated) {
+      self.accessControlService.checkNavPermissions(this);
+    }
   },
   mounted() {
     const self = this;

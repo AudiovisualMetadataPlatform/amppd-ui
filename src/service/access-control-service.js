@@ -18,6 +18,12 @@ export default class AccessControlService extends BaseService {
     );
   }
 
+  async getPermittedMenus() {
+    return super.get_auth(
+      '/permissions/actions?actionTypes=&targetTypes=&unitIds='
+    );
+  }
+
   async getIsAdmin() {
     return super.get_auth(`/roleAssignments/isAdmin`);
   }
@@ -182,6 +188,84 @@ export default class AccessControlService extends BaseService {
       );
       console.error(error);
     }
+  }
+
+  async checkNavPermissions(instance) {
+    const self = instance;
+    await this.getPermittedMenus()
+      .then((res) => {
+        let allUnitActions = res.data;
+        if(allUnitActions != undefined) {
+          let allActions = allUnitActions.map(a => a.actions).flat();
+          let permittedActions = [];
+          for (const [index, action] of allActions.entries()) {
+            const { actionType, targetType } = action;
+            permittedActions.push({ actionType, targetType });
+          }
+          const permissions = self.sharedService.groupByIndex(permittedActions, 'targetType', 'actionType');
+          const targetTypes = Object.keys(permissions);
+          targetTypes.forEach(targetType => {
+            switch(targetType) {
+              case env.getEnv("VUE_APP_AC_TARGETTYPE_UNIT"):
+                self.navPermissions.content_navigation = permissions[targetType]
+                  .indexOf(env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"))
+                  > -1;
+                  self.navPermissions.content = self.navPermissions.content || self.navPermissions.content_navigation;
+                break;
+              case env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT"):
+                self.navPermissions.content_supplement = permissions[targetType]
+                  .indexOf(env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"))
+                  > -1;
+                self.navPermissions.content = self.navPermissions.content || self.navPermissions.content_supplement;
+                break;
+              case env.getEnv("VUE_APP_AC_TARGETTYPE_ITEM"):
+                self.navPermissions.content_search = permissions[targetType]
+                  .indexOf(env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"))
+                  > -1;
+                self.navPermissions.content = self.navPermissions.content || self.navPermissions.content_search;
+                break;
+              case env.getEnv("VUE_APP_AC_TARGETTYPE_BATCH"):
+                self.navPermissions.content_batch = permissions[targetType]
+                  .indexOf(env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"))
+                  > -1;
+                self.navPermissions.content = self.navPermissions.content || self.navPermissions.content_batch;
+                break;
+              case env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT"):
+                self.navPermissions.dashboard = permissions[targetType]
+                  .indexOf(env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"))
+                  > -1;
+                self.navPermissions.workflows_run  = permissions[targetType]
+                    .indexOf(env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"))
+                    > -1;
+                self.navPermissions.workflows = self.navPermissions.workflows || self.navPermissions.workflows_run;
+                break;
+              case env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW"):
+                self.navPermissions.workflows_edit = permissions[targetType]
+                  .indexOf(env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"))
+                  > -1;
+                self.navPermissions.workflows = self.navPermissions.workflows || self.navPermissions.workflows_edit;
+                break;
+              case env.getEnv("VUE_APP_AC_TARGETTYPE_BAG"):
+                self.navPermissions.deliverables = permissions[targetType]
+                  .indexOf(env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"))
+                  > -1;
+                break;
+              case env.getEnv("VUE_APP_AC_TARGETTYPE_MGMEVALUATIONTEST"):
+                self.navPermissions.mgmEvaluation = permissions[targetType]
+                  .indexOf(env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"))
+                  > -1;
+                break;
+              case env.getEnv("VUE_APP_AC_TARGETTYPE_ROLE"):
+                self.navPermissions.configuration = permissions[targetType]
+                  .indexOf(env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"))
+                  > -1;
+                break;   
+              default:
+                break;         
+            }
+          })
+        }
+      });
   }
 
   async checkAccessControl(instance) {
