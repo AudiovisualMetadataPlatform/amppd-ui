@@ -401,13 +401,6 @@
                   <div class="row" v-if="baseUrl === 'item'">
                     <div class="col-6 text-left form-group">
                       <label>External Source:</label>
-                      <!-- <input
-                        type="text"
-                        class="form-control w-100"
-                        v-model="entity.externalSource"
-                        :disabled="showEdit"
-                        @change="onInputChange"
-                    /> -->
                       <select
                         class="select custom-select w-100"
                         :disabled="
@@ -690,7 +683,8 @@
                             <input
                               class=""
                               type="checkbox"
-                              :checked="getRoleValue(roleName, action)"
+                              v-on:click="handleUpdateRoleAction(roleName, action.id)"
+                              :checked="existRoleAction(roleName, action.id)"
                               :disabled="!accessControl._role_unit._update"
                             />
                           </span>
@@ -702,6 +696,7 @@
                     <button
                       type="submit"
                       class="marg-tb-1 btn btn-primary btn-save"
+                      @click="handleRolesSettingsSaveBtn"
                     >
                       Save
                     </button>
@@ -711,8 +706,6 @@
             </div>
             <b-card class="m-0 text-left expand-ani">
               <!-- Title - Listing page -->
-              <!-- <h3 v-if="baseUrl == 'unit' && !purpose">My Units</h3>
-                <h3 v-else-if="baseUrl == 'collection' && !purpose">My Collections</h3>-->
 
               <!-- Title - Unit Details page  -->
               <div class="d-flex w-100" v-if="baseUrl == 'unit'">
@@ -1016,24 +1009,6 @@ export default {
     },
   },
   methods: {
-    getRoleValue(roleName, action) {
-      const self = this;
-      let actionRes = false;
-      self.settingsRoles.roles.find(({ name, actions }) => {
-        if (name === roleName) {
-          actions.find(({ targetType, actionType }) => {
-            if (
-              targetType === action.targetType &&
-              actionType === action.actionType
-            ) {
-              actionRes = true;
-            }
-          });
-        }
-      });
-
-      return actionRes;
-    },
     handleAddUser() {
       const self = this;
       self.assignedRoles.users.splice(0, 0, { username: self.selectedUser });
@@ -1063,14 +1038,14 @@ export default {
         .then(async (res) => {
           if (res.added.length || res.deleted.length) {
             self.$bvToast.toast(
-              "Assign roles have been updated successfully.",
+              "User role assignments have been updated successfully.",
               self.sharedService.successToastConfig
             );
           }
           if (res.failed.length) {
             for (let i = 0; i < res.failed.length; i++) {
               self.$bvToast.toast(
-                `Failed to update ${res.failed[i].roleName} role for ${res.failed[i].username}`,
+                `Failed to update ${res.failed[i].roleName} role assignments for ${res.failed[i].username}`,
                 self.sharedService.erorrToastConfig
               );
             }
@@ -1131,6 +1106,144 @@ export default {
       self.showAssignRoles = false;
       self.showRolesSettings = !self.showRolesSettings;
     },
+    handleUpdateRoleAction(roleName, actionId) {
+      const self = this;
+      // flip the existence of roleName-actionId in the rolesActions hashmap-hashset
+      let rolesActions = self.settingsRoles["rolesActions"];
+      let actions = rolesActions.get(roleName);
+      if (actions) {
+        if (actions.has(actionId)) {
+          actions.remove(actionsId);
+        }
+        else {
+          actions.add(actionId);
+        }
+      } else {
+        actions = new Set();
+        actions.add(actionId);
+        rolesActions.set(roleName, actions);        
+      }
+      // mark the role as being updated in the role
+      self.settingsRoles["rolesUpdated"].add(roleName);      
+    },
+    existRoleAction(roleName, actionId) {
+      const self = this;
+      // check if the roleName-actionId exists in the rolesActions hashmap-hashset
+      let actions = self.settingsRoles["rolesActions"].get(roleName);
+      let exist = actions && actions.has(actionId)
+      return exist;
+    },
+    async handleRolesSettingSaveBtn() {
+      const self = this;
+      // process all updated roles each with action IDs
+      let rolesActions = self.settingsRoles["rolesActions"];
+      let rolesUpdated = self.settingsRoles["rolesUpdated"];
+      let roles = new Array();
+      for (let roleName of rolesUpdated) {
+        let actions = rolesActions.get(roleName);  
+        let actionIds = new Array.from(actions);
+        let role = {"name": roleName, "actionIds": actionIds};
+        roles.add(role);
+      }
+      // call updateRoleActionConfig API 
+      self.accessControlService
+        .updateRoleActionConfig(self.unitEntity.currentUnit, roles)
+        .then(async (res) => {
+          let nFailed = roles.length - res.length;
+          if (nFailed > 0) {
+            self.$bvToast.toast(
+              "Roles permission configuration have been updated successfully.",
+              self.sharedService.successToastConfig
+            );
+          } else {
+              self.$bvToast.toast(
+                `Failed to update ${nFailed} roles with permissions configuration`,
+                self.sharedService.erorrToastConfig
+              );
+          }          
+          self.showLoader = true;
+          refreshRolesSettings();
+          self.showLoader = false;
+        })
+        .catch((e) => {
+          self.showLoader = false;
+          self.$bvToast.toast(
+            "Oops! Something went wrong.",
+            self.sharedService.erorrToastConfig
+          );
+          console.log(e);
+        });
+    },      
+    async refreshRolesSettings() {
+      const self = this;
+      const settingsRolesResponse = await self.accessControlService.retrieveRoleActionConfig(
+        self.unitEntity.currentUnit
+      );
+      self.settingsRoles = settingsRolesResponse.data;
+      let groupBy = function(xs, key) {
+        return xs.reduce(function(rv, x) {
+          (rv[x[key]] = rv[x[key]] || []).push(x);
+          return rv;
+        }, {});
+      };
+      self.settingsRoles["groupedActions"] = groupBy(
+        self.settingsRoles.actions,
+        "targetType"
+      );
+      // set up hashmap <roleName, actionSet>
+      let roleActions = new Map();
+      for (let role of self.settingsRoles.roles) {
+        let actions = roleActions.get(role.name)
+        if (!actions) {
+          actions = new Set();
+          roleActions.set(role.name, actions);
+        }          
+        for (let action of role.actions) {
+          actions.add(action.id);
+        }
+      }
+      self.settingsRoles["rolesActions"] = roleActions;
+      // set up hashset to keep updated roles represented by roleName, initially empty
+      self.settingsRoles["rolesUpdated"] = new Set();
+    },
+    async getUnitDetails() {
+      const self = this;
+      self.showLoader = true;
+      try {
+        const unitDetails = await self.entityService.getUnitDetails(
+          self.unitEntity.currentUnit,
+          self
+        );
+        // set up Roles Assignments
+        const assignRolesResponse = await self.accessControlService.retrieveRoleAssignments(
+          self.unitEntity.currentUnit
+        );
+        self.assignedRoles = assignRolesResponse.data;
+        self.idsExcluding = self.assignedRoles.users.map((user) => user.id);
+        self.accessControlService
+          .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
+          .then((response) => {
+            self.userList = self.sharedService.sortByAlphabatical(
+              response.data,
+              "username"
+            );
+          });
+        // set up Role Settings config
+        await self.refreshRolesSettings        
+        if (unitDetails.response) {
+          self.selectedUnit = unitDetails.response;
+          self.entity = unitDetails.response;
+          this.getUnitCollections();
+          self.showLoader = false;
+        } else {
+          self.showLoader = false;
+        }
+        self.showLoader = false;
+      } catch (error) {
+        self.showLoader = false;
+        console.log(error);
+      }
+    },
     onUnitChange() {
       const self = this;
       self.showAssignRoles = false;
@@ -1141,23 +1254,13 @@ export default {
         for (let i = 0; i < expandAniHtml.length; i++) {
           expandAniHtml[i].classList.remove("expandOpen");
         }
-
       sessionStorage.setItem(
         "unitEntity",
         JSON.stringify({ ...self.unitEntity })
       );
       self.getData();
-
       //Checking Access Control
       self.accessControlService.checkAccessControl(this);
-
-      // //BATCH INGEST: Enable batch ingest nav
-      // let batchIngestHtml = document.getElementById("/batch/ingest");
-      // if (batchIngestHtml) {
-      //   batchIngestHtml = batchIngestHtml.childNodes[0];
-      //   batchIngestHtml.ariaDisabled = null;
-      //   batchIngestHtml.classList.remove("disabled");
-      // }
     },
     async toggleCollectionActive(collection) {
       collection.active = !collection.active;
@@ -1191,39 +1294,7 @@ export default {
             const unitSelectHtml = document.getElementById("unit-select");
             if (unitSelectHtml) unitSelectHtml.focus();
           }
-        });
-        
-		/*
-        await self.unitService.getAllUnits().then(async (response) => {
-          await self.unitService
-            .getAllUnits("0", response.data.page.totalElements)
-            .then((res) => {
-              self.allUnits = res.data;
-              self.unitEntity.unitList = self.sharedService.sortByAlphabatical(
-                this.allUnits._embedded.units
-              );
-              self.showLoader = false;
-
-              // self.unitEntity.unitList = [{ ...self.unitEntity.unitList[0] }]; //For single unit test scenario
-              if (
-                self.unitEntity.unitList &&
-                self.unitEntity.unitList.length === 1
-              ) {
-                self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
-                self.onUnitChange();
-              } else {
-                let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
-                if (!uEntity)
-                  sessionStorage.setItem(
-                    "unitEntity",
-                    JSON.stringify({ ...self.unitEntity })
-                  );
-                const unitSelectHtml = document.getElementById("unit-select");
-                if (unitSelectHtml) unitSelectHtml.focus();
-              }
-            });
-        }); 
-        */
+        });        
       } catch (error) {
         self.showLoader = false;
         console.log(error);
@@ -1284,59 +1355,6 @@ export default {
         self.entity["mediaSource"] = mediaSourceUrl;
         self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
         self.showLoader = false;
-      }
-    },
-    async getUnitDetails() {
-      const self = this;
-      self.showLoader = true;
-      try {
-        const unitDetails = await self.entityService.getUnitDetails(
-          self.unitEntity.currentUnit,
-          self
-        );
-        //Assign Roles
-        const assignRolesResponse = await self.accessControlService.retrieveRoleAssignments(
-          self.unitEntity.currentUnit
-        );
-        self.assignedRoles = assignRolesResponse.data;
-        self.idsExcluding = self.assignedRoles.users.map((user) => user.id);
-        self.accessControlService
-          .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
-          .then((response) => {
-            self.userList = self.sharedService.sortByAlphabatical(
-              response.data,
-              "username"
-            );
-          });
-
-        //Roles Settings
-        const settingsRolesResponse = await self.accessControlService.retrieveRoleActionConfig(
-          self.unitEntity.currentUnit
-        );
-        self.settingsRoles = settingsRolesResponse.data;
-        let groupBy = function(xs, key) {
-          return xs.reduce(function(rv, x) {
-            (rv[x[key]] = rv[x[key]] || []).push(x);
-            return rv;
-          }, {});
-        };
-        self.settingsRoles["groupedActions"] = groupBy(
-          self.settingsRoles.actions,
-          "targetType"
-        );
-
-        if (unitDetails.response) {
-          self.selectedUnit = unitDetails.response;
-          self.entity = unitDetails.response;
-          this.getUnitCollections();
-          self.showLoader = false;
-        } else {
-          self.showLoader = false;
-        }
-        self.showLoader = false;
-      } catch (error) {
-        self.showLoader = false;
-        console.log(error);
       }
     },
     async getUnitCollections() {
@@ -1454,21 +1472,6 @@ export default {
     const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
     if (uEntity && uEntity.currentUnit)
       self.accessControlService.checkAccessControl(this);
-
-    // let batchIngestHtml = document.getElementById("/batch/ingest");
-    // if (batchIngestHtml) {
-    //   if (!uEntity || (uEntity && !uEntity.currentUnit)) {
-    //     //BATCH INGEST: Disable batch ingest nav
-    //     batchIngestHtml = batchIngestHtml.childNodes[0];
-    //     batchIngestHtml.ariaDisabled = "true";
-    //     batchIngestHtml.classList.add("disabled");
-    //   } else {
-    //     //BATCH INGEST: Enable batch ingest nav
-    //     batchIngestHtml = batchIngestHtml.childNodes[0];
-    //     batchIngestHtml.ariaDisabled = null;
-    //     batchIngestHtml.classList.remove("disabled");
-    //   }
-    // }
 
     if (!uEntity) {
       self.unitEntity = { unitList: [], currentUnit: "" };

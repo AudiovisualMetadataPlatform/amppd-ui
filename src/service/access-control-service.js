@@ -42,6 +42,11 @@ export default class AccessControlService extends BaseService {
     return super.get_auth(`/roles/config?unitId=${unitId}`);
   }
 
+  async updateRoleActionConfig(unitId, body) {
+    return super.post_auth(`/roles/config?unitId=${unitId}`, body)
+    .then((result) => result.data);
+  }
+
   async getGlobalPermission(instance, target, action) {
     const self = instance;
     const result = self.accessControl.permittedActions.find(({ actions }) =>
@@ -377,6 +382,7 @@ export default class AccessControlService extends BaseService {
                 self.accessControl._roleassignment._read = true;
                 break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
+                self.accessControl._roleassignment._read = true;
                 self.accessControl._roleassignment._update = true;                
                 break;  
             }          
