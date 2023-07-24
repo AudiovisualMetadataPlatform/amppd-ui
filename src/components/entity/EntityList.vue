@@ -1113,7 +1113,7 @@ export default {
       let actions = rolesActions.get(roleName);
       if (actions) {
         if (actions.has(actionId)) {
-          actions.remove(actionsId);
+          actions.remove(actionId);
         }
         else {
           actions.add(actionId);
@@ -1123,7 +1123,7 @@ export default {
         actions.add(actionId);
         rolesActions.set(roleName, actions);        
       }
-      // mark the role as being updated in the role
+      // add the role as to the update roles hashset
       self.settingsRoles["rolesUpdated"].add(roleName);      
     },
     existRoleAction(roleName, actionId) {
@@ -1135,7 +1135,7 @@ export default {
     },
     async handleRolesSettingSaveBtn() {
       const self = this;
-      // process all updated roles each with action IDs
+      // process all updated roles each with its associated actions IDs
       let rolesActions = self.settingsRoles["rolesActions"];
       let rolesUpdated = self.settingsRoles["rolesUpdated"];
       let roles = new Array();
@@ -1150,7 +1150,7 @@ export default {
         .updateRoleActionConfig(self.unitEntity.currentUnit, roles)
         .then(async (res) => {
           let nFailed = roles.length - res.length;
-          if (nFailed > 0) {
+          if (nFailed === 0) {
             self.$bvToast.toast(
               "Roles permission configuration have been updated successfully.",
               self.sharedService.successToastConfig
@@ -1191,18 +1191,18 @@ export default {
         "targetType"
       );
       // set up hashmap <roleName, actionSet>
-      let roleActions = new Map();
+      let rolesActions = new Map();
       for (let role of self.settingsRoles.roles) {
-        let actions = roleActions.get(role.name)
+        let actions = rolesActions.get(role.name)
         if (!actions) {
           actions = new Set();
-          roleActions.set(role.name, actions);
+          rolesActions.set(role.name, actions);
         }          
         for (let action of role.actions) {
           actions.add(action.id);
         }
       }
-      self.settingsRoles["rolesActions"] = roleActions;
+      self.settingsRoles["rolesActions"] = rolesActions;
       // set up hashset to keep updated roles represented by roleName, initially empty
       self.settingsRoles["rolesUpdated"] = new Set();
     },

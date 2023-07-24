@@ -43,7 +43,8 @@ export default class AccessControlService extends BaseService {
   }
 
   async updateRoleActionConfig(unitId, body) {
-    return super.post_auth(`/roles/config?unitId=${unitId}`, body)
+    return await super
+    .post_auth(`/roles/config?unitId=${unitId}`, body)
     .then((result) => result.data);
   }
 
