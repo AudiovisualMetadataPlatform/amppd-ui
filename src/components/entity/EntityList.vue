@@ -1166,7 +1166,7 @@ export default {
               );
           }          
           self.showLoader = true;
-          refreshRolesSettings();
+          self.refreshRolesSettings();
           self.showLoader = false;
         })
         .catch((e) => {
@@ -1206,7 +1206,7 @@ export default {
         for (let action of role.actions) {
           actions.add(action.id);
         }
-        concole.log("Processed unit role " + role.name + " with " + actions.length + " actions: " + actions);
+        console.log("Processed unit role " + role.name + " with " + actions.length + " actions: " + actions);
       }
       self.settingsRoles["rolesActions"] = rolesActions;
       // set up hashset to keep updated roles represented by roleName, initially empty
@@ -1235,7 +1235,7 @@ export default {
             );
           });
         // set up Role Settings config
-        await self.refreshRolesSettings        
+        await self.refreshRolesSettings();       
         if (unitDetails.response) {
           self.selectedUnit = unitDetails.response;
           self.entity = unitDetails.response;
