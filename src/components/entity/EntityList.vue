@@ -1146,7 +1146,7 @@ export default {
         let actions = rolesActions.get(roleName);  
         let actionIds = Array.from(actions);
         let role = {"name": roleName, "actionIds": actionIds};
-        roles.add(role);
+        roles.push(role);
         console.log("Updating role " + roleName + " with " + actionIds.length + " actions: " + actionIds);
       }
       // call updateRoleActionConfig API 
