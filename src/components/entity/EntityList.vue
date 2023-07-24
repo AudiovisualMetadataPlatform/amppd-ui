@@ -1144,7 +1144,7 @@ export default {
       let roles = new Array();
       for (let roleName of rolesUpdated) {
         let actions = rolesActions.get(roleName);  
-        let actionIds = new Array.from(actions);
+        let actionIds = Array.from(actions);
         let role = {"name": roleName, "actionIds": actionIds};
         roles.add(role);
         console.log("Updating role " + roleName + " with " + actionIds.length + " actions: " + actionIds);
