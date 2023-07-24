@@ -1113,7 +1113,7 @@ export default {
       let actions = rolesActions.get(roleName);
       if (actions) {
         if (actions.has(actionId)) {
-          actions.remove(actionId);
+          actions.delete(actionId);
           console.log("removing role-action to existing role: roleName = " + roleName +", actionId = " + actionId);
         }
         else {
