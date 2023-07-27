@@ -192,19 +192,22 @@ export default class AccessControlService extends BaseService {
 
   async checkNavPermissions(instance) {
     const self = instance;
-    await this.getPermittedMenus()
-      .then((res) => {
-        let allUnitActions = res.data;
-        if(allUnitActions != undefined) {
-          let allActions = allUnitActions.map(a => a.actions).flat();
-          let permittedActions = new Set();
-          for (const [index, action] of allActions.entries()) {
-            const { actionType, targetType } = action;
-            permittedActions.add(`${actionType}-${targetType}`);
-            self.navPermissions.push(`${actionType}-${targetType}`);
+    await this.isAdmin(self);
+    if(!self.accessControl._isAdmin) {
+      await this.getPermittedMenus()
+        .then((res) => {
+          let allUnitActions = res.data;
+          if(allUnitActions != undefined) {
+            let allActions = allUnitActions.map(a => a.actions).flat();
+            let permittedActions = new Set();
+            for (const [index, action] of allActions.entries()) {
+              const { actionType, targetType } = action;
+              permittedActions.add(`${actionType}-${targetType}`);
+              self.navPermissions.push(`${actionType}-${targetType}`);
+            }
           }
-        }
-      });
+        });
+    }
   }
 
   async checkAccessControl(instance) {

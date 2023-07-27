@@ -20,7 +20,7 @@
                 :id="menu.url"
                 @click="routeTo(menu)"
                 :class="{ 
-                  'd-none': navPermissions.indexOf(menu.permissionKey) < 0 
+                  'd-none': resolvePermissions(menu.permissionKey)
                 }"
                 v-if="!menu.children && menu.url !== '/mgm-evaluation'"
               >
@@ -56,7 +56,7 @@
                   :disabled="!submenu.url"
                   class="p-0"
                   :class="{ 
-                    'd-none': navPermissions.indexOf(submenu.permissionKey) < 0
+                    'd-none': resolvePermissions(submenu.permissionKey)
                   }"
                   :id="submenu.url"
                   v-for="submenu in menu.children"
@@ -187,12 +187,18 @@ export default {
       }
     },
     resolvePermissions(keys) {
-      if(keys.length > 0) {
-        return keys.map(key => {
-          return this.navPermissions.indexOf(key) < 0;
-        }).reduce((acc, current) => acc || current, false);
-      } else {
+      if(this.accessControl._isAdmin) {
         return false;
+      } else {
+        if(Array.isArray(keys) && keys.length > 0) {
+          return keys.map(key => {
+            return this.navPermissions.indexOf(key) < 0;
+          }).reduce((acc, current) => acc || current, false);
+        } else if(typeof keys === "string") {
+          return this.navPermissions.indexOf(keys) < 0;
+        } else {
+          return true;
+        }
       }
     }
   },
