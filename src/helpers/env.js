@@ -3,7 +3,7 @@ export const env = {
   getEnv(key) {
     let config = window.config
     let value = config[key] || process.env[key]
-    // console.log(`Env.getEnv: config[${key}] = ${config[key]}, return value = ${value}`)
+    console.log(`Env.getEnv: config[${key}] = ${config[key]}, return value = ${value}`)
     return value
   },
 

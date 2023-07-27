@@ -39,32 +39,32 @@ const menus = [
   {
     displayId: 1,
     name: "Content",
-    id: "content",
+    permissionKey: ["Read-Unit", "Read-Supplement", "Read-Item", "Create-Batch"],
     class: "units, units",
     icon: icons["unit"],
     dropdownIcon: icons["drop_down"],
     children: [
       {
         name: "Navigation",
-        id: "content_navigation",
+        permissionKey: "Read-Unit",
         class: "units, units",
         url: "/unit/details",
       },
       {
         name: "Supplemental Files",
-        id: "content_supplement",
+        permissionKey: "Read-Supplement",
         class: "units, units",
         url: "/supplemental-files",
       },
       {
         name: "Item Search",
-        id: "content_search",
+        permissionKey: "Read-Item",
         class: "units, units",
         url: "/collections/items/item-search",
       },
       {
         name: "Batch Ingest",
-        id: "content_batch",
+        permissionKey: "Create-Batch",
         class: "batch-ingest, batch-ingest",
         url: "/batch/ingest",
       }
@@ -73,7 +73,7 @@ const menus = [
   {
     displayId: 2,
     name: "Dashboard",
-    id: "dashboard",
+    permissionKey: "Read-WorkflowResult",
     class: "collections, collections",
     icon: icons["dashboard"],
     url: "/dashboard",
@@ -81,20 +81,20 @@ const menus = [
   {
     displayId: 3,
     name: "Workflows",
-    id: "workflows",
+    permissionKey: ["Read-Workflow", "Create-WorkflowResult"],
     class: "workflows, workflows",
     icon: icons["new_workflow"],
     dropdownIcon: icons["drop_down"],
     children: [
       {
         name: "Edit",
-        id: "workflows_edit",
+        permissionKey: "Read-Workflow",
         class: "workflows, workflows",
         url: "/workflows",
       },
       {
         name: "Run",
-        id: "workflows_run",
+        permissionKey: "Create-WorkflowResult",
         class: "workflows, workflows",
         url: "/workflow/submit",
       },
@@ -103,7 +103,7 @@ const menus = [
   {
     displayId: 4,
     name: "Deliverables",
-    id: "deliverables",
+    permissionKey: "Create-Bag",
     class: "deliverables, deliverables",
     icon: icons["deliverables"],
     url: "/deliverables",
@@ -111,7 +111,7 @@ const menus = [
   {
     displayId: 5,
     name: "MGM Evaluation",
-    id: "mgmEvaluation",
+    permissionKey: ["Create-MgmEvaluationTest"],
     class: "evaluations, evaluations",
     icon: icons["mgm_evaluation"],
     url: "/mgm-evaluation",
@@ -120,14 +120,14 @@ const menus = [
   {
     displayId: 6,
     name: "Configuration",
-    id: "configuration",
+    permissionKey: ["Update-Role"],
     dropdownIcon: icons["drop_down"],
     icon: icons["configuration"],
     class: "configuration, configuration",
     children: [
       {
         name: "User Role Permissions",
-        id: "configuration",
+        permissionKey: "Update-Role",
         class: "configuration, configuration",
         url: "/configuration/permissions"
       }

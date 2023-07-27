@@ -209,29 +209,4 @@ export default class SharedService {
         if (lastName != null && lastName.length > 0) { userInits.push(lastName[0].toUpperCase()); }
         return userInits.join('');
     }
-
-    /**
-     * Group elements in an object array by a given key and optionally
-     * select a give property
-     * Reference: https://www.tutorialspoint.com/most-efficient-method-to-groupby-on-an-array-of-objects-in-javascript
-     * @param {*} objectArray 
-     * @param {*} indexKey 
-     * @param {*} selectKey
-     */
-    groupByIndex(objectArray, indexKey, selectKey) {
-        return objectArray.reduce((acc, obj) => {
-            const key = obj[indexKey];
-            if (!acc[key]) {
-               acc[key] = [];
-            }
-            if(!selectKey) {
-                acc[key].push(obj);
-            } else {
-                acc[key].indexOf(obj[selectKey]) === -1
-                  ? acc[key].push(obj[selectKey])
-                  : null;
-            }
-            return acc;
-         }, {});
-    }
 }

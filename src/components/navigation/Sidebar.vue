@@ -20,7 +20,7 @@
                 :id="menu.url"
                 @click="routeTo(menu)"
                 :class="{ 
-                  'd-none': !navPermissions[menu.id] 
+                  'd-none': navPermissions.indexOf(menu.permissionKey) < 0 
                 }"
                 v-if="!menu.children && menu.url !== '/mgm-evaluation'"
               >
@@ -29,7 +29,7 @@
               </b-nav-item>
               <b-nav-item-dropdown
                 :class="{ 
-                  'd-none': !navPermissions[menu.id] 
+                  'd-none': resolvePermissions(menu.permissionKey)
                 }"
                 v-else
               >
@@ -56,7 +56,7 @@
                   :disabled="!submenu.url"
                   class="p-0"
                   :class="{ 
-                    'd-none': !navPermissions[submenu.id] 
+                    'd-none': navPermissions.indexOf(submenu.permissionKey) < 0
                   }"
                   :id="submenu.url"
                   v-for="submenu in menu.children"
@@ -110,10 +110,7 @@ export default {
     navPermissions: sync("navPermissions"),
     orderedMenuList() {
       let self = this;
-      let navMenus = self.isAuthenticated 
-        ? this.sharedService.sortByNumber(self.menuList, "displayId")
-        : [];
-      return navMenus;
+      return this.sharedService.sortByNumber(self.menuList, "displayId");
     },
   },
   methods: {
@@ -189,11 +186,23 @@ export default {
         }
       }
     },
+    resolvePermissions(keys) {
+      if(keys.length > 0) {
+        return keys.map(key => {
+          return this.navPermissions.indexOf(key) < 0;
+        }).reduce((acc, current) => acc || current, false);
+      } else {
+        return false;
+      }
+    }
   },
-  beforeUpdate() {
-    const self = this;
-    if (self.isAuthenticated) {
-      self.accessControlService.checkNavPermissions(this);
+  watch: {
+    isAuthenticated(newValue, oldValue) {
+      if(newValue) {
+        this.accessControlService.checkNavPermissions(this);
+      } else {
+        this.navPermissions = [];
+      }
     }
   },
   mounted() {

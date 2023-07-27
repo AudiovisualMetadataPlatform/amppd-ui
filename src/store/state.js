@@ -218,20 +218,7 @@ const state = {
     },
   },
 
-  navPermissions: {
-    content: false,
-    content_navigation: false,
-    content_supplement: false,
-    content_search: false,
-    content_batch: false,
-    dashboard: false,
-    workflows: false,
-    workflows_edit: false,
-    workflows_run: false,
-    deliverables: false,
-    mgmEvaluation: false,
-    configuration: false
-  }
+  navPermissions: []
 };
 
 export default state;
