@@ -19,12 +19,20 @@
               <b-nav-item
                 :id="menu.url"
                 @click="routeTo(menu)"
+                :class="{ 
+                  'd-none': resolvePermissions(menu.permissionKey)
+                }"
                 v-if="!menu.children && menu.url !== '/mgm-evaluation'"
               >
                 <span v-html="menu.icon"></span>
                 <span class="pl-2 menu-name">{{ menu.name }}</span>
               </b-nav-item>
-              <b-nav-item-dropdown v-else>
+              <b-nav-item-dropdown
+                :class="{ 
+                  'd-none': resolvePermissions(menu.permissionKey)
+                }"
+                v-else
+              >
                 <template #button-content>
                   <span v-html="menu.icon"></span>
                   <span class="pl-2  menu-name">{{ menu.name }}</span>
@@ -48,7 +56,7 @@
                   :disabled="!submenu.url"
                   class="p-0"
                   :class="{ 
-                    'd-none': !accessControl._nav._ingestBatch && submenu.url === '/batch/ingest' 
+                    'd-none': resolvePermissions(submenu.permissionKey)
                   }"
                   :id="submenu.url"
                   v-for="submenu in menu.children"
@@ -99,6 +107,7 @@ export default {
     isAuthenticated: sync("isAuthenticated"),
     mgmCategories: sync("mgmCategories"),
     accessControl: sync("accessControl"),
+    navPermissions: sync("navPermissions"),
     orderedMenuList() {
       let self = this;
       return this.sharedService.sortByNumber(self.menuList, "displayId");
@@ -177,13 +186,30 @@ export default {
         }
       }
     },
-    convertToSvg(value) {
-      var parser = new DOMParser();
-      return parser.parseFromString(value, "image/svg+xml");
-    },
-    showDropdown(menu) {
-      menu.show = !menu.show;
-    },
+    resolvePermissions(keys) {
+      if(this.accessControl._isAdmin) {
+        return false;
+      } else {
+        if(Array.isArray(keys) && keys.length > 0) {
+          return keys.map(key => {
+            return this.navPermissions.indexOf(key) < 0;
+          }).reduce((acc, current) => acc || current, false);
+        } else if(typeof keys === "string") {
+          return this.navPermissions.indexOf(keys) < 0;
+        } else {
+          return true;
+        }
+      }
+    }
+  },
+  watch: {
+    isAuthenticated(newValue, oldValue) {
+      if(newValue) {
+        this.accessControlService.checkNavPermissions(this);
+      } else {
+        this.navPermissions = [];
+      }
+    }
   },
   mounted() {
     const self = this;

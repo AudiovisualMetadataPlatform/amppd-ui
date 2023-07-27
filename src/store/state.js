@@ -217,6 +217,8 @@ const state = {
       _ingestBatch: true,
     },
   },
+
+  navPermissions: []
 };
 
 export default state;

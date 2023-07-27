@@ -18,6 +18,12 @@ export default class AccessControlService extends BaseService {
     );
   }
 
+  async getPermittedMenus() {
+    return super.get_auth(
+      '/permissions/actions?actionTypes=&targetTypes=&unitIds='
+    );
+  }
+
   async getIsAdmin() {
     return super.get_auth(`/roleAssignments/isAdmin`);
   }
@@ -187,6 +193,26 @@ export default class AccessControlService extends BaseService {
         self.sharedService.erorrToastConfig
       );
       console.error(error);
+    }
+  }
+
+  async checkNavPermissions(instance) {
+    const self = instance;
+    await this.isAdmin(self);
+    if(!self.accessControl._isAdmin) {
+      await this.getPermittedMenus()
+        .then((res) => {
+          let allUnitActions = res.data;
+          if(allUnitActions != undefined) {
+            let allActions = allUnitActions.map(a => a.actions).flat();
+            let permittedActions = new Set();
+            for (const [index, action] of allActions.entries()) {
+              const { actionType, targetType } = action;
+              permittedActions.add(`${actionType}-${targetType}`);
+              self.navPermissions.push(`${actionType}-${targetType}`);
+            }
+          }
+        });
     }
   }
 
