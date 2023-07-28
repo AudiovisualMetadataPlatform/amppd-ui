@@ -135,9 +135,9 @@ export default {
         let isAdminResponse = await self.accessControlService.getIsAdmin();
         self.accessControl._isAdmin = isAdminResponse.data;
         await self.accessControlService.isAdmin(self);
-        self.accessControl._nav._ingestBatch = true;
+        // self.accessControl._nav._ingestBatch = true;
 
-        //BATCH INGEST: checking permission
+        // checking permission
         if (uEntity && uEntity.currentUnit)
           self.accessControlService.checkAccessControl(this);
 

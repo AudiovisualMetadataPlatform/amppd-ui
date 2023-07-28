@@ -86,7 +86,7 @@ export default {
         let isAdminResponse = await self.accessControlService.getIsAdmin();
         self.accessControl._isAdmin = isAdminResponse.data;
         await self.accessControlService.isAdmin(self);
-        self.accessControl._nav._ingestBatch = true;
+        // self.accessControl._nav._ingestBatch = true;
 
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;
