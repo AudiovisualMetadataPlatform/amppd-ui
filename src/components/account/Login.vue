@@ -145,11 +145,7 @@ export default {
         console.log("AUTH:");
         if (currentUser && currentUser.token) {
           self.isAuthenticated = true;
-<<<<<<< HEAD
           this.accessControlService.checkNavPermissions(this);
-=======
-          self.accessControlService.checkNavPermissions(this);
->>>>>>> refs/remotes/origin/master
           if (this.$route.query.returnUrl) {
             console.log("going to " + this.$route.query.returnUrl);
             this.$router.push(this.$route.query.returnUrl);
