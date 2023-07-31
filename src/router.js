@@ -32,7 +32,7 @@ var router = new Router({
       name: "home",
       component: HomePage,
       meta: {
-        authorize: [],
+        // authorize: [],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
@@ -81,61 +81,11 @@ var router = new Router({
       name: "approve-user",
       component: ApproveUser,
       meta: {
-        authorize: [],
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_AMPUSER")
+        },
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
-      },
-    },
-    {
-      path: "/workflow/edit",
-      name: "workflow-editor",
-      component: WorkflowEditor,
-      meta: {
-        authorize: [],
-        helpUrl: env.getEnv("VUE_APP_DOC_WORKFLOW_CREATING"),
-      },
-    },
-    {
-      path: "/workflow/submit",
-      name: "workflow-submission",
-      component: WorkflowSubmission,
-      meta: {
-        authorize: [],
-        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Workflows" }],
-        helpUrl: env.getEnv("VUE_APP_DOC_WORKFLOW_SUBMISSIONS"),
-      },
-    },
-    {
-      path: "/dashboard",
-      name: "dashboard",
-      component: WorkflowDashboard,
-      meta: {
-        authorize: [],
-        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Dashboard" }],
-        helpUrl: env.getEnv("VUE_APP_DOC_THE_DASHBOARD"),
-      },
-    },
-    {
-      path: "/batch/ingest",
-      name: "batch-ingest",
-      component: BatchIngest,
-      meta: {
-        authorize: [],
-        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Batch Ingest" }],
-        helpUrl: env.getEnv("VUE_APP_DOC_UPLOADING_FILES_VIA_BATCH_INGEST"),
-      },
-    },
-    {
-      path: "/deliverables",
-      name: "deliverables",
-      component: Deliverables,
-      meta: {
-        authorize: [],
-        breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Workflows", href: "#/workflow/submit" },
-          { text: "Deliverables" },
-        ],
-        helpUrl: env.getEnv("VUE_APP_DOC_DELIVERABLES"),
       },
     },
     {
@@ -148,87 +98,85 @@ var router = new Router({
       name: "ner-editor",
       component: NerEditor,
     },
-    // {
-    //   path: "/collections",
-    //   name: "collections",
-    //   component: Collections,
-    //   meta: { authorize: [] },
-    // },
     {
-      path: "/collections/collection-details",
-      name: "collection-details",
-      component: CollectionDetails,
+      path: "/workflows",
+      name: "workflow-listing",
+      component: WorkflowList,
       meta: {
-        authorize: [],
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
+        },
+        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Workflows" }],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
     {
-      path: "/unit/details",
-      name: "unit-details",
-      component: EntityList,
+      path: "/workflow/edit",
+      name: "workflow-editor",
+      component: WorkflowEditor,
       meta: {
-        authorize: [],
-        breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-        ],
-        helpUrl: env.getEnv("VUE_APP_DOC_UNITS"),
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
+        },
+        helpUrl: env.getEnv("VUE_APP_DOC_WORKFLOW_CREATING"),
       },
     },
     {
-      path: "/collections/items/item-search",
-      name: "item-search",
-      component: ItemSearch,
+      path: "/workflow/submit",
+      name: "workflow-submission",
+      component: WorkflowSubmission,
       meta: {
-        authorize: [],
-        breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Item Search" },
-        ],
-        helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT"),
+        },
+        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Workflows" }],
+        helpUrl: env.getEnv("VUE_APP_DOC_WORKFLOW_SUBMISSIONS"),
       },
     },
     {
-      path: "/supplemental-files",
-      name: "supplemental-files",
-      component: SupplementList,
+      path: "/dashboard",
+      name: "dashboard",
+      component: WorkflowDashboard,
       meta: {
-        authorize: [],
-        breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Supplemental Files" },
-        ],
-        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT")
+        },
+        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Dashboard" }],
+        helpUrl: env.getEnv("VUE_APP_DOC_THE_DASHBOARD"),
       },
     },
     {
-      path: "/supplemental-files/add",
-      name: "create-supplemental",
-      component: SupplementList,
+      path: "/deliverables",
+      name: "deliverables",
+      component: Deliverables,
       meta: {
-        authorize: [],
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_BAG")
+        },
         breadCrumb: [
           { text: "Home", href: "#/" },
-          { text: "Supplemental Files", href: "#/supplemental-files" },
-          { text: "File Details", href: "#/supplemental-files/add" },
+          { text: "Workflows", href: "#/workflow/submit" },
+          { text: "Deliverables" },
         ],
-        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_DELIVERABLES"),
       },
     },
     {
-      path: "/supplemental-files/:supplementType/:supplementId",
-      name: "show-supplemental",
-      component: SupplementList,
+      path: "/batch/ingest",
+      name: "batch-ingest",
+      component: BatchIngest,
       meta: {
-        authorize: [],
-        breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Supplemental Files", href: "#/supplemental-files" },
-          { text: "File Details" },
-        ],
-        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_BATCH")
+        },
+        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Batch Ingest" }],
+        helpUrl: env.getEnv("VUE_APP_DOC_UPLOADING_FILES_VIA_BATCH_INGEST"),
       },
     },
     {
@@ -236,7 +184,10 @@ var router = new Router({
       name: "mgm-evaluation",
       component: MGMevaluation,
       meta: {
-        authorize: [],
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_MGMEVALUATIONTEST")
+        },
         breadCrumb: [{ text: "Home", href: "#/" }, { text: "MGM Evaluation" }],
         helpUrl: env.getEnv("VUE_APP_DOC_MGM_EVALUATION"),
       },
@@ -246,7 +197,10 @@ var router = new Router({
       name: "mgm-evaluation",
       component: MGMevaluation,
       meta: {
-        authorize: [],
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_MGMEVALUATIONTEST")
+        },
         breadCrumb: [
           { text: "Home", href: "#/" },
           { text: "MGM Evaluation", href: "#/mgm-evaluation" },
@@ -260,7 +214,10 @@ var router = new Router({
       name: "mgm-evaluation",
       component: TestResultsVisualiz,
       meta: {
-        authorize: [],
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_MGMEVALUATIONTEST")
+        },
         breadCrumb: [
           { text: "Home", href: "#/" },
           { text: "MGM Evaluation", href: "#/mgm-evaluation" },
@@ -270,11 +227,136 @@ var router = new Router({
       },
     },
     {
+      path: "/unit/details",
+      name: "unit-details",
+      component: EntityList,
+      meta: {
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_UNIT")
+        },
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Unit Details", href: "#/unit/details" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_UNITS"),
+      },
+    },
+    {
+      path: "/collection/create",
+      name: "create-collections",
+      component: EntityList,
+      meta: {
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_COLLECTION")
+        },
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Unit Details", href: "#/unit/details" },
+          { text: "Collection", href: "#/collection/create" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_COLLECTIONS"),
+      },
+    },
+    {
+      path: "/collection/details",
+      name: "collection-details",
+      component: EntityList,
+      meta: {
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_COLLECTION")
+        },
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Unit Details", href: "#/unit/details" },
+          { text: "Collection Details", href: "#/collection/details" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_COLLECTIONS"),
+      },
+    },
+    {
+      path: "/collection/add-items",
+      name: "create-items",
+      component: EntityList,
+      meta: {
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_ITEM")
+        },
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Unit Details", href: "#/unit/details" },
+          { text: "Collection Details", href: "#/collection/details" },
+          { text: "Item", href: "#/collection/add-items" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
+      },
+    },
+    {
+      path: "/collections/items/details",
+      name: "items-details",
+      component: EntityList,
+      meta: {
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_ITEM")
+        },
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Unit Details", href: "#/unit/details" },
+          { text: "Collection Details", href: "#/collection/details" },
+          { text: "Item Details", href: "#/collections/items/details" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
+      },
+    },
+    {
+      path: "/collections/file",
+      name: "file-details",
+      component: EntityList,
+      meta: {
+        authorize:  {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE")
+        },
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Unit Details", href: "#/unit/details" },
+          { text: "Collection Details", href: "#/collection/details" },
+          { text: "Item Details", href: "#/collections/items/details" },
+          { text: "Content File Details" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_PRIMARY_FILE"),
+      },
+    },
+    {
+      path: "/collections/items/item-search",
+      name: "item-search",
+      component: ItemSearch,
+      meta: {
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_ITEM")
+        },
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Unit Details", href: "#/unit/details" },
+          { text: "Item Search" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
+      },
+    },
+    {
       path: "/collections/items/item-search/details",
       name: "item-search-details",
       component: EntityList,
       meta: {
-        authorize: [],
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_ITEM")
+        },
         breadCrumb: [
           { text: "Home", href: "#/" },
           { text: "Unit Details", href: "#/unit/details" },
@@ -289,7 +371,10 @@ var router = new Router({
       name: "item-search-file-details",
       component: EntityList,
       meta: {
-        authorize: [],
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE")
+        },
         breadCrumb: [
           { text: "Home", href: "#/" },
           { text: "Unit Details", href: "#/unit/details" },
@@ -304,89 +389,69 @@ var router = new Router({
       },
     },
     {
-      path: "/collection/details",
-      name: "collection-details",
-      component: EntityList,
+      path: "/supplemental-files",
+      name: "supplemental-files",
+      component: SupplementList,
       meta: {
-        authorize: [],
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
+        },
         breadCrumb: [
           { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection Details", href: "#/collection/details" },
+          { text: "Supplemental Files" },
         ],
-        helpUrl: env.getEnv("VUE_APP_DOC_COLLECTIONS"),
-      },
-    },
-    {
-      path: "/collections/items/details",
-      name: "items-details",
-      component: EntityList,
-      meta: {
-        authorize: [],
-        breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection Details", href: "#/collection/details" },
-          { text: "Item Details", href: "#/collections/items/details" },
-        ],
-        helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
-      },
-    },
-    {
-      path: "/collection/create",
-      name: "create-collections",
-      component: EntityList,
-      meta: {
-        authorize: [],
-        breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection", href: "#/collection/create" },
-        ],
-        helpUrl: env.getEnv("VUE_APP_DOC_COLLECTIONS"),
-      },
-    },
-    {
-      path: "/collection/add-items",
-      name: "create-items",
-      component: EntityList,
-      meta: {
-        authorize: [],
-        breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection Details", href: "#/collection/details" },
-          { text: "Item", href: "#/collection/add-items" },
-        ],
-        helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
-      },
-    },
-    {
-      path: "/collections/file",
-      name: "file-details",
-      component: EntityList,
-      meta: {
-        authorize: [],
-        breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection Details", href: "#/collection/details" },
-          { text: "Item Details", href: "#/collections/items/details" },
-          { text: "Content File Details" },
-        ],
-        helpUrl: env.getEnv("VUE_APP_DOC_PRIMARY_FILE"),
-      },
-    },
-    {
-      path: "/workflows",
-      name: "workflow-listing",
-      component: WorkflowList,
-      meta: {
-        authorize: [],
-        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Workflows" }],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
+    {
+      path: "/supplemental-files/add",
+      name: "create-supplemental",
+      component: SupplementList,
+      meta: {
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
+        },
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Supplemental Files", href: "#/supplemental-files" },
+          { text: "File Details", href: "#/supplemental-files/add" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    {
+      path: "/supplemental-files/:supplementType/:supplementId",
+      name: "show-supplemental",
+      component: SupplementList,
+      meta: {
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
+        },
+        breadCrumb: [
+          { text: "Home", href: "#/" },
+          { text: "Supplemental Files", href: "#/supplemental-files" },
+          { text: "File Details" },
+        ],
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    // TODO: below is probably not used and shall be removed
+    {
+      path: "/collections/collection-details",
+      name: "collection-details",
+      component: CollectionDetails,
+      meta: {
+        authorize: {
+          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
+          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_COLLECTION")
+        },
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      },
+    },
+    // TODO: end above    
   ],
 });
 
@@ -403,11 +468,11 @@ router.beforeEach(async (to, from, next) => {
   if (env.getDisableAuth() == "true" || !authorize) {
     return next();
   } else if (!currentUser) {
-    console.log("not current user");
+    console.log("Current user not logged in yet.");
     // not logged in so redirect to login page with the return url
     return next({ path: "/account/login", query: { returnUrl: to.path } });
-    // return next();
   } else {
+    // TODO: the backend validate API doesn't do anything but returns true, this block can be removed.
     var success = await accountService.validate();
     if (!success) {
       // return next();
@@ -416,8 +481,17 @@ router.beforeEach(async (to, from, next) => {
       return next({ path: "/account/login", query: { returnUrl: to.path } });
     } else {
       router.app.$store.state.isAuthenticated = true;
-      // router.app.$store.commit("isAuthenticated");
-      return next();
+      let action = authorize.actionType + "-" + authorize.targetType;
+      let navPermissions = router.app.$store.state.navPermissions;
+      if (navPermissions.includes(action)) {
+        console.log(currentUser + " can perform action " + action);
+        return next();
+      }
+      else {
+        console.log(currentUser + " can't perform action " + action);
+        // TODO replace below with error page
+        return next({ path: "/account/login", query: { returnUrl: to.path } });
+      }
     }
   }
 });
