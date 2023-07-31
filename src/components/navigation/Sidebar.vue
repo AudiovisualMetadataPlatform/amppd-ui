@@ -193,21 +193,12 @@ export default {
         if(Array.isArray(keys) && keys.length > 0) {
           return keys.map(key => {
             return this.navPermissions.indexOf(key) < 0;
-          }).reduce((acc, current) => acc || current, false);
+          }).reduce((acc, current) => acc && current, true);
         } else if(typeof keys === "string") {
           return this.navPermissions.indexOf(keys) < 0;
         } else {
           return true;
         }
-      }
-    }
-  },
-  watch: {
-    isAuthenticated(newValue, oldValue) {
-      if(newValue) {
-        this.accessControlService.checkNavPermissions(this);
-      } else {
-        this.navPermissions = [];
       }
     }
   },
