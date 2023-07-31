@@ -145,7 +145,7 @@ export default {
         console.log("AUTH:");
         if (currentUser && currentUser.token) {
           self.isAuthenticated = true;
-          this.accessControlService.checkNavPermissions(this);
+          self.accessControlService.checkNavPermissions(this);
           if (this.$route.query.returnUrl) {
             console.log("going to " + this.$route.query.returnUrl);
             this.$router.push(this.$route.query.returnUrl);
