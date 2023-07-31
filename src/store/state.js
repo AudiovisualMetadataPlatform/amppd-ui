@@ -218,7 +218,8 @@ const state = {
     },
   },
 
-  navPermissions: []
+  navPermissions: [],
+  actionsUnits: new Map()
 };
 
 export default state;

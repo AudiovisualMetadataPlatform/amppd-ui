@@ -202,15 +202,15 @@ export default {
       }
     }
   },
-  watch: {
-    isAuthenticated(newValue, oldValue) {
-      if(newValue) {
-        this.accessControlService.checkNavPermissions(this);
-      } else {
-        this.navPermissions = [];
-      }
-    }
-  },
+  // watch: {
+  //   isAuthenticated(newValue, oldValue) {
+  //     if(newValue) {
+  //       this.accessControlService.checkNavPermissions(this);
+  //     } else {
+  //       this.navPermissions = [];
+  //     }
+  //   }
+  // },
   mounted() {
     const self = this;
     this.networkCalls();
