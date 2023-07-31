@@ -483,12 +483,13 @@ router.beforeEach(async (to, from, next) => {
       router.app.$store.state.isAuthenticated = true;
       let action = authorize.actionType + "-" + authorize.targetType;
       let navPermissions = router.app.$store.state.navPermissions;
+      console.log("navPermissions =  " + navPermissions);
       if (navPermissions.includes(action)) {
-        console.log(currentUser + " can perform action " + action);
+        console.log(currentUser.username + " can perform action " + action);
         return next();
       }
       else {
-        console.log(currentUser + " can't perform action " + action);
+        console.log(currentUser.username + " can't perform action " + action);
         // TODO replace below with error page
         return next({ path: "/account/login", query: { returnUrl: to.path } });
       }
