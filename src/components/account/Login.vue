@@ -78,6 +78,8 @@
 import Header from "@/components/shared/Header.vue";
 import { accountService } from "@/service/account-service";
 import { sync } from "vuex-pathify";
+import AccessControlService from "@/service/access-control-service";
+
 export default {
   name: "LoginComponent",
   components: {
@@ -97,11 +99,13 @@ export default {
       activate_status: false,
       id: null,
       token: null,
+      accessControlService: new AccessControlService(),
     };
   },
   computed: {
     isAuthenticated: sync("isAuthenticated"),
     accessControl: sync("accessControl"),
+    navPermissions: sync("navPermissions"),
   },
 
   created() {
@@ -141,6 +145,7 @@ export default {
         console.log("AUTH:");
         if (currentUser && currentUser.token) {
           self.isAuthenticated = true;
+          self.accessControlService.checkNavPermissions(this);
           if (this.$route.query.returnUrl) {
             console.log("going to " + this.$route.query.returnUrl);
             this.$router.push(this.$route.query.returnUrl);
