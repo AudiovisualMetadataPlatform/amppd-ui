@@ -490,8 +490,7 @@ router.beforeEach(async (to, from, next) => {
       }
       else {
         console.log(currentUser.username + " can't perform action " + action);
-        // TODO replace below with error page
-        return next({ path: "/account/login", query: { returnUrl: to.path } });
+        // return next({ path: "/account/login", query: { returnUrl: to.path } });
       }
     }
   }
