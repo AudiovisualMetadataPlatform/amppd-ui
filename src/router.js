@@ -490,7 +490,7 @@ router.beforeEach(async (to, from, next) => {
       }
       else {
         console.log(currentUser.username + " can't perform action " + action);
-        // return next({ path: "/account/login", query: { returnUrl: to.path } });
+        return next();
       }
     }
   }
