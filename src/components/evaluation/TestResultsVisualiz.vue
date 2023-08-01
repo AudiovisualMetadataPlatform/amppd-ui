@@ -300,7 +300,7 @@
                                     <td>&nbsp;{{ parameter.name }}</td>
                                     <td>
                                       &nbsp;{{
-                                        parameter.value && typeof parameter.value !== "string"
+                                        typeof parameter.value !== "string" && parameter.value !== null
                                           ? parameter.value.reduce(
                                               (accumulator, currentValue) =>
                                                 accumulator +
