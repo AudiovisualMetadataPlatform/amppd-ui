@@ -182,8 +182,7 @@
                                             :key="parameter.id"
                                           >
                                             {{
-                                              typeof parameter.value !==
-                                              "string"
+                                              parameter.value !== null && typeof parameter.value !== "string"
                                                 ? parameter.value.reduce(
                                                     (
                                                       accumulator,
@@ -300,7 +299,7 @@
                                     <td>&nbsp;{{ parameter.name }}</td>
                                     <td>
                                       &nbsp;{{
-                                        typeof parameter.value !== "string"
+                                        parameter.value !== null && typeof parameter.value !== "string"
                                           ? parameter.value.reduce(
                                               (accumulator, currentValue) =>
                                                 accumulator +

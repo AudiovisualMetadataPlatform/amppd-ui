@@ -153,7 +153,7 @@ export default {
             this.$router.push("/");
 
             //Setting the nav bar visible(cache memory issue)
-            self.accessControl._nav._ingestBatch = true;
+            // self.accessControl._nav._ingestBatch = true;
           }
         } else {
           this.errors.other_errors.push("Email and password do not match");

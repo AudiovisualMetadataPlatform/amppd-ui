@@ -130,7 +130,7 @@ export default class AccessControlService extends BaseService {
         self.accessControl._role_unit._update = true;
         self.accessControl._roleassignment._read = true;
         self.accessControl._roleassignment._update = true;
-        self.accessControl._nav._ingestBatch = true;
+        // self.accessControl._nav._ingestBatch = true;
       } else {
         self.accessControl._isAdmin = false;
         self.accessControl._unit._create = false;
@@ -184,7 +184,7 @@ export default class AccessControlService extends BaseService {
         self.accessControl._role_unit._update = false;
         self.accessControl._roleassignment._read = false;
         self.accessControl._roleassignment._update = false;        
-        self.accessControl._nav._ingestBatch = false; //default value is true
+        // self.accessControl._nav._ingestBatch = false; //default value is true
       }
     } catch (error) {
       self.showLoader = false;
@@ -413,14 +413,14 @@ export default class AccessControlService extends BaseService {
                 self.accessControl._roleassignment._update = true;                
                 break;  
             }          
-          } else if (
-            action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_BATCH")
-          ) {
-            switch (action.actionType) {
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
-                self.accessControl._nav._ingestBatch = true;
-                break;
-            }
+          // } else if (
+          //   action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_BATCH")
+          // ) {
+          //   switch (action.actionType) {
+          //     case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
+          //       self.accessControl._nav._ingestBatch = true;
+          //       break;
+          //   }
           }
         }
       }
