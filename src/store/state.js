@@ -146,6 +146,9 @@ const state = {
 
   accessControl: {
     permittedActions: [],
+    actionsUnits: new Map(),	// HashMap of unitId -> HashSet{actionKey}
+  	unitsActions: new Map(),	// HashMap of actionKey -> HashSet{unitId}
+
     _isAdmin: false,
 
     _unit: {
@@ -217,9 +220,9 @@ const state = {
       _ingestBatch: true,
     },
   },
+  
+	navPermissions: [],			// Array of actionKey
 
-  navPermissions: [],
-  actionsUnits: new Map()
 };
 
 export default state;

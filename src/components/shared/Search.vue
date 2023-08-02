@@ -1046,19 +1046,9 @@ export default {
                         JSON.stringify({ ...uEntity })
                       );
 
-                      //BATCH INGEST: checking permission
+                      //checking permission
                       if (uEntity && uEntity.currentUnit)
                         self.accessControlService.checkAccessControl(self);
-
-                      // //BATCH INGEST: Enable batch ingest nav
-                      // let batchIngestHtml = document.getElementById(
-                      //   "/batch/ingest"
-                      // );
-                      // if (batchIngestHtml) {
-                      //   batchIngestHtml = batchIngestHtml.childNodes[0];
-                      //   batchIngestHtml.ariaDisabled = null;
-                      //   batchIngestHtml.classList.remove("disabled");
-                      // }
                     });
 
                   const res = JSON.parse(JSON.stringify(response));
@@ -1108,18 +1098,6 @@ export default {
       const self = this;
       this.populteValues();
       this.getTypeaheadSearchItems();
-      // this.clonedDataSource = self.sharedService.sortByAlphabatical(
-      //   JSON.parse(JSON.stringify(this.dataSource)),
-      //   self.searchProps[0],
-      //   false
-      // );
-      // To get the distinct values
-      // if(this.searchDataSourceMap.get(this.type)) {
-      //     this.clonedDataSource = this.searchDataSourceMap.get(this.type);
-      // } else {
-      //     // this.clonedDataSource = [...new Map(this.clonedDataSource.map(item =>[item[this.searchProps[0]], item])).values()];
-      //     this.searchDataSourceMap.set(this.type, this.clonedDataSource);
-      // }
       this.selectedRecords =
         this.selectedFilters[this.type] &&
         this.selectedFilters[this.type].length

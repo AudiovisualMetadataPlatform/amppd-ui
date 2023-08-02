@@ -145,15 +145,12 @@ export default {
         console.log("AUTH:");
         if (currentUser && currentUser.token) {
           self.isAuthenticated = true;
-          self.accessControlService.checkNavPermissions(this);
+          self.accessControlService.initPermissions(this);
           if (this.$route.query.returnUrl) {
             console.log("going to " + this.$route.query.returnUrl);
             this.$router.push(this.$route.query.returnUrl);
           } else {
             this.$router.push("/");
-
-            //Setting the nav bar visible(cache memory issue)
-            // self.accessControl._nav._ingestBatch = true;
           }
         } else {
           this.errors.other_errors.push("Email and password do not match");

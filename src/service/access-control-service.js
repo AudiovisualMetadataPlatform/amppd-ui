@@ -196,26 +196,6 @@ export default class AccessControlService extends BaseService {
     }
   }
 
-  async checkNavPermissions(instance) {
-    const self = instance;
-    await this.isAdmin(self);
-    if(!self.accessControl._isAdmin) {
-      await this.getPermittedMenus()
-        .then((res) => {
-          let allUnitActions = res.data;
-          if(allUnitActions != undefined) {
-            let allActions = allUnitActions.map(a => a.actions).flat();
-            let permittedActions = new Set();
-            for (const [index, action] of allActions.entries()) {
-              const { actionType, targetType } = action;
-              permittedActions.add(`${actionType}-${targetType}`);
-              self.navPermissions.push(`${actionType}-${targetType}`);
-            }
-          }
-        });
-    }
-  }
-
   async checkAccessControl(instance) {
     const self = instance;
     try {
@@ -413,14 +393,6 @@ export default class AccessControlService extends BaseService {
                 self.accessControl._roleassignment._update = true;                
                 break;  
             }          
-          // } else if (
-          //   action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_BATCH")
-          // ) {
-          //   switch (action.actionType) {
-          //     case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
-          //       self.accessControl._nav._ingestBatch = true;
-          //       break;
-          //   }
           }
         }
       }
@@ -435,5 +407,41 @@ export default class AccessControlService extends BaseService {
     }
   }
 
-  
+  async initPermissions(instance) {
+    const self = instance;
+    await this.isAdmin(self);
+    if(!self.accessControl._isAdmin) {
+      await this.getPermittedMenus()
+        .then((res) => {
+          let allUnitActions = res.data;
+
+          if(allUnitActions != undefined) {
+            // set up navigation menus permissions
+            let allActions = allUnitActions.map(a => a.actions).flat();          
+            for (const [index, action] of allActions.entries()) {
+              const { actionType, targetType } = action;
+              self.navPermissions.push(`${actionType}-${targetType}`);
+            }
+
+            // set up unitsActions and actionsUnits hashmaps
+            for (let unit of allUnitActions) {
+              let actions = new Set();
+              for (let action of unit.actions) {
+                let actionKey = `${action.actionType}-${action.targetType}`;
+                actions.add(actionKey);
+                let units = self.accessControl.actionsUnits.get(actionKey);
+                if (!units) {
+                  units = new Set();
+                  self.accessControl.actionsUnits.set(actionKey, units);
+                }
+                units.add(unit.unitId);
+              }
+              self.accessControl.unitsActions.set(unit.unitId, actions);
+            }
+          }
+        });
+    }
+  }
+
+
 }

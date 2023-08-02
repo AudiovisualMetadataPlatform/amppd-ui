@@ -86,7 +86,6 @@ export default {
         let isAdminResponse = await self.accessControlService.getIsAdmin();
         self.accessControl._isAdmin = isAdminResponse.data;
         await self.accessControlService.isAdmin(self);
-        // self.accessControl._nav._ingestBatch = true;
 
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;
@@ -109,22 +108,6 @@ export default {
   },
   mounted() {
     this.networkCalls();
-
-    // const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
-    // let batchIngestHtml = document.getElementById("/batch/ingest");
-    // if (batchIngestHtml) {
-    //   if (!uEntity || (uEntity && !uEntity.currentUnit)) {
-    //     //BATCH INGEST: Disable batch ingest nav
-    //     batchIngestHtml = batchIngestHtml.childNodes[0];
-    //     batchIngestHtml.ariaDisabled = "true";
-    //     batchIngestHtml.classList.add("disabled");
-    //   } else {
-    //     //BATCH INGEST: Enable batch ingest nav
-    //     batchIngestHtml = batchIngestHtml.childNodes[0];
-    //     batchIngestHtml.ariaDisabled = null;
-    //     batchIngestHtml.classList.remove("disabled");
-    //   }
-    // }
   },
 };
 </script>

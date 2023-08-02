@@ -135,19 +135,10 @@ export default {
         let isAdminResponse = await self.accessControlService.getIsAdmin();
         self.accessControl._isAdmin = isAdminResponse.data;
         await self.accessControlService.isAdmin(self);
-        // self.accessControl._nav._ingestBatch = true;
 
         // checking permission
         if (uEntity && uEntity.currentUnit)
           self.accessControlService.checkAccessControl(this);
-
-        // //BATCH INGEST: Disable batch ingest nav
-        // if (!uEntity || (uEntity && !uEntity.currentUnit)) {
-        //   let batchIngestHtml = document.getElementById("/batch/ingest")
-        //     .childNodes[0];
-        //   batchIngestHtml.ariaDisabled = "true";
-        //   batchIngestHtml.classList.add("disabled");
-        // }
       } catch (error) {
         console.log(error);
       }

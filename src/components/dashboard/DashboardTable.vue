@@ -130,7 +130,7 @@
             </td>
             <td v-if="checkAvailability('externalId')">{{ rec.externalId }}</td>
             <td v-if="checkAvailability('itemName')">{{ rec.itemName }}</td>
-            <td v-if="checkAvailability('primaryfileName') && accessControl._primaryfile_media._read">
+            <td v-if="checkAvailability('primaryfileName') && canAccessLink(rec, true)">
               <a
                 v-bind:href="
                   workflowResultService.getSourceUrl(rec.primaryfileId)
@@ -151,7 +151,7 @@
             </td>
             <td
               v-if="checkAvailability('outputName') && 
-                accessControl._workflowresult_output._read && 
+                canAccessLink(rec, false) && 
                 outputReady(rec)"
             >
               <a
@@ -161,7 +161,7 @@
                 >{{ rec.outputName }}</a
               >
             </td>
-            <td v-else-if="checkAvailability('outputName') && accessControl._workflowresult_output._read">
+            <td v-else-if="checkAvailability('outputName') && canAccessLink(rec, false)">
               <a role="link" aria-disabled="true">{{ rec.outputName }}</a>
             </td>            
             <td v-else-if="checkAvailability('outputName')">
@@ -169,7 +169,7 @@
             </td>
             <td
               v-if="checkAvailability('outputLabel') && 
-                accessControl._workflowresult_output._read && 
+                canAccessLink(rec, false) && 
                 outputReady(rec)"
             >
               <a
@@ -179,7 +179,7 @@
                 >{{ rec.outputLabel }}</a
               >
             </td>
-            <td v-else-if="checkAvailability('outputLabel') && accessControl._workflowresult_output._read">
+            <td v-else-if="checkAvailability('outputLabel') && canAccessLink(rec, false)">
               <a role="link" aria-disabled="true" class="complete-output">{{ rec.outputLabel }}</a>
             </td>            
             <td v-else-if="checkAvailability('outputLabel')">
@@ -501,6 +501,15 @@ export default {
     },
     outputReady(wr) {
       return wr.outputPath != null && wr.status == 'COMPLETE'
+    },
+    canAccessLink(result, forMedia) {      
+      let actionType = env.getEnv("VUE_APP_AC_ACTIONTYPE_READ");
+      let targetType = forMedia ? // for media or output
+        env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE_MEDIA") :
+        env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT");
+      let actionKey = `${action.actionType}-${action.targetType}`;
+      let units =  this.accessControl.actionsUnits.get(actionKey);
+      return units && units.has(result.unitId);
     },
     handleDeleteRow() {
       const self = this;
