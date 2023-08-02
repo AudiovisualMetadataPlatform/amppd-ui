@@ -437,9 +437,9 @@ export default class AccessControlService extends BaseService {
               for (let action of unit.actions) {
                 if (action.actionType === env.getEnv("VUE_APP_AC_ACTIONTYPE_READ")) {
                   if (action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE_MEDIA"))
-                    self.accessControl.unitsMedia.push(unitId);
+                    self.accessControl.unitsMedia.push(unit.unitId);
                   else if (action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT"))
-                    self.accessControl.unitsOutput.push(unitId);			
+                    self.accessControl.unitsOutput.push(unit.unitId);			
                 }                 
               }
             }						 
