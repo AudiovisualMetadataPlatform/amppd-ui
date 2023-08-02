@@ -442,7 +442,9 @@ export default class AccessControlService extends BaseService {
                     self.accessControl.unitsOutput.push(unit.unitId);			
                 }                 
               }
-            }						 
+            }	
+            console.log("unitsMedia: " + self.accessControl.unitsMedia);		 
+            console.log("unitsOutput: " + self.accessControl.unitsOutput);				 
       
             // set up navigation menus permissions
             let allActions = allUnitActions.map(a => a.actions).flat();          

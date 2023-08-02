@@ -515,6 +515,8 @@ export default {
       let units = forMedia ? // for media or output
         this.accessControl.unitsMedia:
         this.accessControl.unitsOutput;      
+        console.log("forMedia: " + forMedia);	
+        console.log("units: " + units);	
       return units && units.includes(result.unitId);
     },
     handleDeleteRow() {
