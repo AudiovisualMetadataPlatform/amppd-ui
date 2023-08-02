@@ -507,7 +507,7 @@ export default {
       let targetType = forMedia ? // for media or output
         env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE_MEDIA") :
         env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT");
-      let actionKey = `${action.actionType}-${action.targetType}`;
+      let actionKey = `${actionType}-${targetType}`;
       let units =  this.accessControl.actionsUnits.get(actionKey);
       return units && units.has(result.unitId);
     },
