@@ -146,8 +146,10 @@ const state = {
 
   accessControl: {
     permittedActions: [],
-    actionsUnits: new Map(),	// HashMap of unitId -> HashSet{actionKey}
-  	unitsActions: new Map(),	// HashMap of actionKey -> HashSet{unitId}
+    // actionsUnits: new Map(),	// HashMap of unitId -> HashSet{actionKey}
+  	// unitsActions: new Map(),	// HashMap of actionKey -> HashSet{unitId}
+  	unitsMedia: [],				// IDs of units in which user can view primaryfile media
+  	unitsOutput: [],			// IDs of units in which user can view workflow output
 
     _isAdmin: false,
 

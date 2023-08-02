@@ -502,14 +502,20 @@ export default {
     outputReady(wr) {
       return wr.outputPath != null && wr.status == 'COMPLETE'
     },
+    // canAccessLink(result, forMedia) {      
+    //   let actionType = env.getEnv("VUE_APP_AC_ACTIONTYPE_READ");
+    //   let targetType = forMedia ? // for media or output
+    //     env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE_MEDIA") :
+    //     env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT");
+    //   let actionKey = `${actionType}-${targetType}`;
+    //   let units =  this.accessControl.actionsUnits.get(actionKey);
+    //   return units && units.has(result.unitId);
+    // },
     canAccessLink(result, forMedia) {      
-      let actionType = env.getEnv("VUE_APP_AC_ACTIONTYPE_READ");
-      let targetType = forMedia ? // for media or output
-        env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE_MEDIA") :
-        env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT");
-      let actionKey = `${actionType}-${targetType}`;
-      let units =  this.accessControl.actionsUnits.get(actionKey);
-      return units && units.has(result.unitId);
+      let units = forMedia ? // for media or output
+        this.accessControl.unitsMedia:
+        this.accessControl.unitsOutput;      
+      return units && units.includes(result.unitId);
     },
     handleDeleteRow() {
       const self = this;

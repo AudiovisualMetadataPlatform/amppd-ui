@@ -415,7 +415,35 @@ export default class AccessControlService extends BaseService {
         .then((res) => {
           let allUnitActions = res.data;
 
-          if(allUnitActions != undefined) {
+          if (allUnitActions != undefined) {
+            // set up unitsActions and actionsUnits hashmaps            
+            // for (let unit of allUnitActions) {
+            //   let actions = new Set();
+            //   for (let action of unit.actions) {
+            //     let actionKey = `${action.actionType}-${action.targetType}`;
+            //     actions.add(actionKey);
+            //     let units = self.accessControl.actionsUnits.get(actionKey);
+            //     if (!units) {
+            //       units = new Set();
+            //       self.accessControl.actionsUnits.set(actionKey, units);
+            //     }
+            //     units.add(unit.unitId);
+            //   }
+            //   self.accessControl.unitsActions.set(unit.unitId, actions);
+            // }
+
+            // set up unitsMedia and unitsOutput
+            for (let unit of allUnitActions) {
+              for (let action of unit.actions) {
+                if (action.actionType === env.getEnv("VUE_APP_AC_ACTIONTYPE_READ")) {
+                  if (action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE_MEDIA"))
+                    self.accessControl.unitsMedia.push(unitId);
+                  else if (action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT"))
+                    self.accessControl.unitsOutput.push(unitId);			
+                }                 
+              }
+            }						 
+      
             // set up navigation menus permissions
             let allActions = allUnitActions.map(a => a.actions).flat();          
             for (const [index, action] of allActions.entries()) {
@@ -423,21 +451,6 @@ export default class AccessControlService extends BaseService {
               self.navPermissions.push(`${actionType}-${targetType}`);
             }
 
-            // set up unitsActions and actionsUnits hashmaps
-            for (let unit of allUnitActions) {
-              let actions = new Set();
-              for (let action of unit.actions) {
-                let actionKey = `${action.actionType}-${action.targetType}`;
-                actions.add(actionKey);
-                let units = self.accessControl.actionsUnits.get(actionKey);
-                if (!units) {
-                  units = new Set();
-                  self.accessControl.actionsUnits.set(actionKey, units);
-                }
-                units.add(unit.unitId);
-              }
-              self.accessControl.unitsActions.set(unit.unitId, actions);
-            }
           }
         });
     }
