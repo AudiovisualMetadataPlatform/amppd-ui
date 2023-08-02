@@ -94,10 +94,14 @@
         @dragover.prevent
         @drop.prevent
       >
-        <div class="panel-heading">
+        <div class="panel-heading"
+          v-if="accessControl._primaryfile._create"
+        >
           <strong>Upload files</strong>
         </div>
-        <div class="panel-body">
+        <div class="panel-body"
+          v-if="accessControl._primaryfile._create"
+        >
           <div class="d-flex w-100 mt-3">
             <div class="input-group image-preview col-11 p-0 mr-1">
               <!-- <label for="exampleFormControlFile1" class="form-control-file btn btn-light btn-lg"><button>Browse</button></label> -->
