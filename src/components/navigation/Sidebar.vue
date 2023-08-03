@@ -168,7 +168,7 @@ export default {
           }
       } else {
         self.$router.push(`${menu.url}`).catch(error => {
-          if (!(error instanceof NavigationDuplicated)) {
+          if (error.name !== 'NavigationDuplicated') {
             throw error;
           }
         })
