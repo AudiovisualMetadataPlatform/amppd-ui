@@ -34,10 +34,12 @@ const getters = {};
 = Vue Store instance
 =======================================================*/
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state,
   mutations,
   actions,
   getters,
   plugins: [pathify.plugin, createPersistedState()],
 });
+
+export default store;
