@@ -107,7 +107,7 @@ export default {
     isAuthenticated: sync("isAuthenticated"),
     mgmCategories: sync("mgmCategories"),
     accessControl: sync("accessControl"),
-    navPermissions: sync("navPermissions"),
+    acActions: sync("acActions"),
     orderedMenuList() {
       let self = this;
       return this.sharedService.sortByNumber(self.menuList, "displayId");
@@ -135,19 +135,10 @@ export default {
         let isAdminResponse = await self.accessControlService.getIsAdmin();
         self.accessControl._isAdmin = isAdminResponse.data;
         await self.accessControlService.isAdmin(self);
-        // self.accessControl._nav._ingestBatch = true;
 
         // checking permission
         if (uEntity && uEntity.currentUnit)
           self.accessControlService.checkAccessControl(this);
-
-        // //BATCH INGEST: Disable batch ingest nav
-        // if (!uEntity || (uEntity && !uEntity.currentUnit)) {
-        //   let batchIngestHtml = document.getElementById("/batch/ingest")
-        //     .childNodes[0];
-        //   batchIngestHtml.ariaDisabled = "true";
-        //   batchIngestHtml.classList.add("disabled");
-        // }
       } catch (error) {
         console.log(error);
       }
@@ -192,10 +183,10 @@ export default {
       } else {
         if(Array.isArray(keys) && keys.length > 0) {
           return keys.map(key => {
-            return this.navPermissions.indexOf(key) < 0;
+            return this.acActions.indexOf(key) < 0;
           }).reduce((acc, current) => acc && current, true);
         } else if(typeof keys === "string") {
-          return this.navPermissions.indexOf(keys) < 0;
+          return this.acActions.indexOf(keys) < 0;
         } else {
           return true;
         }

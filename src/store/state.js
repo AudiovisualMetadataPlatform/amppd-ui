@@ -146,6 +146,9 @@ const state = {
 
   accessControl: {
     permittedActions: [],
+    // actionsUnits: new Map(),	// HashMap of unitId -> HashSet{actionKey}
+  	// unitsActions: new Map(),	// HashMap of actionKey -> HashSet{unitId}
+
     _isAdmin: false,
 
     _unit: {
@@ -217,9 +220,11 @@ const state = {
       _ingestBatch: true,
     },
   },
+  
+  acUnitsMedia: [],		// IDs of units in which user can view primaryfile media
+  acUnitsOutput: [],	// IDs of units in which user can view workflow output
+  acActions: [],		// actionKeys of action user can perform in some unit
 
-  navPermissions: [],
-  actionsUnits: new Map()
 };
 
 export default state;
