@@ -166,7 +166,6 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
-        try {
           if (menu.url === "/mgm-evaluation") {
             if (data.name === "All MGMs") {
               self.$router.push(menu.url);
@@ -174,11 +173,11 @@ export default {
               self.$router.push(`${menu.url}/${data.id}`);
             }
           } else {
-            self.$router.push(`${menu.url}`);
-          }
-        } catch(error) {
-          if (!(error instanceof NavigationDuplicated)) {
-            throw error;
+            self.$router.push(`${menu.url}`).catch(error => {
+              if (!(error instanceof NavigationDuplicated)) {
+                throw error;
+              }
+            })
           }
         }
       }
