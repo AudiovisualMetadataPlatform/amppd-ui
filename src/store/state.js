@@ -148,8 +148,6 @@ const state = {
     permittedActions: [],
     // actionsUnits: new Map(),	// HashMap of unitId -> HashSet{actionKey}
   	// unitsActions: new Map(),	// HashMap of actionKey -> HashSet{unitId}
-  	unitsMedia: [],				// IDs of units in which user can view primaryfile media
-  	unitsOutput: [],			// IDs of units in which user can view workflow output
 
     _isAdmin: false,
 
@@ -223,7 +221,9 @@ const state = {
     },
   },
   
-	navPermissions: [],			// Array of actionKey
+  acUnitsMedia: [],		// IDs of units in which user can view primaryfile media
+  acUnitsOutput: [],	// IDs of units in which user can view workflow output
+  acActionss: [],		// actionKeys of action user can perform in some unit
 
 };
 

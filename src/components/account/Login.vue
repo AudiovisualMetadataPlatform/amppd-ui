@@ -105,7 +105,9 @@ export default {
   computed: {
     isAuthenticated: sync("isAuthenticated"),
     accessControl: sync("accessControl"),
-    navPermissions: sync("navPermissions"),
+    acUnitsMedia: sync("acUnitsMedia"),
+    acUnitsOutput: sync("acUnitsOutput"),
+    acActions: sync("acActions"),
   },
 
   created() {

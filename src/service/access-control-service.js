@@ -432,25 +432,25 @@ export default class AccessControlService extends BaseService {
             //   self.accessControl.unitsActions.set(unit.unitId, actions);
             // }
 
-            // set up unitsMedia and unitsOutput
+            // set up acUnitsMedia and acUnitsOutput
             for (let unit of allUnitActions) {
               for (let action of unit.actions) {
                 if (action.actionType === env.getEnv("VUE_APP_AC_ACTIONTYPE_READ")) {
                   if (action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE_MEDIA"))
-                    self.accessControl.unitsMedia.push(unit.unitId);
+                    self.acUnitsMedia.push(unit.unitId);
                   else if (action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT"))
-                    self.accessControl.unitsOutput.push(unit.unitId);			
+                    self.acUnitsOutput.push(unit.unitId);			
                 }                 
               }
             }	
-            console.log("unitsMedia: " + self.accessControl.unitsMedia);		 
-            console.log("unitsOutput: " + self.accessControl.unitsOutput);				 
+            console.log("acUnitsMedia: " + self.acUnitsMedia);		 
+            console.log("acUnitsOutput: " + self.acUnitsOutput);				 
       
             // set up navigation menus permissions
             let allActions = allUnitActions.map(a => a.actions).flat();          
             for (const [index, action] of allActions.entries()) {
               const { actionType, targetType } = action;
-              self.navPermissions.push(`${actionType}-${targetType}`);
+              self.acActions.push(`${actionType}-${targetType}`);
             }
 
           }

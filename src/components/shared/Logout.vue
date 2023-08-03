@@ -59,7 +59,9 @@ export default {
       } else {
         accountService.logout();
         self.isAuthenticated = false;
-        self.navPermissions = [];
+        self.acActions = [];
+        self.acUnitsMedia = [];
+        self.acUnitsOutput = [];
         this.$router.push("/");
         // After successful logout we need to reset the state to prevent from showing old data
         this.$store.replaceState(defaultState);
@@ -75,7 +77,9 @@ export default {
   },
   computed: {
     isAuthenticated: sync("isAuthenticated"),
-    navPermissions: sync("navPermissions"),
+    acUnitsMedia: sync("acUnitsMedia"),
+    acUnitsOutput: sync("acUnitsOutput"),
+    acActions: sync("acActions"),
     hasUserInitials: function () {
       return this.isAuthenticated ? this.userInitials.length > 0 : false;
     },

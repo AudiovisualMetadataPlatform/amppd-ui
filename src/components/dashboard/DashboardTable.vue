@@ -398,6 +398,8 @@ export default {
   },
   computed: {
     accessControl: sync("accessControl"),
+    acUnitsMedia: sync("acUnitsMedia"),
+    acUnitsOutput: sync("acUnitsOutput"),
     mgmEvaluation: sync("mgmEvaluation"),
     workflowDashboard: sync("workflowDashboard"),
     filterByCollections: sync(
@@ -512,9 +514,8 @@ export default {
     //   return units && units.has(result.unitId);
     // },
     canAccessLink(result, forMedia) {      
-      let units = forMedia ? // for media or output
-        this.accessControl.unitsMedia:
-        this.accessControl.unitsOutput;      
+      // get units for media or output
+      let units = forMedia ? this.acUnitsMedia : this.acUnitsOutput;      
         console.log("forMedia: " + forMedia);	
         console.log("units: " + units);	
       return units && units.includes(result.unitId);

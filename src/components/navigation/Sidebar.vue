@@ -107,7 +107,7 @@ export default {
     isAuthenticated: sync("isAuthenticated"),
     mgmCategories: sync("mgmCategories"),
     accessControl: sync("accessControl"),
-    navPermissions: sync("navPermissions"),
+    acActions: sync("acActions"),
     orderedMenuList() {
       let self = this;
       return this.sharedService.sortByNumber(self.menuList, "displayId");
@@ -183,10 +183,10 @@ export default {
       } else {
         if(Array.isArray(keys) && keys.length > 0) {
           return keys.map(key => {
-            return this.navPermissions.indexOf(key) < 0;
+            return this.acActions.indexOf(key) < 0;
           }).reduce((acc, current) => acc && current, true);
         } else if(typeof keys === "string") {
-          return this.navPermissions.indexOf(keys) < 0;
+          return this.acActions.indexOf(keys) < 0;
         } else {
           return true;
         }

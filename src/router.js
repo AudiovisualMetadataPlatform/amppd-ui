@@ -482,9 +482,9 @@ router.beforeEach(async (to, from, next) => {
     } else {
       router.app.$store.state.isAuthenticated = true;
       let action = authorize.actionType + "-" + authorize.targetType;
-      let navPermissions = router.app.$store.state.navPermissions;
-      console.log("navPermissions =  " + navPermissions);
-      if (navPermissions.includes(action)) {
+      let acActions = router.app.$store.state.acActions;
+      console.log("initPermissions =  " + acActions);
+      if (acActions.includes(action)) {
         console.log(currentUser.username + " can perform action " + action);
         return next();
       }
