@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import pathify from "vuex-pathify";
 import { make } from "vuex-pathify";
 import defaultState from "./state";
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
@@ -38,5 +39,5 @@ export default new Vuex.Store({
   mutations,
   actions,
   getters,
-  plugins: [pathify.plugin],
+  plugins: [pathify.plugin, createPersistedState()],
 });
