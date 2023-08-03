@@ -166,14 +166,20 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
-        if (menu.url === "/mgm-evaluation") {
-          if (data.name === "All MGMs") {
-            self.$router.push(menu.url);
+        try {
+          if (menu.url === "/mgm-evaluation") {
+            if (data.name === "All MGMs") {
+              self.$router.push(menu.url);
+            } else {
+              self.$router.push(`${menu.url}/${data.id}`);
+            }
           } else {
-            self.$router.push(`${menu.url}/${data.id}`);
+            self.$router.push(`${menu.url}`);
           }
-        } else {
-          self.$router.push(`${menu.url}`);
+        } catch(error) {
+          if (!(error instanceof NavigationDuplicated)) {
+            throw error;
+          }
         }
       }
     },
