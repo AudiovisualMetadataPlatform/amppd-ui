@@ -223,7 +223,7 @@ const state = {
   
   acUnitsMedia: [],		// IDs of units in which user can view primaryfile media
   acUnitsOutput: [],	// IDs of units in which user can view workflow output
-  acActionss: [],		// actionKeys of action user can perform in some unit
+  acActions: [],		// actionKeys of action user can perform in some unit
 
 };
 
