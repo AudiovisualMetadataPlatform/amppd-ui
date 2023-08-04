@@ -398,6 +398,7 @@ export default {
   },
   computed: {
     accessControl: sync("accessControl"),
+    acIsAdmin: sync("acIsAdmin"),
     acUnitsMedia: sync("acUnitsMedia"),
     acUnitsOutput: sync("acUnitsOutput"),
     mgmEvaluation: sync("mgmEvaluation"),
@@ -518,7 +519,7 @@ export default {
       let units = forMedia ? this.acUnitsMedia : this.acUnitsOutput;      
         console.log("forMedia: " + forMedia);	
         console.log("units: " + units);	
-      return units && units.includes(result.unitId);
+      return this.acIsAdmin || units && units.includes(result.unitId);
     },
     handleDeleteRow() {
       const self = this;

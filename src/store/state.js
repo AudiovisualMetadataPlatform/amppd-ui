@@ -221,10 +221,10 @@ const state = {
     },
   },
   
+  acIsAdmin: false,
   acUnitsMedia: [],		// IDs of units in which user can view primaryfile media
   acUnitsOutput: [],	// IDs of units in which user can view workflow output
   acActions: [],		// actionKeys of action user can perform in some unit
-  acIsAdmin: false,
 };
 
 export default state;
