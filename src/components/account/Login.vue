@@ -149,6 +149,14 @@ export default {
         if (currentUser && currentUser.token) {
           self.isAuthenticated = true;
           await self.accessControlService.initPermissions(this);
+          // Force setting localStorage vuex object for state in vuex-persistedstate
+          let vuex = JSON.parse(localStorage.getItem("vuex"));
+          localStorage.setItem("vuex", JSON.stringify({
+            ...vuex,
+            acActions: this.acActions,
+            acUnitsMedia: this.acUnitsMedia,
+            acUnitsOutput: this.acUnitsOutput,
+          }));
           if (this.$route.query.returnUrl) {
             console.log("going to " + this.$route.query.returnUrl);
             this.$router.push(this.$route.query.returnUrl);
