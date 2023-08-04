@@ -452,9 +452,10 @@ export default class AccessControlService extends BaseService {
               const { actionType, targetType } = action;
               self.acActions.push(`${actionType}-${targetType}`);
             }
-
           }
         });
+    } else {
+      self.acIsAdmin = true;
     }
   }
 
