@@ -62,6 +62,7 @@ export default {
         self.acActions = [];
         self.acUnitsMedia = [];
         self.acUnitsOutput = [];
+        self.acIsAdmin = false;
         this.$router.push("/");
         // After successful logout we need to reset the state to prevent from showing old data
         this.$store.replaceState(defaultState);
@@ -80,6 +81,7 @@ export default {
     acUnitsMedia: sync("acUnitsMedia"),
     acUnitsOutput: sync("acUnitsOutput"),
     acActions: sync("acActions"),
+    acIsAdmin: sync("acIsAdmin"),
     hasUserInitials: function () {
       return this.isAuthenticated ? this.userInitials.length > 0 : false;
     },

@@ -108,6 +108,7 @@ export default {
     acUnitsMedia: sync("acUnitsMedia"),
     acUnitsOutput: sync("acUnitsOutput"),
     acActions: sync("acActions"),
+    acIsAdmin: sync("acIsAdmin"),
   },
 
   created() {
@@ -147,7 +148,7 @@ export default {
         console.log("AUTH:");
         if (currentUser && currentUser.token) {
           self.isAuthenticated = true;
-          self.accessControlService.initPermissions(this);
+          await self.accessControlService.initPermissions(this);
           if (this.$route.query.returnUrl) {
             console.log("going to " + this.$route.query.returnUrl);
             this.$router.push(this.$route.query.returnUrl);

@@ -22,6 +22,7 @@ import ItemSearch from "./components/entity/ItemSearch.vue";
 import MGMevaluation from "./components/evaluation/MGMevaluation.vue";
 import TestResultsVisualiz from "./components/evaluation/TestResultsVisualiz.vue";
 import SupplementList from "./components/supplement/SupplementList.vue";
+import AccessDenied from "./components/shared/AccessDenied.vue";
 import HomePage from "@/components/home";
 
 import store from "./store/amp-store.js";
@@ -441,6 +442,14 @@ var router = new Router({
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
+    {
+      path: "/access-denied",
+      name: "access-denied",
+      component: AccessDenied,
+      meta: {
+        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
+      }
+    },
     // TODO: below is probably not used and shall be removed
     {
       path: "/collections/collection-details",
@@ -473,7 +482,7 @@ router.beforeEach(async (to, from, next) => {
   } else if (!currentUser) {
     console.log("Current user not logged in yet.");
     // not logged in so redirect to login page with the return url
-    return next({ path: "/account/login", query: { returnUrl: to.path } });
+    return router.push({ path: "/access-denied", query: { returnUrl: to.path }});
   } else {
     // TODO: the backend validate API doesn't do anything but returns true, this block can be removed.
     var success = await accountService.validate();
@@ -487,14 +496,15 @@ router.beforeEach(async (to, from, next) => {
       let action = authorize.actionType + "-" + authorize.targetType;
       // let acActions = router.app.$store.state.acActions;
       let acActions = store.state.acActions;
-      console.log("initPermissions =  " + acActions);
-      if (acActions.includes(action)) {
+      let acIsAdmin = store.state.acIsAdmin;
+      console.log("initPermissions =  ", acActions," isAdmin = ", acIsAdmin);
+      if (acActions.includes(action) || acIsAdmin) {
         console.log(currentUser.username + " can perform action " + action);
         return next();
       }
       else {
         console.log(currentUser.username + " can't perform action " + action);
-        return next();
+        return router.push("/access-denied");
       }
     }
   }
