@@ -23,6 +23,9 @@ import MGMevaluation from "./components/evaluation/MGMevaluation.vue";
 import TestResultsVisualiz from "./components/evaluation/TestResultsVisualiz.vue";
 import SupplementList from "./components/supplement/SupplementList.vue";
 import HomePage from "@/components/home";
+
+import store from "./store/amp-store.js";
+
 Vue.use(Router);
 
 var router = new Router({
@@ -482,7 +485,8 @@ router.beforeEach(async (to, from, next) => {
     } else {
       router.app.$store.state.isAuthenticated = true;
       let action = authorize.actionType + "-" + authorize.targetType;
-      let acActions = router.app.$store.state.acActions;
+      // let acActions = router.app.$store.state.acActions;
+      let acActions = store.state.acActions;
       console.log("initPermissions =  " + acActions);
       if (acActions.includes(action)) {
         console.log(currentUser.username + " can perform action " + action);

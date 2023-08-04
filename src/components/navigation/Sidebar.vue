@@ -158,23 +158,20 @@ export default {
     },
     routeTo(menu, data) {
       const self = this;
-      if (
-        self.$route.path === "/workflow/edit" &&
-        localStorage.getItem("activeWorkflowSession")
-      ) {
-        alert(
-          "Workflow editor session is active. Please click on done button before leaving the page."
-        );
-      } else {
-        if (menu.url === "/mgm-evaluation") {
+      if (self.$route.path === "/workflow/edit" && localStorage.getItem("activeWorkflowSession")) {
+        alert("Workflow editor session is active. Please click on done button before leaving the page.");
+      } else if (menu.url === "/mgm-evaluation") {
           if (data.name === "All MGMs") {
             self.$router.push(menu.url);
           } else {
             self.$router.push(`${menu.url}/${data.id}`);
           }
-        } else {
-          self.$router.push(`${menu.url}`);
-        }
+      } else {
+        self.$router.push(`${menu.url}`).catch(error => {
+          if (error.name !== 'NavigationDuplicated') {
+            throw error;
+          }
+        })
       }
     },
     resolvePermissions(keys) {
