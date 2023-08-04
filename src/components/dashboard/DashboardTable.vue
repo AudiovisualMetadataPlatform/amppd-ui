@@ -399,7 +399,6 @@ export default {
   computed: {
     accessControl: sync("accessControl"),
     acIsAdmin: sync("acIsAdmin"),
-    acUnitsOutput: sync("acUnitsOutput"),
     acUnitsMedia: sync("acUnitsMedia"),
     acUnitsOutput: sync("acUnitsOutput"),
     mgmEvaluation: sync("mgmEvaluation"),
