@@ -968,6 +968,8 @@ export default {
     configProperties: sync("configProperties"),
     mgmCategories: sync("mgmCategories"),
     accessControl: sync("accessControl"),
+    acUnitsActions: sync("acUnitsActions"),
+    acIsAdmin: sync("acIsAdmin"),
     baseUrl() {
       const self = this;
       if (window.location.hash.toLowerCase().indexOf("unit") > -1) {

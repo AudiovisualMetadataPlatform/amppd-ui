@@ -50,7 +50,6 @@ import config from "@/assets/constants/common-contant.js";
 import SharedService from "@/service/shared-service";
 import EvaluationService from "@/service/evaluation-service";
 import ConfigPropertiesService from "@/service/config-properties-service";
-import AccessControlService from "@/service/access-control-service";
 
 export default {
   name: "Home",
@@ -64,12 +63,10 @@ export default {
       sharedService: new SharedService(),
       evaluationService: new EvaluationService(),
       configPropertiesService: new ConfigPropertiesService(),
-      accessControlService: new AccessControlService(),
     };
   },
   computed: {
     mgmCategories: sync("mgmCategories"),
-    accessControl: sync("accessControl"),
   },
   props: {},
   methods: {
@@ -82,11 +79,6 @@ export default {
     async networkCalls() {
       const self = this;
       try {
-        await self.accessControlService.permittedActions(self);
-        let isAdminResponse = await self.accessControlService.getIsAdmin();
-        self.accessControl._isAdmin = isAdminResponse.data;
-        await self.accessControlService.isAdmin(self);
-
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;
 

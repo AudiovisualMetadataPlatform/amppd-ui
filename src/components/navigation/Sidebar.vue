@@ -108,10 +108,12 @@ export default {
     mgmCategories: sync("mgmCategories"),
     accessControl: sync("accessControl"),
     acActions: sync("acActions"),
+    acUnitsActions: sync("acUnitsActions"),
     orderedMenuList() {
       let self = this;
       return this.sharedService.sortByNumber(self.menuList, "displayId");
     },
+    acIsAdmin: sync("acIsAdmin")
   },
   methods: {
     async networkCalls() {
@@ -129,12 +131,6 @@ export default {
           JSON.stringify(self.filteredMgmCategories)
         );
         const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
-
-        //Access Control
-        await self.accessControlService.permittedActions(self);
-        let isAdminResponse = await self.accessControlService.getIsAdmin();
-        self.accessControl._isAdmin = isAdminResponse.data;
-        await self.accessControlService.isAdmin(self);
 
         // checking permission
         if (uEntity && uEntity.currentUnit)
@@ -175,7 +171,7 @@ export default {
       }
     },
     resolvePermissions(keys) {
-      if(this.accessControl._isAdmin) {
+      if(this.acIsAdmin) {
         return false;
       } else {
         if(Array.isArray(keys) && keys.length > 0) {

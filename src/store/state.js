@@ -145,11 +145,8 @@ const state = {
   ],
 
   accessControl: {
-    permittedActions: [],
     // actionsUnits: new Map(),	// HashMap of unitId -> HashSet{actionKey}
   	// unitsActions: new Map(),	// HashMap of actionKey -> HashSet{unitId}
-
-    _isAdmin: false,
 
     _unit: {
       _create: false,
@@ -220,10 +217,14 @@ const state = {
       _ingestBatch: true,
     },
   },
-  
+  acCurrentUnitActions: [],
+  acUnitsActions: [],
   acIsAdmin: false,
   acUnitsMedia: [],		// IDs of units in which user can view primaryfile media
   acUnitsOutput: [],	// IDs of units in which user can view workflow output
+  acUnitsWorkflowCreate: [], // IDs of units in which user can create workflow
+  acUnitsWorkflowUpdate: [], // IDs of units in which user can update workflow
+  acUnitsSupplementCreate: [], // IDs of units in which user can create supplement
   acActions: [],		// actionKeys of action user can perform in some unit
 };
 

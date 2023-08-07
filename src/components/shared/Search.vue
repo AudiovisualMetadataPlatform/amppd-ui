@@ -715,6 +715,8 @@ export default {
     selectedUnit: sync("selectedUnit"),
     selectedCollection: sync("selectedCollection"),
     accessControl: sync("accessControl"),
+    acUnitsActions: sync("acUnitsActions"),
+    acIsAdmin: sync("acIsAdmin"),
   },
 
   data() {

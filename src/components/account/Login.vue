@@ -79,6 +79,7 @@ import Header from "@/components/shared/Header.vue";
 import { accountService } from "@/service/account-service";
 import { sync } from "vuex-pathify";
 import AccessControlService from "@/service/access-control-service";
+import SharedService from "@/service/shared-service";
 
 export default {
   name: "LoginComponent",
@@ -100,6 +101,7 @@ export default {
       id: null,
       token: null,
       accessControlService: new AccessControlService(),
+      sharedService: new SharedService(),
     };
   },
   computed: {
@@ -109,6 +111,10 @@ export default {
     acUnitsOutput: sync("acUnitsOutput"),
     acActions: sync("acActions"),
     acIsAdmin: sync("acIsAdmin"),
+    acUnitsActions: sync("acUnitsActions"),
+    acUnitsWorkflowCreate: sync("acUnitsWorkflowCreate"),
+    acUnitsWorkflowUpdate: sync("acUnitsWorkflowUpdate"),
+    acUnitsSupplementCreate: sync("acUnitsSupplementCreate"),
   },
 
   created() {
