@@ -203,10 +203,14 @@ export default class SharedService {
      */
     getUserInitials() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const { firstName, lastName } = currentUser;
-        let userInits = [];
-        if (firstName != null && firstName.length > 0) {userInits.push(firstName[0].toUpperCase()); }
-        if (lastName != null && lastName.length > 0) { userInits.push(lastName[0].toUpperCase()); }
-        return userInits.join('');
+        if(currentUser) {
+            const { firstName, lastName } = currentUser;
+            let userInits = [];
+            if (firstName != null && firstName.length > 0) {userInits.push(firstName[0].toUpperCase()); }
+            if (lastName != null && lastName.length > 0) { userInits.push(lastName[0].toUpperCase()); }
+            return userInits.join('');
+        } else {
+            return '';
+        }
     }
 }
