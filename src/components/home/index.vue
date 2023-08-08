@@ -65,9 +65,6 @@ export default {
       configPropertiesService: new ConfigPropertiesService(),
     };
   },
-  computed: {
-    mgmCategories: sync("mgmCategories"),
-  },
   props: {},
   methods: {
     routeToHelp(ev, envKey) {
@@ -81,18 +78,6 @@ export default {
       try {
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;
-
-        //MGM Evaluation menus
-        self.mgmCategoryResponse = await this.evaluationService.getMgmCategories();
-        self.sortedMgmCategories = self.sharedService.sortByAlphabatical(
-          self.mgmCategoryResponse.data._embedded.mgmCategories
-        );
-        self.filteredMgmCategories = self.sortedMgmCategories.filter((item) =>
-          parseInt(item.mstsCount, 10)
-        );
-        self.mgmCategories = JSON.parse(
-          JSON.stringify(self.filteredMgmCategories)
-        );
       } catch (error) {
         console.log(error);
       }

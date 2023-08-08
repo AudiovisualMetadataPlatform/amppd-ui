@@ -67,6 +67,7 @@ export default {
         self.acUnitsWorkflowCreate = [];
         self.acUnitsWorkflowUpdate = [];
         self.acUnitsSupplementCreate = [];
+        self.mgmCategories = [];
         this.$router.push("/");
         // After successful logout we need to reset the state to prevent from showing old data
         this.$store.replaceState(defaultState);
@@ -90,6 +91,7 @@ export default {
     acUnitsWorkflowCreate: sync("acUnitsWorkflowCreate"),
     acUnitsWorkflowUpdate: sync("acUnitsWorkflowUpdate"),
     acUnitsSupplementCreate: sync("acUnitsSupplementCreate"),
+    mgmCategories: sync("mgmCategories"),
     hasUserInitials: function () {
       return this.isAuthenticated ? this.userInitials.length > 0 : false;
     },

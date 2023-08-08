@@ -87,6 +87,7 @@ import { sync } from "vuex-pathify";
 import SharedService from "../../service/shared-service.js";
 import EvaluationService from "@/service/evaluation-service";
 import AccessControlService from "@/service/access-control-service";
+import { env } from "@/helpers/env";
 
 export default {
   components: {
@@ -119,17 +120,6 @@ export default {
     async networkCalls() {
       const self = this;
       try {
-        //MGM Evaluation menus
-        self.mgmCategoryResponse = await this.evaluationService.getMgmCategories();
-        self.sortedMgmCategories = self.sharedService.sortByAlphabatical(
-          self.mgmCategoryResponse.data._embedded.mgmCategories
-        );
-        self.filteredMgmCategories = self.sortedMgmCategories.filter((item) =>
-          parseInt(item.mstsCount, 10)
-        );
-        self.mgmCategories = JSON.parse(
-          JSON.stringify(self.filteredMgmCategories)
-        );
         const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
 
         // checking permission
@@ -184,6 +174,31 @@ export default {
           return true;
         }
       }
+    }
+  },
+  watch: {
+    acActions: async function() {
+        const self = this;
+        // Calculate MGM Evaluation menus when user is logged in and has permission to create MGMEvaluation tests
+        const mgmCreate = `${env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE")}-${env.getEnv("VUE_APP_AC_TARGETTYPE_MGMEVALUATIONTEST")}`
+        if (self.isAuthenticated && self.acActions.includes(mgmCreate)) {
+          self.mgmCategoryResponse = await this.evaluationService.getMgmCategories();
+          self.sortedMgmCategories = self.sharedService.sortByAlphabatical(
+            self.mgmCategoryResponse.data._embedded.mgmCategories
+          );
+          self.filteredMgmCategories = self.sortedMgmCategories.filter((item) =>
+            parseInt(item.mstsCount, 10)
+          );
+          self.mgmCategories = JSON.parse(
+            JSON.stringify(self.filteredMgmCategories)
+          );
+          // // Force setting localStorage vuex object for state in vuex-persistedstate
+          // let vuex = JSON.parse(localStorage.getItem("vuex"));
+          // localStorage.setItem("vuex", JSON.stringify({
+          //   ...vuex,
+          //   mgmCategories: self.mgmCategories,
+          // }));
+        }
     }
   },
   mounted() {
