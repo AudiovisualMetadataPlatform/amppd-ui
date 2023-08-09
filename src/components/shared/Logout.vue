@@ -64,9 +64,6 @@ export default {
         self.acUnitsOutput = [];
         self.acIsAdmin = false;
         self.acUnitsActions = [];
-        self.acUnitsWorkflowCreate = [];
-        self.acUnitsWorkflowUpdate = [];
-        self.acUnitsSupplementCreate = [];
         self.mgmCategories = [];
         this.$router.push("/");
         // After successful logout we need to reset the state to prevent from showing old data
@@ -88,9 +85,6 @@ export default {
     acActions: sync("acActions"),
     acIsAdmin: sync("acIsAdmin"),
     acUnitsActions: sync("acUnitsActions"),
-    acUnitsWorkflowCreate: sync("acUnitsWorkflowCreate"),
-    acUnitsWorkflowUpdate: sync("acUnitsWorkflowUpdate"),
-    acUnitsSupplementCreate: sync("acUnitsSupplementCreate"),
     mgmCategories: sync("mgmCategories"),
     hasUserInitials: function () {
       return this.isAuthenticated ? this.userInitials.length > 0 : false;

@@ -54,22 +54,9 @@ export default class AccessControlService extends BaseService {
     .then((result) => result.data);
   }
 
-  async getGlobalPermission(instance, target, action) {
+  // return permitted actions within current unit (if populated)
+  permittedActions(instance) {
     const self = instance;
-    const result = self.accessControl.permittedActions.find(({ actions }) =>
-      actions.find(
-        ({ targetType, actionType }) =>
-          targetType === target && actionType === action
-      )
-    );
-    return !!result;
-  }
-
-  async permittedActions(instance) {
-    const self = instance;
-    this.getPermittedActions().then(
-      (res) => (self.accessControl.permittedActions = res.data)
-    );
     let unitId;
     let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
     if (uEntity && uEntity.currentUnit) {
@@ -78,8 +65,7 @@ export default class AccessControlService extends BaseService {
       )[0].id;
     }
     if (unitId) {
-      let permission = await this.getPermittedActions(unitId);
-      return permission.data;
+      return self.acUnitsActions.filter((ua) => ua.unitId === unitId)[0].actions;
     }
   }
 
@@ -119,11 +105,6 @@ export default class AccessControlService extends BaseService {
         self.accessControl._workflowresult._delete = true;
         self.accessControl._workflowresult_output._read = true;
         self.accessControl._workflowresult_restricted._create = true;
-        self.accessControl._workflow._create = true;
-        self.accessControl._workflow._read = true;
-        self.accessControl._workflow._update = true;
-        self.accessControl._workflow._restrict = true;
-        self.accessControl._workflow._delete = true;
         self.accessControl._role._read = true;
         self.accessControl._role._update = true;
         self.accessControl._role_unit._update = true;
@@ -148,7 +129,7 @@ export default class AccessControlService extends BaseService {
         self.accessControl._primaryfile._update = false;
         self.accessControl._primaryfile._delete = false;
         self.accessControl._primaryfile_media._read = false;
-        self.accessControl._supplement._create = self.acUnitsSupplementCreate.length > 0;
+        self.accessControl._supplement._create = false;
         self.accessControl._supplement._read = false;
         self.accessControl._supplement._update = false;
         self.accessControl._supplement._move = false;
@@ -159,11 +140,6 @@ export default class AccessControlService extends BaseService {
         self.accessControl._workflowresult._delete = false;
         self.accessControl._workflowresult_output._read = false;
         self.accessControl._workflowresult_restricted._create = false;
-        self.accessControl._workflow._create = self.acUnitsWorkflowCreate.length > 0;
-        self.accessControl._workflow._read = false;
-        self.accessControl._workflow._update = self.acUnitsWorkflowUpdate.length > 0;
-        self.accessControl._workflow._restrict = false;
-        self.accessControl._workflow._delete = false;
         self.accessControl._role._read = false;
         self.accessControl._role._update = false;
         self.accessControl._role_unit._update = false;
@@ -184,10 +160,9 @@ export default class AccessControlService extends BaseService {
     const self = instance;
     try {
       self.showLoader = true;
+      // Permissions for Non-admin User
       if (!self.acIsAdmin) {
-        // Permissions for Non-admin User
-        let allPermissions = self.acUnitsActions;
-        let actions = allPermissions[0].actions;
+        let actions = this.permittedActions(instance); // TODO this looks wrong, should be current unit
         for (let i = 0; i < actions.length; i++) {
           const action = actions[i];
           if (action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_UNIT")) {
@@ -389,15 +364,7 @@ export default class AccessControlService extends BaseService {
                     self.acUnitsMedia.push(unit.unitId);
                   else if (targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT"))
                     self.acUnitsOutput.push(unit.unitId);
-                } else if (actionType === env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE")) {
-                  if (targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW"))
-                    self.acUnitsWorkflowCreate.push(unit.unitId);
-                  else if (targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT"))
-                    self.acUnitsSupplementCreate.push(unit.unitId);
-                } else if (actionType === env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE")) {
-                  if (targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW"))
-                    self.acUnitsWorkflowUpdate.push(unit.unitId);
-                }
+                } 
               }
               self.acUnitsActions.push({ unitId: unit.unitId, actions });
             }	

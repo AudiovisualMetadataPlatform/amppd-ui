@@ -140,6 +140,7 @@ export default {
     };
   },
   computed: {
+    acIsAdmin: sync("acIsAdmin"),
     acActions: sync("acActions"),
     baseUrl() {
       const self = this;
@@ -158,8 +159,8 @@ export default {
   props: {},
   methods: {
     canCreate() {
-      let actionKey = env.getEnv("VUE_APP_AC_TARGETTYPE_CREATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
-      return this.acActions.includes(actionKey);
+      let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
+      return this.acIsAdmin || this.acActions.includes(actionKey);
     },
     onSearch(type) {
       this.searchType = type;

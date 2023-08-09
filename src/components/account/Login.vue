@@ -112,9 +112,6 @@ export default {
     acActions: sync("acActions"),
     acIsAdmin: sync("acIsAdmin"),
     acUnitsActions: sync("acUnitsActions"),
-    acUnitsWorkflowCreate: sync("acUnitsWorkflowCreate"),
-    acUnitsWorkflowUpdate: sync("acUnitsWorkflowUpdate"),
-    acUnitsSupplementCreate: sync("acUnitsSupplementCreate"),
   },
 
   created() {

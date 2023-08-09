@@ -230,15 +230,16 @@ export default {
     };
   },
   computed: {
+    acIsAdmin: sync("acIsAdmin"),
     acActions: sync("acActions"),
   },
   methods: {
     canCreate() {
-      let actionKey = env.getEnv("VUE_APP_AC_TARGETTYPE_CREATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
-      return this.acActions.includes(actionKey);
+      let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
+      return this.acIsAdmin || this.acActions.includes(actionKey);
     },
     canUpdate() {
-      let actionKey = env.getEnv("VUE_APP_AC_TARGETTYPE_UPDATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
+      let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
       return this.acActions.includes(actionKey);
     },
     searchWorkflows(searchFields) {

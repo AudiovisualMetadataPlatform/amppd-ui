@@ -48,7 +48,7 @@
                     />
                     <span
                       class="input-group-btn"
-                      v-if="accessControl._supplement._update"
+                      v-if="canUpdate"
                     >
                       <button
                         class="btn btn-outline btn-right add-remove float-right button-replace"
@@ -100,7 +100,7 @@
                     :class="{
                       'error-border': submitted && !supplement.fileDetails.name,
                     }"
-                    :disabled="!accessControl._supplement._update"
+                    :disabled="!canUpdate"
                   />
                 </div>
                 <div class="form-group col-6">
@@ -113,7 +113,7 @@
                       'error-border':
                         submitted && !supplement.fileDetails.category,
                     }"
-                    :disabled="!accessControl._supplement._update"
+                    :disabled="!canUpdate"
                   >
                     <option value="" disabled selected
                       >- Choose Category -</option
@@ -133,7 +133,7 @@
                     id="description"
                     class="form-control textArea"
                     v-model="supplement.fileDetails.description"
-                    :disabled="!accessControl._supplement._update"
+                    :disabled="!canUpdate"
                   ></textarea>
                 </div>
               </div>
@@ -151,7 +151,7 @@
               :class="{
                 'error-border': submitted && !supplement.fileDetails.unit,
               }"
-              :disabled="!accessControl._supplement._update"
+              :disabled="!canUpdate"
               ><option value="" disabled selected>- Choose Unit -</option>
               <option
                 v-for="option in supplement.allUnits"
@@ -169,7 +169,7 @@
               @change="onInputChange('collection', true)"
               :disabled="
                 !supplement.showCollectionList ||
-                  !accessControl._supplement._update
+                  !canUpdate
               "
               ><option value="" disabled selected>- Choose Collection -</option>
               <option
@@ -189,7 +189,7 @@
               v-model="supplement.fileDetails.item"
               @change="onInputChange('item', true)"
               :disabled="
-                !supplement.showItemList || !accessControl._supplement._update
+                !supplement.showItemList || !canUpdate
               "
               ><option value="" disabled selected>- Choose Item -</option>
               <option
@@ -208,7 +208,7 @@
               @change="onInputChange('primaryFile', true)"
               :disabled="
                 !supplement.showPrimaryFileList ||
-                  !accessControl._supplement._update
+                  !canUpdate
               "
               ><option value="" disabled selected
                 >- Choose Content File -</option
@@ -265,7 +265,7 @@
           </div>
         </div>
         <button
-          v-if="accessControl._supplement._update"
+          v-if="canUpdate"
           class="marg-tb-1 mt-2 float-right  btn btn-primary btn-lg btn-edit"
           @click="saveFile($event, supplement.fileDetails)"
         >
@@ -324,11 +324,14 @@ export default {
       action: "add",
       submitted: false,
       moveSupplement: false,
+      allUnits: [],
+      canCreate: false,
+      canUpdate: false,
     };
   },
   computed: {
-    allUnits: sync("allUnits"),
-    accessControl: sync("accessControl"),
+    acIsAdmin: sync("acIsAdmin"),
+    acUnitsActions: sync("acUnitsActions"),
     configProperties: sync("configProperties"),
   },
   props: {},
@@ -341,25 +344,11 @@ export default {
         self.configProperties = configPropertiesResponse.data;
         await self.accessControlService.getPermissionsUnits("Create", "Supplement").then((res) => {
           self.allUnits = res.data;
-          self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(this.allUnits);
-          self.loading = false;
-          if(res.data && res.data.length > 0) {
-            self.accessControl._supplement._update = true;
-          }
+          self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(self.allUnits);
+          self.canCreate = self.acIsAdmin || res.data && res.data.length > 0
+          self.canUpdate = self.action !== "view" && self.canCreate;
+          self.loading = false;          
         });
-        /* await self.unitService.getAllUnits().then(async (response) => {
-          await self.unitService
-            .getAllUnits("0", response.data.page.totalElements)
-            .then((res) => {
-              self.allUnits = res.data;
-              self.supplement[
-                "allUnits"
-              ] = self.sharedService.sortByAlphabatical(
-                this.allUnits._embedded.units
-              );
-              self.loading = false;
-            });
-        }); */
       } catch (error) {
         self.loading = false;
         console.log(error);
@@ -390,7 +379,7 @@ export default {
               .getSupplement(true, self.viewApiType, self.supplementId)
               .then((r) => {
                 switch (self.supplementType) {
-                  case "p-sup":
+                  case "p-sup": // Primaryfile Supplement
                     self.supplement.fileDetails.unit = r.unitId;
                     self.onInputChange("unit").then(() => {
                       self.supplement.fileDetails.collection = r.collectionId;
@@ -405,7 +394,7 @@ export default {
                     });
                     self.supplement.fileDetails.primaryFile = r.primaryfileId;
                     break;
-                  case "i-sup":
+                  case "i-sup": // Item Supplement
                     self.supplement.fileDetails.unit = r.unitId;
                     self.onInputChange("unit").then(() => {
                       self.supplement.fileDetails.collection = r.collectionId;
@@ -417,7 +406,7 @@ export default {
                       });
                     });
                     break;
-                  case "c-sup":
+                  case "c-sup": // Collection Supplement
                     self.supplement.fileDetails.unit = r.unitId;
                     self.onInputChange("unit").then(() => {
                       self.supplement.fileDetails.collection = r.collectionId;
@@ -426,7 +415,7 @@ export default {
                       });
                     });
                     break;
-                  case "u-sup":
+                  case "u-sup": // Unit Supplement
                     self.supplement.fileDetails.unit = res._embedded.unit.id;
                     self.onInputChange("unit").then(() => {
                       self.superLoading = false;
@@ -434,16 +423,14 @@ export default {
                     break;
                   default:
                     break;
-                }
-                self.accessControlService
-                  .getHasPermission(
-                    env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"),
-                    env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT"),
-                    self.supplement.fileDetails.unit
-                  )
-                  .then((response) => {
-                    self.accessControl._supplement._update = response.data;
-                  });
+                }            
+                self.canUpdate = self.acIsAdmin; 
+                if (!self.canUpdate) {
+                let actions = self.acUnitsActions.filter((ua) => ua.unitId === r.unitId)[0].actions;
+                let actionType = env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE");
+                let targetType = env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT");
+                self.canUpdate = actions.filter((a) => a.targetType === targetType && a.actionType === actionType).length > 0;
+              }
               });
           });
       } catch (error) {
@@ -462,9 +449,6 @@ export default {
       self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
         this.allUnits
       );
-      // self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(
-      //   this.allUnits._embedded.units
-      // );
       const uploadDetailsBody = document.getElementById("upload-details-body");
       uploadDetailsBody.style.display = "block";
 
