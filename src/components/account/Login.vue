@@ -79,6 +79,7 @@ import Header from "@/components/shared/Header.vue";
 import { accountService } from "@/service/account-service";
 import { sync } from "vuex-pathify";
 import AccessControlService from "@/service/access-control-service";
+import SharedService from "@/service/shared-service";
 
 export default {
   name: "LoginComponent",
@@ -100,15 +101,17 @@ export default {
       id: null,
       token: null,
       accessControlService: new AccessControlService(),
+      sharedService: new SharedService(),
     };
   },
   computed: {
     isAuthenticated: sync("isAuthenticated"),
     accessControl: sync("accessControl"),
+    acIsAdmin: sync("acIsAdmin"),
+    acUnitsActions: sync("acUnitsActions"),
     acUnitsMedia: sync("acUnitsMedia"),
     acUnitsOutput: sync("acUnitsOutput"),
     acActions: sync("acActions"),
-    acIsAdmin: sync("acIsAdmin"),
   },
 
   created() {
@@ -153,9 +156,10 @@ export default {
           let vuex = JSON.parse(localStorage.getItem("vuex"));
           localStorage.setItem("vuex", JSON.stringify({
             ...vuex,
-            acActions: this.acActions,
+            acUnitsActions: this.acUnitsActions,
             acUnitsMedia: this.acUnitsMedia,
             acUnitsOutput: this.acUnitsOutput,
+            acActions: this.acActions,
           }));
           if (this.$route.query.returnUrl) {
             console.log("going to " + this.$route.query.returnUrl);

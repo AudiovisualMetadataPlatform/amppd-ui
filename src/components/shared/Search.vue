@@ -714,7 +714,6 @@ export default {
     selectedItem: sync("selectedItem"),
     selectedUnit: sync("selectedUnit"),
     selectedCollection: sync("selectedCollection"),
-    accessControl: sync("accessControl"),
   },
 
   data() {

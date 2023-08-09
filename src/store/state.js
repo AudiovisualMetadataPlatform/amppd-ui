@@ -116,7 +116,7 @@ const state = {
     taskManagers: [],
   },
   configProperties: {},
-  allUnits: {},
+  allUnits: {}, // all units the current user can read
   mgmEvaluation: {
     selectedRecords: [],
   },
@@ -144,12 +144,9 @@ const state = {
     { order: "s", label: "Add to Test", field: "addToTest" },
   ],
 
-  accessControl: {
-    permittedActions: [],
+  accessControl: {  // permissions for current user within current unit
     // actionsUnits: new Map(),	// HashMap of unitId -> HashSet{actionKey}
   	// unitsActions: new Map(),	// HashMap of actionKey -> HashSet{unitId}
-
-    _isAdmin: false,
 
     _unit: {
       _create: false,
@@ -220,11 +217,12 @@ const state = {
       _ingestBatch: true,
     },
   },
-  
-  acIsAdmin: false,
-  acUnitsMedia: [],		// IDs of units in which user can view primaryfile media
-  acUnitsOutput: [],	// IDs of units in which user can view workflow output
-  acActions: [],		// actionKeys of action user can perform in some unit
+
+  acIsAdmin: false,   // whether current user is admin
+  acUnitsActions: [], // 2-D array of all units with all permitted actions per unit for current user
+  acUnitsMedia: [],		// IDs of units in which current user can view primaryfile media
+  acUnitsOutput: [],	// IDs of units in which current user can view workflow output
+  acActions: [],		  // actionKeys of actions current user can perform in some unit
 };
 
 export default state;

@@ -966,7 +966,6 @@ export default {
     selectedFile: sync("selectedFile"),
     itemConfigs: sync("itemConfigs"),
     configProperties: sync("configProperties"),
-    mgmCategories: sync("mgmCategories"),
     accessControl: sync("accessControl"),
     baseUrl() {
       const self = this;
@@ -1312,17 +1311,6 @@ export default {
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;
 
-        //MGM Evaluation menus
-        self.mgmCategoryResponse = await this.evaluationService.getMgmCategories();
-        self.sortedMgmCategories = self.sharedService.sortByAlphabatical(
-          self.mgmCategoryResponse.data._embedded.mgmCategories
-        );
-        self.filteredMgmCategories = self.sortedMgmCategories.filter((item) =>
-          parseInt(item.mstsCount, 10)
-        );
-        self.mgmCategories = JSON.parse(
-          JSON.stringify(self.filteredMgmCategories)
-        );
         self.showLoader = false;
       } catch (error) {
         self.showLoader = false;

@@ -22,7 +22,7 @@
                 >
                   <button
                     class="btn btn-primary btn-lg btn-edit mr-2"
-                    v-if="accessControl._supplement._create"
+                    v-if="canCreate"
                     type="button"
                     @click="onCreate()"
                   >
@@ -119,6 +119,7 @@ import SharedService from "@/service/shared-service";
 import SupplementService from "@/service/supplement-service";
 import Search from "@/components/shared/Search.vue";
 import SupplementFile from "./SupplementFile.vue";
+import { env } from "../../helpers/env.js";
 
 export default {
   name: "SupplementList",
@@ -139,7 +140,8 @@ export default {
     };
   },
   computed: {
-    accessControl: sync("accessControl"),
+    acIsAdmin: sync("acIsAdmin"),
+    acActions: sync("acActions"),
     baseUrl() {
       const self = this;
       if (
@@ -156,6 +158,10 @@ export default {
   },
   props: {},
   methods: {
+    canCreate() {
+      let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
+      return this.acIsAdmin || this.acActions.includes(actionKey);
+    },
     onSearch(type) {
       this.searchType = type;
       this.$bvModal.show("modal-lg");
