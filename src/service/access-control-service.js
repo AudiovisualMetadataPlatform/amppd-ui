@@ -129,7 +129,6 @@ export default class AccessControlService extends BaseService {
         self.accessControl._role_unit._update = true;
         self.accessControl._roleassignment._read = true;
         self.accessControl._roleassignment._update = true;
-        // self.accessControl._nav._ingestBatch = true;
       } else {
         self.accessControl._unit._create = false;
         self.accessControl._unit._read = false;
@@ -170,7 +169,6 @@ export default class AccessControlService extends BaseService {
         self.accessControl._role_unit._update = false;
         self.accessControl._roleassignment._read = false;
         self.accessControl._roleassignment._update = false;        
-        // self.accessControl._nav._ingestBatch = false; //default value is true
       }
     } catch (error) {
       self.showLoader = false;
@@ -194,9 +192,6 @@ export default class AccessControlService extends BaseService {
           const action = actions[i];
           if (action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_UNIT")) {
             switch (action.actionType) {
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
-                self.accessControl._unit._create = true;
-                break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._unit._read = true;
                 break;
@@ -263,7 +258,7 @@ export default class AccessControlService extends BaseService {
                 break;
             }
           } else if (
-            action.targetType ===
+            action.targetType === 
             env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE_MEDIA")
           ) {
             switch (action.actionType) {
@@ -271,13 +266,14 @@ export default class AccessControlService extends BaseService {
                 self.accessControl._primaryfile_media._read = true;
                 break;
             }
-          } else if (
+          } else if ( 
+            // Note: below is not useful for global supplement page, but only for future suuplement page under content navigation
             action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
           ) {
             switch (action.actionType) {
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
                 self.accessControl._supplement._create = true;
-                break;
+                break;              
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._supplement._read = true;
                 break;
@@ -292,13 +288,13 @@ export default class AccessControlService extends BaseService {
                 break;
             }
           } else if (
-            action.targetType ===
-            env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT")
+            // Note: below is not useful for Dashboard, but only for WF results shown under PFile
+            action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT")
           ) {
             switch (action.actionType) {
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
                 self.accessControl._workflowresult._create = true;
-                break;
+                break;               
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._workflowresult._read = true;
                 break;               
@@ -310,41 +306,11 @@ export default class AccessControlService extends BaseService {
                 break;
             }
           } else if (
-            action.targetType ===
-            env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT")
+            action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT")
           ) {
             switch (action.actionType) {
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._workflowresult_output._read = true;
-                break;
-            }
-          } else if (
-            action.targetType ===
-            env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_RESTRICTED")
-          ) {
-            switch (action.actionType) {
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
-                self.accessControl._workflowresult_restricted._create = true;
-                break;
-            }
-          } else if (
-            action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
-          ) {
-            switch (action.actionType) {
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):
-                self.accessControl._workflow._create = true;
-                break;
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
-                self.accessControl._workflow._read = true;
-                break;
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
-                self.accessControl._workflow._update = true;
-                break;
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_RESTRICT"):
-                self.accessControl._workflow._restrict = true;
-                break;
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_DELETE"):
-                self.accessControl._workflow._delete = true;
                 break;
             }
           } else if (
@@ -354,9 +320,6 @@ export default class AccessControlService extends BaseService {
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"):
                 self.accessControl._role._read = true;               
                 break;
-              case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
-                self.accessControl._role._update = true;              
-                break;  
             }          
           } else if (
             action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_ROLE_UNIT")
@@ -374,7 +337,6 @@ export default class AccessControlService extends BaseService {
                 self.accessControl._roleassignment._read = true;
                 break;
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE"):
-                self.accessControl._roleassignment._read = true;
                 self.accessControl._roleassignment._update = true;                
                 break;  
             }          

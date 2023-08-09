@@ -14,7 +14,7 @@
             Search Workflows
           </button>
           <button
-            v-if="accessControl._workflow._create"
+            v-if="canCreate"
             id="btn-workflow-create"
             class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
             @click="handleWorkflowCreation()"
@@ -39,7 +39,7 @@
               <span>{{ workflow.annotations[0] }}</span>
             </div>
             <div
-              v-if="accessControl._workflow._update"
+              v-if="canUpdate"
               class="col-lg-2 text-right"
             >
               <button
@@ -63,9 +63,7 @@
               <br />
               {{ workflow.creator ? workflow.creator : workflow.owner }}
             </div>
-            <!-- <div class="col">
-                            Creator:
-                        </div> -->
+            <!-- <div class="col"> Creator: </div> -->
             <div class="col">
               Date Created:
               <br />{{ workflow.createTime | LOCAL_DATE_VALUE }}
@@ -74,9 +72,7 @@
               Last Updated:
               <br />{{ workflow.updateTime | LOCAL_DATE_VALUE }}
             </div>
-            <!-- <div class="col">
-                            Version:
-                        </div> -->
+            <!-- <div class="col"> Version: </div> -->
             <div class="col" v-if="workflow.tags && workflow.tags.length">
               <p class="mb-0">Tags:</p>
               <span
@@ -209,6 +205,7 @@
     />
   </div>
 </template>
+
 <script>
 import { sync } from "vuex-pathify";
 import WorkflowService from "../../service/workflow-service";
@@ -216,6 +213,7 @@ import config from "../../assets/constants/common-contant.js";
 import SharedService from "../../service/shared-service";
 import { env } from "../../helpers/env.js";
 import Search from "@/components/shared/Search.vue";
+
 export default {
   name: "WorkflowList",
   components: {
@@ -232,9 +230,17 @@ export default {
     };
   },
   computed: {
-    accessControl: sync("accessControl"),
+    acActions: sync("acActions"),
   },
   methods: {
+    canCreate() {
+      let actionKey = env.getEnv("VUE_APP_AC_TARGETTYPE_CREATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
+      return this.acActions.includes(actionKey);
+    },
+    canUpdate() {
+      let actionKey = env.getEnv("VUE_APP_AC_TARGETTYPE_UPDATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
+      return this.acActions.includes(actionKey);
+    },
     searchWorkflows(searchFields) {
       const self = this;
       const name = searchFields.name;

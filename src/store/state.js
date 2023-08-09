@@ -217,7 +217,7 @@ const state = {
       _ingestBatch: true,
     },
   },
-  acCurrentUnitActions: [],
+
   acUnitsActions: [],
   acIsAdmin: false,
   acUnitsMedia: [],		// IDs of units in which user can view primaryfile media
