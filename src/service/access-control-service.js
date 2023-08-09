@@ -12,13 +12,7 @@ export default class AccessControlService extends BaseService {
     return super.get_auth(`/permissions/units?actionType=${actionType}&targetType=${targetType}`);
   }
 
-  async getPermittedActions(unitId) {
-    return super.get_auth(
-      `/permissions/actions?unitIds=${unitId ? unitId : ""}`
-    );
-  }
-
-  async getPermittedMenus() {
+  async getPermittedActions() {
     return super.get_auth(
       '/permissions/actions?actionTypes=&targetTypes=&unitIds='
     );
@@ -54,7 +48,7 @@ export default class AccessControlService extends BaseService {
     .then((result) => result.data);
   }
 
-  // return permitted actions within current unit (if populated)
+  // return permitted actions within current unit (if populated); this is only called after AC data has been initialized
   permittedActions(instance) {
     const self = instance;
     let unitId;
@@ -69,6 +63,7 @@ export default class AccessControlService extends BaseService {
     }
   }
 
+  // call admin API and initialize acIsAdmin along with default permissions for current unit based on acIsAdmin
   async isAdmin(instance) {
     const self = instance;
     try {
@@ -156,13 +151,14 @@ export default class AccessControlService extends BaseService {
     }
   }
 
+  // populate permissions for current unit (selected in Content Navigation) for non-admin user
+  // note that batch/workflow etc are not handled here because they are not tied to current unit
   async checkAccessControl(instance) {
     const self = instance;
     try {
       self.showLoader = true;
-      // Permissions for Non-admin User
       if (!self.acIsAdmin) {
-        let actions = this.permittedActions(instance); // TODO this looks wrong, should be current unit
+        let actions = this.permittedActions(instance); 
         for (let i = 0; i < actions.length; i++) {
           const action = actions[i];
           if (action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_UNIT")) {
@@ -242,7 +238,7 @@ export default class AccessControlService extends BaseService {
                 break;
             }
           } else if ( 
-            // Note: below is not useful for global supplement page, but only for future suuplement page under content navigation
+            // Note: below is only useful for future suuplement page under content navigation, and not useful for global supplement page
             action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
           ) {
             switch (action.actionType) {
@@ -263,7 +259,7 @@ export default class AccessControlService extends BaseService {
                 break;
             }
           } else if (
-            // Note: below is not useful for Dashboard, but only for WF results shown under PFile
+            // Note: below is only useful for WF results shown under PFile, and not useful for Dashboard
             action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT")
           ) {
             switch (action.actionType) {
@@ -333,7 +329,7 @@ export default class AccessControlService extends BaseService {
     const self = instance;
     await this.isAdmin(self);
     if(!self.acIsAdmin) {
-      await this.getPermittedMenus()
+      await this.getPermittedActions()
         .then((res) => {
           let allUnitActions = res.data;
           if (allUnitActions != undefined) {
@@ -382,8 +378,5 @@ export default class AccessControlService extends BaseService {
     }
   }
 
-  // async initCurrentUnitActions(instance) {
-
-  // }
 
 }

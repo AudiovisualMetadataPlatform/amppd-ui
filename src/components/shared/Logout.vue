@@ -59,11 +59,11 @@ export default {
       } else {
         accountService.logout();
         self.isAuthenticated = false;
-        self.acActions = [];
-        self.acUnitsMedia = [];
-        self.acUnitsOutput = [];
         self.acIsAdmin = false;
         self.acUnitsActions = [];
+        self.acUnitsMedia = [];
+        self.acUnitsOutput = [];
+        self.acActions = [];
         self.mgmCategories = [];
         this.$router.push("/");
         // After successful logout we need to reset the state to prevent from showing old data
@@ -80,11 +80,11 @@ export default {
   },
   computed: {
     isAuthenticated: sync("isAuthenticated"),
+    acIsAdmin: sync("acIsAdmin"),
+    acUnitsActions: sync("acUnitsActions"),
     acUnitsMedia: sync("acUnitsMedia"),
     acUnitsOutput: sync("acUnitsOutput"),
     acActions: sync("acActions"),
-    acIsAdmin: sync("acIsAdmin"),
-    acUnitsActions: sync("acUnitsActions"),
     mgmCategories: sync("mgmCategories"),
     hasUserInitials: function () {
       return this.isAuthenticated ? this.userInitials.length > 0 : false;

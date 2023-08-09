@@ -107,11 +107,11 @@ export default {
   computed: {
     isAuthenticated: sync("isAuthenticated"),
     accessControl: sync("accessControl"),
+    acIsAdmin: sync("acIsAdmin"),
+    acUnitsActions: sync("acUnitsActions"),
     acUnitsMedia: sync("acUnitsMedia"),
     acUnitsOutput: sync("acUnitsOutput"),
     acActions: sync("acActions"),
-    acIsAdmin: sync("acIsAdmin"),
-    acUnitsActions: sync("acUnitsActions"),
   },
 
   created() {
@@ -156,9 +156,10 @@ export default {
           let vuex = JSON.parse(localStorage.getItem("vuex"));
           localStorage.setItem("vuex", JSON.stringify({
             ...vuex,
-            acActions: this.acActions,
+            acUnitsActions: this.acUnitsActions,
             acUnitsMedia: this.acUnitsMedia,
             acUnitsOutput: this.acUnitsOutput,
+            acActions: this.acActions,
           }));
           if (this.$route.query.returnUrl) {
             console.log("going to " + this.$route.query.returnUrl);

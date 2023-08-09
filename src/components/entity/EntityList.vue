@@ -966,10 +966,7 @@ export default {
     selectedFile: sync("selectedFile"),
     itemConfigs: sync("itemConfigs"),
     configProperties: sync("configProperties"),
-    mgmCategories: sync("mgmCategories"),
     accessControl: sync("accessControl"),
-    acIsAdmin: sync("acIsAdmin"),
-    acUnitsActions: sync("acUnitsActions"),
     baseUrl() {
       const self = this;
       if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
