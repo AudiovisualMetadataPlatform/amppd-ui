@@ -960,13 +960,15 @@ export default {
     };
   },
   computed: {
+    accessControl: sync("accessControl"),
+    acIsAdmin: sync("acIsAdmin"),
+    acUnitsActions: sync("acUnitsActions"),
     selectedCollection: sync("selectedCollection"),
     selectedUnit: sync("selectedUnit"),
     selectedItem: sync("selectedItem"),
     selectedFile: sync("selectedFile"),
     itemConfigs: sync("itemConfigs"),
     configProperties: sync("configProperties"),
-    accessControl: sync("accessControl"),
     baseUrl() {
       const self = this;
       if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
