@@ -698,6 +698,9 @@ export default {
     Typeahead,
   },
   computed: {
+    accessControl: sync("accessControl"),
+    acIsAdmin: sync("acIsAdmin"),
+    acUnitsActions: sync("acUnitsActions"),
     modifiedDataSource() {
       return [];
     },
@@ -715,7 +718,6 @@ export default {
     selectedUnit: sync("selectedUnit"),
     selectedCollection: sync("selectedCollection"),
   },
-
   data() {
     return {
       sharedService: new SharedService(),
