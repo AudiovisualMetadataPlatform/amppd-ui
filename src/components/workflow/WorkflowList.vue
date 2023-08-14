@@ -14,7 +14,7 @@
             Search Workflows
           </button>
           <button
-            v-if="canCreate"
+            v-if="canCreate()"
             id="btn-workflow-create"
             class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
             @click="handleWorkflowCreation()"
@@ -39,7 +39,7 @@
               <span>{{ workflow.annotations[0] }}</span>
             </div>
             <div
-              v-if="canUpdate"
+              v-if="canUpdate()"
               class="col-lg-2 text-right"
             >
               <button
@@ -236,6 +236,7 @@ export default {
   methods: {
     canCreate() {
       let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
+      console.log("actionKey" + actionKey);
       return this.acIsAdmin || this.acActions.includes(actionKey);
     },
     canUpdate() {

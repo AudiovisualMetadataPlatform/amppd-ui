@@ -109,10 +109,9 @@ async function validate() {
 }
 function logout() {
   // remove user from local storage to log user out
-  localStorage.removeItem('currentUser');
-  sessionStorage.removeItem('userValues');
-  sessionStorage.removeItem('unitEntity');
-  sessionStorage.removeItem('batchUnits');
+  // also clear up local and session storage
+  localStorage.clear();
+  sessionStorage.clear();
   this.currentUser = null;
 }
 

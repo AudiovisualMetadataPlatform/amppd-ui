@@ -426,11 +426,12 @@ export default {
                 }            
                 self.canUpdate = self.acIsAdmin; 
                 if (!self.canUpdate) {
-                let actions = self.acUnitsActions.filter((ua) => ua.unitId === r.unitId)[0].actions;
-                let actionType = env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE");
-                let targetType = env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT");
-                self.canUpdate = actions.filter((a) => a.targetType === targetType && a.actionType === actionType).length > 0;
-              }
+                  let actions = self.acUnitsActions.filter((ua) => ua.unitId == r.unitId)[0].actions;
+                  let actionType = env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE");
+                  let targetType = env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT");
+                  console.log("actions:" + actions);
+                  self.canUpdate = actions.filter((a) => a.targetType == targetType && a.actionType == actionType).length > 0;
+                }
               });
           });
       } catch (error) {
