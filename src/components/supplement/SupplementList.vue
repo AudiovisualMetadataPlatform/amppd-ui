@@ -22,7 +22,7 @@
                 >
                   <button
                     class="btn btn-primary btn-lg btn-edit mr-2"
-                    v-if="canCreate"
+                    v-if="canCreate()"
                     type="button"
                     @click="onCreate()"
                   >
