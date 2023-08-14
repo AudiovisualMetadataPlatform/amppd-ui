@@ -524,7 +524,7 @@
           >
             <ItemFiles></ItemFiles>
           </div>
-          <div v-else-if="baseUrl === 'file'">
+          <div v-else-if="baseUrl === 'file' && accessControl._workflowresult._read">
             <OutputFile />
           </div>
           <div
