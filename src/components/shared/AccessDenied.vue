@@ -24,7 +24,7 @@ export default {
     return {
       currentUser: JSON.parse(localStorage.getItem('currentUser')),
       heading: "Restricted Content",
-      signedout: "Your're not signed in. You may be able to view this page after sigining in.",
+      signedout: "You're not signed in. You may be able to view this page after signing in.",
       unauthorized: "You are not authorized to access this content."
     }
   },
