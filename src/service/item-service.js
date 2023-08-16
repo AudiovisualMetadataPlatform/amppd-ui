@@ -10,9 +10,9 @@ export default class ItemService extends BaseService{
 
     async getCollectionItems(collectionId, num,size){
         if(num && size){
-            return super.get_auth(`/collections/${collectionId}/items?page=${num}&size=${size}`)
+            return await super.get_auth(`/collections/${collectionId}/items?page=${num}&size=${size}`)
         }
-        else return super.get_auth(`/collections/${collectionId}/items`);
+        else return await super.get_auth(`/collections/${collectionId}/items`);
     }
 
     /***
