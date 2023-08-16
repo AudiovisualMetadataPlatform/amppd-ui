@@ -63,84 +63,55 @@ export default class AccessControlService extends BaseService {
     }
   }
 
+  // reset all accessControl fields of the given instance to the permitted value
+  resetAccessControl(instance, permitted) {
+    const self = instance;
+    self.accessControl._unit._create = permitted;
+    self.accessControl._unit._read = permitted;
+    self.accessControl._unit._update = permitted;
+    self.accessControl._unit._delete = permitted;
+    self.accessControl._collection._create = permitted;
+    self.accessControl._collection._read = permitted;
+    self.accessControl._collection._update = permitted;
+    self.accessControl._collection._activate = permitted;
+    self.accessControl._collection._delete = permitted;
+    self.accessControl._item._create = permitted;
+    self.accessControl._item._read = permitted;
+    self.accessControl._item._update = permitted;
+    self.accessControl._item._delete = permitted;
+    self.accessControl._primaryfile._create = permitted;
+    self.accessControl._primaryfile._read = permitted;
+    self.accessControl._primaryfile._update = permitted;
+    self.accessControl._primaryfile._delete = permitted;
+    self.accessControl._primaryfile_media._read = permitted;
+    self.accessControl._supplement._create = permitted;
+    self.accessControl._supplement._read = permitted;
+    self.accessControl._supplement._update = permitted;
+    self.accessControl._supplement._move = permitted;
+    self.accessControl._supplement._delete = permitted;
+    self.accessControl._workflowresult._create = permitted;
+    self.accessControl._workflowresult._read = permitted;
+    self.accessControl._workflowresult._update = permitted;
+    self.accessControl._workflowresult._delete = permitted;
+    self.accessControl._workflowresult_output._read = permitted;
+    self.accessControl._workflowresult_restricted._create = permitted;
+    self.accessControl._role._read = permitted;
+    self.accessControl._role._update = permitted;
+    self.accessControl._role_unit._update = permitted;
+    self.accessControl._roleassignment._read = permitted;
+    self.accessControl._roleassignment._update = permitted;
+    return permitted;
+  }
+
   // call admin API and initialize acIsAdmin along with default permissions for current unit based on acIsAdmin
   async isAdmin(instance) {
     const self = instance;
     try {
+      // call Admin API to check if current user is admin
       let adminResponse = await this.getIsAdmin();
       self.acIsAdmin = adminResponse.data;
-      if (self.acIsAdmin) {
-        // Permissions for Admin User
-        self.accessControl._unit._create = true;
-        self.accessControl._unit._read = true;
-        self.accessControl._unit._update = true;
-        self.accessControl._unit._delete = true;
-        self.accessControl._collection._create = true;
-        self.accessControl._collection._read = true;
-        self.accessControl._collection._update = true;
-        self.accessControl._collection._activate = true;
-        self.accessControl._collection._delete = true;
-        self.accessControl._item._create = true;
-        self.accessControl._item._read = true;
-        self.accessControl._item._update = true;
-        self.accessControl._item._delete = true;
-        self.accessControl._primaryfile._create = true;
-        self.accessControl._primaryfile._read = true;
-        self.accessControl._primaryfile._update = true;
-        self.accessControl._primaryfile._delete = true;
-        self.accessControl._primaryfile_media._read = true;
-        self.accessControl._supplement._create = true;
-        self.accessControl._supplement._read = true;
-        self.accessControl._supplement._update = true;
-        self.accessControl._supplement._move = true;
-        self.accessControl._supplement._delete = true;
-        self.accessControl._workflowresult._create = true;
-        self.accessControl._workflowresult._read = true;
-        self.accessControl._workflowresult._update = true;
-        self.accessControl._workflowresult._delete = true;
-        self.accessControl._workflowresult_output._read = true;
-        self.accessControl._workflowresult_restricted._create = true;
-        self.accessControl._role._read = true;
-        self.accessControl._role._update = true;
-        self.accessControl._role_unit._update = true;
-        self.accessControl._roleassignment._read = true;
-        self.accessControl._roleassignment._update = true;
-      } else {
-        self.accessControl._unit._create = false;
-        self.accessControl._unit._read = false;
-        self.accessControl._unit._update = false;
-        self.accessControl._unit._delete = false;
-        self.accessControl._collection._create = false;
-        self.accessControl._collection._read = false;
-        self.accessControl._collection._update = false;
-        self.accessControl._collection._activate = false;
-        self.accessControl._collection._delete = false;
-        self.accessControl._item._create = false;
-        self.accessControl._item._read = false;
-        self.accessControl._item._update = false;
-        self.accessControl._item._delete = false;
-        self.accessControl._primaryfile._create = false;
-        self.accessControl._primaryfile._read = false;
-        self.accessControl._primaryfile._update = false;
-        self.accessControl._primaryfile._delete = false;
-        self.accessControl._primaryfile_media._read = false;
-        self.accessControl._supplement._create = false;
-        self.accessControl._supplement._read = false;
-        self.accessControl._supplement._update = false;
-        self.accessControl._supplement._move = false;
-        self.accessControl._supplement._delete = false;
-        self.accessControl._workflowresult._create = false;
-        self.accessControl._workflowresult._read = false;
-        self.accessControl._workflowresult._update = false;
-        self.accessControl._workflowresult._delete = false;
-        self.accessControl._workflowresult_output._read = false;
-        self.accessControl._workflowresult_restricted._create = false;
-        self.accessControl._role._read = false;
-        self.accessControl._role._update = false;
-        self.accessControl._role_unit._update = false;
-        self.accessControl._roleassignment._read = false;
-        self.accessControl._roleassignment._update = false;        
-      }
+      // init permissions for Admin User to all true and non-Admin User to all false
+      this.resetAccessControl(instance, self.acIsAdmin);      
     } catch (error) {
       self.showLoader = false;
       self.$bvToast.toast(
@@ -158,7 +129,10 @@ export default class AccessControlService extends BaseService {
     try {
       self.showLoader = true;
       if (!self.acIsAdmin) {
+        // reset accessControl fields to all false       
+        this.resetAccessControl(instance, false);
         let actions = this.permittedActions(instance); 
+        // set accessControl permissions according to the allowed actions within current unit
         for (let i = 0; i < actions.length; i++) {
           const action = actions[i];
           if (action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_UNIT")) {

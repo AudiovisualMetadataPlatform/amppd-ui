@@ -213,9 +213,6 @@ const state = {
       _read: false,
       _update: false,
     },
-    _nav: {
-      _ingestBatch: true,
-    },
   },
 
   acIsAdmin: false,   // whether current user is admin

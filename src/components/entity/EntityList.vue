@@ -1466,10 +1466,13 @@ export default {
 
     // For unit details page
     const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
+    
+    // TODO below checkAccessControl is unnecessary because it's done upon each unit change
+    // including change made in item search
     if (uEntity && uEntity.currentUnit)
       self.accessControlService.checkAccessControl(this);
 
-    if (!uEntity) {
+    if (!uEntity) { //} && !self.selectedUnit) {
       self.unitEntity = { unitList: [], currentUnit: "" };
       self.getAllUnits();
     } else {
