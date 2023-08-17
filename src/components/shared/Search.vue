@@ -699,8 +699,8 @@ export default {
   },
   computed: {
     accessControl: sync("accessControl"),
-    acIsAdmin: sync("acIsAdmin"),
-    acUnitsActions: sync("acUnitsActions"),
+    acIsAdmin: sync("acIsAdmin"), // indirectly referenced by checkAccessControl
+    acUnitsActions: sync("acUnitsActions"), // indirectly referenced by checkAccessControl
     modifiedDataSource() {
       return [];
     },
