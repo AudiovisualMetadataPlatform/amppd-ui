@@ -346,7 +346,7 @@ export default {
           self.allUnits = res.data;
           self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(self.allUnits);
           self.canCreate = self.acIsAdmin || res.data && res.data.length > 0
-          self.canUpdate = self.action !== "view" && self.canCreate;
+          self.canUpdate = self.acIsAdmin || self.action !== "view" && self.canCreate;
           self.loading = false;          
         });
       } catch (error) {

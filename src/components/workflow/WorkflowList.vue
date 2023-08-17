@@ -241,7 +241,7 @@ export default {
     },
     canUpdate() {
       let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
-      return this.acActions.includes(actionKey);
+      return this.acIsAdmin || this.acActions.includes(actionKey);
     },
     searchWorkflows(searchFields) {
       const self = this;
