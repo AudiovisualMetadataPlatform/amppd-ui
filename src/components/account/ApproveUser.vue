@@ -84,14 +84,12 @@ export default {
       self.reject_user = false;
       self.disableAction = true;
       await accountService
-        .sendApproveUserRequest(this.$route.params.id)
+        .sendApproveUserRequest(this.$route.params.id, true)
         .then((response) => {
           self.approve_user = response.success;
-          // self.disableAction = false;
         })
         .catch((e) => {
           console.log(e);
-          // self.disableAction = false;
         });
       console.log("approve result is:" + self.approve_user);
       if (this.errors.length != 0) {
@@ -120,14 +118,12 @@ export default {
       self.reject_user = false;
       self.disableAction = true;
       await accountService
-        .sendRejectUserRequest(this.$route.params.id)
+        .sendApproveUserRequest(this.$route.params.id, false)
         .then((response) => {
           self.reject_user = response.success;
-          // self.disableAction = false;
         })
         .catch((e) => {
           console.log(e);
-          // self.disableAction = false;
         });
       console.log("reject result is:" + self.reject_user);
       if (this.errors.length != 0) {

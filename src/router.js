@@ -484,7 +484,8 @@ router.beforeEach(async (to, from, next) => {
     // not logged in so redirect to login page with the return url
     return router.push({ path: "/access-denied", query: { returnUrl: to.path }});
   } else {
-    // TODO: the backend validate API doesn't do anything but returns true, this block can be removed.
+    // TODO, below API call is to validate auth token, in case the locally stored one is compromised;
+    // there might be better way to achieve this without making such extra API call
     var success = await accountService.validate();
     if (!success) {
       // return next();
