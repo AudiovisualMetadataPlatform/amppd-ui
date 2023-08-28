@@ -45,17 +45,14 @@ function sendForgotPswdEmailRequest(emailid) {
 }
 
 function getUser(userid){
-  const url = `/account/`+userid;
+  const url = `/users/`+userid;
   return baseService.get_auth(url)
   .then(x => x.data)
   }
 
-function sendApproveUserRequest(userid) {
-  const url = `/account/approve`;
-	return baseService.post_auth(url,
-        {
-         userId: userid
-        })
+function sendApproveUserRequest(userId, approve) {
+  const url = `/account/approve?userId=${userId}&approve=${approve}`;
+	return baseService.post_auth(url)
         .then(x => x.data)
 }
 
@@ -64,15 +61,6 @@ function sendActivateUserRequest(userToken) {
 	return baseService.post_auth(url,
         {
          token: userToken
-        })
-        .then(x => x.data)
-}
-
-function sendRejectUserRequest(userid) {
-  const url = `/account/reject`;
-	return baseService.post_auth(url,
-        {
-         userId: userid
         })
         .then(x => x.data)
 }
@@ -95,6 +83,7 @@ function login(username, password) {
         console.log(error);
       });
 }
+
 async function validate() {
   var success = await baseService.post_auth(`/account/validate`)
       .then(user => {
@@ -107,6 +96,7 @@ async function validate() {
   console.log("Success: " + success);
   return success;
 }
+
 function logout() {
   // remove user from local storage to log user out
   // also clear up local and session storage
@@ -123,7 +113,6 @@ export const accountService = {
   getUser,  
   sendApproveUserRequest,
   sendActivateUserRequest,
-  sendRejectUserRequest, 
   validate,
   login, 
   logout,

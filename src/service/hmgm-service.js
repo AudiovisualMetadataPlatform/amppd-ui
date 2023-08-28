@@ -8,10 +8,13 @@ async function auth_token_required(auth_string, input_file){
     if(env.getDisableAuth() == 'true'){
         return false;
     }
+    // check if the current user is logged in and the locally stored auth token is valid
     var validated = await accountService.validate();
+    // if yes, no need to ask for HMGM auth string
     if(validated===true){
         return false;
     }
+    // otherwise, check HMGM auth string
     var user_token = localStorage.getItem(input_file);
     if(!user_token){
         console.log("No input token defined")
@@ -25,6 +28,10 @@ async function auth_token_valid(auth_string, input_file, user_token){
     if(env.getDisableAuth() == 'true'){
         return true;
     } 
+    // TODO the following API call to check auth string might be unnecessary, 
+    // because the backend validate auth string upon any HMGM API call;
+    // the purpose here might be to prevent the page from being shown beore any HMGM API call is made
+    // although there should be better way to achieve that than using an extra API to check
     const url = `/hmgm/authorize-editor?authString=${auth_string}&userToken=${user_token}&editorInput=${input_file}`;
     var success = await baseService.get(url).then(x=>{
         if(x.data==true){
@@ -72,19 +79,14 @@ function completeNer(resourcePath) {
     console.log("axios completeNer: url = " + url);
     console.log("axios completeNer: resourcePath = " + resourcePath);
     return baseService.post_token_auth(url, {resourcePath:resourcePath},resourcePath)
-    // return axios.post(url, {resourcePath:resourcePath})
-        // get data
         .then(x => x.data)
 }
 
 function resetNer(resourcePath) {
-    // const url = `${BASE_URL}/hmgm/ner-editor/reset`;
     const url = `/hmgm/ner-editor/reset?resourcePath=${resourcePath}`;
     console.log("axios resetNer: url = " + url);
     console.log("axios resetNer: resourcePath = " + resourcePath);
     return baseService.post_token_auth(url,resourcePath)
-    // return axios.post(url, {resourcePath:resourcePath})
-        // get data
         .then(x => x.data)
 }
 
