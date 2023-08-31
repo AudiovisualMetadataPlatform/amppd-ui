@@ -148,7 +148,7 @@ export default {
       await this.workflowService
         .findBundle(this.bundleName)
         .then((response) => {
-          this.bundle = response.data;
+          this.bundle = response.data[0];
           console.log("Returned bundle: " + this.bundle.id);
         })
         .catch((e) => {
