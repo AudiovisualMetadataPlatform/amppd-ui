@@ -71,19 +71,19 @@ export default class WorkflowService extends BaseService {
     }
 
     listBundles() {
-        return super.get_auth(`/bundles/search/findAllNamed`);
+        return super.get_auth(`/bundles/search`);
     }
 
     findBundle(name) {
-        return super.get_auth(`/bundles/search/findNamedByCurrentUser?name=${name}`);
+        return super.get_auth(`/bundles/search?name=${name}`);
     }
 
     updateBundle(bundleId, description, primaryfileIds) {
-        return super.post_auth(`/bundles/${bundleId}/update?description=${description}&primaryfileIds=${primaryfileIds}`);
+        return super.patch_auth(`/bundles/${bundleId}?description=${description}&primaryfileIds=${primaryfileIds}`);
     }
 
     createBundle(name, description, primaryfileIds) {
-        return super.post_auth(`/bundles/create?name=${name}&description=${description}&primaryfileIds=${primaryfileIds}`);
+        return super.post_auth(`/bundles?name=${name}&description=${description}&primaryfileIds=${primaryfileIds}`);
     }
 
     getSupplementsForPrimaryfiles(primaryfileIds, name, category, format) {
