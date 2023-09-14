@@ -60,7 +60,7 @@ export default class EvaluationService extends BaseService {
 
   async mgmSubmitNewTest(body) {
     var data = await super
-      .post_auth("/mgm-evaluation-test/new", body)
+      .post_auth("/mgm-evaluation-test/create", body)
       .then((result) => {
         return result.data;
       });
