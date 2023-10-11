@@ -1051,23 +1051,7 @@ export default {
               );
             }
           }
-          self.showLoader = true;
-          self.assignedRoles = {};
-          const assignRolesResponse = await self.accessControlService.retrieveRoleAssignments(
-            self.unitEntity.currentUnit
-          );
-          self.assignedRoles = assignRolesResponse.data;
-          self.idsExcluding = self.assignedRoles.users.map((user) => user.id);
-          self.accessControlService
-            .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
-            .then((response) => {
-              self.userList = self.sharedService.sortByAlphabatical(
-                response.data,
-                "username"
-              );
-            });
-          self.newRoles = [];
-          self.showLoader = false;
+          self.refreshRoleAssignments(true);
         })
         .catch((e) => {
           self.showLoader = false;
@@ -1097,15 +1081,97 @@ export default {
         });
       }
     },
-    handleAssignRolesButton() {
+    async handleAssignRolesButton() {
       const self = this;
       self.showRolesSettings = false;
       self.showAssignRoles = !self.showAssignRoles;
+      console.log("showAssignRoles = " + self.showAssignRoles);
+      if (self.showAssignRoles) {
+        self.refreshRoleAssignments();
+      }
     },
-    handleRolesSettingBtn() {
+    async refreshRoleAssignments(forced = false) {
+      const self = this;
+      
+      // no need to do anything if refresh not forced and assignedRoles already initialized
+      if (!forced && Object.keys(self.assignedRoles).length > 0) {
+        console.log ("No need to refresh RoleAssignments.");
+        return false;
+      }
+
+      // otherwise retrieve RoleAssignments and initialize/reset data
+      self.showLoader = true;
+      const assignRolesResponse = await 
+        self.accessControlService.retrieveRoleAssignments(self.unitEntity.currentUnit);
+      self.assignedRoles = assignRolesResponse.data;
+      self.idsExcluding = self.assignedRoles.users.map((user) => user.id);
+      self.accessControlService
+        .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
+        .then((response) => {
+          self.userList = self.sharedService.sortByAlphabatical(
+            response.data,
+            "username"
+          );
+        });
+        self.newRoles = [];
+        self.showLoader = false;        
+
+        console.log("Refreshed RoleAssignments");
+        return true;
+    },
+    async refreshRolesSettings(forced = false) {
+      const self = this;
+
+      // no need to do anything if refresh not forced and settingsRoles already initialized
+      if (!forced && Object.keys(self.settingsRoles).length > 0) {
+        console.log ("No need to refresh RolesSettings.");
+        return false;
+      }
+
+      // otherwise retrieve RolesSettings and initialize/reset settingsRoles
+      self.showLoader = true;
+      const settingsRolesResponse = await 
+        self.accessControlService.retrieveRoleActionConfig(self.unitEntity.currentUnit);
+      self.settingsRoles = settingsRolesResponse.data;
+      let groupBy = function(xs, key) {
+        return xs.reduce(function(rv, x) {
+          (rv[x[key]] = rv[x[key]] || []).push(x);
+          return rv;
+        }, {});
+      };
+      self.settingsRoles["groupedActions"] = groupBy(self.settingsRoles.actions, "targetType");
+
+      // set up hashmap <roleName, actionSet>
+      console.log("Refreshing rolesActions hashmap and updatedRoles hashset ...")
+      let rolesActions = new Map();
+      for (let role of self.settingsRoles.roles) {
+        let actions = rolesActions.get(role.name)
+        if (!actions) {
+          actions = new Set();
+          rolesActions.set(role.name, actions);
+        }          
+        for (let action of role.actions) {
+          actions.add(action.id);
+        }
+        console.log("Processed unit role " + role.name + " with " + actions.size + " actions: " + actions);
+      }
+      self.settingsRoles["rolesActions"] = rolesActions;
+
+      // set up hashset to keep updated roles represented by roleName, initially empty
+      self.settingsRoles["rolesUpdated"] = new Set();      
+      self.showLoader = false;
+
+      console.log ("Refreshed RolesSettings.");
+      return true;
+    },
+    async handleRolesSettingBtn() {
       const self = this;
       self.showAssignRoles = false;
       self.showRolesSettings = !self.showRolesSettings;
+      console.log("showRolesSettings = " + self.showRolesSettings);
+      if (self.showRolesSettings) {
+        self.refreshRolesSettings();
+      }
     },
     handleUpdateRoleAction(roleName, actionId) {
       const self = this;
@@ -1127,7 +1193,7 @@ export default {
         rolesActions.set(roleName, actions);        
         console.log("adding role-action to new role: roleName = " + roleName +", actionId = " + actionId);
       }
-      // add the role as to the update roles hashset
+      // add the role name to the update roles hashset
       self.settingsRoles["rolesUpdated"].add(roleName);      
     },
     existRoleAction(roleName, actionId) {
@@ -1166,9 +1232,7 @@ export default {
                 self.sharedService.erorrToastConfig
               );
           }          
-          self.showLoader = true;
-          self.refreshRolesSettings();
-          self.showLoader = false;
+          self.refreshRolesSettings(true);
         })
         .catch((e) => {
           self.showLoader = false;
@@ -1179,40 +1243,6 @@ export default {
           console.log(e);
         });
     },      
-    async refreshRolesSettings() {
-      const self = this;
-      const settingsRolesResponse = await self.accessControlService.retrieveRoleActionConfig(
-        self.unitEntity.currentUnit
-      );
-      self.settingsRoles = settingsRolesResponse.data;
-      let groupBy = function(xs, key) {
-        return xs.reduce(function(rv, x) {
-          (rv[x[key]] = rv[x[key]] || []).push(x);
-          return rv;
-        }, {});
-      };
-      self.settingsRoles["groupedActions"] = groupBy(
-        self.settingsRoles.actions,
-        "targetType"
-      );
-      // set up hashmap <roleName, actionSet>
-      console.log("Refreshing rolesActions hashmap and updatedRoles hashset ...")
-      let rolesActions = new Map();
-      for (let role of self.settingsRoles.roles) {
-        let actions = rolesActions.get(role.name)
-        if (!actions) {
-          actions = new Set();
-          rolesActions.set(role.name, actions);
-        }          
-        for (let action of role.actions) {
-          actions.add(action.id);
-        }
-        console.log("Processed unit role " + role.name + " with " + actions.length + " actions: " + actions);
-      }
-      self.settingsRoles["rolesActions"] = rolesActions;
-      // set up hashset to keep updated roles represented by roleName, initially empty
-      self.settingsRoles["rolesUpdated"] = new Set();
-    },
     async getUnitDetails() {
       const self = this;
       self.showLoader = true;
@@ -1220,23 +1250,7 @@ export default {
         const unitDetails = await self.entityService.getUnitDetails(
           self.unitEntity.currentUnit,
           self
-        );
-        // set up Roles Assignments
-        const assignRolesResponse = await self.accessControlService.retrieveRoleAssignments(
-          self.unitEntity.currentUnit
-        );
-        self.assignedRoles = assignRolesResponse.data;
-        self.idsExcluding = self.assignedRoles.users.map((user) => user.id);
-        self.accessControlService
-          .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
-          .then((response) => {
-            self.userList = self.sharedService.sortByAlphabatical(
-              response.data,
-              "username"
-            );
-          });
-        // set up Role Settings config
-        await self.refreshRolesSettings();       
+        );      
         if (unitDetails.response) {
           self.selectedUnit = unitDetails.response;
           self.entity = unitDetails.response;
