@@ -1354,9 +1354,10 @@ export default {
           self.showEdit = false;
         }
       } else if (self.baseUrl === "file") {
-        let mediaSourceUrl = self.workflowResultService.getSourceUrl(
+        let mediaSourceUrl = await self.workflowResultService.getSourceLink(
           self.selectedFile.id
         );
+        console.log("mediaSourceUrl = " + mediaSourceUrl);
         let mediaSourceType = await self.primaryFileService.getPrimaryFile(
           self.selectedFile.id
         );

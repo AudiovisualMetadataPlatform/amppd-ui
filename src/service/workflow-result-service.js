@@ -53,13 +53,28 @@ export default class WorkflowResultService extends BaseService {
     return data;
   }
 
-  getSourceUrl(primaryfileId) {
-    const url = `${this.API_URL}/primaryfiles/${primaryfileId}/media`;
-    return url;
+  async getSourceLink(primaryfileId) {
+    const url = `/primaryfiles/${primaryfileId}/media`;
+    var symlink = await super.get_auth(url).then((result) => {
+      return result.headers['location'];
+    });
+    return symlink;
   }
-  getOutputUrl(id) {
-    const url = `${this.API_URL}/workflow-results/${id}/output`;
-    return url;
+  
+  async getSourceUrl(primaryfileId) {
+    const url = `/primaryfiles/${primaryfileId}/media`;
+    var content = await super.get_auth(url).then((result) => {
+      return result.data;
+    });
+    return content;
+  }
+
+  async getOutputUrl(id) {
+    const url = `/workflow-results/${id}/output`;
+    var content = await super.get_auth(url).then((result) => {
+      return result.data;
+    });
+    return content;
   }
 
   async deleteWorkflowResult(id) {

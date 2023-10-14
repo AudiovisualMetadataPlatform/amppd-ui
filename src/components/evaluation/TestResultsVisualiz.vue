@@ -63,11 +63,8 @@
                                     >
                                     (<a
                                       class="scores-files"
-                                      v-bind:href="
-                                        workflowResultService.getOutputUrl(
-                                          testResult.workflowResult.id
-                                        )
-                                      "
+                                      href="#" 
+                                      @click="workflowResultService.getOutputUrl(testResult.workflowResult.id)"
                                       target="_blank"
                                       >{{
                                         testResult.workflowResult.workflowStep
