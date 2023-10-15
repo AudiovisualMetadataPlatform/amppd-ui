@@ -56,7 +56,7 @@ export default class WorkflowResultService extends BaseService {
   async getSourceLink(primaryfileId) {
     const url = `/primaryfiles/${primaryfileId}/media`;
     var symlink = await super.get_auth(url).then((result) => {
-      return result.headers['location'];
+      return result.headers['Location'];
     });
     return symlink;
   }
