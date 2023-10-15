@@ -73,7 +73,8 @@
                     disabled
                 /> -->
                 <a
-                  :href="workflowResultService.getOutputUrl(output.id)"
+                  href="#" 
+                  @click="workflowResultService.getOutputUrl(output.id)"
                   class="complete-output"
                   target="_blank"
                   v-if="

@@ -132,9 +132,8 @@
             <td v-if="checkAvailability('itemName')">{{ rec.itemName }}</td>
             <td v-if="checkAvailability('primaryfileName') && canAccessLink(rec, true)">
               <a
-                v-bind:href="
-                  workflowResultService.getSourceUrl(rec.primaryfileId)
-                "
+                href="#"
+                @click="workflowResultService.getSourceUrl(rec.primaryfileId)"
                 target="_blank"
                 class="complete-output"
                 >{{ rec.primaryfileName }}</a
@@ -155,7 +154,8 @@
                 outputReady(rec)"
             >
               <a
-                v-bind:href="workflowResultService.getOutputUrl(rec.id)"
+                href="#" 
+                @click="workflowResultService.getOutputUrl(rec.id)"
                 target="_blank"
                 class="complete-output"
                 >{{ rec.outputName }}</a
@@ -173,7 +173,8 @@
                 outputReady(rec)"
             >
               <a
-                v-bind:href="workflowResultService.getOutputUrl(rec.id)"
+                href="#" 
+                @click="workflowResultService.getOutputUrl(rec.id)"
                 target="_blank"
                 class="complete-output"
                 >{{ rec.outputLabel }}</a
@@ -517,8 +518,8 @@ export default {
     canAccessLink(result, forMedia) {      
       // get units for media or output
       let units = forMedia ? this.acUnitsMedia : this.acUnitsOutput;      
-        console.log("forMedia: " + forMedia);	
-        console.log("units: " + units);	
+        // console.log("forMedia: " + forMedia);	
+        // console.log("units: " + units);	
       return this.acIsAdmin || units && units.includes(result.unitId);
     },
     handleDeleteRow() {
