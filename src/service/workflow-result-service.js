@@ -30,6 +30,7 @@ export default class WorkflowResultService extends BaseService {
       });
     return data;
   }
+
   async setWorkflowResultFinal(id, isFinal) {
     var data = await super
       .patch_auth("/workflowResults/" + id + "?isFinal=" + isFinal, null)
@@ -38,6 +39,7 @@ export default class WorkflowResultService extends BaseService {
       });
     return data;
   }
+  
   async updateWorkflowResult(id, outputLabel) {
     var data = await super
       .patch_auth(
@@ -84,9 +86,11 @@ export default class WorkflowResultService extends BaseService {
       let symlink = ""
       if (forOutput) {
         symlink = await this.getOutputSymlink(result.id);
+        console.log("workflowResultId = " + result.id + ", symlink = " + symlink)
       }
       else {
         symlink = await this.getMediaSymlink(result.primaryfileId);
+        console.log("primaryfileId = " + result.primaryfileId + ", symlink = " + symlink)
       }
       
       // TODO handle error resposne
@@ -94,7 +98,6 @@ export default class WorkflowResultService extends BaseService {
       // initialize the link URL and trigger a click to request the content
       link.href = symlink;
       link.click();
-      console.log("forOutput = " + forOutput + ", symlink = " + symlink)
     }
     // otherwise do nothing and just let browser handle the link click
   }
