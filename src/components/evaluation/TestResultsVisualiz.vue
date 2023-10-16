@@ -563,8 +563,7 @@ export default {
         const mgmReviewOutput = await self.evaluationService.getMgmReviewOutput(
           testResultIds
         );
-        self.mgmEvaluationTests =
-          mgmReviewOutput.data._embedded.mgmEvaluationTests;
+        self.mgmEvaluationTests = mgmReviewOutput;
         self.selectedTestResult = self.mgmEvaluationTests[0];
 
         //Structure of bar chart data
