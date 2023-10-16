@@ -73,8 +73,7 @@
                     disabled
                 /> -->
                 <a
-                  href="#" 
-                  @click="workflowResultService.getOutputUrl(output.id)"
+                  @click="workflowResultService.getSymlinkContent(output, true, $event)"
                   class="complete-output"
                   target="_blank"
                   v-if="

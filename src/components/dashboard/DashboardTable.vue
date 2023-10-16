@@ -131,11 +131,10 @@
             <td v-if="checkAvailability('externalId')">{{ rec.externalId }}</td>
             <td v-if="checkAvailability('itemName')">{{ rec.itemName }}</td>
             <td v-if="checkAvailability('primaryfileName') && canAccessLink(rec, true)">
-              <a
-                href="#"
-                @click="workflowResultService.getSourceUrl(rec.primaryfileId)"
+              <a            
+                @click="workflowResultService.getSymlinkContent(rec, false, $event)"
                 target="_blank"
-                class="complete-output"
+                class="complete-output"              
                 >{{ rec.primaryfileName }}</a
               >
             </td>
@@ -154,8 +153,7 @@
                 outputReady(rec)"
             >
               <a
-                href="#" 
-                @click="workflowResultService.getOutputUrl(rec.id)"
+                @click="workflowResultService.getSymlinkContent(rec, true, $event)"                
                 target="_blank"
                 class="complete-output"
                 >{{ rec.outputName }}</a
@@ -173,8 +171,7 @@
                 outputReady(rec)"
             >
               <a
-                href="#" 
-                @click="workflowResultService.getOutputUrl(rec.id)"
+                @click="workflowResultService.getSymlinkContent(rec, true, $event)"  
                 target="_blank"
                 class="complete-output"
                 >{{ rec.outputLabel }}</a
@@ -476,6 +473,25 @@ export default {
     },
   },
   methods: {
+    // async getMedia(rec, event) {
+    //   // let link = doc.getElementById(rec.id + '-M');
+    //   let link = event.target;
+    //   if (!link.href) {
+    //     let symlink = await this.workflowResultService.getMediaSymlink(rec.primaryfileId);
+    //     link.href = symlink;
+    //     link.click();
+    //     console.log("media symlink = " + symlink)
+    //   }
+    // },
+    async getOutput(rec) {
+      let link = document.getElementById(rec.id + '-O');
+      if (!link.href) {
+        let symlink = await this.workflowResultService.getOutputSymlink(rec.Id);
+        link.href = symlink;
+        link.click();
+        console.log("output symlink = " + symlink)
+      }
+    },
     async setWorkflowResultFinal(workflowResultId) {
       for (
         var r = 0;
