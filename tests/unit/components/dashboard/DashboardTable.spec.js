@@ -61,7 +61,7 @@ function(){
             workflowStep: "contact_sheets"}],filters: null, totalResults: 1});
           
         },
-        getSourceUrl: (id) => {
+        getMediaSymlink: (id) => {
           return id;
         }
     }

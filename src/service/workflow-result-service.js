@@ -52,29 +52,51 @@ export default class WorkflowResultService extends BaseService {
       });
     return data;
   }
-
-  async getSourceLink(primaryfileId) {
+  
+  // get symlink for primaryfile media
+  async getMediaSymlink(primaryfileId) {
     const url = `/primaryfiles/${primaryfileId}/media`;
     var symlink = await super.get_auth(url).then((result) => {
-      return result.headers['Location'];
+      return result.data;
     });
     return symlink;
   }
-  
-  async getSourceUrl(primaryfileId) {
-    const url = `/primaryfiles/${primaryfileId}/media`;
-    var content = await super.get_auth(url).then((result) => {
+
+  // get symlink for workflow result output
+  async getOutputSymlink(id) {
+    const url = `/workflow-results/${id}/output`;
+    var symlink = await super.get_auth(url).then((result) => {
       return result.data;
     });
-    return content;
+    return symlink;
   }
 
-  async getOutputUrl(id) {
-    const url = `/workflow-results/${id}/output`;
-    var content = await super.get_auth(url).then((result) => {
-      return result.data;
-    });
-    return content;
+  // onclick event handler for media/output links:
+  // get content of media or output based on forOutput boolean
+  // note that this method is shared across multiple components.
+  async getSymlinkContent(result, forOutput, event) {
+    // get the link element being clicked
+    let link = event.target;
+
+    // only process the event when the link href hasm't been populated
+    if (!link.href) {
+      // get symlink URL via API call
+      let symlink = ""
+      if (forOutput) {
+        symlink = await this.getOutputSymlink(result.id);
+      }
+      else {
+        symlink = await this.getMediaSymlink(result.primaryfileId);
+      }
+      
+      // TODO handle error resposne
+
+      // initialize the link URL and trigger a click to request the content
+      link.href = symlink;
+      link.click();
+      console.log("forOutput = " + forOutput + ", symlink = " + symlink)
+    }
+    // otherwise do nothing and just let browser handle the link click
   }
 
   async deleteWorkflowResult(id) {

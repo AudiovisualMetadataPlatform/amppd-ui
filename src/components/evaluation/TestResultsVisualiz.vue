@@ -52,19 +52,13 @@
                                   <h6>
                                     <a
                                       class="scores-files"
-                                      v-bind:href="
-                                        workflowResultService.getSourceUrl(
-                                          testResult.workflowResult
-                                            .primaryfileId
-                                        )
-                                      "
+                                      @click="workflowResultService.getSymlinkContent(testResult.workflowResult, false, $event)"
                                       target="_blank"
                                       >{{ testResult.primaryFilename }}</a
                                     >
                                     (<a
-                                      class="scores-files"
-                                      href="#" 
-                                      @click="workflowResultService.getOutputUrl(testResult.workflowResult.id)"
+                                      class="scores-files" 
+                                      @click="workflowResultService.getSymlinkContent(testResult.workflowResult, true, $event)"
                                       target="_blank"
                                       >{{
                                         testResult.workflowResult.workflowStep
