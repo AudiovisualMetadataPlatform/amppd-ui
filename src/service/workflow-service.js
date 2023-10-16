@@ -12,14 +12,14 @@ export default class WorkflowService extends BaseService {
     async searchIntermediateFiles(searchWord, outputTypes) {
         return await super
             .get_auth(
-                "/workflow-results/intermediate/primaryfiles?outputTypes=" + outputTypes + "&keyword=" + encodeURIComponent(searchWord)
+                "/workflowResults/intermediate/primaryfiles?outputTypes=" + outputTypes + "&keyword=" + encodeURIComponent(searchWord)
             ).then((response) => response.data);
     }
 
     async getCompleteWorkflowResultsForPrimaryfileOutputTypes(outputTypes, primaryfileId) {
         return await super
             .get_auth(
-                "/workflow-results/intermediate/outputs?outputTypes=" + outputTypes + "&primaryfileId=" + primaryfileId
+                "/workflowResults/intermediate/outputs?outputTypes=" + outputTypes + "&primaryfileId=" + primaryfileId
             ).then((response) => response.data);
     }
 

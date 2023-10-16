@@ -3,7 +3,7 @@ import { env } from "../helpers/env";
 
 export default class WorkflowResultService extends BaseService {
   async getWorkflowResults(searchQuery, actionType, targetType) {
-	var url = "/workflow-results/query";
+	var url = "/workflowResults/query";
 	if (actionType && targetType) {
 		url = url + "?actionType=" + actionType + "&targetType=" + targetType;
 	}	
@@ -24,7 +24,7 @@ export default class WorkflowResultService extends BaseService {
 
   async exportWorkflowResults(searchQuery) {
     var data = await super
-      .post_auth("/workflow-results/export", searchQuery)
+      .post_auth("/workflowResults/export", searchQuery)
       .then((result) => {
         return result.data;
       });
@@ -32,7 +32,7 @@ export default class WorkflowResultService extends BaseService {
   }
   async setWorkflowResultFinal(id, isFinal) {
     var data = await super
-      .patch_auth("/workflow-results/" + id + "?isFinal=" + isFinal, null)
+      .patch_auth("/workflowResults/" + id + "?isFinal=" + isFinal, null)
       .then((result) => {
         return result.data;
       });
@@ -41,7 +41,7 @@ export default class WorkflowResultService extends BaseService {
   async updateWorkflowResult(id, outputLabel) {
     var data = await super
       .patch_auth(
-        "/workflow-results/" +
+        "/workflowResults/" +
           id +
           "?outputLabel=" +
           outputLabel +
@@ -64,7 +64,7 @@ export default class WorkflowResultService extends BaseService {
 
   // get symlink for workflow result output
   async getOutputSymlink(id) {
-    const url = `/workflow-results/${id}/output`;
+    const url = `/workflowResults/${id}/output`;
     var symlink = await super.get_auth(url).then((result) => {
       return result.data;
     });
@@ -100,6 +100,6 @@ export default class WorkflowResultService extends BaseService {
   }
 
   async deleteWorkflowResult(id) {
-    await super.delete_auth(`/workflow-results/${id}`);
+    await super.delete_auth(`/workflowResults/${id}`);
   }
 }

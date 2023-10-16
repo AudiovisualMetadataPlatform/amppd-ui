@@ -34,9 +34,7 @@ export default class EvaluationService extends BaseService {
    */
 
   async getDetailParametersMgmScoringTool(id) {
-    return super.get_auth(
-      `/mgmScoringTools/${id}/parameters?projection=detail`
-    );
+    return super.get_auth(`/mgmScoringTools/${id}/parameters?projection=detail`);
   }
 
   /***
@@ -46,7 +44,7 @@ export default class EvaluationService extends BaseService {
 
   async getMgmEvaluationTestResults(searchQuery) {
     var data = await super
-      .post_auth("/mgm-evaluation-test/query", searchQuery)
+      .post_auth("/mgmEvaluationTests/query", searchQuery)
       .then((result) => {
         return result.data;
       });
@@ -60,7 +58,7 @@ export default class EvaluationService extends BaseService {
 
   async mgmSubmitNewTest(body) {
     var data = await super
-      .post_auth("/mgm-evaluation-test/create", body)
+      .post_auth("/mgmEvaluationTests/create", body)
       .then((result) => {
         return result.data;
       });
@@ -73,9 +71,12 @@ export default class EvaluationService extends BaseService {
    */
 
   async getMgmReviewOutput(ids) {
-    return super.get_auth(
-      `/mgmEvaluationTests/search/findByIds?ids=${ids}&projection=detail`
-    );
+    var data = await super
+      .get_auth(`/mgmEvaluationTests?ids=${ids}`)
+      .then((result) => {
+        return result.data;
+      });
+    return data;
   }
 
   // To download any file by it's name
