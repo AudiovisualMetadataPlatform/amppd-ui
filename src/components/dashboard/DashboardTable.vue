@@ -116,10 +116,10 @@
             </td>
             <td v-if="checkAvailability('testDate')">
               {{ new Date(rec.testDate) | LOCAL_DATE_VALUE }}
-            </td>
-            <td v-if="checkAvailability('outputDate')">
-              {{ new Date(rec.outputDate) | LOCAL_DATE_VALUE }}
-            </td>
+            </td><!--
+            <td v-if="checkAvailability('dateCreated')">
+              {{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}
+            </td>-->
             <td v-if="checkAvailability('submitter')">{{ rec.submitter }}</td>
             <td v-if="checkAvailability('unit')">{{ rec.unitName }}</td>
             <td v-if="checkAvailability('collectionName')">
@@ -132,7 +132,7 @@
             <td v-if="checkAvailability('itemName')">{{ rec.itemName }}</td>
             <td v-if="checkAvailability('primaryfileName') && canAccessLink(rec, true)">
               <a            
-                @click="workflowResultService.getSymlinkContent(rec, false, $event)"
+                @click="workflowResultService.getSymlinkContent(rec, false, parent, $event)"
                 target="_blank"
                 class="complete-output"              
                 >{{ rec.primaryfileName }}</a
@@ -153,7 +153,7 @@
                 outputReady(rec)"
             >
               <a
-                @click="workflowResultService.getSymlinkContent(rec, true, $event)"                
+                @click="workflowResultService.getSymlinkContent(rec, true, parent, $event)"                
                 target="_blank"
                 class="complete-output"
                 >{{ rec.outputName }}</a
@@ -171,7 +171,7 @@
                 outputReady(rec)"
             >
               <a
-                @click="workflowResultService.getSymlinkContent(rec, true, $event)"  
+                @click="workflowResultService.getSymlinkContent(rec, true, parent, $event)"  
                 target="_blank"
                 class="complete-output"
                 >{{ rec.outputLabel }}</a
@@ -186,8 +186,8 @@
             <td v-if="checkAvailability('groundTruth')">
               {{ rec.groundTruth }}
             </td>
-            <td v-if="checkAvailability('outputTest')">
-              {{ rec.outputTest }}
+            <td v-if="checkAvailability('scores')">
+              {{ rec.scores }}
             </td>
             <td
               v-if="
@@ -473,25 +473,6 @@ export default {
     },
   },
   methods: {
-    // async getMedia(rec, event) {
-    //   // let link = doc.getElementById(rec.id + '-M');
-    //   let link = event.target;
-    //   if (!link.href) {
-    //     let symlink = await this.workflowResultService.getMediaSymlink(rec.primaryfileId);
-    //     link.href = symlink;
-    //     link.click();
-    //     console.log("media symlink = " + symlink)
-    //   }
-    // },
-    async getOutput(rec) {
-      let link = document.getElementById(rec.id + '-O');
-      if (!link.href) {
-        let symlink = await this.workflowResultService.getOutputSymlink(rec.Id);
-        link.href = symlink;
-        link.click();
-        console.log("output symlink = " + symlink)
-      }
-    },
     async setWorkflowResultFinal(workflowResultId) {
       for (
         var r = 0;
@@ -520,7 +501,8 @@ export default {
       else return true;
     },
     outputReady(wr) {
-      return wr.outputPath != null && wr.status == 'COMPLETE'
+      return this.parent === "TestResults" || this.parent === "NewTest" ||
+        wr.outputPath != null && wr.status == 'COMPLETE'
     },
     // canAccessLink(result, forMedia) {      
     //   let actionType = env.getEnv("VUE_APP_AC_ACTIONTYPE_READ");

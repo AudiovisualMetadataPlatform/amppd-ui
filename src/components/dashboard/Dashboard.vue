@@ -647,7 +647,7 @@
                                 (item) => {
                                   if (parent === 'TestResults')
                                     return (
-                                      item.field !== 'dateCreated' &&
+                                      // item.field !== 'dateCreated' &&
                                       item.field !== 'status' &&
                                       item.field !== 'actions' &&
                                       item.field !== 'addToTest'
@@ -655,9 +655,9 @@
                                   else
                                     return (
                                       item.field !== 'testDate' &&
-                                      item.field !== 'outputDate' &&
+                                      // item.field !== 'dateCreated' &&
                                       item.field !== 'groundTruth' &&
-                                      item.field !== 'outputTest' &&
+                                      item.field !== 'scores' &&
                                       item.field !== 'addToTest'
                                     );
                                 }
@@ -1194,7 +1194,7 @@ export default {
         }
 
         return (
-          column.field !== "dateCreated" &&
+          //column.field !== "dateCreated" &&
           column.field !== "status" &&
           column.field !== "actions"
         );
@@ -1211,9 +1211,9 @@ export default {
 
         return (
           column.field !== "testDate" &&
-          column.field !== "outputDate" &&
+          //column.field !== "dateCreated" &&
           column.field !== "groundTruth" &&
-          column.field !== "outputTest" &&
+          column.field !== "scores" &&
           column.field !== "status" &&
           column.field !== "actions"
         );
@@ -1230,12 +1230,12 @@ export default {
       this.columns = this.columns.filter((column) => {
         return (
           column.field !== "testDate" &&
-          column.field !== "outputDate" &&
+          //column.field !== "dateCreated" &&
           column.field !== "unit" &&
           column.field !== "externalSource" &&
           column.field !== "workflowStep" &&
           column.field !== "groundTruth" &&
-          column.field !== "outputTest" &&
+          column.field !== "scores" &&
           column.field !== "actions" &&
           column.field !== "addToTest"
         );

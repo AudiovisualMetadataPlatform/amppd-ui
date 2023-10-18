@@ -30,6 +30,7 @@ export default class WorkflowResultService extends BaseService {
       });
     return data;
   }
+
   async setWorkflowResultFinal(id, isFinal) {
     var data = await super
       .patch_auth("/workflowResults/" + id + "?isFinal=" + isFinal, null)
@@ -38,6 +39,7 @@ export default class WorkflowResultService extends BaseService {
       });
     return data;
   }
+  
   async updateWorkflowResult(id, outputLabel) {
     var data = await super
       .patch_auth(
@@ -74,19 +76,29 @@ export default class WorkflowResultService extends BaseService {
   // onclick event handler for media/output links:
   // get content of media or output based on forOutput boolean
   // note that this method is shared across multiple components.
-  async getSymlinkContent(result, forOutput, event) {
+  async getSymlinkContent(result, forOutput, parent, event) {
     // get the link element being clicked
     let link = event.target;
 
     // only process the event when the link href hasm't been populated
-    if (!link.href) {
+    if (!link.href) {      
+      // for TestResults, the passed in result is MET result; otherwise, it is WFR result;
+      // the WFR ID field name differs in above cases.
+      // note that primaryfile ID field name remains the same regardless of which parent page 
+      let wfrId = parent === "TestResults" ? result.workflowResultId : result.id;
+      console.log("parent = " + parent + ", result.id = " + result.id);
+
       // get symlink URL via API call
       let symlink = ""
       if (forOutput) {
-        symlink = await this.getOutputSymlink(result.id);
+        // WFR output symlink
+        symlink = await this.getOutputSymlink(wfrId);
+        console.log("workflowResultId = " + wfrId + ", symlink = " + symlink)
       }
       else {
+        // PFile symlink
         symlink = await this.getMediaSymlink(result.primaryfileId);
+        console.log("workflowResultId = " + wfrId + ", primaryfileId = " + result.primaryfileId + ", symlink = " + symlink)
       }
       
       // TODO handle error resposne
@@ -94,7 +106,6 @@ export default class WorkflowResultService extends BaseService {
       // initialize the link URL and trigger a click to request the content
       link.href = symlink;
       link.click();
-      console.log("forOutput = " + forOutput + ", symlink = " + symlink)
     }
     // otherwise do nothing and just let browser handle the link click
   }

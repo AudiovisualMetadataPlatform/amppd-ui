@@ -91,7 +91,7 @@ describe('Dashboard.vue', () => {
             dashboardColumns: [
                 { order: "a", label: "Date", field: "dateCreated" },
                 { order: "b", label: "Test Date", field: "testDate" },
-                { order: "c", label: "Output Date", field: "outputDate" },
+                //{ order: "c", label: "Output Date", field: "outputDate" },
                 { order: "d", label: "Submitter", field: "submitter" },
                 { order: "e", label: "Unit", field: "unit" },
                 { order: "f", label: "Collection", field: "collectionName" },
@@ -104,7 +104,7 @@ describe('Dashboard.vue', () => {
                 { order: "m", label: "Output", field: "outputName" },
                 { order: "n", label: "Alias", field: "outputLabel" },
                 { order: "o", label: "Ground Truth", field: "groundTruth" },
-                { order: "p", label: "Test Output", field: "outputTest" },
+                { order: "p", label: "Test Scores", field: "scores" },
                 { order: "q", label: "Status", field: "status" },
                 { order: "r", label: "Actions", field: "actions" },
                 { order: "s", label: "Add to Test", field: "addToTest" },
