@@ -11,7 +11,7 @@
       v-on:click="setFilterFlags"
     >
       {{
-        label ? label : parent === "TestResults" ? "Output Date" : "Date range"
+        label ? label : parent === "TestResults" ? "Date" : "Date"
       }}
     </button>
     <div
