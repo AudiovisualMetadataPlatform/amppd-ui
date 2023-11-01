@@ -36,7 +36,7 @@ export default class EntityService {
 
             }
             if (!self.isCreatePage) {
-                self.collectionService.updateCollection(self.entity).then(reponse => {
+                self.collectionService.updateCollection(self.entity).then(response => {
                     self.$bvToast.toast("Collection details updated successfully", self.sharedService.successToastConfig);
                     self.submitted = false;
                     self.isDataChanged = false;
@@ -51,11 +51,15 @@ export default class EntityService {
                 });
             } else {
                 self.entity.unit = self.baseService.API_URL + `/units/${self.selectedUnit.id}`;
-                self.collectionService.createCollection(self.entity).then(reponse => {
+                self.collectionService.createCollection(self.entity).then(response => {
                     self.$bvToast.toast("Collection created successfully", self.sharedService.successToastConfig);
-                    // self.showEdit = !self.showEdit;
+                    self.entity = response;
+                    self.selectedCollection = response;
+                    self.selectedCollection.selectedCollectionId = response.id;                    
                     self.submitted = false;
                     self.isDataChanged = false;
+                    console.log("collection.id = " + self.entity.id);
+                    console.log("selectedCollectionId = " + self.selectedCollection.selectedCollectionId);
                 }).catch(error => {
                     self.submitted = false;
                     if (error.response && error.response.data && error.response.data.validationErrors) {
@@ -75,7 +79,7 @@ export default class EntityService {
             }
             self.showLoader = true;
             const payload = { name: self.entity.name, description: self.entity.description };
-            self.primaryFileService.updatePrimaryFile(self.entity.id, payload).then(reponse => {
+            self.primaryFileService.updatePrimaryFile(self.entity.id, payload).then(response => {
                 self.showLoader = false;
                 self.submitted = false;
                 self.$bvToast.toast("File details has been updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
