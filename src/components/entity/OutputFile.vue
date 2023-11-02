@@ -34,7 +34,7 @@
             <!-- -->
             <tr v-for="output in listOfOutputList" :key="output.id">
               <td>
-                <!-- <input type="text" :value="12/28/2021" class="form-control" disabled /> -->
+                 <!-- <input type="text" :value="12/28/2021" class="form-control" disabled /> -->
                 <p>{{ new Date(output.dateCreated) | LOCAL_DATE_VALUE }}</p>
               </td>
               <td>
@@ -73,7 +73,7 @@
                     disabled
                 /> -->
                 <a
-                  @click="workflowResultService.getSymlinkContent(output, true, $event)"
+                  @click="workflowResultService.getSymlinkContent(output, true, null, $event)"
                   class="complete-output"
                   target="_blank"
                   v-if="

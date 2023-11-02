@@ -52,13 +52,13 @@
                                   <h6>
                                     <a
                                       class="scores-files"
-                                      @click="workflowResultService.getSymlinkContent(testResult.workflowResult, false, $event)"
+                                      @click="workflowResultService.getSymlinkContent(testResult.workflowResult, false, null, $event)"
                                       target="_blank"
                                       >{{ testResult.primaryFilename }}</a
                                     >
                                     (<a
                                       class="scores-files" 
-                                      @click="workflowResultService.getSymlinkContent(testResult.workflowResult, true, $event)"
+                                      @click="workflowResultService.getSymlinkContent(testResult.workflowResult, true, null, $event)"
                                       target="_blank"
                                       >{{
                                         testResult.workflowResult.workflowStep
