@@ -1354,16 +1354,18 @@ export default {
           self.showEdit = false;
         }
       } else if (self.baseUrl === "file") {
-        let mediaSourceUrl = await self.workflowResultService.getMediaSymlink(
-          self.selectedFile.id
-        );
-        console.log("mediaSourceUrl = " + mediaSourceUrl);
+        if (self.accessControl._primaryfile_media._read) {
+          let mediaSourceUrl = await self.workflowResultService.getMediaSymlink(
+            self.selectedFile.id
+          );
+          console.log("mediaSourceUrl = " + mediaSourceUrl);
+          self.entity["mediaSource"] = mediaSourceUrl;
+        }
         let mediaSourceType = await self.primaryFileService.getPrimaryFile(
           self.selectedFile.id
         );
         self.selectedFile["mediaInfo"] = mediaSourceType.mediaInfo;
         self.entity = self.selectedFile;
-        self.entity["mediaSource"] = mediaSourceUrl;
         self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
         self.showLoader = false;
       }
