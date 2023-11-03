@@ -951,6 +951,8 @@ export default {
       unitEntity: { unitList: [], currentUnit: "" },
       showAssignRoles: false,
       showRolesSettings: false,
+      assignedRolesUnitChanged: false,    // whether unit for role assignments has changed since last refresh
+      settingsRolesUnitChanged: false,    // whether unit for role setings has changed since last refresh
       assignedRoles: {},
       settingsRoles: {},
       newRoles: [],
@@ -1093,8 +1095,8 @@ export default {
     async refreshRoleAssignments(forced = false) {
       const self = this;
       
-      // no need to do anything if refresh not forced and assignedRoles already initialized
-      if (!forced && Object.keys(self.assignedRoles).length > 0) {
+      // no need to do anything if refresh not forced and unit hasn't changed since last refresh
+      if (!forced && !self.assignedRolesUnitChanged) {
         console.log ("No need to refresh RoleAssignments.");
         return false;
       }
@@ -1114,6 +1116,7 @@ export default {
           );
         });
         self.newRoles = [];
+        self.assignedRolesUnitChanged = false;
         self.showLoader = false;        
 
         console.log("Refreshed RoleAssignments");
@@ -1122,8 +1125,8 @@ export default {
     async refreshRolesSettings(forced = false) {
       const self = this;
 
-      // no need to do anything if refresh not forced and settingsRoles already initialized
-      if (!forced && Object.keys(self.settingsRoles).length > 0) {
+      // no need to do anything if refresh not forced and unit hasn't changed since last refresh
+      if (!forced && !self.settingsRolesUnitChanged) {
         console.log ("No need to refresh RolesSettings.");
         return false;
       }
@@ -1159,6 +1162,7 @@ export default {
 
       // set up hashset to keep updated roles represented by roleName, initially empty
       self.settingsRoles["rolesUpdated"] = new Set();      
+      self.settingsRolesUnitChanged = false;
       self.showLoader = false;
 
       console.log ("Refreshed RolesSettings.");
@@ -1280,6 +1284,8 @@ export default {
         JSON.stringify({ ...self.unitEntity })
       );
       self.getData();
+      self.assignedRolesUnitChanged = true;
+      self.settingsRolesUnitChanged = true;
       //Checking Access Control
       self.accessControlService.checkAccessControl(this);
     },
@@ -1495,6 +1501,8 @@ export default {
     } else {
       self.unitEntity = uEntity;
       self.getData();
+      self.assignedRolesUnitChanged = true;
+      self.settingsRolesUnitChanged = true;
     }
 
     let formHTML = document.getElementsByClassName("form")[0];
