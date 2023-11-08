@@ -185,8 +185,7 @@ export default class AccessControlService extends BaseService {
                 break;
             }
           } else if (
-            action.targetType ===
-            env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE")
+            action.targetType === env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE")
           ) {
             switch (action.actionType) {
               case env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"):

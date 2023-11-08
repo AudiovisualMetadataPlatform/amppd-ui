@@ -130,16 +130,15 @@
             </td>
             <td v-if="checkAvailability('externalId')">{{ rec.externalId }}</td>
             <td v-if="checkAvailability('itemName')">{{ rec.itemName }}</td>
-            <td v-if="checkAvailability('primaryfileName') && canAccessLink(rec, true)">
+            <td v-if="checkAvailability('primaryfileName')">
               <a            
+                v-if="canAccessLink(rec, true)"
                 @click="workflowResultService.getSymlinkContent(rec, false, parent, $event)"
                 target="_blank"
                 class="complete-output"              
-                >{{ rec.primaryfileName }}</a
-              >
-            </td>
-            <td v-else-if="checkAvailability('primaryfileName')">
-              {{ rec.primaryfileName }}
+                >{{ rec.primaryfileName }}
+              </a>
+              <span v-else>{{ rec.primaryfileName }}</span>
             </td>
             <td v-if="checkAvailability('workflowName')">
               {{ rec.workflowName }}
@@ -147,41 +146,29 @@
             <td v-if="checkAvailability('workflowStep')">
               {{ rec.workflowStep }}
             </td>
-            <td
-              v-if="checkAvailability('outputName') && 
-                canAccessLink(rec, false) && 
-                outputReady(rec)"
-            >
-              <a
+            <td v-if="checkAvailability('outputName')">            
+              <a v-if="canAccessLink(rec, false) && outputReady(rec)"
                 @click="workflowResultService.getSymlinkContent(rec, true, parent, $event)"                
                 target="_blank"
                 class="complete-output"
-                >{{ rec.outputName }}</a
-              >
+                >{{ rec.outputName }}
+              </a>
+              <a v-else-if="canAccessLink(rec, false)"
+                role="link" aria-disabled="true">{{ rec.outputName }}
+              </a>         
+            <span v-else> {{ rec.outputName }} </span>
             </td>
-            <td v-else-if="checkAvailability('outputName') && canAccessLink(rec, false)">
-              <a role="link" aria-disabled="true">{{ rec.outputName }}</a>
-            </td>            
-            <td v-else-if="checkAvailability('outputName')">
-              {{ rec.outputName }}
-            </td>
-            <td
-              v-if="checkAvailability('outputLabel') && 
-                canAccessLink(rec, false) && 
-                outputReady(rec)"
-            >
-              <a
-                @click="workflowResultService.getSymlinkContent(rec, true, parent, $event)"  
+            <td v-if="checkAvailability('outputLabel')">            
+              <a v-if="canAccessLink(rec, false) && outputReady(rec)"
+                @click="workflowResultService.getSymlinkContent(rec, true, parent, $event)"                
                 target="_blank"
                 class="complete-output"
-                >{{ rec.outputLabel }}</a
-              >
-            </td>
-            <td v-else-if="checkAvailability('outputLabel') && canAccessLink(rec, false)">
-              <a role="link" aria-disabled="true" class="complete-output">{{ rec.outputLabel }}</a>
-            </td>            
-            <td v-else-if="checkAvailability('outputLabel')">
-              {{ rec.outputLabel }}
+                >{{ rec.outputLabel }}
+              </a>
+              <a v-else-if="canAccessLink(rec, false)"
+                role="link" aria-disabled="true">{{ rec.outputLabel }}
+              </a>         
+            <span v-else> {{ rec.outputLabel }} </span>
             </td>
             <td v-if="checkAvailability('groundTruth')">
               {{ rec.groundTruth }}
