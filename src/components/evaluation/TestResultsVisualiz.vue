@@ -61,7 +61,7 @@
                                       @click="workflowResultService.getSymlinkContent(testResult.workflowResult, true, null, $event)"
                                       target="_blank"
                                       >{{
-                                        testResult.workflowResult.workflowStep
+                                        testResult.workflowResult.outputName
                                       }}</a
                                     >)
                                   </h6>
