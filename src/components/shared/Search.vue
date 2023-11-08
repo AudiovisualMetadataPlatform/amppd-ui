@@ -97,15 +97,8 @@
               <button class="btn btn-success" type="submit">Go</button>
             </div>
           </div>
-          <!-- <typeahead :source="typeaheadSearchItems" filter-key="items" filter-type="contains" :start-at="1" @selection="addItem"
-                    id="colFormLabelSearch" class="col-10 form-control bootstrap-typeahead" placeholder="Search here"/>-->
-          <!-- <button class="btn btn-outline-success my-2 my-sm-0 col-2" type="button">Search</button> -->
         </form>
-        <!-- <h6>
-                    Selected:
-                    <span v-if="type && selectedFilters[type]">{{ selectedFilters[type].length }}</span>
-                </h6> -->
-
+      
         <template v-if="type === 'statuses'">
           <b-form-group v-slot="{ ariaDescribedby }">
             <b-form-checkbox-group
@@ -179,9 +172,6 @@
                       {{ source.workflowName }}
                     </td>
                     <td v-if="type === 'outputs'">{{ source.outputName }}</td>
-                    <!-- <td v-if="type === 'workflows' || type === 'collections'">
-                      {{ source.dateCreated | LOCAL_DATE_VALUE }}
-                    </td> -->
                     <td v-if="type === 'primaryfiles'">
                       {{ source.externalSource }}
                     </td>
@@ -285,9 +275,6 @@
                 </th>
                 <th v-if="type === 'workflows'">Workflow</th>
                 <th v-if="type === 'outputs'">Output</th>
-                <!-- <th v-if="type === 'workflows' || type === 'collections'">
-                  Date Created
-                </th> -->
                 <th v-if="type === 'primaryfiles'">External Source</th>
                 <th v-if="type === 'primaryfiles' || type === 'item-search'">
                   External ID
@@ -397,9 +384,6 @@
                       {{ source.workflowName }}
                     </td>
                     <td v-if="type === 'outputs'">{{ source.outputName }}</td>
-                    <!-- <td v-if="type === 'workflows' || type === 'collections'">
-                      {{ source.dateCreated | LOCAL_DATE_VALUE }}
-                    </td> -->
                     <td v-if="type === 'primaryfiles'">
                       {{ source.externalSource }}
                     </td>
@@ -857,7 +841,7 @@ export default {
         self.selectedUnit.name = record.unitName;
         self.selectedCollection = record.collectionName;
       }
-      console.log(self.selectAll);
+      // console.log(self.selectAll);
       const isStatusChecked = self.selectedRecords.indexOf(record.id);
       const checkedStatus = self.type === "statuses" && isStatusChecked !== -1;
       const isChecked = ev && ev.srcElement && ev.srcElement.checked;
@@ -891,7 +875,6 @@ export default {
       const temp = [];
       const tempDataSource = this.dataSource;
       tempDataSource.filter((o) =>
-        // Object.keys(o).some(k => o[k] && o[k].toLowerCase().includes(self.userSearchValue.toLowerCase())));
         self.searchProps.filter((el) => {
           if (
             o[el] &&
@@ -1041,6 +1024,11 @@ export default {
                       let uEntity = JSON.parse(
                         sessionStorage.getItem("unitEntity")
                       );
+                      console.log("Search: uEntity = " + uEntity);
+                      // if (!uEntity) {
+                      //   sessionStorage.setItem("unitEntity",
+                      //     JSON.stringify({ ...self.unitEntity })
+                      //   );
                       uEntity.currentUnit = unitId;
                       sessionStorage.setItem(
                         "unitEntity",

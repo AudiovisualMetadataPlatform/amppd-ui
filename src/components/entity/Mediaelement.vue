@@ -68,7 +68,6 @@ export default {
     player: null,
   }),
   mounted() {
-    console.log(this.type);
     const { MediaElementPlayer } = global;
     const componentObject = this;
     this.player = new MediaElementPlayer(this.$el, {
