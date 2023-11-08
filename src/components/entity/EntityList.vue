@@ -40,7 +40,7 @@
               <div
                 class="media-player"
                 v-if="
-                  baseUrl === 'file' && accessControl._primaryfile_media._read
+                  baseUrl === 'file'
                 "
               >
                 <div v-if="entity.mediaSource">
