@@ -1360,7 +1360,8 @@ export default {
           self.showEdit = false;
         }
       } else if (self.baseUrl === "file") {
-        console.log("showLoader = " + self.showLoader);
+        console.log("start loading file: showLoader = " + self.showLoader);
+        self.showLoader = true;
         self.entity = self.selectedFile;
         if (self.accessControl._primaryfile_media._read) {
           let mediaSourceUrl = await self.workflowResultService.getMediaSymlink(
@@ -1376,6 +1377,7 @@ export default {
         self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
         console.log("mediaType = " + self.entity.mediaType);
         self.showLoader = false;
+        console.log("end loading file: showLoader = " + self.showLoader);
       }
     },
     async getUnitCollections() {
