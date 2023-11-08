@@ -55,7 +55,7 @@
                     height="495.4px"
                   ></mediaelement>
                 </div>
-                <div class="float-left" v-if="baseUrl === 'file'">
+                <div class="float-left">
                   <b-button
                     v-b-toggle.collapse-1
                     variant="outline-primary"
@@ -1360,19 +1360,21 @@ export default {
           self.showEdit = false;
         }
       } else if (self.baseUrl === "file") {
+        console.log("showLoader = " + self.showLoader);
+        self.entity = self.selectedFile;
         if (self.accessControl._primaryfile_media._read) {
           let mediaSourceUrl = await self.workflowResultService.getMediaSymlink(
             self.selectedFile.id
           );
-          console.log("mediaSourceUrl = " + mediaSourceUrl);
           self.entity["mediaSource"] = mediaSourceUrl;
+          console.log("mediaSource = " + self.entity.mediaSource);
         }
         let mediaSourceType = await self.primaryFileService.getPrimaryFile(
           self.selectedFile.id
         );
-        self.selectedFile["mediaInfo"] = mediaSourceType.mediaInfo;
-        self.entity = self.selectedFile;
+        self.entity["mediaInfo"] = mediaSourceType.mediaInfo;
         self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
+        console.log("mediaType = " + self.entity.mediaType);
         self.showLoader = false;
       }
     },
@@ -1511,6 +1513,9 @@ export default {
     } else if (formHTML) {
       formHTML.style.width = "100%";
     }
+
+    console.log("end of mounted: mediaSource = " + self.entity.mediaSource);
+    console.log("end of mounted: mediaType = " + self.entity.mediaType);
   },
 };
 </script>
