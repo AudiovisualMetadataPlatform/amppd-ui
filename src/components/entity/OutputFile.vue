@@ -34,53 +34,27 @@
             <!-- -->
             <tr v-for="output in listOfOutputList" :key="output.id">
               <td>
-                 <!-- <input type="text" :value="12/28/2021" class="form-control" disabled /> -->
                 <p>{{ new Date(output.dateCreated) | LOCAL_DATE_VALUE }}</p>
               </td>
               <td>
-                <!-- <input
-                    type="text"
-                    :value="output.submitter"
-                    class="form-control"
-                    disabled
-                /> -->
                 {{ output.submitter }}
               </td>
               <td>
-                <!-- <input
-                    type="text"
-                    :value="output.workflowName"
-                    class="form-control"
-                    disabled
-                /> -->
                 {{ output.workflowName }}
               </td>
-
               <td>
-                <!-- <input
-                    type="text"
-                    :value="output.workflowStep"
-                    class="form-control"
-                    disabled
-                /> -->
                 {{ output.workflowStep }}
               </td>
               <td>
-                <!-- <input
-                    type="text"
-                    :value="output.outputLink"
-                    class="form-control"
-                    disabled
-                /> -->
                 <a
+                v-if="
+                    output.outputPath != null &&
+                    output.status == 'COMPLETE' &&
+                    accessControl._workflowresult_output._read
+                  "
                   @click="workflowResultService.getSymlinkContent(output, true, null, $event)"
                   class="complete-output"
                   target="_blank"
-                  v-if="
-                    output.outputPath != null &&
-                      output.status == 'COMPLETE' &&
-                      accessControl._workflowresult._read
-                  "
                 >
                   {{ output.outputName }}</a
                 >
@@ -189,6 +163,7 @@ export default {
   },
   mounted() {
     this.getOutputFileList();
+    console.log("accessControl._workflowresult_output._read = " + this.accessControl._workflowresult_output._read);
   },
 };
 </script>

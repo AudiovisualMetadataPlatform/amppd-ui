@@ -26,8 +26,10 @@ async function auth_token_required(auth_string, input_file){
 
 async function auth_token_valid(auth_string, input_file, user_token){   
     if(env.getDisableAuth() == 'true'){
+        console.log("Authenticated disabled: " + success);
         return true;
     } 
+
     // TODO the following API call to check auth string might be unnecessary, 
     // because the backend validate auth string upon any HMGM API call;
     // the purpose here might be to prevent the page from being shown beore any HMGM API call is made
@@ -43,8 +45,8 @@ async function auth_token_valid(auth_string, input_file, user_token){
         console.log("Error: " + e);
         return false;
     });
-    console.log("Success: " + success);
 
+    console.log("User authenticated for HMGM editor: " + success);
     return success;
 }
 

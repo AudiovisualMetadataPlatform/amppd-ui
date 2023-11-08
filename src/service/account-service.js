@@ -66,7 +66,6 @@ function sendActivateUserRequest(userToken) {
 }
 
 function login(username, password) {
-  console.log("login");
   return baseService.post(`/account/authenticate`, { username, password })
       .then(response => {
           const { token, user } = response.data;
@@ -93,7 +92,7 @@ async function validate() {
         console.log("IN ERROR");
         return false;
       });
-  console.log("Success: " + success);
+  console.log("User authenticated: " + success);
   return success;
 }
 
