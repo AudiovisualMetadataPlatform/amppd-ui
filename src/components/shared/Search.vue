@@ -830,42 +830,55 @@ export default {
         self.selectedFilters[self.type] = [];
         this.clonedDataSource = JSON.parse(JSON.stringify(this.dataSource));
       }
-      console.log(self.selectedRecords);
+      console.log("selectedRecords: ", self.selectedRecords);
       return;
     },
     onChange(ev, record) {
       const self = this;
+
+      // item-search allows only one record to be selected, so no need to handle selectedFilters/selectedRecords 
       if (self.type === "item-search") {
         self.selectedItemId = record.id;
         self.selectedUnit = {};
         self.selectedUnit.name = record.unitName;
         self.selectedCollection = record.collectionName;
+        return;
       }
       // console.log(self.selectAll);
-      const isStatusChecked = self.selectedRecords.indexOf(record.id);
-      const checkedStatus = self.type === "statuses" && isStatusChecked !== -1;
-      const isChecked = ev && ev.srcElement && ev.srcElement.checked;
-      if (checkedStatus || isChecked) {
-        self.selectedFilters[self.type] = self.selectedFilters[self.type] || [];
+
+      // for all other search types, multiple records can be selected, so need to handle selectedFilters/selectedRecords 
+      // all other filters use checkbox except Status filter, which need special handling
+      const isRecordSelected = self.selectedRecords.indexOf(record.id);   // if current record is selected, note: this seems to only apply to Status filter
+      const isStatusSelected = self.type === "statuses" && isRecordSelected !== -1; // current status just got selected/checked
+      const isChecked = ev && ev.srcElement && ev.srcElement.checked; // current event is checking a checkbox
+      console.log("isRecordSelected: ", isRecordSelected, " isStatusSelected: ", isStatusSelected, " isChecked: ", isChecked );
+      
+      // initialze selectedFilters for current type (if not yet)
+      self.selectedFilters[self.type] = self.selectedFilters[self.type] || [];  
+      
+      // if a record in search list just got checked/selected, add it to selectedFilters
+      if (isStatusSelected || isChecked) {
         if (!self.selectedFilters[self.type].find((el) => el.id === record.id))
           self.selectedFilters[self.type].push(
             this.clonedDataSource.find((el) => el.id === record.id)
           );
-      } else if (!checkedStatus) {
+      // if a record in search list just got unchecked/deselected, remove it from selectedFilters
+      } else { // if (!isStatusSelected) {
         let index;
         self.selectedFilters[self.type].map((el, i) => {
           if (el.id === record.id) index = i;
         });
         self.selectedFilters[self.type].splice(index, 1);
-      } else {
-        // self.selectedRecords.splice(this.selectedRecords.indexOf(record.id), 1);
-        self.selectedFilters[self.type].splice(
-          self.selectedFilters[self.type].indexOf((el) => el.id === record.id),
-          1
-        );
-        if (self.selectedRecords.length !== self.clonedDataSource.length)
-          self.selectAll = false;
-      }
+      } 
+      // else {
+      //   // self.selectedRecords.splice(this.selectedRecords.indexOf(record.id), 1);
+      //   self.selectedFilters[self.type].splice(
+      //     self.selectedFilters[self.type].indexOf((el) => el.id === record.id),
+      //     1
+      //   );
+      //   if (self.selectedRecords.length !== self.clonedDataSource.length)
+      //     self.selectAll = false;
+      // }
     },
     onFilterUserInput() {
       const self = this;
