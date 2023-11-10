@@ -841,7 +841,8 @@ export default {
         self.selectedItemId = record.id;
         self.selectedUnit = {};
         self.selectedUnit.name = record.unitName;
-        self.selectedCollection = record.collectionName;
+        self.selectedCollection = {};
+        self.selectedCollection.name = record.collectionName;
         return;
       }
       // console.log(self.selectAll);
@@ -1018,48 +1019,37 @@ export default {
               : []
           );
           break;
-        case "item-search":
+        case "item-search":          
           this.itemService
             .getItemDetails(this.selectedItemId)
             .then((res) => {
+              const self = this;
               const selectedCollectionId = res._embedded.collection.id;
-              this.itemService
-                .getItemById(selectedCollectionId, this.selectedItemId)
+              self.collectionDetailsService
+                .getCollection(selectedCollectionId)
                 .then((response) => {
-                  const self = this;
-                  self.collectionDetailsService
-                    .getCollection(selectedCollectionId)
-                    .then((response) => {
-                      self.selectedCollection = response.data;
-
-                      //Updating unit id in our session storage for content page
-                      const unitId = response.data._embedded.unit.id;
-                      let uEntity = JSON.parse(
-                        sessionStorage.getItem("unitEntity")
-                      );
-                      console.log("Search: uEntity = " + uEntity);
-                      // if (!uEntity) {
-                      //   sessionStorage.setItem("unitEntity",
-                      //     JSON.stringify({ ...self.unitEntity })
-                      //   );
-                      uEntity.currentUnit = unitId;
-                      sessionStorage.setItem(
-                        "unitEntity",
-                        JSON.stringify({ ...uEntity })
-                      );
-
-                      //checking permission
-                      if (uEntity && uEntity.currentUnit)
-                        self.accessControlService.checkAccessControl(self);
-                    });
-
-                  const res = JSON.parse(JSON.stringify(response));
-                  self.selectedItem = res;
-                  self.selectedItem.parentType = self.type;
-                  self.selectedItem.unitName = self.selectedUnit.name;
-                  self.selectedItem.collectionName = self.selectedCollection;
-                  self.$router.push("/collections/items/item-search/details");
-                });
+                  self.selectedCollection = response.data;
+                  //Updating unit id in our session storage for content page
+                  const unitId = response.data._embedded.unit.id;
+                  let uEntity = JSON.parse(
+                    sessionStorage.getItem("unitEntity")
+                  );
+                  uEntity = uEntity || {};
+                  console.log("Search: uEntity = " + uEntity);
+                  uEntity.currentUnit = unitId;
+                  sessionStorage.setItem(
+                    "unitEntity",
+                    JSON.stringify({ ...uEntity })
+                  );
+                  //checking permission
+                  if (uEntity && uEntity.currentUnit)
+                    self.accessControlService.checkAccessControl(self);
+                });                  
+              self.selectedItem = res;
+              self.selectedItem.parentType = self.type;
+              self.selectedItem.unitName = self.selectedUnit.name;
+              self.selectedItem.collectionName = self.selectedCollection.name;
+              self.$router.push("/collections/items/item-search/details");
             })
             .catch((error) => {
               this.dataSource = [];

@@ -1284,8 +1284,6 @@ export default {
         JSON.stringify({ ...self.unitEntity })
       );
       self.getData();
-      self.assignedRolesUnitChanged = true;
-      self.settingsRolesUnitChanged = true;
       //Checking Access Control
       self.accessControlService.checkAccessControl(this);
     },
@@ -1342,7 +1340,9 @@ export default {
     async getData() {
       const self = this;
       if (self.baseUrl === "unit") {
-        this.getUnitDetails();
+        self.getUnitDetails();
+        self.assignedRolesUnitChanged = true;
+        self.settingsRolesUnitChanged = true;
       } else if (self.baseUrl === "collection") {
         self.entity = self.selectedCollection;
         if (self.selectedCollection && !self.isCreatePage)
@@ -1494,8 +1494,8 @@ export default {
     
     // TODO below checkAccessControl is unnecessary because it's done upon each unit change
     // including change made in item search
-    if (uEntity && uEntity.currentUnit)
-      self.accessControlService.checkAccessControl(this);
+    // if (uEntity && uEntity.currentUnit)
+    //   self.accessControlService.checkAccessControl(this);
 
     if (!uEntity) { //} && !self.selectedUnit) {
       self.unitEntity = { unitList: [], currentUnit: "" };
@@ -1503,8 +1503,6 @@ export default {
     } else {
       self.unitEntity = uEntity;
       self.getData();
-      self.assignedRolesUnitChanged = true;
-      self.settingsRolesUnitChanged = true;
     }
 
     let formHTML = document.getElementsByClassName("form")[0];
