@@ -478,10 +478,11 @@ router.beforeEach(async (to, from, next) => {
   const currentUser = accountService.currentUserValue;
 
   if (env.getDisableAuth() == "true" || !authorize) {
+	  console.log("router: No auth needed.")
     return next();
   } else if (!currentUser) {
-    console.log("Current user not logged in yet.");
-    // not logged in so redirect to login page with the return url
+    console.log("router: Current user not logged in yet.");
+    // not logged in so redirect to access-denied page with login link and with the return url
     return router.push({ path: "/access-denied", query: { returnUrl: to.path }});
   } else {
     // TODO, below API call is to validate auth token, in case the locally stored one is compromised;
@@ -491,6 +492,7 @@ router.beforeEach(async (to, from, next) => {
       // return next();
       router.app.$store.state.isAuthenticated = false;
       router.app.$store.commit("isAuthenticated");
+      console.log("router: Auth token invalid!")
       return next({ path: "/account/login", query: { returnUrl: to.path } });
     } else {
       router.app.$store.state.isAuthenticated = true;
@@ -498,7 +500,7 @@ router.beforeEach(async (to, from, next) => {
       // let acActions = router.app.$store.state.acActions;
       let acActions = store.state.acActions;
       let acIsAdmin = store.state.acIsAdmin;
-      console.log("initPermissions =  ", acActions," isAdmin = ", acIsAdmin);
+      console.log("router: initPermissions =  ", acActions," isAdmin = ", acIsAdmin);
       if (acActions.includes(action) || acIsAdmin) {
         console.log(currentUser.username + " can perform action " + action);
         return next();

@@ -1401,6 +1401,7 @@ export default {
     },
     async getCollectionItems() {
       const self = this;
+      self.showLoader = true;
       self.itemService
         .getCollectionItems(self.selectedCollection.id)
         .then((response) => {
@@ -1412,6 +1413,7 @@ export default {
             self.masterRecords = JSON.parse(JSON.stringify(self.records));
           }
         });
+        self.showLoader = false;
     },
     async onView(objInstance) {
       const self = this;
@@ -1497,11 +1499,26 @@ export default {
     // if (uEntity && uEntity.currentUnit)
     //   self.accessControlService.checkAccessControl(this);
 
-    if (!uEntity) { //} && !self.selectedUnit) {
+    // if (!uEntity) { //} && !self.selectedUnit) {
+    //   self.unitEntity = { unitList: [], currentUnit: "" };
+    //   self.getAllUnits();
+    // } else {
+    //   self.unitEntity = uEntity;
+    //   self.getData();
+    // }
+
+    if (!uEntity) {
       self.unitEntity = { unitList: [], currentUnit: "" };
+    }
+    else {
+      self.unitEntity = uEntity;    
+    }
+
+    if (!self.unitEntity.unitList || !self.unitEntity.unitList.length) {
       self.getAllUnits();
-    } else {
-      self.unitEntity = uEntity;
+    } 
+
+    if (self.unitEntity.currentUnit) {
       self.getData();
     }
 

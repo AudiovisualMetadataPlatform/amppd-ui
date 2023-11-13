@@ -1,6 +1,5 @@
 <template>
   <div class="w-100 home-container">
-    <loader :show="loading" />
 
     <div class="home tech-bg  ex-lg">
       <div class="home-body">
@@ -45,24 +44,16 @@
 <script>
 import { sync } from "vuex-pathify";
 import { env } from "@/helpers/env";
-import Loader from "@/components/shared/Loader.vue";
 import config from "@/assets/constants/common-contant.js";
 import SharedService from "@/service/shared-service";
-import EvaluationService from "@/service/evaluation-service";
-import ConfigPropertiesService from "@/service/config-properties-service";
 
 export default {
   name: "Home",
   components: {
-    Loader,
   },
   data() {
     return {
-      loading: false,
       cardList: config.cards,
-      sharedService: new SharedService(),
-      evaluationService: new EvaluationService(),
-      configPropertiesService: new ConfigPropertiesService(),
     };
   },
   props: {},
@@ -73,18 +64,8 @@ export default {
       if (envKey === "VUE_APP_DOC_AMP_MAIL_TO") window.location.href = url;
       else window.open(url, "helpwindow", "width=800, height=500");
     },
-    async networkCalls() {
-      const self = this;
-      try {
-        const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
-        self.configProperties = configPropertiesResponse.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
   },
   mounted() {
-    this.networkCalls();
   },
 };
 </script>
