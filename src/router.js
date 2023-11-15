@@ -36,7 +36,6 @@ var router = new Router({
       name: "home",
       component: HomePage,
       meta: {
-        // authorize: [],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
@@ -476,6 +475,8 @@ router.beforeEach(async (to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const { authorize } = to.meta;
   const currentUser = accountService.currentUserValue;
+
+  console.log("from: ", from, "\nto: ", to, "\nnext: ", next);
 
   if (env.getDisableAuth() == "true" || !authorize) {
 	  console.log("router: No auth needed.")
