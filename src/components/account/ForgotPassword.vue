@@ -47,8 +47,8 @@
               </p>
 
               <div class="form-group" v-if="resend_email">
-                <label>An email has been sent. </label>
-                <span><a href="#" @click="sendEmail()">Resend Email?</a></span>
+                <label>An email with a link to reset password has been sent. Please use the link as soon as possible as it will expire in s short time.</label>
+                <span><a href="#" @click="sendEmail()">&nbsp; Resend Email</a></span>
               </div>
             </form>
           </div>

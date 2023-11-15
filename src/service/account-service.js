@@ -2,6 +2,11 @@ import BaseService from './base-service.js';
 
 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 const baseService = new BaseService();
+
+// TODO
+// API calls for user registration & reset password etc should not use post_auth as 
+// these APIs do not require authentication; instead just use plain baseService.post
+
 function sendRegisterRequest(username, firstName, lastName, pswd, email) {
   const url = `/account/register`;
 	return baseService.post_auth(url,
