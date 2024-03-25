@@ -1283,7 +1283,7 @@ export default {
         "unitEntity",
         JSON.stringify({ ...self.unitEntity })
       );
-      self.getData();
+      self.getEntityData();
       //Checking Access Control
       self.accessControlService.checkAccessControl(this);
     },
@@ -1325,9 +1325,10 @@ export default {
         console.log(error);
       }
     },
-    async networkCalls() {
+    async getConfigs() {
       const self = this;
       try {
+        self.showLoader = true;
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;
 
@@ -1337,9 +1338,9 @@ export default {
         console.log(error);
       }
     },
-    async getData() {
+    async getEntityData() {
       const self = this;
-      if (self.baseUrl === "unit") {
+      if (self.baseUrl === "unit" && self.selectedUnit) {
         self.getUnitDetails();
         self.assignedRolesUnitChanged = true;
         self.settingsRolesUnitChanged = true;
@@ -1487,25 +1488,12 @@ export default {
   mounted() {
     const self = this;
     self.showLoader = true;
-    if (self.baseUrl === "unit") {
-      this.networkCalls();
+    if (!self.configProperties) {
+      self.getConfigs();
     }
 
     // For unit details page
     const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
-    
-    // TODO below checkAccessControl is unnecessary because it's done upon each unit change
-    // including change made in item search
-    // if (uEntity && uEntity.currentUnit)
-    //   self.accessControlService.checkAccessControl(this);
-
-    // if (!uEntity) { //} && !self.selectedUnit) {
-    //   self.unitEntity = { unitList: [], currentUnit: "" };
-    //   self.getAllUnits();
-    // } else {
-    //   self.unitEntity = uEntity;
-    //   self.getData();
-    // }
 
     if (!uEntity) {
       self.unitEntity = { unitList: [], currentUnit: "" };
@@ -1519,7 +1507,7 @@ export default {
     } 
 
     if (self.unitEntity.currentUnit) {
-      self.getData();
+      self.getEntityData();
     }
 
     let formHTML = document.getElementsByClassName("form")[0];
