@@ -839,10 +839,11 @@ export default {
       // item-search allows only one record to be selected, so no need to handle selectedFilters/selectedRecords 
       if (self.type === "item-search") {
         self.selectedItemId = record.id;
-        self.selectedUnit = {};
-        self.selectedUnit.name = record.unitName;
+        self.selectedItem = record;
         self.selectedCollection = {};
-        self.selectedCollection.name = record.collectionName;
+        self.selectedCollection.id = record.collectionId;
+        self.selectedUnit = {};
+        self.selectedUnit.id = record.unitId;
         return;
       }
       // console.log(self.selectAll);
@@ -946,10 +947,10 @@ export default {
       }
     },
     addItem(item) {
-      const sefl = this;
-      sefl.selectedFilters[self.type] = sefl.selectedFilters[self.type] || [];
-      if (sefl.selectedFilters[self.type].indexOf(item) === -1)
-        sefl.selectedFilters[self.type].push(item);
+      const self = this;
+      self.selectedFilters[self.type] = self.selectedFilters[self.type] || [];
+      if (self.selectedFilters[self.type].indexOf(item) === -1)
+        self.selectedFilters[self.type].push(item);
     },
     onCancel() {
       if (this.type === "item-search") {
@@ -1019,53 +1020,68 @@ export default {
               : []
           );
           break;
-        case "item-search":          
-          this.itemService
-            .getItemDetails(this.selectedItemId)
-            .then((res) => {
-              const self = this;
-              const selectedCollectionId = res._embedded.collection.id;
-              self.collectionDetailsService
-                .getCollection(selectedCollectionId)
-                .then((response) => {
-                  self.selectedCollection = response.data;
-                  //Updating unit id in our session storage for content page
-                  const unitId = response.data._embedded.unit.id;
-                  let uEntity = JSON.parse(
-                    sessionStorage.getItem("unitEntity")
-                  );
-                  uEntity = uEntity || {};
-                  console.log("Search: uEntity = " + uEntity);
-                  uEntity.currentUnit = unitId;
-                  sessionStorage.setItem(
-                    "unitEntity",
-                    JSON.stringify({ ...uEntity })
-                  );
-                  //checking permission
-                  if (uEntity && uEntity.currentUnit)
-                    self.accessControlService.checkAccessControl(self);
-                });                  
-              self.selectedItem = res;
-              self.selectedItem.parentType = self.type;
-              self.selectedItem.unitName = self.selectedUnit.name;
-              self.selectedItem.collectionName = self.selectedCollection.name;
-              self.$router.push("/collections/items/item-search/details");
-            })
-            .catch((error) => {
-              this.dataSource = [];
-              this.clonedDataSource = [];
-              this.searchWord = "";
-              this.selectedItemId = null;
-              this.errors.search_error = "";
-              this.errors.no_data_error = "";
-              this.$bvToast.toast("Failed to show the item", {
-                title: "Notification",
-                appendToast: true,
-                variant: "danger",
-                autoHideDelay: 5000,
-              });
-            });
+        case "item-search": {   
+          console.log("item-search: selectedItemId: ", this.selectedItem.id, "selectedCollectionId: ", this.selectedCollection.id, "selectedUnitId: ", this.selectedUnit.id);
+          let uEntity = JSON.parse(
+            sessionStorage.getItem("unitEntity")
+          );
+          uEntity = uEntity || {};
+          console.log("item-search: uEntity = " + uEntity);
+          uEntity.currentUnit = this.selectedUnit.id;
+          sessionStorage.setItem(
+            "unitEntity",
+            JSON.stringify({ ...uEntity })
+          );
+          //checking permission
+          if (uEntity && uEntity.currentUnit)
+            self.accessControlService.checkAccessControl(self);          
+          // this.itemService
+          //   .getItemDetails(this.selectedItemId)
+          //   .then((res) => {
+          //     const self = this;
+          //     const selectedCollectionId = res._embedded.collection.id;
+          //     self.collectionDetailsService
+          //       .getCollection(selectedCollectionId)
+          //       .then((response) => {
+          //         self.selectedCollection = response.data;
+          //         //Updating unit id in our session storage for content page
+          //         const unitId = response.data._embedded.unit.id;
+          //         let uEntity = JSON.parse(
+          //           sessionStorage.getItem("unitEntity")
+          //         );
+          //         uEntity = uEntity || {};
+          //         console.log("Search: uEntity = " + uEntity);
+          //         uEntity.currentUnit = unitId;
+          //         sessionStorage.setItem(
+          //           "unitEntity",
+          //           JSON.stringify({ ...uEntity })
+          //         );
+          //         //checking permission
+          //         if (uEntity && uEntity.currentUnit)
+          //           self.accessControlService.checkAccessControl(self);
+          //       });                  
+          //     self.selectedItem = res;
+          //     self.selectedItem.parentType = self.type;
+          //     self.selectedItem.unitName = self.selectedUnit.name;
+          //     self.selectedItem.collectionName = self.selectedCollection.name;
+          self.$router.push("/collections/items/item-search/details");
+            // })
+            // .catch((error) => {
+            //   this.dataSource = [];
+            //   this.clonedDataSource = [];
+            //   this.searchWord = "";
+            //   this.selectedItemId = null;
+            //   this.errors.search_error = "";
+            //   this.errors.no_data_error = "";
+            //   this.$bvToast.toast("Failed to show the item", {
+            //     title: "Notification",
+            //     appendToast: true,
+            //     variant: "danger",
+            //     autoHideDelay: 5000,
+            //   });
+            // });
           break;
+        }
         case "workflow-search":
           this.$emit("handleSearchWorkflows", this.searchFields);
           if (
