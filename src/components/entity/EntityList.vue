@@ -785,11 +785,10 @@
                         "
                         class="col-1 text-right"
                       >
-                        <div
-                          v-if="
-                            baseUrl === 'unit' &&
-                              accessControl._collection._activate
-                          "
+                        <!-- TODO
+                          Remove active button for now until we fix the issue with inactive workflow result
+                        <div                          
+                          v-if="baseUrl === 'unit' && accessControl._collection._activate"
                           class="d-flex float-right"
                         >
                           <span class="mr-1">Active</span>
@@ -804,7 +803,8 @@
                             />
                             <span class="slider round"></span>
                           </label>
-                        </div>
+                        </div> 
+                        -->
                         <div
                           v-if="
                             (elem.active &&
