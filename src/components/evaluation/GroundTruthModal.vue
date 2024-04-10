@@ -128,7 +128,7 @@
                       class="btn btn-link add-remove float-right mr-1"
                       @click="removeFile(index)"
                     >
-                      <span v-html="removeIcon" class="pr-1"></span>Remove file
+                      <span v-html="removeIcon" class="pr-1"></span>Remove File
                     </button>
                   </td>
                 </tr>

@@ -23,26 +23,26 @@
           >
             <td>
               <input
+                v-model="file.name"
                 type="text"
                 class="w-100 form-control"
-                :disabled="!accessControl._primaryfile._update"
-                v-model="file.name"
+                :disabled="!(file.file && accessControl._primaryfile._create)"
               />
             </td>
             <td>
               <input
+                v-model="file.originalFilename"
                 type="text"
                 class="w-100 form-control"
-                v-model="file.originalFilename"
                 :disabled="true"
               />
             </td>
             <td>
               <input
+                v-model="file.description"
                 type="text"
                 class="w-100 form-control"
-                :disabled="!accessControl._primaryfile._update"
-                v-model="file.description"
+                :disabled="!(file.file && accessControl._primaryfile._create)"
               />
             </td>
             <td>
@@ -56,7 +56,7 @@
               <button
                 class="btn btn-primary btn float-right"
                 @click="saveFile(file, index)"
-                v-if="file.file"
+                v-if="file.file && accessControl._primaryfile._create"
               >
                 Save
               </button>
@@ -65,7 +65,7 @@
                 v-if="accessControl._primaryfile._delete"
                 @click="removeFile(index)"
               >
-                <span v-html="removeIcon" class="pr-1"></span>Remove file
+                <span v-html="removeIcon" class="pr-1"></span>Remove File
               </button>
             </td>
           </tr>
