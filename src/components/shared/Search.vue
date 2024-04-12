@@ -810,14 +810,18 @@ export default {
       const self = this;
       self.searchFields.rows[0] = self.searchFields.choosenField;
     },
+
+    // called when search button clicked
     async searchItems() {
       this.$emit("handleSearchItems", this.searchWord);
     },
+    // called when enter key pressed on keyword textarea
     async searchKeyUp(e) {
       if (e.keyCode === 13) {
         this.searchItems();
       }
     },
+
     onSelectAllChange(ev) {
       const self = this;
       if (ev.srcElement.checked) {
@@ -833,6 +837,8 @@ export default {
       console.log("selectedRecords: ", self.selectedRecords);
       return;
     },
+
+    // event handler when selections in the search results list change
     onChange(ev, record) {
       const self = this;
 
@@ -1032,9 +1038,11 @@ export default {
             "unitEntity",
             JSON.stringify({ ...uEntity })
           );
-          //checking permission
+          // checking permission
           if (uEntity && uEntity.currentUnit)
-            self.accessControlService.checkAccessControl(self);          
+            self.accessControlService.checkAccessControl(self);    
+          // go to item detail page
+          self.$router.push("/collections/items/item-search/details");          
           // this.itemService
           //   .getItemDetails(this.selectedItemId)
           //   .then((res) => {
@@ -1064,22 +1072,22 @@ export default {
           //     self.selectedItem.parentType = self.type;
           //     self.selectedItem.unitName = self.selectedUnit.name;
           //     self.selectedItem.collectionName = self.selectedCollection.name;
-          self.$router.push("/collections/items/item-search/details");
-            // })
-            // .catch((error) => {
-            //   this.dataSource = [];
-            //   this.clonedDataSource = [];
-            //   this.searchWord = "";
-            //   this.selectedItemId = null;
-            //   this.errors.search_error = "";
-            //   this.errors.no_data_error = "";
-            //   this.$bvToast.toast("Failed to show the item", {
-            //     title: "Notification",
-            //     appendToast: true,
-            //     variant: "danger",
-            //     autoHideDelay: 5000,
-            //   });
-            // });
+          //     self.$router.push("/collections/items/item-search/details");
+          //   })
+          //   .catch((error) => {
+          //     this.dataSource = [];
+          //     this.clonedDataSource = [];
+          //     this.searchWord = "";
+          //     this.selectedItemId = null;
+          //     this.errors.search_error = "";
+          //     this.errors.no_data_error = "";
+          //     this.$bvToast.toast("Failed to show the item", {
+          //       title: "Notification",
+          //       appendToast: true,
+          //       variant: "danger",
+          //       autoHideDelay: 5000,
+          //     });
+          //   });
           break;
         }
         case "workflow-search":

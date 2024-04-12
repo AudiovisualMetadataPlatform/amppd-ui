@@ -52,11 +52,11 @@ export default {
   },
   data() {
     return {
+      workflowResultService: new WorkflowResultService(),
+      itemService: new ItemService(),
       loading: false,
       searchType: "",
       searchSource: [],
-      workflowResultService: new WorkflowResultService(),
-      itemService: new ItemService(),
       errors: {
         search_error: "",
         no_data_error: "",
@@ -66,12 +66,17 @@ export default {
   computed: {},
   props: {},
   methods: {
+    // handler for handleSearchItems event emitted by child component (the Search pop-up ialog)
     searchItems(searchWord) {
       this.refreshData(searchWord);
     },
+    
+    // pop up child component (the Search pop-up ialog)
     onSearch() {
       this.$bvModal.show("modal-lg");
     },
+
+    // call item search API 
     async refreshData(searchWord = "") {
       const self = this;
       try {
@@ -98,9 +103,11 @@ export default {
       }
     },
   },
+
   updated() {
     this.onSearch();
   },
+  
   mounted() {
     this.onSearch();
   },
