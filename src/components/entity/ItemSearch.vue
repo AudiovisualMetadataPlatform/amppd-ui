@@ -40,7 +40,6 @@
 
 <script>
 import Search from "@/components/shared/Search.vue";
-import WorkflowResultService from "../../service/workflow-result-service";
 import Loader from "@/components/shared/Loader.vue";
 import ItemService from "../../service/item-service";
 
@@ -52,7 +51,6 @@ export default {
   },
   data() {
     return {
-      workflowResultService: new WorkflowResultService(),
       itemService: new ItemService(),
       loading: false,
       searchType: "",
