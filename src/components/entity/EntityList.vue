@@ -1329,7 +1329,8 @@ export default {
       const self = this;
       try {
         self.showLoader = true;
-        self.configProperties = await self.configPropertiesService.getConfigProperties();        
+        const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
+        self.configProperties = configPropertiesResponse.data;
         self.showLoader = false;
       } catch (error) {
         self.showLoader = false;
@@ -1345,7 +1346,6 @@ export default {
       } else if (self.baseUrl === "collection") {
         self.entity = self.selectedCollection;
         if (self.selectedCollection && !self.isCreatePage)
-          // collection 
           this.getCollectionItems();
         else {
           self.selectedCollection = self.entity = {};
@@ -1382,7 +1382,7 @@ export default {
       self.collectionService
         .getCollectionByUnitId(self.selectedUnit.id)
         .then((response) => {
-          if (response && response && response._embedded) {
+          if (response && response._embedded) {
             self.records =
               response._embedded[Object.keys(response._embedded)[0]];
             self.records = self.sharedService.sortByAlphabatical(self.records);

@@ -13,7 +13,7 @@ export default class EntityService {
         await unitService.getUnitById(defaultUnit).then(res => {
             unitDetails.response = res;
         }).catch(err => {
-            self.$bvToast.toast("Unable to retrive unit details. Please try again!", context.sharedService.erorrToastConfig);
+            self.$bvToast.toast("Unable to retrieve unit details. Please try again!", context.sharedService.erorrToastConfig);
         });
         return unitDetails;
     }

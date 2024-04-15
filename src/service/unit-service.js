@@ -5,7 +5,7 @@ const baseService = new BaseService();
 export default class UnitService extends BaseService{
 
     /***
-     * To get all unit details
+     * To get the list of all units.
      * @params num, size
      */
 
