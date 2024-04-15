@@ -340,15 +340,21 @@ export default {
       const self = this;
       try {
         self.loading = true;
-        const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
-        self.configProperties = configPropertiesResponse.data;
+
+        // retrieve configProperties if not yet done
+        if (!self.configProperties || Object.keys(self.configProperties).length === 0) {
+          self.configProperties = await self.configPropertiesService.getConfigProperties();        
+        }
+
+        // retrieve accessible units for create/update
         await self.accessControlService.getPermissionsUnits("Create", "Supplement").then((res) => {
           self.allUnits = res.data;
           self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(self.allUnits);
           self.canCreate = self.acIsAdmin || res.data && res.data.length > 0
-          self.canUpdate = self.acIsAdmin || self.action !== "view" && self.canCreate;
-          self.loading = false;          
+          self.canUpdate = self.acIsAdmin || self.action !== "view" && self.canCreate;                
         });
+
+        self.loading = false;    
       } catch (error) {
         self.loading = false;
         console.log(error);

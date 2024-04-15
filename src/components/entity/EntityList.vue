@@ -1331,7 +1331,6 @@ export default {
         self.showLoader = true;
         const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
         self.configProperties = configPropertiesResponse.data;
-
         self.showLoader = false;
       } catch (error) {
         self.showLoader = false;
@@ -1350,12 +1349,10 @@ export default {
           this.getCollectionItems();
         else {
           self.selectedCollection = self.entity = {};
-          self.showLoader = false;
           self.showEdit = false;
         }
       } else if (self.baseUrl === "item") {
         self.entity = self.selectedItem;
-        self.showLoader = false;
         if (self.isCreatePage) {
           self.selectedItem = self.entity = {};
           self.showEdit = false;
@@ -1487,14 +1484,14 @@ export default {
   },
   mounted() {
     const self = this;
-    self.showLoader = true;
-    if (!self.configProperties) {
+    
+    // retrieve configProperties if not yet populated
+    if (!self.configProperties || Object.keys(self.configProperties).length === 0) {
       self.getConfigs();
     }
 
-    // For unit details page
+    // retrieve units list and currentUnit info from storage if available, otherwise initialize them 
     const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
-
     if (!uEntity) {
       self.unitEntity = { unitList: [], currentUnit: "" };
     }
@@ -1502,23 +1499,23 @@ export default {
       self.unitEntity = uEntity;    
     }
 
+    // retrieve units list if not yet populated
     if (!self.unitEntity.unitList || !self.unitEntity.unitList.length) {
       self.getAllUnits();
     } 
 
+    // if currentUnit set, gegetEntityData for the page 
     if (self.unitEntity.currentUnit) {
       self.getEntityData();
     }
 
+    // adjust size of PFile fields for PFile page
     let formHTML = document.getElementsByClassName("form")[0];
     if (formHTML && this.baseUrl === "file") {
       formHTML.style.width = "50%";
     } else if (formHTML) {
       formHTML.style.width = "100%";
     }
-
-    // console.log("end of mounted: mediaSource = " + self.entity.mediaSource);
-    // console.log("end of mounted: mediaType = " + self.entity.mediaType);
   },
 };
 </script>

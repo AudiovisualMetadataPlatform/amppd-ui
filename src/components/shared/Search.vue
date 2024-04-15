@@ -1027,7 +1027,11 @@ export default {
           );
           break;
         case "item-search": {   
+          // since item search by keyword returns a list of items each with all parents IDs
+          // there is no need to do extra fetching for entity details along the chain at this point
+          // rather, the details can be fetched later upon request for a sepcific parent entity detail page
           console.log("item-search: selectedItemId: ", this.selectedItem.id, "selectedCollectionId: ", this.selectedCollection.id, "selectedUnitId: ", this.selectedUnit.id);
+          // update currentUnit
           let uEntity = JSON.parse(
             sessionStorage.getItem("unitEntity")
           );
@@ -1038,56 +1042,11 @@ export default {
             "unitEntity",
             JSON.stringify({ ...uEntity })
           );
-          // checking permission
+          // check permission
           if (uEntity && uEntity.currentUnit)
-            self.accessControlService.checkAccessControl(self);    
-          // go to item detail page
-          self.$router.push("/collections/items/item-search/details");          
-          // this.itemService
-          //   .getItemDetails(this.selectedItemId)
-          //   .then((res) => {
-          //     const self = this;
-          //     const selectedCollectionId = res._embedded.collection.id;
-          //     self.collectionDetailsService
-          //       .getCollection(selectedCollectionId)
-          //       .then((response) => {
-          //         self.selectedCollection = response.data;
-          //         //Updating unit id in our session storage for content page
-          //         const unitId = response.data._embedded.unit.id;
-          //         let uEntity = JSON.parse(
-          //           sessionStorage.getItem("unitEntity")
-          //         );
-          //         uEntity = uEntity || {};
-          //         console.log("Search: uEntity = " + uEntity);
-          //         uEntity.currentUnit = unitId;
-          //         sessionStorage.setItem(
-          //           "unitEntity",
-          //           JSON.stringify({ ...uEntity })
-          //         );
-          //         //checking permission
-          //         if (uEntity && uEntity.currentUnit)
-          //           self.accessControlService.checkAccessControl(self);
-          //       });                  
-          //     self.selectedItem = res;
-          //     self.selectedItem.parentType = self.type;
-          //     self.selectedItem.unitName = self.selectedUnit.name;
-          //     self.selectedItem.collectionName = self.selectedCollection.name;
-          //     self.$router.push("/collections/items/item-search/details");
-          //   })
-          //   .catch((error) => {
-          //     this.dataSource = [];
-          //     this.clonedDataSource = [];
-          //     this.searchWord = "";
-          //     this.selectedItemId = null;
-          //     this.errors.search_error = "";
-          //     this.errors.no_data_error = "";
-          //     this.$bvToast.toast("Failed to show the item", {
-          //       title: "Notification",
-          //       appendToast: true,
-          //       variant: "danger",
-          //       autoHideDelay: 5000,
-          //     });
-          //   });
+            this.accessControlService.checkAccessControl(this);    
+          // go to item detail page (upon which point the item detail info shall be fetched in EntityList)
+          this.$router.push("/collections/items/item-search/details");          
           break;
         }
         case "workflow-search":
