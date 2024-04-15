@@ -1329,8 +1329,7 @@ export default {
       const self = this;
       try {
         self.showLoader = true;
-        const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
-        self.configProperties = configPropertiesResponse.data;
+        self.configProperties = await self.configPropertiesService.getConfigProperties();        
         self.showLoader = false;
       } catch (error) {
         self.showLoader = false;
@@ -1346,6 +1345,7 @@ export default {
       } else if (self.baseUrl === "collection") {
         self.entity = self.selectedCollection;
         if (self.selectedCollection && !self.isCreatePage)
+          // collection 
           this.getCollectionItems();
         else {
           self.selectedCollection = self.entity = {};
