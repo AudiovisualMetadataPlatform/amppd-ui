@@ -1329,8 +1329,7 @@ export default {
       const self = this;
       try {
         self.showLoader = true;
-        const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
-        self.configProperties = configPropertiesResponse.data;
+        self.configProperties = await self.configPropertiesService.getConfigProperties();        
         self.showLoader = false;
       } catch (error) {
         self.showLoader = false;
@@ -1344,6 +1343,11 @@ export default {
         self.assignedRolesUnitChanged = true;
         self.settingsRolesUnitChanged = true;
       } else if (self.baseUrl === "collection") {
+        // if current collection exists but fields not populated, get its details
+        if (self.selectedCollection && self.selectedCollection.id && !self.selectedCollection.name) {
+          self.selectedCollection = await this.collectionService.getCollectionDetails(self.selectedCollection.id);
+          //console.log("self.selectedCollection.id = " + self.selectedCollection.id, )
+        }
         self.entity = self.selectedCollection;
         if (self.selectedCollection && !self.isCreatePage)
           this.getCollectionItems();
@@ -1382,7 +1386,7 @@ export default {
       self.collectionService
         .getCollectionByUnitId(self.selectedUnit.id)
         .then((response) => {
-          if (response && response._embedded) {
+          if (response && response && response._embedded) {
             self.records =
               response._embedded[Object.keys(response._embedded)[0]];
             self.records = self.sharedService.sortByAlphabatical(self.records);
