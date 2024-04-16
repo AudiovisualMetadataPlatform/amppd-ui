@@ -6,7 +6,7 @@ export default class ConfigPropertiesService extends BaseService {
    * @method GET
    */
 
-  async getConfigProperties() {
+  getConfigProperties() {
     return super.get_auth(`/config`).then(result => result.data);
   }
 }

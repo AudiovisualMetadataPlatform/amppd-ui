@@ -1329,8 +1329,7 @@ export default {
       const self = this;
       try {
         self.showLoader = true;
-        const configPropertiesResponse = await self.configPropertiesService.getConfigProperties();
-        self.configProperties = configPropertiesResponse.data;
+        self.configProperties = await self.configPropertiesService.getConfigProperties();        
         self.showLoader = false;
       } catch (error) {
         self.showLoader = false;
@@ -1344,6 +1343,10 @@ export default {
         self.assignedRolesUnitChanged = true;
         self.settingsRolesUnitChanged = true;
       } else if (self.baseUrl === "collection") {
+        // if current collection exists but fields not populated, get its details
+        if (self.selectedCollection && self.selectedCollection.id && !self.selectedCollection.name) {
+          self.selectedCollection = await this.collectionService.getCollectionDetails(self.selectedCollection.id);
+        }
         self.entity = self.selectedCollection;
         if (self.selectedCollection && !self.isCreatePage)
           this.getCollectionItems();

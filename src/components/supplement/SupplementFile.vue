@@ -296,8 +296,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
-      superLoading: false,
       unitService: new UnitService(),
       itemService: new ItemService(),
       sharedService: new SharedService(),
@@ -306,6 +304,8 @@ export default {
       supplementService: new SupplementService(),
       accessControlService: new AccessControlService(),
       configPropertiesService: new ConfigPropertiesService(),
+      loading: false,
+      superLoading: false,
       supplement: {
         showCollectionList: false,
         collectionList: [],
