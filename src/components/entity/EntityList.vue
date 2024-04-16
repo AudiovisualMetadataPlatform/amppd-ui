@@ -1346,7 +1346,6 @@ export default {
         // if current collection exists but fields not populated, get its details
         if (self.selectedCollection && self.selectedCollection.id && !self.selectedCollection.name) {
           self.selectedCollection = await this.collectionService.getCollectionDetails(self.selectedCollection.id);
-          //console.log("self.selectedCollection.id = " + self.selectedCollection.id, )
         }
         self.entity = self.selectedCollection;
         if (self.selectedCollection && !self.isCreatePage)
