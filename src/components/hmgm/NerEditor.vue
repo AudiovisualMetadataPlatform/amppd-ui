@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import AmpHeader from "@/components/shared/Header.vue";
+import AmpHeader from "@/components/shared/AmpHeader.vue";
 import Logout from "@/components/shared/Logout.vue";
 import Modal from "@/components/shared/Modal.vue";
 import {

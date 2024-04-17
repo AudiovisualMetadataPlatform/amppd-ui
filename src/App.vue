@@ -59,3 +59,6 @@ export default {
   },
 };
 </script>
+<style lang="css">
+/* @import '../../styles/style.css'; */
+</style>

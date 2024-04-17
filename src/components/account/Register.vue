@@ -1,6 +1,6 @@
 <template>
   <div class="col-12">
-    <!-- <Header/> -->
+    <!-- <AmpHeader/> -->
     <main>
       <div class="container">
         <h1 class="text-center">
@@ -107,12 +107,12 @@
 </template>
 
 <script>
-import Header from "@/components/shared/Header.vue";
+import AmpHeader from "@/components/shared/AmpHeader.vue";
 import { accountService } from "@/service/account-service";
 export default {
   name: "RegisterComponent",
   components: {
-    Header,
+    AmpHeader,
   },
   data: function() {
     return {
@@ -222,7 +222,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .form-errors {
   color: red;
   margin: 0% !important;

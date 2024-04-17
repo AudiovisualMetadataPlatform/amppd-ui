@@ -113,7 +113,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .item-search {
   width: calc(100% - 64px);
 }

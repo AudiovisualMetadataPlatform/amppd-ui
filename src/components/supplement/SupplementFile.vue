@@ -824,7 +824,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .file-upload {
   padding: 1em;
   border-radius: 0.5rem;

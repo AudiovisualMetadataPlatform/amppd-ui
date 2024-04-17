@@ -147,7 +147,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .select-test {
   width: 33% !important;
 }

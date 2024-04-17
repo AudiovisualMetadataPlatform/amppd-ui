@@ -613,7 +613,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 nav.nav-pills {
   justify-content: flex-start !important;
   padding: 0.4rem !important;

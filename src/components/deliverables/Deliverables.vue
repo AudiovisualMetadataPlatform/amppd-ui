@@ -459,7 +459,7 @@ export default {
 </script>
 
 <style scoped>
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .deliverables-search {
   cursor: pointer;
 }
