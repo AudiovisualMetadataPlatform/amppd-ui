@@ -2,7 +2,7 @@
   <div class="deliverables w-100">
     <loader :show="loading" />
     <div
-      class="container col-12"
+      class="container-fluid"
       v-bind:class="[{ modalOpen: showModal }, 'container', 'col-12']"
     >
       <div class="row">

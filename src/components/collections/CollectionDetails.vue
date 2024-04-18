@@ -1,6 +1,6 @@
 <template>
   <div class="collection">
-    <div class="container col-12">
+    <div class="container-fluid">
       <div class="row expand-h">
         <Sidebar />
         <div class="col-10 bg-light-gray-1">

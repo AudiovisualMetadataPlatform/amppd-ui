@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container col-12 dataTables_wrapper"
+    class="container-fluid dataTables_wrapper"
     :class="baseUrl == 'unit' ? 'units' : 'collection'"
   >
     <loader :show="showLoader" />

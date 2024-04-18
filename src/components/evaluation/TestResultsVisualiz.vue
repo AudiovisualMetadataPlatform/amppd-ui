@@ -2,7 +2,7 @@
   <div class="col-12 bg-light-gray-1">
     <main class="m-0">
       <loader :show="loading" />
-      <div class="container col-12 p-0">
+      <div class="container-fluid p-0">
         <div class="row expand-h">
           <div class="col-12 p-0">
             <main class="ml-5 mr-5">

@@ -1,5 +1,5 @@
 <template>
-  <div class="container col-12 workflows">
+  <div class="container-fluid workflows">
     <loader :show="workflowSubmission.loading" />
     <div class="row">
       <!-- <Sidebar/> -->

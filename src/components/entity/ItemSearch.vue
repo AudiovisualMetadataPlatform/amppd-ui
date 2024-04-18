@@ -1,7 +1,7 @@
 <template>
   <div class="item-search">
     <loader :show="loading" />
-    <div class="container col-12">
+    <div class="container-fluid">
       <div class="row expand-h">
         <div class="col-12 bg-light-gray-1 item-search-container">
           <main class="m-0">

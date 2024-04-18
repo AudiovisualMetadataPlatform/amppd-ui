@@ -1,7 +1,7 @@
 <template>
   <div class="batch-ingest w-100">
     <loader :show="inProgress" />
-    <div class="container col-12">
+    <div class="container-fluid">
       <div class="row expand-h">
         <!-- <Sidebar/>     -->
         <div class="col-12 bg-light-gray-1">

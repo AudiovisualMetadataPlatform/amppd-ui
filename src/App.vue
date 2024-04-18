@@ -1,5 +1,5 @@
 <template>
-  <div class="container col-12 dataTables_wrapper">
+  <div class="container-fluid dataTables_wrapper">
     <div class="row">
       <Sidebar />
 
@@ -60,5 +60,5 @@ export default {
 };
 </script>
 <style lang="css">
-/* @import '../../styles/style.css'; */
+  @import './styles/style.css';
 </style>

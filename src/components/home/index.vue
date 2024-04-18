@@ -83,7 +83,7 @@ body,
   margin-top: 3px;
 }
 .tech-bg {
-  background-image: url("/assets/img/home.jpg");
+  background-image: url("../../assets/home.jpg");
   background-repeat: no-repeat;
 }
 .home-body {
