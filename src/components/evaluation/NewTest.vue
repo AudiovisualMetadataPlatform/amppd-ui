@@ -619,7 +619,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .new-test {
   padding-left: 15px;
 }

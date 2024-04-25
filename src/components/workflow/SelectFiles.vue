@@ -779,7 +779,7 @@ export default {
 </script>
 
 <style scoped>
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .select-bundles {
   margin: 5px;
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="col-12">
-    <!-- <Header/> -->
+    <!-- <AmpHeader/> -->
     <main>
       <div class="container">
         <h1 class="text-center">
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import Header from "@/components/shared/Header.vue";
+import AmpHeader from "@/components/shared/AmpHeader.vue";
 import { accountService } from "@/service/account-service";
 import { sync } from "vuex-pathify";
 import AccessControlService from "@/service/access-control-service";
@@ -84,7 +84,7 @@ import SharedService from "@/service/shared-service";
 export default {
   name: "LoginComponent",
   components: {
-    Header,
+    AmpHeader,
   },
   data() {
     return {
@@ -190,7 +190,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .form-errors {
   color: red;
   margin: 0% !important;

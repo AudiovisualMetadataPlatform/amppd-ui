@@ -2,7 +2,7 @@
   <div class="deliverables w-100">
     <loader :show="loading" />
     <div
-      class="container col-12"
+      class="container-fluid"
       v-bind:class="[{ modalOpen: showModal }, 'container', 'col-12']"
     >
       <div class="row">
@@ -459,7 +459,7 @@ export default {
 </script>
 
 <style scoped>
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .deliverables-search {
   cursor: pointer;
 }

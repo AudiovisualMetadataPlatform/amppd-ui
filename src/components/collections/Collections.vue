@@ -1,6 +1,6 @@
 <template>
   <div class="collection dataTables_wrapper">
-    <div class="container col-12">
+    <div class="container-fluid">
       <div class="row expand-h">
         <Sidebar />
         <div class="col-10 bg-light-gray-1">
@@ -151,5 +151,5 @@ export default {
 </script>
 
 <style scoped>
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 </style>

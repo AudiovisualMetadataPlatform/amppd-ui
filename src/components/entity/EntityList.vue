@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container col-12 dataTables_wrapper"
+    class="container-fluid dataTables_wrapper"
     :class="baseUrl == 'unit' ? 'units' : 'collection'"
   >
     <loader :show="showLoader" />
@@ -8,7 +8,7 @@
       <!-- <Sidebar /> -->
       <div class="col-12 bg-light-gray-1">
         <main :class="!unitEntity.currentUnit ? 'mb-3' : 'mb-5'">
-          <!-- Header - Details page -->
+          <!-- AmpHeader - Details page -->
 
           <b-card
             class="text-center mt-5 mb-3"
@@ -515,7 +515,7 @@
             </div>
           </b-card>
 
-          <!-- Header - Details page Ends here-->
+          <!-- AmpHeader - Details page Ends here-->
           <div
             v-if="
               baseUrl === 'item' &&
@@ -1524,7 +1524,7 @@ export default {
 </script>
 
 <style scoped>
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 
 .textArea {
   width: 100%;

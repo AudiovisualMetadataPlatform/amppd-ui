@@ -385,7 +385,9 @@ a:hover {
   fill: #F4871E; }
 
 .filter-btns .dropdown {
-  margin: 0.25rem 0.5rem; }
+  margin: 0.25rem 0.5rem; 
+  height: fit-content;
+}
 
 #myTable {
   font-size: .8em; }
@@ -714,6 +716,7 @@ svg.icon-user {
     border: 4px solid #F4871E;
     transition: all 0.5s ease;
     height:64px;
+    width: auto;
   }
   #help a:link {
     color: #153c4d;

@@ -2,7 +2,7 @@
   <div class="collections w-100">
     <!-- <loader :show="!isFilterApiLoaded"/> -->
     <div
-      class="container col-12"
+      class="container-fluid"
       :class="{
         'p-0': parent === 'NewTest' || parent === 'TestResults',
       }"
@@ -544,136 +544,137 @@
 
                   <div class="container-fluid">
                     <div class="row filter-btns">
-                      <b-button
-                        class="btn btn-info dropdown"
-                        v-b-modal.modal-lg
-                        @click="onOpenModal('unit')"
-                        >Unit</b-button
-                      >
-                      <b-button
-                        class="btn btn-info dropdown"
-                        v-b-modal.modal-lg
-                        @click="onOpenModal('collection')"
-                        >Collection</b-button
-                      >
-                      <b-button
-                        class="btn btn-info dropdown"
-                        v-b-modal.modal-lg
-                        @click="onOpenModal('workflow')"
-                        >Workflow</b-button
-                      >
-                      <b-button
-                        v-if="parent !== 'NewTest'"
-                        class="btn btn-info dropdown"
-                        v-b-modal.modal-lg
-                        @click="onOpenModal('output')"
-                        >Output</b-button
-                      >
-                      <DateFilter
-                        :parent="parent"
-                        v-if="parent === 'TestResults'"
-                        label="Test Date"
-                        @displayChanged="
-                          changeDisplayedFilter(
-                            workflowDashboard.filtersEnabled.dateFilter
-                          )
-                        "
-                      />
-                      <DateFilter
-                        :parent="parent"
-                        @displayChanged="
-                          changeDisplayedFilter(
-                            workflowDashboard.filtersEnabled.dateFilter
-                          )
-                        "
-                      />
-                      <b-button
-                        class="btn btn-info dropdown"
-                        v-b-modal.modal-lg
-                        @click="onOpenModal('submitter')"
-                        >Submitter</b-button
-                      >
-                      <b-button
-                        class="btn btn-info dropdown"
-                        v-b-modal.modal-lg
-                        @click="onOpenModal('item')"
-                        >Item</b-button
-                      >
-                      <b-button
-                        class="btn btn-info dropdown"
-                        v-b-modal.modal-lg
-                        @click="onOpenModal('primaryfile')"
-                        >Content File</b-button
-                      >
-                      <b-button
-                        class="btn btn-info dropdown"
-                        v-b-modal.modal-lg
-                        @click="onOpenModal('step')"
-                        >Step</b-button
-                      >
-                      <b-button
-                        v-if="parent !== 'NewTest' && parent !== 'TestResults'"
-                        class="btn btn-info dropdown"
-                        v-b-modal.modal-lg
-                        @click="onOpenModal('status')"
-                        >Status</b-button
-                      >
+                      <div class="col d-flex">
+                        <b-button
+                          class="btn btn-info dropdown"
+                          v-b-modal.modal-lg
+                          @click="onOpenModal('unit')"
+                          >Unit</b-button
+                        >
+                        <b-button
+                          class="btn btn-info dropdown"
+                          v-b-modal.modal-lg
+                          @click="onOpenModal('collection')"
+                          >Collection</b-button
+                        >
+                        <b-button
+                          class="btn btn-info dropdown"
+                          v-b-modal.modal-lg
+                          @click="onOpenModal('workflow')"
+                          >Workflow</b-button
+                        >
+                        <b-button
+                          v-if="parent !== 'NewTest'"
+                          class="btn btn-info dropdown"
+                          v-b-modal.modal-lg
+                          @click="onOpenModal('output')"
+                          >Output</b-button
+                        >
+                        <DateFilter
+                          :parent="parent"
+                          v-if="parent === 'TestResults'"
+                          label="Test Date"
+                          @displayChanged="
+                            changeDisplayedFilter(
+                              workflowDashboard.filtersEnabled.dateFilter
+                            )
+                          "
+                        />
+                        <DateFilter
+                          :parent="parent"
+                          @displayChanged="
+                            changeDisplayedFilter(
+                              workflowDashboard.filtersEnabled.dateFilter
+                            )
+                          "
+                        />
+                        <b-button
+                          class="btn btn-info dropdown"
+                          v-b-modal.modal-lg
+                          @click="onOpenModal('submitter')"
+                          >Submitter</b-button
+                        >
+                        <b-button
+                          class="btn btn-info dropdown"
+                          v-b-modal.modal-lg
+                          @click="onOpenModal('item')"
+                          >Item</b-button
+                        >
+                        <b-button
+                          class="btn btn-info dropdown"
+                          v-b-modal.modal-lg
+                          @click="onOpenModal('primaryfile')"
+                          >Content File</b-button
+                        >
+                        <b-button
+                          class="btn btn-info dropdown"
+                          v-b-modal.modal-lg
+                          @click="onOpenModal('step')"
+                          >Step</b-button
+                        >
+                        <b-button
+                          v-if="parent !== 'NewTest' && parent !== 'TestResults'"
+                          class="btn btn-info dropdown"
+                          v-b-modal.modal-lg
+                          @click="onOpenModal('status')"
+                          >Status</b-button
+                        >
 
-                      <div
-                        v-if="parent !== 'NewTest'"
-                        id="btn-show-hide"
-                        class="dropdown"
-                      >
-                        <b-dropdown id="dropdown-form">
-                          <template #button-content>
-                            <span>Show/Hide Columns</span>
-                            <span
-                              ><svg
-                                aria-hidden="true"
-                                focusable="false"
-                                class="svg-inline"
-                                role="img"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 48 48"
+                        <div
+                          v-if="parent !== 'NewTest'"
+                          id="btn-show-hide"
+                          class="dropdown"
+                        >
+                          <b-dropdown id="dropdown-form">
+                            <template #button-content>
+                              <span>Show/Hide Columns</span>
+                              <span
+                                ><svg
+                                  aria-hidden="true"
+                                  focusable="false"
+                                  class="svg-inline"
+                                  role="img"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 48 48"
+                                >
+                                  <g id="Layer_2" class="icon-white">
+                                    <path d="M14 20l10 10 10-10z"></path>
+                                  </g></svg
+                              ></span>
+                            </template>
+                            <b-dropdown-form>
+                              <b-form-checkbox
+                                v-for="column in dashboardColumns.filter(
+                                  (item) => {
+                                    if (parent === 'TestResults')
+                                      return (
+                                        // item.field !== 'dateCreated' &&
+                                        item.field !== 'status' &&
+                                        item.field !== 'actions' &&
+                                        item.field !== 'addToTest'
+                                      );
+                                    else
+                                      return (
+                                        item.field !== 'testDate' &&
+                                        // item.field !== 'dateCreated' &&
+                                        item.field !== 'groundTruth' &&
+                                        item.field !== 'scores' &&
+                                        item.field !== 'addToTest'
+                                      );
+                                  }
+                                )"
+                                :key="column.field"
+                                :value="column"
+                                :checked="column"
+                                v-model="columns"
+                                @change="onChange($event.target, column)"
+                                class="mb-3"
+                                >{{ column.label }}</b-form-checkbox
                               >
-                                <g id="Layer_2" class="icon-white">
-                                  <path d="M14 20l10 10 10-10z"></path>
-                                </g></svg
-                            ></span>
-                          </template>
-                          <b-dropdown-form>
-                            <b-form-checkbox
-                              v-for="column in dashboardColumns.filter(
-                                (item) => {
-                                  if (parent === 'TestResults')
-                                    return (
-                                      // item.field !== 'dateCreated' &&
-                                      item.field !== 'status' &&
-                                      item.field !== 'actions' &&
-                                      item.field !== 'addToTest'
-                                    );
-                                  else
-                                    return (
-                                      item.field !== 'testDate' &&
-                                      // item.field !== 'dateCreated' &&
-                                      item.field !== 'groundTruth' &&
-                                      item.field !== 'scores' &&
-                                      item.field !== 'addToTest'
-                                    );
-                                }
-                              )"
-                              :key="column.field"
-                              :value="column"
-                              :checked="column"
-                              v-model="columns"
-                              @change="onChange($event.target, column)"
-                              class="mb-3"
-                              >{{ column.label }}</b-form-checkbox
-                            >
-                          </b-dropdown-form>
-                        </b-dropdown>
+                            </b-dropdown-form>
+                          </b-dropdown>
+                        </div>                    
                       </div>
-
                       <div
                         v-if="parent !== 'NewTest' && parent !== 'TestResults'"
                         class="relevant-togggle"

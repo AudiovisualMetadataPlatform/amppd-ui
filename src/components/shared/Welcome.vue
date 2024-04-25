@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header />
+    <AmpHeader />
     <Logout />
     <div class="form-body">
       <h1>Welcome</h1>
@@ -19,12 +19,12 @@
 </template>
 
 <script>
-import Header from "@/components/shared/Header";
+import AmpHeader from "@/components/shared/AmpHeader";
 import Logout from "@/components/shared/Logout.vue";
 export default {
   name: "WelcomeComponent",
   components: {
-    Header,
+    AmpHeader,
     Logout,
   },
   data() {

@@ -3,7 +3,7 @@
     <main class="m-0">
       <b-card class="w-100">
         <loader :show="loading" />
-        <div class="container col-12 p-0">
+        <div class="container-fluid p-0">
           <div class="row expand-h">
             <div class="col-12 p-0">
               <main>
@@ -248,7 +248,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 main {
   margin-top: 0px;
 }

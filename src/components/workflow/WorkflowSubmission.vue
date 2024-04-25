@@ -1,5 +1,5 @@
 <template>
-  <div class="container col-12 workflows">
+  <div class="container-fluid workflows">
     <loader :show="workflowSubmission.loading" />
     <div class="row">
       <!-- <Sidebar/> -->
@@ -50,7 +50,7 @@ export default {
 };
 </script>
 <style scoped>
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .main-margin-min {
   margin: 0.5em !important;
 }

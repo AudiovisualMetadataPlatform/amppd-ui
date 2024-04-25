@@ -1,7 +1,7 @@
 <template>
   <div class="item-search">
     <loader :show="loading" />
-    <div class="container col-12">
+    <div class="container-fluid">
       <div class="row expand-h">
         <div class="col-12 bg-light-gray-1 item-search-container">
           <main class="m-0">
@@ -113,7 +113,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .item-search {
   width: calc(100% - 64px);
 }

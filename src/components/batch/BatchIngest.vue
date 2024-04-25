@@ -1,7 +1,7 @@
 <template>
   <div class="batch-ingest w-100">
     <loader :show="inProgress" />
-    <div class="container col-12">
+    <div class="container-fluid">
       <div class="row expand-h">
         <!-- <Sidebar/>     -->
         <div class="col-12 bg-light-gray-1">
@@ -307,7 +307,7 @@ export default {
 </script>
 
 <style lang="css">
-@import "/amppd-ui/src/styles/style.css";
+@import "../../styles/style.css";
 .main-margin-min {
   margin: 0.5em !important;
 }

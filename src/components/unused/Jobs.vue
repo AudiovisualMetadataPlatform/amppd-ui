@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <Header/> -->
+    <!-- <AmpHeader/> -->
     <div class="jobs">
       <h3>
         The following content files had AMPPD jobs successfully created and
@@ -41,13 +41,13 @@
 </template>
 
 <script>
-//import Header from '@/components/shared/Header.vue'
+//import AmpHeader from '@/components/shared/AmpHeader.vue'
 import { sync } from "vuex-pathify";
 
 export default {
   name: "Jobs",
   components: {
-    //Header
+    //AmpHeader
   },
   data() {
     return {};
