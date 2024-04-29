@@ -54,12 +54,8 @@ export default class AccessControlService extends BaseService {
     let unitId;
     let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
     if (uEntity && uEntity.currentUnit) {
-      unitId = uEntity.unitList.filter(
-        (unit) => unit.id === uEntity.currentUnit
-      )[0].id;
-    }
-    if (unitId) {
-      return self.acUnitsActions.filter((ua) => ua.unitId === unitId)[0].actions;
+      unitId = uEntity.currentUnit;
+      return self.acUnitsActions.filter((ua) => ua.unitId == unitId)[0].actions;
     }
   }
 
