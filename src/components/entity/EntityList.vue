@@ -1502,6 +1502,8 @@ export default {
       self.unitEntity = uEntity;    
     }
 
+    // TODO review below code: we don't need to retrieve all units unless it's on the unit listing page, 
+    // when units dropdown list is requested
     // retrieve units list if not yet populated
     if (!self.unitEntity.unitList || !self.unitEntity.unitList.length) {
       self.getAllUnits();
