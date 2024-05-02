@@ -125,7 +125,6 @@ const state = {
   dashboardColumns: [
     { order: "a", label: "Test Date", field: "testDate" },
     { order: "b", label: "Date", field: "dateCreated" },
-    //{ order: "c", label: "Workflow Date", field: "dateCreated" },
     { order: "d", label: "Submitter", field: "submitter" },
     { order: "e", label: "Unit", field: "unit" },
     { order: "f", label: "Collection", field: "collectionName" },

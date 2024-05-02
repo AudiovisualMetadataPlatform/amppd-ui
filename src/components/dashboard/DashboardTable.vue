@@ -111,15 +111,12 @@
                 isSelected(rec.id),
             }"
           >
+            <td v-if="checkAvailability('testDate')">
+              {{ new Date(rec.testDate) | LOCAL_DATE_VALUE }}
+            </td>
             <td v-if="checkAvailability('dateCreated')">
               {{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}
             </td>
-            <td v-if="checkAvailability('testDate')">
-              {{ new Date(rec.testDate) | LOCAL_DATE_VALUE }}
-            </td><!--
-            <td v-if="checkAvailability('dateCreated')">
-              {{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}
-            </td>-->
             <td v-if="checkAvailability('submitter')">{{ rec.submitter }}</td>
             <td v-if="checkAvailability('unit')">{{ rec.unitName }}</td>
             <td v-if="checkAvailability('collectionName')">
