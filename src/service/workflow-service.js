@@ -119,17 +119,20 @@ export default class WorkflowService extends BaseService {
         var tempParams = [];
         return await super.get_auth('/workflows/' + id).then(response => {
             // Get the steps from the response
-            var data = response.data.steps;
+            var steps = response.data.steps;
 
             // If we didn't get an steps, return empty list
-            if (!response.data.steps) {
+            if (!steps) {
                 return tempParams;
             }
 
             // Get the node keys
-            var nodeKeys = Object.keys(data);
+            var nodeKeys = Object.keys(steps);
             for (var nodeKey in nodeKeys) {
-                var thisNode = data[nodeKey];
+                var thisNode = steps[nodeKey];
+
+                // skip input (non-MGM) nodes, which have null toolId and are of type "data_input"
+                if (!thisNode.toolId || thisNode.type == "data_input") continue;
 
                 // Create a new node object
                 var newNode = {
@@ -140,17 +143,23 @@ export default class WorkflowService extends BaseService {
                     params: []
                 };
 
-                // Iterate over the tool inputs and add appropriate
+                // Iterate over the tool inputs and add appropriate parameters
                 var toolInputKeys = Object.keys(thisNode.toolInputs);
                 for (var input = 0; input < toolInputKeys.length; input++) {
                     // Get the input
                     var toolInputKey = toolInputKeys[input];
                     var thisInput = thisNode.toolInputs[toolInputKey];
 
+                    // Note: below code commented out, as we do want to show all user parameters disregarding if the value is empty
                     // If we don't have an input, skip it
-                    if (!thisInput) continue;
-                    // __class__ as far as I can tell, is an indication it is not a parameter
-                    if (thisInput.__class__) continue;
+                    // if (!thisInput) continue;
+
+                    // skip Galaxy workflow system param such as __page__ and __rerun_remap_job_id__,
+                    // assuming no MGM parameter starts and ends with __
+                    if (toolInputKey.startsWith('__') && toolInputKey.endsWith('__')) continue;
+
+                    // skip input value "__class__": "RuntimeValue", which refers to data input of a tool, not a parameter.
+                    if (thisInput && thisInput.__class__) continue;
 
                     // Add the parameter
                     newNode.params.push({
@@ -160,10 +169,12 @@ export default class WorkflowService extends BaseService {
                     });
 
                 }
+                
+                // Note: below condition is commented out, as we do want to show all steps disregarding if it has any param
                 // If we had any params, add it to the list of nodes with params
-                if (newNode.params.length > 0) {
-                    tempParams.push(newNode);
-                }
+                // if (newNode.params.length > 0) {
+                tempParams.push(newNode);
+                // }
             }
             return { tempParams: tempParams, response: response.data };
         });
