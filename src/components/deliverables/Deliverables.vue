@@ -164,8 +164,8 @@
                         v-on:keyup.down="onArrowDown"
                         v-on:keyup.up="onArrowUp"
                         v-on:click="rowClicked(index)"
-                        v-bind:class="{
-                          highlight: rowSelected(pfile.primaryfileId),
+                        :class="{
+                          'table-dark': rowSelected(pfile.primaryfileId),
                         }"
                       >
                         <td>{{ pfile.collectionName }}</td>

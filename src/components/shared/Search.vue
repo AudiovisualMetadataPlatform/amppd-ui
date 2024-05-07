@@ -332,7 +332,7 @@
                   :class="
                     type === 'item-search'
                       ? source.id === selectedItemId
-                        ? 'item-cls trActive'
+                        ? 'item-cls table-dark'
                         : 'item-cls'
                       : ''
                   "
@@ -1086,9 +1086,14 @@ export default {
 </script>
 
 <style scoped>
+/*
 table tbody tr:nth-of-type(odd) {
   background-color: #f8ecb4;
 }
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f8ecb4;
+}
+*/
 .table td,
 .table th {
   padding: 0.75rem;
@@ -1124,10 +1129,10 @@ table tbody tr:nth-of-type(odd) {
 .item-cls {
   cursor: pointer;
 }
-.trActive {
+/* .trActive {
   background-color: #153c4d !important;
   color: #fff;
-}
+} */
 .trActive {
   animation-name: expandOpen;
   animation-duration: 0.3s;
