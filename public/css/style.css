@@ -658,8 +658,8 @@ svg.icon-user {
   height: 250px;
   overflow-y: scroll; }
 
-.highlight {
-  background: #F8ECB4; }
+/* .highlight {
+  background: #F8ECB4; } */
 
 .scrollDiv td, .scrollDiv th {
   text-align: left; }
