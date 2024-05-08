@@ -134,6 +134,9 @@
                     type="dark"
                     class="nav-pills"
                   >
+                    <span v-if="!workflow.details || workflow.details.length==0">
+                      No step specified in workflow.
+                    </span>
                     <span v-for="(node, i) in workflow.details" :key="i">
                       <b-nav-item
                         :class="
@@ -151,6 +154,12 @@
                       workflow && workflow.details && workflow.details.length
                     "
                   >
+                    <div
+                      v-if="workflow.details[workflow.selectedNode].params.length==0"
+                      class="mr-5 d-flex"
+                    >
+                      No parameter specified.
+                    </div>
                     <div
                       class="mr-5 d-flex"
                       v-for="(p, paramIndex) in workflow.details[

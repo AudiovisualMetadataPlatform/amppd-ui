@@ -23,19 +23,25 @@
         <h4>Workflow Node Parameters</h4>
         <div class="scroll-div">
           <ul class="list-unstyled">
+            <li v-if="workflowSubmission.selectedWorkflowParameters.length==0">
+              No step specified in workflow.
+            </li>
             <li
               v-for="(param,
               index) in workflowSubmission.selectedWorkflowParameters"
-              v-bind:key="index"
+              :key="index"
               class="node-li"
             >
               <h5 class="node-name">
                 Node {{ param.nodeId }}: {{ param.nodeName }}
               </h5>
+              <div v-if="param.params.length==0">
+                No parameter specified.
+              </div>
               <div
                 v-for="(p, paramIndex) in param.params"
-                v-bind:key="paramIndex"
-                v-bind:value="p.name"
+                :key="paramIndex"
+                :value="p.name"
               >
                 {{ p.name }}: {{ p.value }}
               </div>
