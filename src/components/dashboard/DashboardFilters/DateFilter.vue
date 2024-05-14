@@ -161,6 +161,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 input {
   width: -webkit-fill-available;
@@ -168,6 +169,11 @@ input {
 }
 .my-datepicker {
   border: none;
+}
+.btn-info {
+  color: #fff !important;
+  background-color: #17a2b8 !important;
+  border-color: #17a2b8 !important;
 }
 #dropdownMenuButton:hover {
   background: #153c4d !important;
