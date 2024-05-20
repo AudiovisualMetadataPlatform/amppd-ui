@@ -1,23 +1,6 @@
 <template>
   <div class="dataTables_wrapper no-footer">
     <loader :show="workflowDashboard.loading" />
-    <div
-      v-if="
-        parent !== 'NewTest' &&
-          parent !== 'TestResults' &&
-          parent !== 'Deliverables'
-      "
-      class="export-row"
-    >
-      <input
-        id="export-results"
-        type="button"
-        class="btn btn-outline-primary btn-sm"
-        v-on:click="exportResults"
-        value="Export to CSV"
-      />
-    </div>
-
     <div v-if="parent !== 'Deliverables'" class="row col-12 p-0 m-0">
       <div
         class="
@@ -27,7 +10,7 @@
         "
       >
         <label>
-          Show
+          Show 
           <select
             name="myTable_length"
             v-model="workflowDashboard.searchQuery.resultsPerPage"
@@ -43,7 +26,7 @@
             <option value="50">50</option>
             <option value="100">100</option>
           </select>
-          Entries
+          Entries 
         </label>
       </div>
       <b-pagination
@@ -60,11 +43,7 @@
         prev-text="Prev"
         next-text="Next"
       ></b-pagination>
-      <search-filter
-        v-if="parent !== 'Deliverables'"
-        :parent="parent"
-        class="col-xl-3 col-md-3 col-sm-12 col-xs-12 pr-0 justify-content-right"
-      />
+      <slot name="show-hide-columns"></slot>
     </div>
     <br v-if="parent !== 'Deliverables'" />
     <div
@@ -355,7 +334,6 @@ import { env } from "@/helpers/env";
 import WorkflowResultService from "../../service/workflow-result-service";
 import SortableHeader from "../shared/SortableHeader";
 import Pagination from "../shared/Pagination";
-import SearchFilter from "./DashboardFilters/SearchFilter";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "../../service/shared-service";
 import { accountService } from "@/service/account-service.js";
@@ -367,7 +345,6 @@ export default {
     SortableHeader,
     Pagination,
     Loader,
-    SearchFilter,
   },
   data() {
     return {
@@ -553,27 +530,6 @@ export default {
         }
       }
     },
-    getDateString() {
-      const date = new Date();
-      const year = date.getFullYear();
-      const month = `${date.getMonth() + 1}`.padStart(2, "0");
-      const day = `${date.getDate()}`.padStart(2, "0");
-      return `${year}${month}${day}`;
-    },
-    async exportResults() {
-      console.log("export results");
-      console.log(event.target);
-      var content = await this.workflowResultService.exportWorkflowResults(
-        this.workflowDashboard.searchQuery
-      );
-      var uriContent = encodeURIComponent(content);
-
-      var link = document.createElement("a");
-      var dateString;
-      link.download = "AMPDashboardExport_" + this.getDateString() + ".csv";
-      link.href = "data:text/csv," + uriContent;
-      link.click();
-    },
     paginate(page_number) {
       this.workflowDashboard.searchQuery.pageNum = page_number;
       this.refreshData();
@@ -743,14 +699,6 @@ th {
 .export-row {
   display: flex;
   justify-content: flex-end;
-}
-.relevant-togggle {
-  /* z-index: 1001; */
-  display: flex;
-  justify-content: space-around;
-  position: absolute;
-  top: 0;
-  /* left: 170px; */
 }
 .btn-blue:hover,
 .btn-blue:active,
