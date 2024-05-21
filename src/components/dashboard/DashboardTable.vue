@@ -1,12 +1,12 @@
 <template>
   <div class="dataTables_wrapper no-footer">
     <loader :show="workflowDashboard.loading" />
-    <div v-if="parent !== 'Deliverables'" class="row col-12 p-0 m-0">
+    <div v-if="parent !== 'Deliverables'" class="col d-flex justify-content-between">
       <div
         class="
           col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12
           dataTables_length
-          mt-1
+          my-auto
         "
       >
         <label>
@@ -30,7 +30,7 @@
         </label>
       </div>
       <b-pagination
-        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100 mt-1"
+        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100"
         v-model="workflowDashboard.searchQuery.pageNum"
         :total-rows="workflowDashboard.searchResult.totalResults"
         :per-page="workflowDashboard.searchQuery.resultsPerPage"
@@ -45,7 +45,7 @@
       ></b-pagination>
       <slot name="show-hide-columns"></slot>
     </div>
-    <br v-if="parent !== 'Deliverables'" />
+    <!-- <br v-if="parent !== 'Deliverables'" /> -->
     <div
       class="table-responsive"
       :class="
@@ -277,29 +277,22 @@
           </tr>
         </tbody>
       </table>
-      <div v-if="parent !== 'Deliverables'" class="row col-12 p-0 m-0">
-        <div class="col-2 col-md-2 col-sm-2 col-xs-12">
-          <div class="dataTables_info">
-            <label>{{ totalText }}</label>
-          </div>
-        </div>
-        <div class="col-8 col-md-8 col-sm-8 col-xs-12 w-100">
-          <b-pagination
-            class="mt-3 justify-content-left"
-            v-model="workflowDashboard.searchQuery.pageNum"
-            :total-rows="workflowDashboard.searchResult.totalResults"
-            :per-page="workflowDashboard.searchQuery.resultsPerPage"
-            @change="paginate($event)"
-            size="sm"
-            align="center"
-            first-number
-            limit="9"
-            last-number
-            prev-text="Prev"
-            next-text="Next"
-          ></b-pagination>
-        </div>
-        <div class="col-2 col-md-2 col-sm-2 col-xs-12"></div>
+      <div v-if="parent !== 'Deliverables'" class="col d-flex">
+        <label>{{ totalText }}</label>
+        <b-pagination
+          class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100"
+          v-model="workflowDashboard.searchQuery.pageNum"
+          :total-rows="workflowDashboard.searchResult.totalResults"
+          :per-page="workflowDashboard.searchQuery.resultsPerPage"
+          @change="paginate($event)"
+          size="sm"
+          align="center"
+          first-number
+          limit="9"
+          last-number
+          prev-text="Prev"
+          next-text="Next"
+        ></b-pagination>
       </div>
 
       <!-- Modal for delete confirmation -->

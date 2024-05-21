@@ -20,36 +20,32 @@
       :class="{ show: this.displayFilter === true }"
       aria-labelledby="dropdownMenuButton"
     >
-      <form class="">
+      <form class="p-2">
         <div class="form-group row">
           <label
             for="colFormLabelFrom"
-            class="col-sm-4 col-form-label col-form-label-sm text-right"
+            class="col-sm-4 col-form-label col-form-label-sm"
             >From</label
           >
-          <div>
-            <datepicker
-              v-model="fromDate"
-              class="form-control form-control-sm col-sm-8 my-datepicker"
-              format="MM/dd/yyyy"
-              v-on:input="setDisabledDate()"
-            ></datepicker>
-          </div>
+          <datepicker
+            v-model="fromDate"
+            class="form-control form-control-sm col-sm-8 my-datepicker"
+            format="MM/dd/yyyy"
+            v-on:input="setDisabledDate()"
+          ></datepicker>
         </div>
         <div class="form-group row">
           <label
             for="colFormLabelFrom2"
-            class="col-sm-4 col-form-label col-form-label-sm text-right"
+            class="col-sm-4 col-form-label col-form-label-sm"
             >To</label
           >
-          <div>
-            <datepicker
-              v-model="toDate"
-              class="form-control form-control-sm col-sm-8 my-datepicker"
-              format="MM/dd/yyyy"
-              :disabled-dates="state.disabledDates"
-            ></datepicker>
-          </div>
+          <datepicker
+            v-model="toDate"
+            class="form-control form-control-sm col-sm-8 my-datepicker"
+            format="MM/dd/yyyy"
+            :disabled-dates="state.disabledDates"
+          ></datepicker>
         </div>
         <div class="form-group row">
           <div class="col-sm-12">
