@@ -658,9 +658,6 @@ svg.icon-user {
   height: 250px;
   overflow-y: scroll; }
 
-/* .highlight {
-  background: #F8ECB4; } */
-
 .scrollDiv td, .scrollDiv th {
   text-align: left; }
 
@@ -676,7 +673,7 @@ svg.icon-user {
 
 .table-responsive {
   position: relative;
-  padding-top: 19px; }
+  padding-top: 15px; }
 
 .final-choice-top {
   z-index: 1001;

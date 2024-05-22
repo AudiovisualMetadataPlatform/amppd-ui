@@ -1,6 +1,5 @@
 <template>
   <div class="collections w-100">
-    <!-- <loader :show="!isFilterApiLoaded"/> -->
     <div
       class="container-fluid"
       :class="{
@@ -25,16 +24,15 @@
                 <div class="card-body">
                   <h1
                     v-if="parent !== 'NewTest' && parent !== 'TestResults'"
-                    class="card-title"
+                    class="card-title pb-3"
                   >
                     AMP Dashboard
                   </h1>
-                  <div class="container-fluid" v-if="filterCount > 0">
-                    <div class="row selected-filters-row">
+                  <div v-if="filterCount > 0">
+                    <div class="col d-flex flex-wrap">
                       <div class="col-sm-2 label-bold">
                         CURRENTLY FILTERED BY
                       </div>
-
                       <button
                         class="btn btn-outline col-sm-2 selected-filter-button"
                         v-if="
@@ -542,90 +540,138 @@
                     </div>
                   </div>
 
-                  <div class="container-fluid">
-                    <div class="row filter-btns">
-                      <div class="col d-flex">
-                        <b-button
-                          class="btn btn-info dropdown"
-                          v-b-modal.modal-lg
-                          @click="onOpenModal('unit')"
-                          >Unit</b-button
-                        >
-                        <b-button
-                          class="btn btn-info dropdown"
-                          v-b-modal.modal-lg
-                          @click="onOpenModal('collection')"
-                          >Collection</b-button
-                        >
-                        <b-button
-                          class="btn btn-info dropdown"
-                          v-b-modal.modal-lg
-                          @click="onOpenModal('workflow')"
-                          >Workflow</b-button
-                        >
-                        <b-button
-                          v-if="parent !== 'NewTest'"
-                          class="btn btn-info dropdown"
-                          v-b-modal.modal-lg
-                          @click="onOpenModal('output')"
-                          >Output</b-button
-                        >
-                        <DateFilter
-                          :parent="parent"
-                          v-if="parent === 'TestResults'"
-                          label="Test Date"
-                          @displayChanged="
-                            changeDisplayedFilter(
-                              workflowDashboard.filtersEnabled.dateFilter
-                            )
+                  <div class="col d-flex flex-wrap filter-btns">
+                    <DateFilter
+                      :parent="parent"
+                      v-if="parent === 'TestResults'"
+                      label="Test Date"
+                      @displayChanged="
+                        changeDisplayedFilter(
+                          workflowDashboard.filtersEnabled.dateFilter
+                        )
+                      "
+                    />
+                    <DateFilter
+                      :parent="parent"
+                      @displayChanged="
+                        changeDisplayedFilter(
+                          workflowDashboard.filtersEnabled.dateFilter
+                        )
+                      "
+                    />
+                    <b-button
+                      class="btn btn-info dropdown"
+                      v-b-modal.modal-lg
+                      @click="onOpenModal('submitter')"
+                      >Submitter</b-button
+                    >                        
+                    <b-button
+                      class="btn btn-info dropdown"
+                      v-b-modal.modal-lg
+                      @click="onOpenModal('unit')"
+                      >Unit</b-button
+                    >
+                    <b-button
+                      class="btn btn-info dropdown"
+                      v-b-modal.modal-lg
+                      @click="onOpenModal('collection')"
+                      >Collection</b-button
+                    >
+                    <b-button
+                      class="btn btn-info dropdown"
+                      v-b-modal.modal-lg
+                      @click="onOpenModal('item')"
+                      >Item</b-button
+                    >
+                    <b-button
+                      class="btn btn-info dropdown"
+                      v-b-modal.modal-lg
+                      @click="onOpenModal('primaryfile')"
+                      >Content File</b-button
+                    >
+                    <b-button
+                      class="btn btn-info dropdown"
+                      v-b-modal.modal-lg
+                      @click="onOpenModal('workflow')"
+                      >Workflow</b-button
+                    >
+                    <b-button
+                      v-if="parent !== 'NewTest'"
+                      class="btn btn-info dropdown"
+                      v-b-modal.modal-lg
+                      @click="onOpenModal('output')"
+                      >Output</b-button
+                    >                        
+                    <b-button
+                      class="btn btn-info dropdown"
+                      v-b-modal.modal-lg
+                      @click="onOpenModal('step')"
+                      >Step</b-button
+                    >
+                    <b-button
+                      v-if="parent !== 'NewTest' && parent !== 'TestResults'"
+                      class="btn btn-info dropdown"
+                      v-b-modal.modal-lg
+                      @click="onOpenModal('status')"
+                      >Status</b-button
+                    >
+                  </div>   
+                  <div class="col d-flex flex-wrap py-2">
+                    <search-filter
+                      v-if="parent !== 'Deliverables'"
+                      :parent="parent"
+                      class="col-xl-3 col-md-3 col-sm-12 col-xs-12 px-2 my-0"
+                    />                        
+                    <span
+                      v-if="parent !== 'NewTest' && parent !== 'TestResults'"
+                      class="relevant-togggle"
+                      >
+                      <span class="txt-v pr-2"
+                        >Show Relevant Results Only</span
+                      >
+                      <label class="switch my-0" title="Relevant Result">
+                        <span class="sr-only">Relevant Result</span>
+                        <input
+                          type="checkbox"
+                          v-model="
+                            workflowDashboard.searchQuery.filterByRelevant
                           "
                         />
-                        <DateFilter
-                          :parent="parent"
-                          @displayChanged="
-                            changeDisplayedFilter(
-                              workflowDashboard.filtersEnabled.dateFilter
-                            )
-                          "
-                        />
-                        <b-button
-                          class="btn btn-info dropdown"
-                          v-b-modal.modal-lg
-                          @click="onOpenModal('submitter')"
-                          >Submitter</b-button
-                        >
-                        <b-button
-                          class="btn btn-info dropdown"
-                          v-b-modal.modal-lg
-                          @click="onOpenModal('item')"
-                          >Item</b-button
-                        >
-                        <b-button
-                          class="btn btn-info dropdown"
-                          v-b-modal.modal-lg
-                          @click="onOpenModal('primaryfile')"
-                          >Content File</b-button
-                        >
-                        <b-button
-                          class="btn btn-info dropdown"
-                          v-b-modal.modal-lg
-                          @click="onOpenModal('step')"
-                          >Step</b-button
-                        >
-                        <b-button
-                          v-if="parent !== 'NewTest' && parent !== 'TestResults'"
-                          class="btn btn-info dropdown"
-                          v-b-modal.modal-lg
-                          @click="onOpenModal('status')"
-                          >Status</b-button
-                        >
+                        <span class="slider round"></span>
+                      </label>
+                    </span>
+                    <div
+                      v-if="
+                        parent !== 'NewTest' &&
+                          parent !== 'TestResults' &&
+                          parent !== 'Deliverables'
+                        "
+                        class="export-row ml-auto px-2"
+                      >
+                      <input
+                        id="export-results"
+                        type="button"
+                        class="btn btn-primary btn-sm"
+                        v-on:click="exportResults"
+                        value="Export to CSV"
+                      />
+                    </div>
+                  </div>                        
 
-                        <div
-                          v-if="parent !== 'NewTest'"
-                          id="btn-show-hide"
-                          class="dropdown"
-                        >
-                          <b-dropdown id="dropdown-form">
+                  <DashboardTable
+                    v-if="columns.length"
+                    :columns="columns"
+                    :parent="parent"
+                    :workflowResultType="workflowResultType"
+                    :workflowResultOutput="workflowResultOutput"
+                  >
+                    <template #show-hide-columns>
+                      <div
+                        v-if="parent !== 'NewTest' && parent !== 'Deliverables'"
+                        id="btn-show-hide"
+                        class="dropdown mt-2"
+                      >
+                        <b-dropdown id="dropdown-form">
                             <template #button-content>
                               <span>Show/Hide Columns</span>
                               <span
@@ -670,44 +716,10 @@
                                 >{{ column.label }}</b-form-checkbox
                               >
                             </b-dropdown-form>
-                          </b-dropdown>
-                        </div>                    
-                      </div>
-                      <div
-                        v-if="parent !== 'NewTest' && parent !== 'TestResults'"
-                        class="relevant-togggle"
-                      >
-                        <span class="txt-v pr-2"
-                          >Show Relevant Results Only</span
-                        >
-                        <label class="switch" title="Relevant Result"
-                          ><span class="sr-only">Relevant Result</span>
-                          <input
-                            type="checkbox"
-                            v-model="
-                              workflowDashboard.searchQuery.filterByRelevant
-                            "
-                          />
-                          <span class="slider round"></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div
-                      class="row spacer"
-                      :class="
-                        parent === 'NewTest' || parent === 'TestResults'
-                          ? 'filter-gap'
-                          : ''
-                      "
-                    ></div>
-                  </div>
-                  <DashboardTable
-                    v-if="columns.length"
-                    :columns="columns"
-                    :parent="parent"
-                    :workflowResultType="workflowResultType"
-                    :workflowResultOutput="workflowResultOutput"
-                  />
+                        </b-dropdown>
+                      </div>  
+                    </template>
+                  </DashboardTable>
                   <Search
                     :searchType="searchType"
                     :dataSource="searchSource"
@@ -728,6 +740,7 @@ import { sync } from "vuex-pathify";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import DashboardTable from "@/components/dashboard/DashboardTable.vue";
 import DateFilter from "@/components/dashboard/DashboardFilters/DateFilter";
+import SearchFilter from "@/components/dashboard/DashboardFilters/SearchFilter";
 import Logout from "@/components/shared/Logout.vue";
 import Search from "@/components/shared/Search.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
@@ -740,6 +753,7 @@ export default {
     Sidebar,
     DashboardTable,
     DateFilter,
+    SearchFilter,
     Logout,
     Search,
     Loader,
@@ -1182,6 +1196,27 @@ export default {
 
       this.$bvModal.show("modal-lg");
     },
+    getDateString() {
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = `${date.getMonth() + 1}`.padStart(2, "0");
+      const day = `${date.getDate()}`.padStart(2, "0");
+      return `${year}${month}${day}`;
+    },
+    async exportResults() {
+      console.log("export results");
+      console.log(event.target);
+      var content = await this.workflowResultService.exportWorkflowResults(
+        this.workflowDashboard.searchQuery
+      );
+      var uriContent = encodeURIComponent(content);
+
+      var link = document.createElement("a");
+      var dateString;
+      link.download = "AMPDashboardExport_" + this.getDateString() + ".csv";
+      link.href = "data:text/csv," + uriContent;
+      link.click();
+    },    
   },
   mounted() {
     this.columns = this.dashboardColumns;
@@ -1254,12 +1289,6 @@ export default {
   height: 24px;
 }
 
-.selected-filters-row {
-  margin-left: -30px;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-}
-
 .selected-filter-button {
   background-color: white;
   border: 2px solid;
@@ -1291,11 +1320,11 @@ export default {
   background-color: #17a2b8 !important;
   border-color: #17a2b8 !important;
 }
+
 .relevant-togggle {
-  margin-left: auto;
   margin-right: 0;
-  margin-top: auto;
 }
+
 .filter-gap {
   height: 18px !important;
 }
@@ -1304,12 +1333,15 @@ export default {
   margin: 0px;
   padding: 0px;
 }
+
 #dropdown-form > button > span > svg > g > path {
   fill: #153c4d !important;
 }
+
 #dropdown-form > button:hover > span > svg > g > path {
   fill: #fff !important;
 }
+
 form.b-dropdown-form {
   width: 350px;
   display: flex;
@@ -1317,6 +1349,7 @@ form.b-dropdown-form {
   justify-content: flex-start;
   flex-wrap: wrap;
 }
+
 form.b-dropdown-form > * {
   flex: 0 0 50%;
 }

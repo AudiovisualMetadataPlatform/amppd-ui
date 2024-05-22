@@ -14,7 +14,7 @@
                   <h1 class="card-title">AMP Deliverables</h1>
                   <button
                     v-bind:disabled="!canDeliverFinalResults"
-                    class="btn btn-primary marg-bot-4"
+                    class="btn btn-primary my-3"
                     data-toggle="modal"
                     data-target=".bd-example-modal-lg"
                   >
@@ -62,7 +62,7 @@
                       id="myTable_wrapper"
                       class="dataTables_wrapper no-footer"
                     >
-                      <div class="dataTables_length" id="myTable_length">
+                      <div class="dataTables_length mt-1" id="myTable_length">
                         <label
                           >Show
                           <select
@@ -478,10 +478,6 @@ export default {
   right: 0;
   top: 0.5em;
   z-index: 1 !important;
-}
-.table-responsive {
-  position: relative;
-  padding-top: 19px;
 }
 .final-choice-top {
   z-index: 1001;
