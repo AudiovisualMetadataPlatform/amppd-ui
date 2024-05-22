@@ -1,7 +1,7 @@
 <template>
   <div class="dataTables_wrapper no-footer">
     <loader :show="workflowDashboard.loading" />
-    <div v-if="parent !== 'Deliverables'" class="col d-flex justify-content-between">
+    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap justify-content-between">
       <div
         class="
           col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12
@@ -45,16 +45,9 @@
       ></b-pagination>
       <slot name="show-hide-columns"></slot>
     </div>
-    <!-- <br v-if="parent !== 'Deliverables'" /> -->
+
     <div
       class="table-responsive"
-      :class="
-        parent === 'NewTest' ||
-        parent === 'TestResults' ||
-        parent === 'Deliverables'
-          ? 'table-gap'
-          : ''
-      "
     >
       <table id="myTable" class="table dataTable no-footer">
         <thead>
@@ -277,47 +270,48 @@
           </tr>
         </tbody>
       </table>
-      <div v-if="parent !== 'Deliverables'" class="col d-flex">
-        <label>{{ totalText }}</label>
-        <b-pagination
-          class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100"
-          v-model="workflowDashboard.searchQuery.pageNum"
-          :total-rows="workflowDashboard.searchResult.totalResults"
-          :per-page="workflowDashboard.searchQuery.resultsPerPage"
-          @change="paginate($event)"
-          size="sm"
-          align="center"
-          first-number
-          limit="9"
-          last-number
-          prev-text="Prev"
-          next-text="Next"
-        ></b-pagination>
-      </div>
-
-      <!-- Modal for delete confirmation -->
-      <b-modal v-model="showModal" id="modal-center" centered>
-        <template #modal-header="{}">
-          <h5 class="text-capitalize">
-            Confirm
-          </h5>
-        </template>
-        <template #default="{}">
-          <div class="row pad-all-2">
-            Are you sure you want to delete this result from the Dashboard? This
-            action cannot be rolled back.
-          </div>
-        </template>
-        <template #modal-footer="{ hide }">
-          <button class="btn btn-outline" @click="hide()">
-            Cancel
-          </button>
-          <button size="sm" class="btn btn-primary" @click="handleDeleteRow()">
-            Delete
-          </button>
-        </template>
-      </b-modal>
+    </div>     
+     
+    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap">
+      <label>{{ totalText }}</label>
+      <b-pagination
+        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100"
+        v-model="workflowDashboard.searchQuery.pageNum"
+        :total-rows="workflowDashboard.searchResult.totalResults"
+        :per-page="workflowDashboard.searchQuery.resultsPerPage"
+        @change="paginate($event)"
+        size="sm"
+        align="center"
+        first-number
+        limit="9"
+        last-number
+        prev-text="Prev"
+        next-text="Next"
+      ></b-pagination>
     </div>
+
+    <!-- Modal for delete confirmation -->
+    <b-modal v-model="showModal" id="modal-center" centered>
+      <template #modal-header="{}">
+        <h5 class="text-capitalize">
+          Confirm
+        </h5>
+      </template>
+      <template #default="{}">
+        <div class="row pad-all-2">
+          Are you sure you want to delete this result from the Dashboard? This
+          action cannot be rolled back.
+        </div>
+      </template>
+      <template #modal-footer="{ hide }">
+        <button class="btn btn-outline" @click="hide()">
+          Cancel
+        </button>
+        <button size="sm" class="btn btn-primary" @click="handleDeleteRow()">
+          Delete
+        </button>
+      </template>
+    </b-modal>
   </div>
 </template>
 
@@ -458,20 +452,9 @@ export default {
       return this.parent === "TestResults" || this.parent === "NewTest" ||
         wr.outputPath != null && wr.status == 'COMPLETE'
     },
-    // canAccessLink(result, forMedia) {      
-    //   let actionType = env.getEnv("VUE_APP_AC_ACTIONTYPE_READ");
-    //   let targetType = forMedia ? // for media or output
-    //     env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE_MEDIA") :
-    //     env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT_OUTPUT");
-    //   let actionKey = `${actionType}-${targetType}`;
-    //   let units =  this.accessControl.actionsUnits.get(actionKey);
-    //   return units && units.has(result.unitId);
-    // },
     canAccessLink(result, forMedia) {      
       // get units for media or output
-      let units = forMedia ? this.acUnitsMedia : this.acUnitsOutput;      
-        // console.log("forMedia: " + forMedia);	
-        // console.log("units: " + units);	
+      let units = forMedia ? this.acUnitsMedia : this.acUnitsOutput;      	
       return this.acIsAdmin || units && units.includes(result.unitId);
     },
     handleDeleteRow() {
@@ -583,7 +566,6 @@ export default {
   },
   watch: {
     filterByDates: function() {
-      // console.log("inside watcher for filterByDates",this.filterByDates[0]," ",this.filterByDates[1]);
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.refreshData();
     },
@@ -727,11 +709,6 @@ th {
 }
 .justify-content-right {
   justify-content: right;
-}
-.table-gap {
-  margin-top: -20px !important;
-  margin-bottom: 0px;
-  overflow-y: hidden;
 }
 .add-to-test-checkbox {
   width: 28px;

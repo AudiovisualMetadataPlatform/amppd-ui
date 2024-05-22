@@ -1,6 +1,5 @@
 <template>
   <div class="collections w-100">
-    <!-- <loader :show="!isFilterApiLoaded"/> -->
     <div
       class="container-fluid"
       :class="{
@@ -621,7 +620,7 @@
                     <search-filter
                       v-if="parent !== 'Deliverables'"
                       :parent="parent"
-                      class="col-xl-3 col-md-3 col-sm-12 col-xs-12 px-0 my-0"
+                      class="col-xl-3 col-md-3 col-sm-12 col-xs-12 px-2 my-0"
                     />                        
                     <span
                       v-if="parent !== 'NewTest' && parent !== 'TestResults'"
@@ -652,7 +651,7 @@
                       <input
                         id="export-results"
                         type="button"
-                        class="btn btn-outline-primary btn-sm"
+                        class="btn btn-primary btn-sm"
                         v-on:click="exportResults"
                         value="Export to CSV"
                       />
@@ -1290,12 +1289,6 @@ export default {
   height: 24px;
 }
 
-.selected-filters-row {
-  margin-left: -30px;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-}
-
 .selected-filter-button {
   background-color: white;
   border: 2px solid;
@@ -1330,12 +1323,6 @@ export default {
 
 .relevant-togggle {
   margin-right: 0;
-  /*
-  display: flex;
-  justify-content: space-around;
-  position: absolute;
-  top: 0;  
-  */
 }
 
 .filter-gap {
@@ -1346,12 +1333,15 @@ export default {
   margin: 0px;
   padding: 0px;
 }
+
 #dropdown-form > button > span > svg > g > path {
   fill: #153c4d !important;
 }
+
 #dropdown-form > button:hover > span > svg > g > path {
   fill: #fff !important;
 }
+
 form.b-dropdown-form {
   width: 350px;
   display: flex;
@@ -1359,6 +1349,7 @@ form.b-dropdown-form {
   justify-content: flex-start;
   flex-wrap: wrap;
 }
+
 form.b-dropdown-form > * {
   flex: 0 0 50%;
 }
