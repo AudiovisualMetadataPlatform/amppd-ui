@@ -21,7 +21,7 @@
       aria-labelledby="dropdownMenuButton"
     >
       <form class="p-2">
-        <div class="form-group row">
+        <div class="col d-flex flex-wrap justify-content-between">
           <label
             for="colFormLabelFrom"
             class="col-sm-4 col-form-label col-form-label-sm"
@@ -34,7 +34,7 @@
             v-on:input="setDisabledDate()"
           ></datepicker>
         </div>
-        <div class="form-group row">
+        <div class="col d-flex flex-wrap justify-content-between">
           <label
             for="colFormLabelFrom2"
             class="col-sm-4 col-form-label col-form-label-sm"
@@ -47,10 +47,10 @@
             :disabled-dates="state.disabledDates"
           ></datepicker>
         </div>
-        <div class="form-group row">
+        <div class="col d-flex flex-wrap justify-content-between">
           <div class="col-sm-12">
             <button
-              class="btn btn-info float-right"
+              class="btn btn-info float-right m-2"
               @click="filterByDate($event)"
             >
               Filter
