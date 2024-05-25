@@ -320,7 +320,6 @@ import { sync } from "vuex-pathify";
 import { env } from "@/helpers/env";
 import WorkflowResultService from "../../service/workflow-result-service";
 import SortableHeader from "../shared/SortableHeader";
-import Pagination from "../shared/Pagination";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "../../service/shared-service";
 import { accountService } from "@/service/account-service.js";
@@ -330,7 +329,6 @@ export default {
   name: "DashboardTable",
   components: {
     SortableHeader,
-    Pagination,
     Loader,
   },
   data() {
@@ -728,5 +726,9 @@ th {
 }
 .dis-color > svg {
   fill: rgba(187, 187, 187, 0.856) !important;
+}
+li {
+  list-style: none;
+  padding: 1pt;
 }
 </style>

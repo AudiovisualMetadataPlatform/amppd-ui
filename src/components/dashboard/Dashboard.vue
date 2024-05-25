@@ -651,7 +651,7 @@
                       <input
                         id="export-results"
                         type="button"
-                        class="btn btn-primary btn-sm"
+                        class="btn btn-outline-primary btn-sm"
                         v-on:click="exportResults"
                         value="Export to CSV"
                       />

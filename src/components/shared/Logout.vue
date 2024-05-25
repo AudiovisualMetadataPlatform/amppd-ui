@@ -141,7 +141,7 @@ export default {
 
 li {
   list-style: none;
-  padding: 1rem;
+  padding: .1rem;
 }
 
 .active-link {
