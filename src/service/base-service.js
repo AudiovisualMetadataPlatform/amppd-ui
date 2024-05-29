@@ -45,7 +45,9 @@ export default class BaseService{
 
     post_auth(url, body){
         console.log("BaseService: sending post to " + this.API_URL + url);
-        return this.axiosInstance.post(this.API_URL + url, body, requestOptions.post());
+        console.log("body = " + body);
+        // return this.axiosInstance.post(this.API_URL + url, body, requestOptions.post());
+        return this.axiosInstance.post(this.API_URL + url, body, requestOptions.post(body instanceof FormData));
     }
 
     post_token_auth(url, body, input_dataset){
