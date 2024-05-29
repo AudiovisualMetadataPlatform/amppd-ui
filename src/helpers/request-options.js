@@ -48,14 +48,14 @@ function headers(formData = false) {
     const currentUser = accountService.currentUserValue || {};
     const authHeader = currentUser && currentUser.token ? { 'Authorization': 'Bearer ' + currentUser.token  } : {};
     const ctHeader = formData ? 'multipart/form-data' : 'application/json';
-    console.log("ctHeader = " + ctHeader);
     return {
         headers: {
             ...authHeader,
-            'Content-Type': ctHeader
+            'Content-Type': ctHeader    // not necessary, but keep it for now
         }
-    };
+    };    
 }
+
 function tokenHeaders(editorInput) {
     const authString = localStorage.getItem(editorInput);
     console.log("Auth String: " + authString);
@@ -64,7 +64,7 @@ function tokenHeaders(editorInput) {
         return {
             headers: {
                 ...authHeader,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json'    // not necessary, but keep it for now
             }
         };
     }

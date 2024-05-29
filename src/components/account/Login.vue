@@ -93,7 +93,6 @@ export default {
         pswd_error: "",
         other_errors: [],
       },
-      // formData: new FormData(),
       email: null,
       pswd: null,
       auth_status: false,
