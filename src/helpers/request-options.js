@@ -46,8 +46,9 @@ export const requestOptions = {
 
 function headers(formData = false) {
     const currentUser = accountService.currentUserValue || {};
-    const authHeader = currentUser && currentUser.token ? { 'Authorization': 'Bearer ' + currentUser.token  } : {}
-    const ctHeader = formData ? 'multipart/form-data' : 'application/json'
+    const authHeader = currentUser && currentUser.token ? { 'Authorization': 'Bearer ' + currentUser.token  } : {};
+    const ctHeader = formData ? 'multipart/form-data' : 'application/json';
+    console.log("ctHeader = " + ctHeader);
     return {
         headers: {
             ...authHeader,

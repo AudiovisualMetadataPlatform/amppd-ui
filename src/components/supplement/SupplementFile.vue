@@ -459,7 +459,6 @@ export default {
       );
       const uploadDetailsBody = document.getElementById("upload-details-body");
       uploadDetailsBody.style.display = "block";
-
       self.supplement.fileDetails.file = self.supplement.files[0];
       self.supplement.fileDetails.originalFilename = self.supplement.files[0].name;
       console.log("SupplementFile.filesChange -----  file.size = " + self.supplement.fileDetails.file.size);
@@ -592,8 +591,6 @@ export default {
             formDataKey = "primaryfileSupplement";
           }
           let formData = new FormData();
-          // formData.append('test', "test");
-          // console.log("SupplementFile.saveFile ----- after appending test, formData.test = " + formData.get('test'));
           formData.append(
             formDataKey,
             new Blob(
@@ -610,9 +607,7 @@ export default {
               }
             )
           );
-          console.log(`SupplementFile.saveFile ----- after appending formDataKey, formData.${formDataKey}.size = ${formData.get(formDataKey).size}`);
           formData.append("mediaFile", data.file);
-          console.log("SupplementFile.saveFile ----- after appending mediaFile, formData.mediaFile.size = " + formData.get('mediaFile').size);
           await self.supplementService
             .addSupplement(apiType, self.entityId, formData)
             .then((response) => {
