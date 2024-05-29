@@ -1,5 +1,5 @@
 <template>
-  <div class="collections w-100">
+  <div class="collections w-100 px-0">
     <div
       class="container-fluid"
       :class="{
@@ -21,7 +21,7 @@
                   'mb-0': parent === 'NewTest' || parent === 'TestResults',
                 }"
               >
-                <div class="card-body">
+                <div class="card-body px-2">
                   <h1
                     v-if="parent !== 'NewTest' && parent !== 'TestResults'"
                     class="card-title pb-3"
@@ -29,7 +29,7 @@
                     AMP Dashboard
                   </h1>
                   <div v-if="filterCount > 0">
-                    <div class="col d-flex flex-wrap">
+                    <div class="col d-flex flex-wrap px-0">
                       <div class="col-sm-2 label-bold">
                         CURRENTLY FILTERED BY
                       </div>
@@ -540,7 +540,7 @@
                     </div>
                   </div>
 
-                  <div class="col d-flex flex-wrap filter-btns">
+                  <div class="col d-flex flex-wrap filter-btns px-0">
                     <DateFilter
                       :parent="parent"
                       v-if="parent === 'TestResults'"
@@ -615,38 +615,34 @@
                       @click="onOpenModal('status')"
                       >Status</b-button
                     >
-                  </div>   
-                  <div class="col d-flex flex-wrap py-2">
                     <search-filter
                       v-if="parent !== 'Deliverables'"
                       :parent="parent"
-                      class="col-xl-3 col-md-3 col-sm-12 col-xs-12 px-2 my-0"
-                    />                        
-                    <span
+                      class="px-2 my-1"
+                    />                 
+                    <span 
                       v-if="parent !== 'NewTest' && parent !== 'TestResults'"
-                      class="relevant-togggle"
-                      >
-                      <span class="txt-v pr-2"
-                        >Show Relevant Results Only</span
-                      >
+                      class="px-2 my-2"
+                    >
+                      <span class="txt-v px-1 py-2">
+                        Show Relevant Results Only
+                      </span>
                       <label class="switch my-0" title="Relevant Result">
                         <span class="sr-only">Relevant Result</span>
                         <input
                           type="checkbox"
-                          v-model="
-                            workflowDashboard.searchQuery.filterByRelevant
-                          "
+                          v-model="workflowDashboard.searchQuery.filterByRelevant"
                         />
                         <span class="slider round"></span>
                       </label>
                     </span>
-                    <div
+                    <span
                       v-if="
                         parent !== 'NewTest' &&
                           parent !== 'TestResults' &&
                           parent !== 'Deliverables'
                         "
-                        class="export-row ml-auto px-2"
+                        class="ml-auto px-2 my-2"
                       >
                       <input
                         id="export-results"
@@ -655,7 +651,7 @@
                         v-on:click="exportResults"
                         value="Export to CSV"
                       />
-                    </div>
+                    </span>
                   </div>                        
 
                   <DashboardTable
@@ -669,7 +665,7 @@
                       <div
                         v-if="parent !== 'NewTest' && parent !== 'Deliverables'"
                         id="btn-show-hide"
-                        class="dropdown mt-2"
+                        class="dropdown mb-2"
                       >
                         <b-dropdown id="dropdown-form">
                             <template #button-content>
@@ -1319,10 +1315,6 @@ export default {
   color: #fff !important;
   background-color: #17a2b8 !important;
   border-color: #17a2b8 !important;
-}
-
-.relevant-togggle {
-  margin-right: 0;
 }
 
 .filter-gap {
