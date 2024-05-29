@@ -450,6 +450,7 @@ export default {
     filesChange(e) {
       const self = this;
       self.supplement["files"] = e.target.files || e.dataTransfer.files;
+      console.log("SupplementFile.filesChange -----  files.length = " + self.supplement["files"].length);
       self.supplement[
         "allCategories"
       ] = this.configProperties.supplementCategories;
@@ -458,10 +459,9 @@ export default {
       );
       const uploadDetailsBody = document.getElementById("upload-details-body");
       uploadDetailsBody.style.display = "block";
-
       self.supplement.fileDetails.file = self.supplement.files[0];
-      self.supplement.fileDetails.originalFilename =
-        self.supplement.files[0].name;
+      self.supplement.fileDetails.originalFilename = self.supplement.files[0].name;
+      console.log("SupplementFile.filesChange -----  file.size = " + self.supplement.fileDetails.file.size);
     },
 
     async onInputChange(type, directCall = false) {

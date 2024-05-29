@@ -1,7 +1,7 @@
 <template>
   <div class="dataTables_wrapper no-footer">
     <loader :show="workflowDashboard.loading" />
-    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap justify-content-between">
+    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap px-0 justify-content-between">
       <div
         class="
           col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12
@@ -272,7 +272,7 @@
       </table>
     </div>     
      
-    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap">
+    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap justify-content-between">
       <label>{{ totalText }}</label>
       <b-pagination
         class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100"
@@ -668,10 +668,6 @@ th {
 #export-results {
   width: 200px;
   margin: 10px 0 10px 15px;
-}
-.export-row {
-  display: flex;
-  justify-content: flex-end;
 }
 .btn-blue:hover,
 .btn-blue:active,

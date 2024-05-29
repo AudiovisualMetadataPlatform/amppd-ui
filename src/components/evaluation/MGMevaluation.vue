@@ -6,7 +6,7 @@
         <div class="container-fluid p-0">
           <div class="row expand-h">
             <div class="col-12 p-0">
-              <main>
+              <main class="m-2">
                 <h1>MGM Evaluation</h1>
                 <b-overlay v-if="mgmCategoryId" rounded="sm" class="mt-4">
                   <div>
@@ -92,7 +92,7 @@
                       </b-navbar>
 
                       <dl
-                        class="d-flex col-12 mt-3 mb-0 pr-0"
+                        class="d-flex col-12 mt-3 mb-0 p-0"
                         v-if="selectedTab === 0"
                       >
                         <TestResults
@@ -100,7 +100,10 @@
                           :mgmCategoryId="mgmCategoryId"
                         />
                       </dl>
-                      <dl class="d-flex col-12 mt-3 mb-0 pr-0" v-else>
+                      <dl 
+                        class="d-flex col-12 mt-3 mb-0 pr-0" 
+                        v-else
+                      >
                         <div class="w-100 row div-test">
                           <NewTest
                             :mgmCategory="mgmCategoryDetails"

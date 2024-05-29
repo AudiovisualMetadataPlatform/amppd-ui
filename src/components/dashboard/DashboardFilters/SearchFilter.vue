@@ -1,6 +1,6 @@
 <template>
-  <div id="myTable_filter" class="dataTables_filter">
-      <form
+  <span id="myTable_filter" class="dataTables_filter">
+    <form
       @submit="
         $event.preventDefault();
         onSearchChange();
@@ -13,7 +13,7 @@
         class="form-control customSearchWidth"
       />
     </form>
-  </div>
+  </span>
 </template>
 
 <script>
@@ -98,12 +98,6 @@ export default {
 <style scoped>
 #search-input {
   display: inline;
-}
-.spacer {
-  height: 24px;
-}
-.submitter {
-  margin: 0.2rem;
 }
 .bootstrap-typeahead {
   height: calc(2.25rem + 1px);

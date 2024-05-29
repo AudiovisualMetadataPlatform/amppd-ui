@@ -11,10 +11,10 @@ export const requestOptions = {
             ...tokenHeaders(editorInput)
         };
     },
-    post() {
+    post(formData = false) {
         return {
             method: 'POST',
-            ...headers()
+            ...headers(formData)
         };
     },
     postToken(editorInput) {
@@ -44,16 +44,18 @@ export const requestOptions = {
     }
 }
 
-function headers() {
+function headers(formData = false) {
     const currentUser = accountService.currentUserValue || {};
-    const authHeader = currentUser && currentUser.token ? { 'Authorization': 'Bearer ' + currentUser.token  } : {}
+    const authHeader = currentUser && currentUser.token ? { 'Authorization': 'Bearer ' + currentUser.token  } : {};
+    const ctHeader = formData ? 'multipart/form-data' : 'application/json';
     return {
         headers: {
             ...authHeader,
-            'Content-Type': 'application/json'
+            'Content-Type': ctHeader    // not necessary, but keep it for now
         }
-    };
+    };    
 }
+
 function tokenHeaders(editorInput) {
     const authString = localStorage.getItem(editorInput);
     console.log("Auth String: " + authString);
@@ -62,7 +64,7 @@ function tokenHeaders(editorInput) {
         return {
             headers: {
                 ...authHeader,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json'    // not necessary, but keep it for now
             }
         };
     }
