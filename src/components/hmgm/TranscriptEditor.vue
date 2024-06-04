@@ -129,7 +129,7 @@ import AmpHeader from "@/components/shared/AmpHeader.vue";
 import Loader from "@/components/shared/Loader.vue";
 import Logout from "@/components/shared/Logout.vue";
 import TokenValidator from "@/components/hmgm/TokenValidator";
-// import BBCTranscriptEditor from "@bbc/react-transcript-editor/dist";
+import BBCTranscriptEditor from "@bbc/react-transcript-editor/dist";
 import Modal from "@/components/shared/Modal.vue";
 import {
   getTranscript,

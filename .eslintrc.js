@@ -17,7 +17,7 @@ module.exports = {
     },
     "plugins": [
         "vue",
-        // "react"
+        "react"
     ],
     "rules": {
       'no-console': 'off',
