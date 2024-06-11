@@ -144,7 +144,7 @@ export default {
     AmpHeader,
     Loader,
     Logout,
-    // BBCTranscriptEditor,
+    BBCTranscriptEditor,
     TokenValidator,
     Modal,
   },
