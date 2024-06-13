@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "private": true,
   "scripts": {
-    "postinstall": "cd node_modules/@bbc/react-transcript-editor && npm install -force && npm run build:component",
+    "postinstall": "cd node_modules/@bbc/react-transcript-editor && npm install && npm run build:component",
     "serve": "vue-cli-service serve --port 8500",
     "build": "vue-cli-service build",
     "test": "vue-cli-service test:unit",
