@@ -561,7 +561,7 @@
                           v-for="user in userList"
                           :key="user.id"
                           :value="user.username"
-                          >{{ `${user.firstName} user.lastName}` }}</option
+                          >{{ `${user.firstName} ${user.lastName}` }}</option
                         >
                       </datalist>
 
