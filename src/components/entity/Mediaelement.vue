@@ -70,6 +70,7 @@ export default {
   mounted() {
     const { MediaElementPlayer } = global;
     const componentObject = this;
+    // console.log("MediaElement: loading MediaElementPlayer");
     this.player = new MediaElementPlayer(this.$el, {
       pluginPath: "https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/",
       shimScriptAccess: "always",
@@ -82,9 +83,11 @@ export default {
           });
         }
         this.success(mediaElement, originalNode, instance);
+        // console.log("MediaElement: MediaElementPlayer loaded.");
       },
       error: (e) => {
         this.error(e);
+        // console.log("MediaElement: error: " + e);
       },
     });
   },
