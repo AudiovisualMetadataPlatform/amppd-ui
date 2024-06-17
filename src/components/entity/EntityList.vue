@@ -4,7 +4,7 @@
     :class="baseUrl == 'unit' ? 'units' : 'collection'"
   >
     <loader :show="showLoader" />
-    <div class="row">
+    <div class="row" v-if="!showLoader">
       <!-- <Sidebar /> -->
       <div class="col-12 bg-light-gray-1">
         <main :class="!unitEntity.currentUnit ? 'mb-3' : 'mb-5'">
@@ -38,12 +38,12 @@
             </h1>
             <div class="primary-file">
               <div
+                v-if="baseUrl === 'file'"
                 class="media-player"
-                v-if="
-                  baseUrl === 'file'
-                "
               >
+                <!-- showLoader is {{ showLoader }}, mediaSource is {{ entity.mediaSource }} -->
                 <div v-if="entity.mediaSource">
+                  <!-- MediaElement -->
                   <mediaelement
                     ref="vPlay"
                     :type="entity.mediaType"
@@ -561,7 +561,7 @@
                           v-for="user in userList"
                           :key="user.id"
                           :value="user.username"
-                          >{{ `${user.firstName} ${user.lastName}` }}</option
+                          >{{ `${user.firstName} user.lastName}` }}</option
                         >
                       </datalist>
 
@@ -1362,21 +1362,23 @@ export default {
         }
       } else if (self.baseUrl === "file") {
         self.showLoader = true;
+        // console.log("EntityList.getEntityData: before get media, showLoader = " + self.showLoader);
         self.entity = self.selectedFile;
         if (self.accessControl._primaryfile_media._read) {
           let mediaSourceUrl = await self.workflowResultService.getMediaSymlink(
             self.selectedFile.id
           );
           self.entity["mediaSource"] = mediaSourceUrl;
-          console.log("mediaSource = " + self.entity.mediaSource);
+          console.log("EntityList.getEntityData: mediaSource = " + self.entity.mediaSource);
         }
         let mediaSourceType = await self.primaryFileService.getPrimaryFile(
           self.selectedFile.id
         );
         self.entity["mediaInfo"] = mediaSourceType.mediaInfo;
         self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
-        // console.log("mediaType = " + self.entity.mediaType);
+        console.log("EntityList.getEntityData: mediaType = " + self.entity.mediaType);
         self.showLoader = false;
+        // console.log("EntityList.getEntityData: after get media, showLoader = " + self.showLoader);
       }
     },
     async getUnitCollections() {
