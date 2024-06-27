@@ -740,7 +740,6 @@ import SearchFilter from "@/components/dashboard/DashboardFilters/SearchFilter";
 import Logout from "@/components/shared/Logout.vue";
 import Search from "@/components/shared/Search.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
-import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 
 export default {
@@ -752,7 +751,6 @@ export default {
     SearchFilter,
     Logout,
     Search,
-    Loader,
   },
   data() {
     return {

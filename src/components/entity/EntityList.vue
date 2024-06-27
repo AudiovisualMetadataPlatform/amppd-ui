@@ -41,9 +41,7 @@
                 v-if="baseUrl === 'file'"
                 class="media-player"
               >
-                <!-- showLoader is {{ showLoader }}, mediaSource is {{ entity.mediaSource }} -->
                 <div v-if="entity.mediaSource">
-                  <!-- MediaElement -->
                   <mediaelement
                     ref="vPlay"
                     :type="entity.mediaType"
@@ -81,7 +79,8 @@
                 name="unitForm"
                 class="form"
                 :class="{
-                  'w-100': !accessControl._primaryfile_media._read,
+                  'w-50': baseUrl === 'file',
+                  'w-100': baseUrl !== 'file',
                 }"
               >
                 <div v-if="baseUrl === 'file'">
@@ -1362,7 +1361,6 @@ export default {
         }
       } else if (self.baseUrl === "file") {
         self.showLoader = true;
-        // console.log("EntityList.getEntityData: before get media, showLoader = " + self.showLoader);
         self.entity = self.selectedFile;
         if (self.accessControl._primaryfile_media._read) {
           let mediaSourceUrl = await self.workflowResultService.getMediaSymlink(
@@ -1378,7 +1376,6 @@ export default {
         self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
         console.log("EntityList.getEntityData: mediaType = " + self.entity.mediaType);
         self.showLoader = false;
-        // console.log("EntityList.getEntityData: after get media, showLoader = " + self.showLoader);
       }
     },
     async getUnitCollections() {
