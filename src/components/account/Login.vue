@@ -1,5 +1,6 @@
 <template>
   <div class="col-12">
+    <loader :show="loading" />
     <!-- <AmpHeader/> -->
     <main>
       <div class="container">
@@ -80,11 +81,13 @@ import { accountService } from "@/service/account-service";
 import { sync } from "vuex-pathify";
 import AccessControlService from "@/service/access-control-service";
 import SharedService from "@/service/shared-service";
+import Loader from "@/components/shared/Loader.vue";
 
 export default {
   name: "LoginComponent",
   components: {
     AmpHeader,
+    Loader
   },
   data() {
     return {
@@ -97,6 +100,7 @@ export default {
       pswd: null,
       auth_status: false,
       activate_status: false,
+      loading: false,
       id: null,
       token: null,
       accessControlService: new AccessControlService(),
@@ -113,11 +117,13 @@ export default {
     acActions: sync("acActions"),
   },
 
-  created() {
+  async created() {
     if (this.$route.params.token) {
       console.log("The token is:" + this.$route.params.token);
       this.token = this.$route.params.token;
-      this.activateNewUser();
+      this.loading = true;
+      await this.activateNewUser();
+      this.loading = false;
       console.log("activation result is:" + this.activate_status);
     }
   },
@@ -128,7 +134,10 @@ export default {
         .sendActivateUserRequest(this.token)
         .then((response) => {
           self.activate_status = response.success;
-          self.errors.other_errors = response.errors;
+          if (self.activate_status) 
+            self.errors.other_errors = "Your account has been successfully activated. You may now login.";
+          else 
+            self.errors.other_errors = response.errors;
         })
         .catch((e) => {
           console.log(e);
