@@ -124,24 +124,24 @@ export default {
       this.loading = true;
       await this.activateNewUser();
       this.loading = false;
-      console.log("activation result is:" + this.activate_status);
+      console.log("activation status:" + this.activate_status);
+      console.log("activation errors:" + this.errors.other_errors);
     }
   },
   methods: {
-    activateNewUser() {
+    async activateNewUser() {
       let self = this;
-      accountService
-        .sendActivateUserRequest(this.token)
-        .then((response) => {
-          self.activate_status = response.success;
-          if (self.activate_status) 
-            self.errors.other_errors = "Your account has been successfully activated. You may now login.";
-          else 
-            self.errors.other_errors = response.errors;
-        })
-        .catch((e) => {
+      try {
+        let response = await accountService.sendActivateUserRequest(this.token);
+        self.activate_status = response.success;
+        if (self.activate_status) 
+          self.errors.other_errors[0] = "Your account has been successfully activated. You may now login.";
+        else 
+          self.errors.other_errors = response.errors;
+      }
+      catch(e) {
           console.log(e);
-        });
+      }
     },
     async checkForm() {
       event.preventDefault();
