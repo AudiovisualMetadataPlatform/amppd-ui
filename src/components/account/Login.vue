@@ -124,8 +124,8 @@ export default {
       this.loading = true;
       await this.activateNewUser();
       this.loading = false;
-      console.log("activation status:" + this.activate_status);
-      console.log("activation errors:" + this.errors.other_errors);
+      console.log("activation status: " + this.activate_status);
+      console.log("activation errors: " + this.errors.other_errors);
     }
   },
   methods: {

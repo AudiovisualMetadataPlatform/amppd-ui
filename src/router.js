@@ -14,7 +14,6 @@ import BatchIngest from "./components/batch/BatchIngest.vue";
 import TranscriptEditor from "./components/hmgm/TranscriptEditor.vue";
 import NerEditor from "./components/hmgm/NerEditor.vue";
 import { accountService } from "./service/account-service.js";
-import CollectionDetails from "./components/collections/CollectionDetails.vue";
 import { env } from "./helpers/env.js";
 import WorkflowList from "./components/workflow/WorkflowList.vue";
 import EntityList from "./components/entity/EntityList.vue";
@@ -24,7 +23,6 @@ import TestResultsVisualiz from "./components/evaluation/TestResultsVisualiz.vue
 import SupplementList from "./components/supplement/SupplementList.vue";
 import AccessDenied from "./components/shared/AccessDenied.vue";
 import HomePage from "@/components/home";
-
 import store from "./store/amp-store.js";
 
 Vue.use(Router);
@@ -448,28 +446,9 @@ var router = new Router({
       meta: {
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       }
-    },
-    // TODO: below is probably not used and shall be removed
-    {
-      path: "/collections/collection-details",
-      name: "collection-details",
-      component: CollectionDetails,
-      meta: {
-        authorize: {
-          actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
-          targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_COLLECTION")
-        },
-        helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
-      },
-    },
-    // TODO: end above    
+    },  
   ],
 });
-
-export default router;
-
-const currentUser = accountService.currentUserValue;
-if (!currentUser) router.push("/");
 
 router.beforeEach(async (to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
@@ -513,3 +492,5 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 });
+
+export default router;
