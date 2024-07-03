@@ -195,7 +195,7 @@ var router = new Router({
     },
     {
       path: "/mgm-evaluation/:mgmCategoryId",
-      name: "mgm-evaluation",
+      name: "mgm-evaluation-category",
       component: MGMevaluation,
       meta: {
         authorize: {
@@ -212,7 +212,7 @@ var router = new Router({
     },
     {
       path: "/mgm-evaluation/:mgmCategoryId/:testResultIds",
-      name: "mgm-evaluation",
+      name: "mgm-evaluation-test-result",
       component: TestResultsVisualiz,
       meta: {
         authorize: {
@@ -456,6 +456,7 @@ router.beforeEach(async (to, from, next) => {
   const currentUser = accountService.currentUserValue;
 
   console.log("from: ", from, "\nto: ", to, "\nnext: ", next);
+  console.log("currentUser: ", currentUser);
 
   if (env.getDisableAuth() == "true" || !authorize) {
 	  console.log("router: No auth needed.")
@@ -465,8 +466,9 @@ router.beforeEach(async (to, from, next) => {
     // not logged in so redirect to access-denied page with login link and with the return url
     return router.push({ path: "/access-denied", query: { returnUrl: to.path }});
   } else {
-    // TODO, below API call is to validate auth token, in case the locally stored one is compromised;
-    // there might be better way to achieve this without making such extra API call
+    // TODO
+    // below API call is to validate the auth token before new page is loaded, in case the current login has expired;
+    // there should be better way to achieve this without making such extra API call
     var success = await accountService.validate();
     if (!success) {
       // return next();
