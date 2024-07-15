@@ -1486,26 +1486,26 @@ export default {
       next();
     }
   },
-  beforeCreate() {
-    console.log ("EntityList.beforeCreate(): showLoader = " + this.showLoader);
-    console.log ("EntityList.beforeCreate(): mediaSource = " + this.entity.mediaSource);
-  },
-  created() {
-    console.log ("EntityList.created(): showLoader = " + this.showLoader);
-    console.log ("EntityList.created(): mediaSource = " + this.entity.mediaSource);
-  },
-  beforeUpdate() {
-    console.log ("EntityList.beforeUpdate(): showLoader = " + this.showLoader);
-    console.log ("EntityList.beforeUpdate(): mediaSource = " + this.entity.mediaSource);
-  },
-  updated() {
-    console.log ("EntityList.updated(): showLoader = " + this.showLoader);
-    console.log ("EntityList.created(): mediaSource = " + this.entity.mediaSource);
-  },
-  beforeMount() {
-    console.log ("EntityList.beforeMount(): showLoader = " + this.showLoader);
-    console.log ("EntityList.beforeMount(): mediaSource = " + this.entity.mediaSource);
-  },
+  // beforeCreate() {
+  //   console.log ("EntityList.beforeCreate(): showLoader = " + this.showLoader);
+  //   console.log ("EntityList.beforeCreate(): mediaSource = " + this.entity.mediaSource);
+  // },
+  // created() {
+  //   console.log ("EntityList.created(): showLoader = " + this.showLoader);
+  //   console.log ("EntityList.created(): mediaSource = " + this.entity.mediaSource);
+  // },
+  // beforeUpdate() {
+  //   console.log ("EntityList.beforeUpdate(): showLoader = " + this.showLoader);
+  //   console.log ("EntityList.beforeUpdate(): mediaSource = " + this.entity.mediaSource);
+  // },
+  // updated() {
+  //   console.log ("EntityList.updated(): showLoader = " + this.showLoader);
+  //   console.log ("EntityList.created(): mediaSource = " + this.entity.mediaSource);
+  // },
+  // beforeMount() {
+  //   console.log ("EntityList.beforeMount(): showLoader = " + this.showLoader);
+  //   console.log ("EntityList.beforeMount(): mediaSource = " + this.entity.mediaSource);
+  // },
   async mounted() {
     const self = this;
     
@@ -1514,7 +1514,7 @@ export default {
     // retrieve configProperties if not yet populated
     if (!self.configProperties || Object.keys(self.configProperties).length === 0) {
       await self.getConfigs();
-      console.log("EntityList.mounted: configs.length = " + self.configProperties.length);
+      // console.log("EntityList.mounted: configs.length = " + self.configProperties.length);
     }
 
     // retrieve units list and currentUnit info from storage if available, otherwise initialize them 
@@ -1535,7 +1535,7 @@ export default {
     // if currentUnit set, getEntityData for the page 
     if (self.unitEntity.currentUnit) {
       await self.getEntityData();
-      console.log("EntityList.mounted: mediaSource = " + this.entity.mediaSource); 
+      // console.log("EntityList.mounted: mediaSource = " + this.entity.mediaSource); 
     }
 
     // adjust size of PFile fields for PFile page
