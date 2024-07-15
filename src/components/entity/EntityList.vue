@@ -939,7 +939,7 @@ export default {
       accessControlService: new AccessControlService(),
       records: [],
       masterRecords: [],
-      showLoader: false,
+      showLoader: true,
       entity: {},
       showEdit: false,
       infoSvg: config.common.icons["info"],
@@ -1011,7 +1011,7 @@ export default {
     },
   },
   methods: {
-    handleAddUser() {
+    async handleAddUser() {
       const self = this;
       self.assignedRoles.users.splice(0, 0, { username: self.selectedUser });
       let role = [];
@@ -1024,6 +1024,7 @@ export default {
       );
       self.selectedUser = "";
       self.idsExcluding.push(getUser.id);
+      // self.showLoader = true;
       self.accessControlService
         .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
         .then((response) => {
@@ -1031,10 +1032,12 @@ export default {
             response.data,
             "username"
           );
+          // self.showLoader = false;
         });
     },
     async handleAssignRolesSaveBtn() {
       const self = this;
+      // self.showLoader = true;
       self.accessControlService
         .updateRoleAssignments(self.unitEntity.currentUnit, self.newRoles)
         .then(async (res) => {
@@ -1053,9 +1056,10 @@ export default {
             }
           }
           self.refreshRoleAssignments(true);
+          // self.showLoader = false;
         })
         .catch((e) => {
-          self.showLoader = false;
+          // self.showLoader = false;
           self.$bvToast.toast(
             "Oops! Something went wrong.",
             self.sharedService.erorrToastConfig
@@ -1088,7 +1092,7 @@ export default {
       self.showAssignRoles = !self.showAssignRoles;
       console.log("showAssignRoles = " + self.showAssignRoles);
       if (self.showAssignRoles) {
-        self.refreshRoleAssignments();
+        await self.refreshRoleAssignments();
       }
     },
     async refreshRoleAssignments(forced = false) {
@@ -1101,25 +1105,21 @@ export default {
       }
 
       // otherwise retrieve RoleAssignments and initialize/reset data
-      self.showLoader = true;
+      // self.showLoader = true;
       const assignRolesResponse = await 
         self.accessControlService.retrieveRoleAssignments(self.unitEntity.currentUnit);
       self.assignedRoles = assignRolesResponse.data;
       self.idsExcluding = self.assignedRoles.users.map((user) => user.id);
-      self.accessControlService
-        .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
-        .then((response) => {
-          self.userList = self.sharedService.sortByAlphabatical(
-            response.data,
-            "username"
-          );
-        });
-        self.newRoles = [];
-        self.assignedRolesUnitChanged = false;
-        self.showLoader = false;        
+      let userResponse = await self.accessControlService
+        .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding);
+      self.userList = self.sharedService.sortByAlphabatical(userResponse.data, "username");
+      // self.showLoader = false;        
 
-        console.log("Refreshed RoleAssignments");
-        return true;
+      // reset newRoles and assignedRolesUnitChanged
+      self.newRoles = [];
+      self.assignedRolesUnitChanged = false;        
+      console.log("Refreshed RoleAssignments");
+      return true;
     },
     async refreshRolesSettings(forced = false) {
       const self = this;
@@ -1131,7 +1131,7 @@ export default {
       }
 
       // otherwise retrieve RolesSettings and initialize/reset settingsRoles
-      self.showLoader = true;
+      // self.showLoader = true;
       const settingsRolesResponse = await 
         self.accessControlService.retrieveRoleActionConfig(self.unitEntity.currentUnit);
       self.settingsRoles = settingsRolesResponse.data;
@@ -1162,8 +1162,8 @@ export default {
       // set up hashset to keep updated roles represented by roleName, initially empty
       self.settingsRoles["rolesUpdated"] = new Set();      
       self.settingsRolesUnitChanged = false;
-      self.showLoader = false;
-
+      
+      // self.showLoader = false;
       console.log ("Refreshed RolesSettings.");
       return true;
     },
@@ -1220,6 +1220,7 @@ export default {
         console.log("Updating role " + roleName + " with " + actionIds.length + " actions: " + actionIds);
       }
       // call updateRoleActionConfig API 
+      // self.showLoader = true;
       self.accessControlService
         .updateRoleActionConfig(self.unitEntity.currentUnit, roles)
         .then(async (res) => {
@@ -1236,9 +1237,10 @@ export default {
               );
           }          
           self.refreshRolesSettings(true);
+          // self.showLoader = false;
         })
         .catch((e) => {
-          self.showLoader = false;
+          // self.showLoader = false;
           self.$bvToast.toast(
             "Oops! Something went wrong.",
             self.sharedService.erorrToastConfig
@@ -1248,8 +1250,8 @@ export default {
     },      
     async getUnitDetails() {
       const self = this;
-      self.showLoader = true;
       try {
+        // self.showLoader = true;
         const unitDetails = await self.entityService.getUnitDetails(
           self.unitEntity.currentUnit,
           self
@@ -1258,17 +1260,14 @@ export default {
           self.selectedUnit = unitDetails.response;
           self.entity = unitDetails.response;
           this.getUnitCollections();
-          self.showLoader = false;
-        } else {
-          self.showLoader = false;
         }
-        self.showLoader = false;
+        // self.showLoader = false;
       } catch (error) {
-        self.showLoader = false;
+        // self.showLoader = false;
         console.log(error);
       }
     },
-    onUnitChange() {
+    async onUnitChange() {
       const self = this;
       self.showAssignRoles = false;
       self.showRolesSettings = false;
@@ -1282,13 +1281,13 @@ export default {
         "unitEntity",
         JSON.stringify({ ...self.unitEntity })
       );
-      self.getEntityData();
+      await self.getEntityData();
       //Checking Access Control
       self.accessControlService.checkAccessControl(this);
     },
     async toggleCollectionActive(collection) {
       collection.active = !collection.active;
-      this.collectionService.activateCollection(
+      await this.collectionService.activateCollection(
         collection.id,
         collection.active
       );
@@ -1296,16 +1295,17 @@ export default {
     async getAllUnits() {
       const self = this;
       try {
-        self.showLoader = true;
+        // self.showLoader = true;
         
-        await self.unitService.getAllUnits().then((res) => {
+        self.unitService.getAllUnits().then((res) => {
           self.allUnits = res.data;
           self.unitEntity.unitList = self.sharedService.sortByAlphabatical(this.allUnits);
-          self.showLoader = false;
+          // self.showLoader = false;
           if (
             self.unitEntity.unitList &&
             self.unitEntity.unitList.length === 1
           ) {
+            // TODO need to save unitEntity as well in this branch
             self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
             self.onUnitChange();
           } else {
@@ -1318,37 +1318,39 @@ export default {
             const unitSelectHtml = document.getElementById("unit-select");
             if (unitSelectHtml) unitSelectHtml.focus();
           }
+          console.log("EntityList.getAllUnits: unitList.length = " + self.unitEntity.unitList.length);
         });        
       } catch (error) {
-        self.showLoader = false;
+        // self.showLoader = false;
         console.log(error);
       }
     },
     async getConfigs() {
       const self = this;
       try {
-        self.showLoader = true;
-        self.configProperties = await self.configPropertiesService.getConfigProperties();        
-        self.showLoader = false;
+        // self.showLoader = true;
+        self.configProperties = await self.configPropertiesService.getConfigProperties();           
+        // self.showLoader = false;
       } catch (error) {
-        self.showLoader = false;
+        // self.showLoader = false;
         console.log(error);
       }
     },
     async getEntityData() {
+      // TODO: at each entity level, get its details, no need to get its children as that's already included in details
       const self = this;
       if (self.baseUrl === "unit" && self.selectedUnit) {
-        self.getUnitDetails();
+        await self.getUnitDetails();
         self.assignedRolesUnitChanged = true;
         self.settingsRolesUnitChanged = true;
       } else if (self.baseUrl === "collection") {
         // if current collection exists but fields not populated, get its details
         if (self.selectedCollection && self.selectedCollection.id && !self.selectedCollection.name) {
-          self.selectedCollection = await this.collectionService.getCollectionDetails(self.selectedCollection.id);
+          self.selectedCollection = await self.collectionService.getCollectionDetails(self.selectedCollection.id);
         }
         self.entity = self.selectedCollection;
         if (self.selectedCollection && !self.isCreatePage)
-          this.getCollectionItems();
+          self.getCollectionItems();
         else {
           self.selectedCollection = self.entity = {};
           self.showEdit = false;
@@ -1360,27 +1362,27 @@ export default {
           self.showEdit = false;
         }
       } else if (self.baseUrl === "file") {
-        self.showLoader = true;
+        // self.showLoader = true;
         self.entity = self.selectedFile;
         if (self.accessControl._primaryfile_media._read) {
           let mediaSourceUrl = await self.workflowResultService.getMediaSymlink(
             self.selectedFile.id
           );
-          self.entity["mediaSource"] = mediaSourceUrl;
+          self.entity.mediaSource = mediaSourceUrl;
           console.log("EntityList.getEntityData: mediaSource = " + self.entity.mediaSource);
         }
         let mediaSourceType = await self.primaryFileService.getPrimaryFile(
           self.selectedFile.id
         );
-        self.entity["mediaInfo"] = mediaSourceType.mediaInfo;
-        self.entity["mediaType"] = mediaSourceType.mimeType.substring(0, 5);
+        self.entity.mediaInfo = mediaSourceType.mediaInfo;
+        self.entity.mediaType = mediaSourceType.mimeType.substring(0, 5);
         console.log("EntityList.getEntityData: mediaType = " + self.entity.mediaType);
-        self.showLoader = false;
+        // self.showLoader = false;
       }
     },
     async getUnitCollections() {
       const self = this;
-      self.showLoader = true;
+      // self.showLoader = true;
       self.collectionService
         .getCollectionByUnitId(self.selectedUnit.id)
         .then((response) => {
@@ -1390,7 +1392,7 @@ export default {
             self.records = self.sharedService.sortByAlphabatical(self.records);
             self.masterRecords = JSON.parse(JSON.stringify(self.records));
           }
-          self.showLoader = false;
+          // self.showLoader = false;
 
           //Adding expand animation css
           const expandAniHtml = document.getElementsByClassName("expand-ani");
@@ -1401,11 +1403,11 @@ export default {
     },
     async getCollectionItems() {
       const self = this;
-      self.showLoader = true;
+      // self.showLoader = true;
       self.itemService
         .getCollectionItems(self.selectedCollection.id)
         .then((response) => {
-          self.showLoader = false;
+          // self.showLoader = false;
           if (response && response.data && response.data._embedded) {
             self.records =
               response.data._embedded[Object.keys(response.data._embedded)[0]];
@@ -1413,7 +1415,7 @@ export default {
             self.masterRecords = JSON.parse(JSON.stringify(self.records));
           }
         });
-        self.showLoader = false;
+        // self.showLoader = false;
     },
     async onView(objInstance) {
       const self = this;
@@ -1469,7 +1471,7 @@ export default {
           //   okVariant: 'danger',
           okTitle: "Leave",
           cancelTitle: "Cancel",
-          footerClass: "p-2",
+          footerClass: "p-2", 
           hideHeaderClose: true,
           centered: false,
           noCloseOnBackdrop: true,
@@ -1484,12 +1486,35 @@ export default {
       next();
     }
   },
-  mounted() {
+  // beforeCreate() {
+  //   console.log ("EntityList.beforeCreate(): showLoader = " + this.showLoader);
+  //   console.log ("EntityList.beforeCreate(): mediaSource = " + this.entity.mediaSource);
+  // },
+  // created() {
+  //   console.log ("EntityList.created(): showLoader = " + this.showLoader);
+  //   console.log ("EntityList.created(): mediaSource = " + this.entity.mediaSource);
+  // },
+  // beforeUpdate() {
+  //   console.log ("EntityList.beforeUpdate(): showLoader = " + this.showLoader);
+  //   console.log ("EntityList.beforeUpdate(): mediaSource = " + this.entity.mediaSource);
+  // },
+  // updated() {
+  //   console.log ("EntityList.updated(): showLoader = " + this.showLoader);
+  //   console.log ("EntityList.created(): mediaSource = " + this.entity.mediaSource);
+  // },
+  // beforeMount() {
+  //   console.log ("EntityList.beforeMount(): showLoader = " + this.showLoader);
+  //   console.log ("EntityList.beforeMount(): mediaSource = " + this.entity.mediaSource);
+  // },
+  async mounted() {
     const self = this;
     
+    console.log ("EntityList.mounted(): showLoader = " + this.showLoader);
+
     // retrieve configProperties if not yet populated
     if (!self.configProperties || Object.keys(self.configProperties).length === 0) {
-      self.getConfigs();
+      await self.getConfigs();
+      // console.log("EntityList.mounted: configs.length = " + self.configProperties.length);
     }
 
     // retrieve units list and currentUnit info from storage if available, otherwise initialize them 
@@ -1503,12 +1528,14 @@ export default {
 
     // retrieve units list if not yet populated
     if (!self.unitEntity.unitList || !self.unitEntity.unitList.length) {
-      self.getAllUnits();
+      await self.getAllUnits();
+      // console.log("EntityList.mounted: unitList.length = " + self.unitEntity.unitList.length);
     } 
 
-    // if currentUnit set, gegetEntityData for the page 
+    // if currentUnit set, getEntityData for the page 
     if (self.unitEntity.currentUnit) {
-      self.getEntityData();
+      await self.getEntityData();
+      // console.log("EntityList.mounted: mediaSource = " + this.entity.mediaSource); 
     }
 
     // adjust size of PFile fields for PFile page
@@ -1518,6 +1545,8 @@ export default {
     } else if (formHTML) {
       formHTML.style.width = "100%";
     }
+
+    this.showLoader = false;
   },
 };
 </script>
