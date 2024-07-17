@@ -7,7 +7,7 @@
       class="my-modal"
     >
       <template #header><h3>Save file selection as a bundle</h3></template>
-      body" class="input-group mb-3">
+      <template #body><div class="input-group mb-3">
         <form>
           <div class="form-group">
             <label for="name">Bundle Name</label>
@@ -36,7 +36,7 @@
             />
           </div>
         </form>
-      </div>
+      </div></template>
       <template #footer><div class="action-buttons">
         <input
           type="button"

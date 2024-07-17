@@ -7,7 +7,7 @@
       class="my-modal"
     >
       <template #header><h3>Select content files from saved bundles</h3></template>
-      <template #body></template><div class="input-group mb-3">
+      <template #body><div class="input-group mb-3">
         <div
           id="accordion"
           v-if="bundles && bundles.length > 0"
@@ -148,7 +148,7 @@
           v-on:click="workflowSubmission.showSelectBundle = false"
           value="Done"
         />
-      </div>
+      </div></template>
     </modal>
 
     <modal
