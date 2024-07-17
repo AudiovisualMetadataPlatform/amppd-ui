@@ -6,8 +6,8 @@
       @close="workflowSubmission.showSelectBundle = false"
       class="my-modal"
     >
-      <h3 slot="header">Select content files from saved bundles</h3>
-      <div slot="body" class="input-group mb-3">
+      <template #header><h3>Select content files from saved bundles</h3></template>
+      <template #body><div class="input-group mb-3">
         <div
           id="accordion"
           v-if="bundles && bundles.length > 0"
@@ -140,15 +140,15 @@
         <div v-else>
           No Bundles found
         </div>
-      </div>
-      <div slot="footer">
+      </div></template>
+      <template #footer><div>
         <input
           type="button"
           class="btn btn-primary btn-md"
           v-on:click="workflowSubmission.showSelectBundle = false"
           value="Done"
         />
-      </div>
+      </div></template>
     </modal>
 
     <modal
@@ -157,18 +157,18 @@
       @close="workflowSubmission.showBundleError = false"
       class="my-modal"
     >
-      <h3 slot="header">{{ responseHeader }}</h3>
-      <div slot="body">
+      <template #header><h3>{{ responseHeader }}</h3></template>
+      <template #body><div>
         {{ responseText }}
-      </div>
-      <div slot="footer">
+      </div>></template>
+      <template #footer><div>
         <input
           type="button"
           class="secondary-button"
           v-on:click="workflowSubmission.showBundleError = false"
           value="Ok"
         />
-      </div>
+      </div></template>
     </modal>
   </div>
 </template>

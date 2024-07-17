@@ -46,17 +46,17 @@
       </div>
     </div>
     <modal v-if="showResponse" @close="modalDismiss">
-      <h3 slot="header">{{ responseHeader }}</h3>
-      <div slot="body">
+      <template #header><h3>{{ responseHeader }}</h3></template>
+      <template #body><div>
         {{ responseBody }}
-      </div>
+      </div></template>
     </modal>
     <modal v-if="showConfirm" @close="showConfirm = false">
-      <h3 slot="header">{{ confirmHeader }}</h3>
-      <div slot="body">
+      <template #header><h3>{{ confirmHeader }}</h3></template>
+      <template #body><div>
         {{ confirmBody }}
-      </div>
-      <div slot="footer" class="action-buttons">
+      </div>></template>
+      <template #footer><div class="action-buttons">
         <input
           type="button"
           class="secondary-button"
@@ -69,7 +69,7 @@
           v-on:click="onConfirm"
           value="Continue"
         />
-      </div>
+      </div></template>
     </modal>
     <token-validator
       v-if="showTokenValidator"

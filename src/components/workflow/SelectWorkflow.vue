@@ -230,8 +230,8 @@
       </div>
     </div>
     <modal v-if="showModal" @close="showModal = false" class="my-modal">
-      <h3 slot="header">{{ modalHeader }}</h3>
-      <div slot="body">
+      <template #header><h3>{{ modalHeader }}</h3></template>
+      <template #body><div>
         <div v-for="(modalText, index) in modalTextList" :key="index">
           <div
             v-if="
@@ -263,15 +263,15 @@
             <div class="col-md-12 error-item">Error: {{ error.error }}</div>
           </div>
         </div>
-      </div>
-      <div slot="footer">
+      </div>></template>
+      <template #footer><div>
         <input
           type="button"
           class="secondary-button"
           v-on:click="handleSuccess"
           value="Ok"
         />
-      </div>
+      </div></template>
     </modal>
     <SaveBundle />
     <div>

@@ -45,12 +45,6 @@
           </button>
         </template>
       </b-modal>
-      <!-- <modal v-if="showValidation" @close="modalDismiss">
-      <h3 slot="header">{{validationHeader}}</h3>
-      <div slot="body">
-        {{validationErrors}}
-      </div>
-    </modal> -->
     </main>
   </div>
 </template>
