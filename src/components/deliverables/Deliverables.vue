@@ -101,106 +101,110 @@
               </div>
             </div>
             <modal class="my-modal" v-if="showModal" @close="showModal = false">
-              <h3 slot="header">Search</h3>
-              <div slot="body">
-                <div class="input-group mb-3">
-                  <input
-                    v-model="searchWord"
-                    type="text"
-                    class="form-control"
-                    placeholder="Search"
-                    v-on:keyup.enter="searchKeyUp"
-                    v-on:keyup.down="onArrowDown"
-                    ref="searchInput"
-                    tabindex="0"
-                  />
-                  <div class="input-group-append">
-                    <button
-                      v-on:click="searchFiles"
-                      class="btn btn-success"
-                      type="button"
+              <template #header><h3>Search</h3></template>
+              <template #body>
+                <div>
+                  <div class="input-group mb-3">
+                    <input
+                      v-model="searchWord"
+                      type="text"
+                      class="form-control"
+                      placeholder="Search"
+                      v-on:keyup.enter="searchKeyUp"
+                      v-on:keyup.down="onArrowDown"
+                      ref="searchInput"
+                      tabindex="0"
+                    />
+                    <div class="input-group-append">
+                      <button
+                        v-on:click="searchFiles"
+                        class="btn btn-success"
+                        type="button"
+                      >
+                        Go
+                      </button>
+                    </div>
+                  </div>
+                  <div class="scrollDiv">
+                    <table
+                      id="myTable"
+                      data-detail-view="true"
+                      class="table"
+                      ref="tbl"
                     >
-                      Go
-                    </button>
+                      <thead>
+                        <tr>
+                          <th data-sortable="true" data-field="collectionName">
+                            Collection
+                          </th>
+                          <th data-sortable="true" data-field="itemName">Item</th>
+                          <th data-sortable="true" data-field="externalSource">
+                            External Source
+                          </th>
+                          <th data-sortable="true" data-field="externalId">
+                            External ID
+                          </th>
+                          <th data-sortable="true" data-field="primaryfileName">
+                            Content File
+                          </th>
+                          <th
+                            data-sortable="true"
+                            data-field="primaryfileOriginalname"
+                          >
+                            Filename
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          class="deliverables-search"
+                          v-for="(pfile, index) in searchedPfiles"
+                          v-bind:key="index"
+                          :ref="'row' + index"
+                          tabindex="0"
+                          v-on:keyup.down="onArrowDown"
+                          v-on:keyup.up="onArrowUp"
+                          v-on:click="rowClicked(index)"
+                          :class="{
+                            'table-dark': rowSelected(pfile.primaryfileId),
+                          }"
+                        >
+                          <td>{{ pfile.collectionName }}</td>
+                          <td>{{ pfile.itemName }}</td>
+                          <td>{{ pfile.externalSource }}</td>
+                          <td>{{ pfile.externalId }}</td>
+                          <td>{{ pfile.primaryfileName }}</td>
+                          <td
+                            style="max-width: 30px !important; overflow-wrap: break-word;"
+                          >
+                            {{ pfile.primaryfileOriginalname }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-                <div class="scrollDiv">
-                  <table
-                    id="myTable"
-                    data-detail-view="true"
-                    class="table"
-                    ref="tbl"
+              </template>
+              <template #footer>
+                <slot class="my-modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-outline pull-left"
+                    data-dismiss="modal"
+                    v-on:click="close()"
+                    aria-label="Close"
                   >
-                    <thead>
-                      <tr>
-                        <th data-sortable="true" data-field="collectionName">
-                          Collection
-                        </th>
-                        <th data-sortable="true" data-field="itemName">Item</th>
-                        <th data-sortable="true" data-field="externalSource">
-                          External Source
-                        </th>
-                        <th data-sortable="true" data-field="externalId">
-                          External ID
-                        </th>
-                        <th data-sortable="true" data-field="primaryfileName">
-                          Content File
-                        </th>
-                        <th
-                          data-sortable="true"
-                          data-field="primaryfileOriginalname"
-                        >
-                          Filename
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        class="deliverables-search"
-                        v-for="(pfile, index) in searchedPfiles"
-                        v-bind:key="index"
-                        :ref="'row' + index"
-                        tabindex="0"
-                        v-on:keyup.down="onArrowDown"
-                        v-on:keyup.up="onArrowUp"
-                        v-on:click="rowClicked(index)"
-                        :class="{
-                          'table-dark': rowSelected(pfile.primaryfileId),
-                        }"
-                      >
-                        <td>{{ pfile.collectionName }}</td>
-                        <td>{{ pfile.itemName }}</td>
-                        <td>{{ pfile.externalSource }}</td>
-                        <td>{{ pfile.externalId }}</td>
-                        <td>{{ pfile.primaryfileName }}</td>
-                        <td
-                          style="max-width: 30px !important; overflow-wrap: break-word;"
-                        >
-                          {{ pfile.primaryfileOriginalname }}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <slot slot="footer" class="my-modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-outline pull-left"
-                  data-dismiss="modal"
-                  v-on:click="close()"
-                  aria-label="Close"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  v-on:click="done()"
-                >
-                  Done
-                </button>
-              </slot>
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    v-on:click="done()"
+                  >
+                    Done
+                  </button>
+                </slot>
+              </template>
             </modal>
           </main>
         </div>

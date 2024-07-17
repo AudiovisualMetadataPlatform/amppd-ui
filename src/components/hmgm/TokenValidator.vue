@@ -1,8 +1,8 @@
 <template>
   <div>
     <modal class="my-modal">
-      <h5 slot="header">Authentication Required</h5>
-      <div slot="body">
+      <template #header><h5>Authentication Required</h5></template>
+      <template #body><div>
         Enter the editor password to view the page:
         <div class="form-input">
           <label class="form-errors" v-if="invalidInput"
@@ -14,15 +14,15 @@
             v-on:keyup.enter="submitToken"
           />
         </div>
-      </div>
-      <div slot="footer">
+      </div>></template>
+      <template #footer><div>
         <input
           type="button"
           class="primary-button"
           value="Submit"
           v-on:click="submitToken"
         />
-      </div>
+      </div></template>
     </modal>
   </div>
 </template>

@@ -6,8 +6,8 @@
       @close="workflowSubmission.showSaveBundle = false"
       class="my-modal"
     >
-      <h3 slot="header">Save file selection as a bundle</h3>
-      <div slot="body" class="input-group mb-3">
+      <template #header><h3>Save file selection as a bundle</h3></template>
+      body" class="input-group mb-3">
         <form>
           <div class="form-group">
             <label for="name">Bundle Name</label>
@@ -37,7 +37,7 @@
           </div>
         </form>
       </div>
-      <div slot="footer" class="action-buttons">
+      <template #footer><div class="action-buttons">
         <input
           type="button"
           class="secondary-button"
@@ -50,7 +50,7 @@
           v-on:click="saveBundle"
           value="Save Selection"
         />
-      </div>
+      </div></template>
     </modal>
 
     <modal
@@ -59,13 +59,13 @@
       @close="showConfirmUpdate = false"
       class="my-modal"
     >
-      <h3 slot="header">Confirm</h3>
-      <div slot="body">
+      <template #header><h3>Confirm</h3></template>
+      <template #body><div>
         A bundle owned by you with name "{{ bundle.name }}" and description "{{
           bundle.description
         }}" already exists, do you want to overwrite it?
-      </div>
-      <div slot="footer" class="action-buttons">
+      </div>></template>
+      <template #footer><div class="action-buttons">
         <input
           type="button"
           class="secondary-button"
@@ -78,7 +78,7 @@
           v-on:click="updateConfirmed"
           value="Yes"
         />
-      </div>
+      </div></template>
     </modal>
 
     <modal
@@ -87,18 +87,18 @@
       @close="showResponse = false"
       class="my-modal"
     >
-      <h3 slot="header">{{ responseHeader }}</h3>
-      <div slot="body">
+      <template #header><h3>{{ responseHeader }}</h3></template>
+      <template #body><div>
         {{ responseText }}
-      </div>
-      <div slot="footer">
+      </div>></template>
+      <template #footer><div>
         <input
           type="button"
           class="secondary-button"
           v-on:click="showResponse = false"
           value="Ok"
         />
-      </div>
+      </div></template>
     </modal>
   </div>
 </template>

@@ -46,17 +46,17 @@
       </div>
     </div>
     <modal v-if="showModal" @close="modalDismiss" class="my-modal">
-      <h5 slot="header">{{ modalHeader }}</h5>
-      <div slot="body">
+      <template #header><h5>{{ modalHeader }}</h5></template>
+      <template #body><div>
         {{ modalBody }}
-      </div>
+      </div>></template>
     </modal>
     <modal v-if="showSaveModal" @close="saveModalCancel" class="my-modal">
-      <h5 slot="header">Save and close?</h5>
-      <div slot="body">
+      <template #header><h5>Save and close?</h5></template>
+      <template #body><div>
         Are you sure you want to save the transcript and exit this page?
-      </div>
-      <div slot="footer">
+      </div>></template>
+      <template #footer><div>
         <input
           type="button"
           class="secondary-button"
@@ -69,14 +69,14 @@
           v-on:click="saveModal"
           value="Yes"
         />
-      </div>
+      </div></template>
     </modal>
     <modal v-if="showResetModal" @close="resetModalCancel" class="my-modal">
-      <h5 slot="header">Reset the transcript?</h5>
-      <div slot="body">
+      <template #header><h5>Reset the transcript?</h5></template>
+      <template #body><div>
         Are you sure you want to reset the transcript to the original text?
-      </div>
-      <div slot="footer">
+      </div>></template>
+      <template #footer><div>
         <input
           type="button"
           class="secondary-button"
@@ -89,18 +89,18 @@
           v-on:click="resetModalYes"
           value="Yes"
         />
-      </div>
+      </div></template>
     </modal>
     <modal
       v-if="showCompleteModal"
       @close="completeModalCancel"
       class="my-modal"
     >
-      <h5 slot="header">Complete?</h5>
-      <div slot="body">
+      <template #header><h5>Complete?</h5></template>
+      <template #body><div>
         Are you sure you want to complete the transcript and exit the page?
-      </div>
-      <div slot="footer">
+      </div>></template>
+      <template #footer><div>
         <input
           type="button"
           class="secondary-button"
@@ -113,7 +113,7 @@
           v-on:click="completeModalYes"
           value="Yes"
         />
-      </div>
+      </div></template>
     </modal>
     <token-validator
       v-if="showTokenValidator"

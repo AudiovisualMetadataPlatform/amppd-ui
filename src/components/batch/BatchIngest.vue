@@ -102,53 +102,54 @@
         </div>
       </div>
       <modal class="my-modal" v-if="showModal" @close="reset()">
-        <h3
-          slot="header"
-          v-if="validationResponse && !validationResponse.success"
-        >
-          Batch Ingest Errors
-        </h3>
-        <h3 slot="header" v-else>Batch Submitted Successfully!</h3>
-        <div slot="body">
-          <div
-            v-if="
-              validationResponse &&
-                !validationResponse.success &&
-                validationResponse.validationErrors.length > 0
-            "
-            class="batch-errors"
-          >
-            <p>There is an error validating your batch.</p>
-            <ul>
-              <li
-                class="error-li"
-                v-for="(error, index) in validationResponse.validationErrors"
-                v-bind:key="index"
-              >
-                {{ error }}
-              </li>
-            </ul>
+        <template #header>
+          <h3 v-if="validationResponse && !validationResponse.success">
+            Batch Ingest Errors
+          </h3>
+          <h3 v-else>Batch Submitted Successfully!</h3>
+        </template>
+        <template #body>
+          <div>
+            <div
+              v-if="
+                validationResponse &&
+                  !validationResponse.success &&
+                  validationResponse.validationErrors.length > 0
+              "
+              class="batch-errors"
+            >
+              <p>There is an error validating your batch.</p>
+              <ul>
+                <li
+                  class="error-li"
+                  v-for="(error, index) in validationResponse.validationErrors"
+                  v-bind:key="index"
+                >
+                  {{ error }}
+                </li>
+              </ul>
+            </div>
+            <div
+              v-else-if="validationResponse && !validationResponse.success"
+              class="batch-errors"
+            >
+              <p>There is an error processing your batch.</p>
+              <ul>
+                <li
+                  class="error-li"
+                  v-for="(error, index) in validationResponse.processingErrors"
+                  v-bind:key="index"
+                >
+                  {{ error }}
+                </li>
+              </ul>
+            </div>
+            <div v-else>
+              Your batch has been successfully submitted and all files are ready
+              to be submitted to a workflow.
+            </div>
           </div>
-          <div
-            v-else-if="validationResponse && !validationResponse.success"
-            class="batch-errors"
-          >
-            <p>There is an error processing your batch.</p>
-            <ul>
-              <li
-                class="error-li"
-                v-for="(error, index) in validationResponse.processingErrors"
-                v-bind:key="index"
-              >
-                {{ error }}
-              </li>
-            </ul>
-          </div>
-          <div v-else>
-            Your batch has been successfully submitted and all files are ready
-            to be submitted to a workflow.
-          </div>
-        </div>
+        </template>
       </modal>
     </div>
   </div>
