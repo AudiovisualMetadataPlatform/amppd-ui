@@ -242,7 +242,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="css">
 .bold {
   font-weight: bold;
 }
@@ -704,9 +704,6 @@ nav ul {
 nav ul li {
   padding: 1rem;
 }
-
-// .workflows .workflows, .collections .collections {
-//   background: #22617d; }
 
 .icon-play,
 .icon-play-audio,
