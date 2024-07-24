@@ -62,6 +62,3 @@ export default {
 <style lang="css">
   @import './styles/style.css';
 </style>
-<style lang="scss">
-  @import './styles/style.scss';
-</style>
