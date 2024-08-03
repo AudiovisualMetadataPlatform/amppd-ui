@@ -26,7 +26,7 @@
     "vue-click-outside": "^1.1.0",
     "vue-mediaelement": "^1.0.0",
     "vue-router": "^4.4.0",
-    "vuejs-datepicker": "^1.6.2",
+    "vuejs3-datepicker": "^1.1.2",
     "vuera": "^0.2.7",
     "vuex": "^4.1.0",
     "vuex-pathify": "^1.5.1",
