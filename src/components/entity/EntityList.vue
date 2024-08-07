@@ -172,7 +172,7 @@
                   <div class="row">
                     <div
                       class="text-left form-group"
-                      :class="baseUrl === 'collection' ? 'col-6' : 'col-12'"
+                      :class="baseUrl === 'unit' ? 'col-6' : 'col-12'"
                     >
                       <label>
                         <span class="text-capitalize">{{ baseUrl }}</span> Name:
@@ -211,7 +211,7 @@
                     </div>
                     <div
                       class="col-6 text-left form-group"
-                      v-if="baseUrl === 'collection'"
+                      v-if="baseUrl === 'unit'"
                     >
                       <label>Task Manager:</label>
                       <select
@@ -219,8 +219,8 @@
                         v-model="entity.taskManager"
                         :disabled="
                           showEdit ||
-                            (baseUrl === 'collection' &&
-                              !accessControl._collection._update)
+                            (baseUrl === 'unit' &&
+                              !accessControl._unit._update)
                         "
                         :class="{
                           'error-border': submitted && !entity.taskManager,
@@ -968,7 +968,7 @@ export default {
     selectedCollection: sync("selectedCollection"),
     selectedItem: sync("selectedItem"),
     selectedFile: sync("selectedFile"),
-    itemConfigs: sync("itemConfigs"),
+    entityConfigs: sync("entityConfigs"),
     configProperties: sync("configProperties"),
     baseUrl() {
       const self = this;
@@ -980,7 +980,7 @@ export default {
         window.location.hash.toLowerCase().indexOf("collection") > -1 &&
         window.location.hash.toLowerCase().indexOf("item") === -1
       ) {
-        this.getItemsConfig();
+        this.getEntityConfigs();
         return "collection";
       } else if (window.location.hash.toLowerCase().indexOf("item") > -1) {
         return "item";
@@ -999,10 +999,10 @@ export default {
       );
     },
     listOfTaskManager() {
-      return this.itemConfigs.taskManagers;
+      return this.entityConfigs.taskManagers;
     },
     listOfExternalResources() {
-      return this.itemConfigs.externalSources;
+      return this.entityConfigs.externalSources;
     },
     mediaInfo() {
       return this.selectedFile && this.selectedFile.mediaInfo
@@ -1453,9 +1453,9 @@ export default {
     onInputChange(ev) {
       this.isDataChanged = true;
     },
-    async getItemsConfig() {
+    async getEntityConfigs() {
       const self = this;
-      self.entityService.getItemsConfig(self);
+      self.entityService.getEntityConfigs(self);
     },
     handleSearchItem() {
       this.$router.push("/collections/items/item-search");

@@ -21,6 +21,11 @@ export default class EntityService {
 
     async onUpdateEntityDetails(self) {
         if (self.baseUrl === 'unit') {
+            // unit Validation rules
+            if (!self.entity.name || !self.entity.taskManager) {
+                self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
+                return false;
+            }
             self.unitService.updateUnitDetails(self.selectedUnit.id, self.entity).then(response => {
                 self.isDataChanged = false;
                 self.$bvToast.toast("Unit details updated successfully.", self.sharedService.successToastConfig);
@@ -29,11 +34,9 @@ export default class EntityService {
             self.submitted = true;
 
             // Collection Validation rules
-            if (!self.entity.name || !self.entity.taskManager) {
-
+            if (!self.entity.name) {
                 self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
                 return false;
-
             }
             if (!self.isCreatePage) {
                 self.collectionService.updateCollection(self.entity).then(response => {
@@ -72,7 +75,8 @@ export default class EntityService {
             }
         } else if (self.baseUrl === 'file') {
             self.submitted = true;
-            // Collection Validation rules
+            
+            // file Validation rules
             if (!self.entity.name) {
                 self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
                 return false;
@@ -98,7 +102,7 @@ export default class EntityService {
         } else if (self.baseUrl === 'item') {
             self.submitted = true;
 
-            // Collection Validation rules
+            // item Validation rules
             if (!self.entity.name) {
                 self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
                 return false;
@@ -117,7 +121,6 @@ export default class EntityService {
                     self.selectedItem.selectedItemId = response.id;
                     self.isDataChanged = false;
                     self.$router.push("/collections/items/details");
-                    // self.$router.push("/collection/details");
                 }).catch(error => {
                     self.showLoader = false;
                     self.submitted = false;
@@ -133,7 +136,6 @@ export default class EntityService {
                 self.itemService.updateItem(self.entity).then(success => {
                     self.showLoader = false;
                     self.$bvToast.toast("Item details updated successfully", { title: 'Notification', appendToast: true, variant: "success", autoHideDelay: 5000 });
-                    // self.showEdit = !self.showEdit;
                     self.submitted = false;
                     self.isDataChanged = false;
                 }).catch(error => {
@@ -151,11 +153,11 @@ export default class EntityService {
         }
     }
 
-    async getItemsConfig(self) {
-        if(!self.itemConfigs.externalSources.length || !self.itemConfigs.taskManagers.length) {
-            await self.itemService.getItemsConfig().then(res => {
-                self.itemConfigs.externalSources = res.externalSources;
-                self.itemConfigs.taskManagers = res.taskManagers;
+    async getEntityConfigs(self) {
+        if(!self.entityConfigs.externalSources.length || !self.entityConfigs.taskManagers.length) {
+            await self.itemService.getEntityConfigs().then(res => {
+                self.entityConfigs.externalSources = res.externalSources;
+                self.entityConfigs.taskManagers = res.taskManagers;
             }).catch(err => {
                 self.$bvToast.toast("Unable to retrive config details. Please try again!", self.sharedService.erorrToastConfig);
             })
