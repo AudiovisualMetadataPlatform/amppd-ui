@@ -111,7 +111,7 @@ const state = {
   isAuthenticated: false,
   selectedFile: {},
   selectedFilters: {},
-  itemConfigs: {
+  entityConfigs: {
     externalSources: [],
     taskManagers: [],
   },

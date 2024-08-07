@@ -149,11 +149,11 @@ export default class EntityService {
         }
     }
 
-    async getItemsConfig(self) {
-        if(!self.itemConfigs.externalSources.length || !self.itemConfigs.taskManagers.length) {
-            await self.itemService.getItemsConfig().then(res => {
-                self.itemConfigs.externalSources = res.externalSources;
-                self.itemConfigs.taskManagers = res.taskManagers;
+    async getEntityConfigs(self) {
+        if(!self.entityConfigs.externalSources.length || !self.entityConfigs.taskManagers.length) {
+            await self.itemService.getEntityConfigs().then(res => {
+                self.entityConfigs.externalSources = res.externalSources;
+                self.entityConfigs.taskManagers = res.taskManagers;
             }).catch(err => {
                 self.$bvToast.toast("Unable to retrive config details. Please try again!", self.sharedService.erorrToastConfig);
             })

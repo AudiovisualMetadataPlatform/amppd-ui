@@ -69,7 +69,7 @@ export default class ItemService extends BaseService{
      * @params obj, id
      */
 
-      async getItemsConfig(){
+      async getEntityConfigs(){
         var data = "";
         await super.get_auth(`/config?properties=externalSources,taskManagers`).then(result => data = result.data);
         return data;
