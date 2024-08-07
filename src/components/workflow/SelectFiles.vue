@@ -27,47 +27,6 @@
           "
         >
           <div class="row">
-            <!-- <div class="col-xl-6 col-md-12">
-              <div id="limiter">
-                <strong>Limit results to </strong>
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="inlineCheckbox1"
-                    value="option1"
-                    v-model="searchAudio"
-                  />
-                  <label class="form-check-label" for="inlineCheckbox1"
-                    >Audio</label
-                  >
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="inlineCheckbox2"
-                    value="option2"
-                    v-model="searchVideo"
-                  />
-                  <label class="form-check-label" for="inlineCheckbox2"
-                    >Video</label
-                  >
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="inlineCheckbox3"
-                    value="option3"
-                    v-model="searchOther"
-                  />
-                  <label class="form-check-label" for="inlineCheckbox3"
-                    >Other</label
-                  >
-                </div>
-              </div>
-            </div> -->
             <div class="mb-3" style="margin-left: -0.25rem; margin-top: -15px">
               <button
                 v-if="
