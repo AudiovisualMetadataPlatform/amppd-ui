@@ -172,7 +172,7 @@
                   <div class="row">
                     <div
                       class="text-left form-group"
-                      :class="baseUrl === 'collection' ? 'col-6' : 'col-12'"
+                      :class="baseUrl === 'unit' ? 'col-6' : 'col-12'"
                     >
                       <label>
                         <span class="text-capitalize">{{ baseUrl }}</span> Name:
@@ -211,7 +211,7 @@
                     </div>
                     <div
                       class="col-6 text-left form-group"
-                      v-if="baseUrl === 'collection'"
+                      v-if="baseUrl === 'unit'"
                     >
                       <label>Task Manager:</label>
                       <select
@@ -219,8 +219,8 @@
                         v-model="entity.taskManager"
                         :disabled="
                           showEdit ||
-                            (baseUrl === 'collection' &&
-                              !accessControl._collection._update)
+                            (baseUrl === 'unit' &&
+                              !accessControl._unit._update)
                         "
                         :class="{
                           'error-border': submitted && !entity.taskManager,

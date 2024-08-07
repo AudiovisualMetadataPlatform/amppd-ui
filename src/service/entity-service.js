@@ -25,16 +25,14 @@ export default class EntityService {
                 self.isDataChanged = false;
                 self.$bvToast.toast("Unit details updated successfully.", self.sharedService.successToastConfig);
             });
+            if (!self.entity.name || !self.entity.taskManager) {
+                self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
+                return false;
+            }
         } else if (self.baseUrl === 'collection') {
             self.submitted = true;
 
             // Collection Validation rules
-            if (!self.entity.name || !self.entity.taskManager) {
-
-                self.$bvToast.toast("Please provide required fields!", self.sharedService.erorrToastConfig);
-                return false;
-
-            }
             if (!self.isCreatePage) {
                 self.collectionService.updateCollection(self.entity).then(response => {
                     self.$bvToast.toast("Collection details updated successfully", self.sharedService.successToastConfig);
