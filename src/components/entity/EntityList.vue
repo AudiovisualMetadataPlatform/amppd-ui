@@ -211,7 +211,7 @@
                     </div>
                     <div
                       class="col-6 text-left form-group"
-                      v-if="baseUrl === 'unit'"
+                      v-if="baseUrl === 'unit' && unitEntity.currentUnit"
                     >
                       <label>Task Manager:</label>
                       <select
@@ -836,10 +836,6 @@
                       "
                       v-if="purpose"
                     >
-                      <div class="col-3" v-if="baseUrl == 'unit'">
-                        <label>Task Manager</label>
-                        <p class="mb-0">{{ elem.taskManager }}</p>
-                      </div>
                       <div class="col-2" v-if="baseUrl == 'collection'">
                         <label>Source Name</label>
                         <p class="mb-0">{{ elem.externalSource }}</p>
@@ -1509,7 +1505,7 @@ export default {
   async mounted() {
     const self = this;
     
-    console.log ("EntityList.mounted(): showLoader = " + this.showLoader);
+    console.log ("EntityList.mounted start: showLoader = " + this.showLoader);
 
     // retrieve configProperties if not yet populated
     if (!self.configProperties || Object.keys(self.configProperties).length === 0) {
@@ -1547,6 +1543,7 @@ export default {
     }
 
     this.showLoader = false;
+    console.log ("EntityList.mounted end: showLoader = " + this.showLoader);
   },
 };
 </script>
