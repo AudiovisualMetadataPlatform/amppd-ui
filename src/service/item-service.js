@@ -64,14 +64,4 @@ export default class ItemService extends BaseService{
         return await super.get_auth(`/items/search?keyword=${keyword}`).then(result => result.data)
     }
 
-     /***
-     * To get a list of external resources and task managers
-     * @params obj, id
-     */
-
-      async getEntityConfigs(){
-        var data = "";
-        await super.get_auth(`/config?properties=externalSources,taskManagers`).then(result => data = result.data);
-        return data;
-    }
 }
