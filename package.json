@@ -24,7 +24,7 @@
     "underscore": "^1.13.7",
     "vue": "^3.4.34",
     "vue-click-outside": "^1.1.0",
-    "vue-mediaelement": "^1.0.0",
+    "vue3-mediaelement": "^0.0.8",
     "vue-router": "^4.4.0",
     "vuejs3-datepicker": "^1.0.19",
     "vuera": "^0.2.7",

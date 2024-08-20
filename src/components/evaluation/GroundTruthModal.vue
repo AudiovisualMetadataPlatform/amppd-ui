@@ -2,7 +2,8 @@
   <div>
     <loader :show="loading" />
     <b-modal
-      v-model="showModal"
+      :modelValue="showModal"
+      @update:modelValue="showModal = $event" 
       id="modal-center"
       centered
       no-close-on-backdrop
