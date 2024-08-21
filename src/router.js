@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import { createRouter } from 'vue-router'
 
 import Login from "./components/account/Login.vue";
 import Deliverables from "./components/deliverables/Deliverables.vue";
@@ -27,7 +28,7 @@ import store from "./store/amp-store.js";
 
 Vue.use(Router);
 
-var router = new Router({
+var router = createRouter({
   routes: [
     {
       path: "/",
