@@ -1,11 +1,7 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import pathify from "vuex-pathify";
-import { make } from "vuex-pathify";
+import { createStore } from "vuex";
+import Pathify, { make } from 'vuex-pathify';
 import defaultState from "./state";
 import createPersistedState from "vuex-persistedstate";
-
-Vue.use(Vuex);
 
 /*======================================================
 = Helpers
@@ -34,12 +30,11 @@ const getters = {};
 = Vue Store instance
 =======================================================*/
 
-const store = new Vuex.Store({
-  state,
-  mutations,
-  actions,
-  getters,
-  plugins: [pathify.plugin, createPersistedState()],
-});
+export const store = createStore({
+    state,
+    mutations,
+    actions,
+    getters,
+    plugins: [Pathify.plugin, createPersistedState()]
+  });
 
-export default store;

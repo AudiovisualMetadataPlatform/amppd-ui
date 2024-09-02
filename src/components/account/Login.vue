@@ -146,37 +146,38 @@ export default {
     async checkForm() {
       event.preventDefault();
       let self = this;
-      this.errors.other_errors = [];
-      if (!this.email) {
-        this.errors.email_error = "(Email required)";
+      self.errors.other_errors = [];
+      if (!self.email) {
+        self.errors.email_error = "(Email required)";
       }
-      if (!this.pswd) {
-        this.errors.pswd_error = "(Password required)";
+      if (!self.pswd) {
+        self.errors.pswd_error = "(Password required)";
       }
-      if (this.errors.email_error == "" && this.errors.pswd_error == "") {
-        var currentUser = await accountService.login(this.email, this.pswd);
-        console.log("current user:" + currentUser);
-        console.log("AUTH:");
+      if (self.errors.email_error == "" && self.errors.pswd_error == "") {
+        var currentUser = await accountService.login(self.email, self.pswd);
+        console.log("current user: " + currentUser);
         if (currentUser && currentUser.token) {
           self.isAuthenticated = true;
-          await self.accessControlService.initPermissions(this);
+          console.log("self.accessControl = ", self.accessControl)
+          console.log("store.accessControl: ", self.$store.state.accessControl);
+          await self.accessControlService.initPermissions(self);
           // Force setting localStorage vuex object for state in vuex-persistedstate
           let vuex = JSON.parse(localStorage.getItem("vuex"));
           localStorage.setItem("vuex", JSON.stringify({
             ...vuex,
-            acUnitsActions: this.acUnitsActions,
-            acUnitsMedia: this.acUnitsMedia,
-            acUnitsOutput: this.acUnitsOutput,
-            acActions: this.acActions,
+            acUnitsActions: self.acUnitsActions,
+            acUnitsMedia: self.acUnitsMedia,
+            acUnitsOutput: self.acUnitsOutput,
+            acActions: self.acActions,
           }));
-          if (this.$route.query.returnUrl) {
-            console.log("going to " + this.$route.query.returnUrl);
-            this.$router.push(this.$route.query.returnUrl);
+          if (self.$route.query.returnUrl) {
+            console.log("going to " + self.$route.query.returnUrl);
+            self.$router.push(self.$route.query.returnUrl);
           } else {
-            this.$router.push("/");
+            self.$router.push("/");
           }
         } else {
-          this.errors.other_errors.push("Email and password do not match");
+          self.errors.other_errors.push("Email and password do not match");
         }
       }
     },

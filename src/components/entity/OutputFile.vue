@@ -34,7 +34,7 @@
             <!-- -->
             <tr v-for="output in listOfOutputList" :key="output.id">
               <td>
-                <p>{{ new Date(output.dateCreated) | LOCAL_DATE_VALUE }}</p>
+                <p>{{ $filters.localDate(new Date(output.dateCreated)) }}</p>
               </td>
               <td>
                 {{ output.submitter }}

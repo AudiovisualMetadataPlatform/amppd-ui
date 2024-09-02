@@ -84,7 +84,7 @@
                         </div>
                         <div class="col">
                           Modified Date: <br />{{
-                            elem.modifiedDate | LOCAL_DATE_VALUE
+                            $filters.localDate(elem.modifiedDate)
                           }}
                         </div>
                         <div class="col">

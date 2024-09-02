@@ -298,7 +298,7 @@ export default class AccessControlService extends BaseService {
     const self = instance;
     await this.isAdmin(self);
     if(!self.acIsAdmin) {
-      await this.getPermittedActions()
+      this.getPermittedActions()
         .then((res) => {
           let allUnitActions = res.data;
           if (allUnitActions != undefined) {

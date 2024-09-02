@@ -66,11 +66,11 @@
             <!-- <div class="col"> Creator: </div> -->
             <div class="col">
               Date Created:
-              <br />{{ workflow.createTime | LOCAL_DATE_VALUE }}
+              <br />{{ $filters.localDate(workflow.createTime) }}
             </div>
             <div class="col">
               Last Updated:
-              <br />{{ workflow.updateTime | LOCAL_DATE_VALUE }}
+              <br />{{ $filters.localDate(workflow.updateTime) }}
             </div>
             <!-- <div class="col"> Version: </div> -->
             <div class="col" v-if="workflow.tags && workflow.tags.length">

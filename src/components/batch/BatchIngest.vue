@@ -71,13 +71,13 @@
                   <div class="form-row">
                     <div class="col-lg-6">
                       <input
+                        v-bind="filename"
                         type="file"
                         class="form-control-file btn btn-light btn-lg"
                         id="exampleFormControlFile1"
                         ref="inputFile"
                         value="Upload batch manifest"
                         :disabled="inProgress || unitName.length === 0"
-                        v-bind="filename"
                         accept=".csv"
                         @change="
                           filesChange($event.target.name, $event.target.files);

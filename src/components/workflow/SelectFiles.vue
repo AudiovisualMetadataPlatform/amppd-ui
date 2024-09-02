@@ -375,7 +375,7 @@
                         >
                           <td>{{ res.outputLabel }}</td>
                           <td>
-                            {{ new Date(res.dateCreated) | LOCAL_DATE_VALUE }}
+                            {{ $filters.localDate(new Date(res.dateCreated)) }}
                           </td>
                           <td>{{ res.submitter }}</td>
                           <td>{{ res.workflowName }}</td>

@@ -84,10 +84,10 @@
             }"
           >
             <td v-if="checkAvailability('testDate')">
-              {{ new Date(rec.testDate) | LOCAL_DATE_VALUE }}
+              {{ $filters.localDate(new Date(rec.testDate)) }}
             </td>
             <td v-if="checkAvailability('dateCreated')">
-              {{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}
+              {{ $filters.localDate(new Date(rec.dateCreated)) }}
             </td>
             <td v-if="checkAvailability('submitter')">{{ rec.submitter }}</td>
             <td v-if="checkAvailability('unit')">{{ rec.unitName }}</td>

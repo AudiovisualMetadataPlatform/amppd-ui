@@ -239,7 +239,7 @@
               type="text"
               class="form-control"
               id="create_date"
-              :value="supplement.fileDetails.createdDate | LOCAL_DATE_VALUE"
+              :value="$filters.localDate(supplement.fileDetails.createdDate)"
               disabled
             />
           </div>
@@ -259,7 +259,7 @@
               type="text"
               class="form-control"
               id="modified_date"
-              :value="supplement.fileDetails.modifiedDate | LOCAL_DATE_VALUE"
+              :value="$filters.localDate(supplement.fileDetails.modifiedDate)"
               disabled
             />
           </div>

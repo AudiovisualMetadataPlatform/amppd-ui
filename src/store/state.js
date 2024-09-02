@@ -218,7 +218,7 @@ const state = {
   acUnitsActions: [], // 2-D array of all units with all permitted actions per unit for current user
   acUnitsMedia: [],		// IDs of units in which current user can view primaryfile media
   acUnitsOutput: [],	// IDs of units in which current user can view workflow output
-  acActions: [],		  // actionKeys of actions current user can perform in some unit
+  acActions: []		  // actionKeys of actions current user can perform in some unit
 };
 
 export default state;
