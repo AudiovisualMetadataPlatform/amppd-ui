@@ -316,7 +316,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "@/helpers/env";
 import WorkflowResultService from "../../service/workflow-result-service";
 import SortableHeader from "../shared/SortableHeader";

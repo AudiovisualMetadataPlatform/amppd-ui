@@ -42,7 +42,7 @@
 
 <script>
 //import AmpHeader from '@/components/shared/AmpHeader.vue'
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 
 export default {
   name: "Jobs",

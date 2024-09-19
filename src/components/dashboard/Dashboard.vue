@@ -732,7 +732,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import DashboardTable from "@/components/dashboard/DashboardTable.vue";
 import DateFilter from "@/components/dashboard/DashboardFilters/DateFilter";

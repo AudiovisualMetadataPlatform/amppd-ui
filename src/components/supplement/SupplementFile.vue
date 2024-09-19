@@ -277,7 +277,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "@/helpers/env";
 import UnitService from "@/service/unit-service";
 import ItemService from "@/service/item-service";

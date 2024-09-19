@@ -297,6 +297,7 @@ export default class AccessControlService extends BaseService {
   async initPermissions(instance) {
     const self = instance;
     await this.isAdmin(self);
+    console.log("acIsAdmin = " + self.acIsAdmin);
     if(!self.acIsAdmin) {
       this.getPermittedActions()
         .then((res) => {

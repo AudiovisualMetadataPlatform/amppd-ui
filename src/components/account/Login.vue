@@ -78,7 +78,7 @@
 <script>
 import AmpHeader from "@/components/shared/AmpHeader.vue";
 import { accountService } from "@/service/account-service";
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import AccessControlService from "@/service/access-control-service";
 import SharedService from "@/service/shared-service";
 import Loader from "@/components/shared/Loader.vue";

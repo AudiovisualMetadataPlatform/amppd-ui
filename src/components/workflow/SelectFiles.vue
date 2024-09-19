@@ -417,7 +417,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "@/helpers/env";
 import SharedService from "@/service/shared-service";
 import WorkflowService from "../../service/workflow-service";

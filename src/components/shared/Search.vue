@@ -652,7 +652,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import SharedService from "@/service/shared-service";
 import Typeahead from "../shared/TypeAhead.vue";
 import ItemService from "@/service/item-service";

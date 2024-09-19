@@ -79,7 +79,7 @@
   </div>
 </template>
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Loader from "@/components/shared/Loader.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
 import config from "../../assets/constants/common-contant.js";

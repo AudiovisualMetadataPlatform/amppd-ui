@@ -62,7 +62,7 @@
   </div>
 </template>
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Datepicker from "vuejs3-datepicker";
 import ClickOutside from "vue-click-outside";
 export default {

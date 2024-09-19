@@ -179,7 +179,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 import config from "@/assets/constants/common-contant.js";

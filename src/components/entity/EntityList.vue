@@ -890,7 +890,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import config from "../../assets/constants/common-contant.js";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import Logout from "@/components/shared/Logout.vue";
