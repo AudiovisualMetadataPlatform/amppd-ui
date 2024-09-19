@@ -325,7 +325,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "@/helpers/env.js";
 import { requestOptions } from "@/helpers/request-options";
 import Modal from "@/components/shared/Modal.vue";

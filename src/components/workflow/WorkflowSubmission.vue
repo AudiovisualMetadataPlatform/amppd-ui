@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import SelectFiles from "@/components/workflow/SelectFiles.vue";
 import SelectWorkflow from "@/components/workflow/SelectWorkflow.vue";

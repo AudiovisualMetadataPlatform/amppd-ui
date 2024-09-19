@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "../../helpers/env";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import Logout from "@/components/shared/Logout.vue";

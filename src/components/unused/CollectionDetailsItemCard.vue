@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import CollectionDetailsService from "../../service/collection-detail-service";
 
 export default {

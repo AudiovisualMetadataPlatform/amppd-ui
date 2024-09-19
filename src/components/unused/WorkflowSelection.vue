@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { requestOptions } from "@/helpers/request-options";
 import WorkflowService from "../../service/workflow-service";
 export default {

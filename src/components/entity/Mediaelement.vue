@@ -10,8 +10,6 @@
 </template>
 
 <script>
-// import "mediaelement";
-// import "vue-mediaelement/src";
 export default {
   name: "Mediaelement",
   props: {

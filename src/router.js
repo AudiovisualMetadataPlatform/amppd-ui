@@ -1,5 +1,4 @@
-import Vue from "vue";
-import Router from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router'
 
 import Login from "./components/account/Login.vue";
 import Deliverables from "./components/deliverables/Deliverables.vue";
@@ -23,11 +22,11 @@ import TestResultsVisualiz from "./components/evaluation/TestResultsVisualiz.vue
 import SupplementList from "./components/supplement/SupplementList.vue";
 import AccessDenied from "./components/shared/AccessDenied.vue";
 import HomePage from "@/components/home";
-import store from "./store/amp-store.js";
+import { store } from "./store/amp-store.js";
 
-Vue.use(Router);
 
-var router = new Router({
+var router = createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: "/",

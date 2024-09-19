@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import _ from "underscore";
 import { BFormCheckboxGroup } from "bootstrap-vue";
 import ClickOutside from "vue-click-outside";

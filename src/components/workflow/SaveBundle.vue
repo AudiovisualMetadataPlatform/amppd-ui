@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Modal from "@/components/shared/Modal.vue";
 import WorkflowService from "../../service/workflow-service";
 

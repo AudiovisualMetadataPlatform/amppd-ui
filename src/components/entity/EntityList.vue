@@ -141,7 +141,7 @@
                       <input
                         type="text"
                         class="form-control w-100"
-                        :value="entity.createdDate | LOCAL_DATE_VALUE"
+                        :value="$filters.localDate(entity.createdDate)"
                         :disabled="true"
                       />
                     </div>
@@ -161,7 +161,7 @@
                       <input
                         type="text"
                         class="form-control w-100"
-                        :value="entity.modifiedDate | LOCAL_DATE_VALUE"
+                        :value="$filters.localDate(entity.modifiedDate )"
                         :disabled="true"
                       />
                     </div>
@@ -325,7 +325,7 @@
                       <input
                         type="text"
                         class="form-control w-100"
-                        :value="entity.createdDate | LOCAL_DATE_VALUE"
+                        :value="$filters.localDate(entity.createdDate)"
                         :disabled="true"
                       />
                     </div>
@@ -346,7 +346,7 @@
                       <input
                         type="text"
                         class="form-control w-100"
-                        :value="entity.modifiedDate | LOCAL_DATE_VALUE"
+                        :value="$filters.localDate(entity.modifiedDate )"
                         :disabled="true"
                       />
                     </div>
@@ -371,7 +371,7 @@
                         <input
                           type="text"
                           class="form-control w-100"
-                          :value="entity.createdDate | LOCAL_DATE_VALUE"
+                          :value="$filters.localDate(entity.createdDate)"
                           :disabled="true"
                         />
                       </div>
@@ -390,7 +390,7 @@
                         <input
                           type="text"
                           class="form-control w-100"
-                          :value="entity.modifiedDate | LOCAL_DATE_VALUE"
+                          :value="$filters.localDate(entity.modifiedDate )"
                           :disabled="true"
                         />
                       </div>
@@ -847,7 +847,7 @@
                       <div class="col-2">
                         <label>Date Created:</label>
                         <p class="mb-0">
-                          {{ elem.createdDate | LOCAL_DATE_VALUE }}
+                          {{ $filters.localDate(elem.createdDate ) }}
                         </p>
                       </div>
                       <div class="col-2">
@@ -861,7 +861,7 @@
                       <div class="col-2">
                         <label>Modified Date</label>
                         <p class="mb-0">
-                          {{ elem.modifiedDate | LOCAL_DATE_VALUE }}
+                          {{ $filters.localDate(elem.modifiedDate ) }}
                         </p>
                       </div>
                     </div>
@@ -886,7 +886,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import config from "../../assets/constants/common-contant.js";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import Logout from "@/components/shared/Logout.vue";

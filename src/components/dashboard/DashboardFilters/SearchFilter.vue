@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import _ from "underscore";
 import Typeahead from "../../shared/TypeAhead.vue";
 

@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Typeahead from "../../shared/TypeAhead.vue";
 import ClickOutside from "vue-click-outside";
 

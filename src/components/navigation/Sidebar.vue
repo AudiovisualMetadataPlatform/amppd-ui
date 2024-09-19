@@ -82,7 +82,7 @@
 import config from "../../assets/constants/common-contant.js";
 import Logout from "@/components/shared/Logout.vue";
 import BreadCrumbs from "@/components/shared/BreadCrumbs.vue";
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import SharedService from "../../service/shared-service.js";
 import EvaluationService from "@/service/evaluation-service";
 import { env } from "@/helpers/env";

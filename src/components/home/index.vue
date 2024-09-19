@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "@/helpers/env";
 import config from "@/assets/constants/common-contant.js";
 import SharedService from "@/service/shared-service";

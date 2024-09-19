@@ -2,7 +2,8 @@
   <div>
     <loader :show="loading" />
     <b-modal
-      v-model="showModal"
+      :modelValue="showModal"
+      @update:modelValue="showModal = $event" 
       id="modal-center"
       centered
       no-close-on-backdrop
@@ -45,7 +46,7 @@
                     <td>
                       {{ supplement.description }}
                     </td>
-                    <td>{{ supplement.createdDate | LOCAL_DATE_VALUE }}</td>
+                    <td>{{ $filters.localDate(supplement.createdDate) }}</td>
                     <td class="text-center slim-col-12">
                       <input
                         type="radio"
@@ -178,7 +179,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 import config from "@/assets/constants/common-contant.js";

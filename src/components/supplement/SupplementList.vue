@@ -84,7 +84,7 @@
                         </div>
                         <div class="col">
                           Modified Date: <br />{{
-                            elem.modifiedDate | LOCAL_DATE_VALUE
+                            $filters.localDate(elem.modifiedDate)
                           }}
                         </div>
                         <div class="col">
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 import SupplementService from "@/service/supplement-service";

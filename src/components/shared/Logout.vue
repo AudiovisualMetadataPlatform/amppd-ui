@@ -35,7 +35,7 @@
 <script>
 import config from "../../assets/constants/common-contant.js"
 import { accountService } from "@/service/account-service";
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import defaultState from "../../store/state";
 import SharedService from "@/service/shared-service";
 export default {
