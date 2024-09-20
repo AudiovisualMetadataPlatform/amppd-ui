@@ -471,12 +471,12 @@ router.beforeEach(async (to, from, next) => {
     var success = await accountService.validate();
     if (!success) {
       // return next();
-      router.app.$store.state.isAuthenticated = false;
-      router.app.$store.commit("isAuthenticated");
+      store.state.isAuthenticated = false;
+      store.commit("isAuthenticated");
       console.log("router: Auth token invalid!")
       return next({ path: "/account/login", query: { returnUrl: to.path } });
     } else {
-      router.app.$store.state.isAuthenticated = true;
+      store.state.isAuthenticated = true;
       let action = authorize.actionType + "-" + authorize.targetType;
       // let acActions = router.app.$store.state.acActions;
       let acActions = store.state.acActions;
