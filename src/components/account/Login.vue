@@ -155,11 +155,9 @@ export default {
       }
       if (self.errors.email_error == "" && self.errors.pswd_error == "") {
         var currentUser = await accountService.login(self.email, self.pswd);
-        console.log("current user: " + currentUser);
+        console.log("Current user: ", currentUser);
         if (currentUser && currentUser.token) {
           self.isAuthenticated = true;
-          console.log("self.accessControl = ", self.accessControl)
-          console.log("store.accessControl: ", self.$store.state.accessControl);
           await self.accessControlService.initPermissions(self);
           // Force setting localStorage vuex object for state in vuex-persistedstate
           let vuex = JSON.parse(localStorage.getItem("vuex"));
