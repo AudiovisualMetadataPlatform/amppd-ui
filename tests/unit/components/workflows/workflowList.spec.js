@@ -1,5 +1,5 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import BootstrapVue from 'bootstrap-vue'
+import BootstrapVue from 'bootstrap-vue-next'
 import { wrap } from 'underscore';
 import WorkflowList from '../../../../src/components/workflow/WorkflowList.vue'
 jest.mock('../../../../src/service/base-service',

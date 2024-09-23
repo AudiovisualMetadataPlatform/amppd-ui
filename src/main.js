@@ -4,10 +4,10 @@ import router from "./router";
 import { store } from "./store/amp-store";
 import { VuePlugin } from "vuera";
 import VueFilterDateFormat from "@vuejs-community/vue-filter-date-format";
-import BootstrapVue from "bootstrap-vue";
+import BootstrapVue from "bootstrap-vue-next";
 import moment from "moment";
 import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
+import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
 
 const app = createApp(App)
 

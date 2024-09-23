@@ -1,5 +1,5 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import BootstrapVue from 'bootstrap-vue'
+import BootstrapVue from 'bootstrap-vue-next'
 import EntityList from '../../../../src/components/entity/EntityList.vue'
 import Vuex from 'vuex'
 

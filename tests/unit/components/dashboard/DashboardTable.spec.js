@@ -1,7 +1,7 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 
 import DashboardTable from '../../../../src/components/dashboard/DashboardTable.vue'
-import BootstrapVue from 'bootstrap-vue'
+import BootstrapVue from 'bootstrap-vue-next'
 import moment from 'moment'
 
 jest.mock('../../../../src/service/base-service', 

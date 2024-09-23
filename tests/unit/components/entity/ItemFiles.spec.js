@@ -1,5 +1,5 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
-import BootstrapVue from "bootstrap-vue";
+import BootstrapVue from "bootstrap-vue-next";
 import ItemFiles from "../../../../src/components/entity/ItemFiles.vue";
 
 jest.mock("../../../../src/service/base-service", function () {
