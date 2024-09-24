@@ -1,5 +1,5 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import BootstrapVue from 'bootstrap-vue-next'
+import {createBootstrap} from 'bootstrap-vue-next'
 import Dashboard from '../../../../src/components/dashboard/Dashboard.vue'
 jest.mock('../../../../src/service/base-service',
     function () {
@@ -28,7 +28,7 @@ describe('Dashboard.vue', () => {
     let wrapper;
     let refreshDataSpy;
     const localVue = createLocalVue();
-    localVue.use(BootstrapVue);
+    localVue.use(createBootstrap());
     const $store = {
         state: {
             workflowDashboard: {

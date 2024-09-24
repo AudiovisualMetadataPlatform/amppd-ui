@@ -3,7 +3,6 @@
   "version": "1.0.2",
   "private": true,
   "scripts": {
-    "postinstall": "cd node_modules/@bbc/react-transcript-editor && npm install && npm run build:component",
     "serve": "vue-cli-service serve --port 8500",
     "build": "vue-cli-service build",
     "test": "vue-cli-service test:unit",
@@ -12,9 +11,8 @@
     "stop": "pkill --signal SIGINT amppd-ui"
   },
   "dependencies": {
-    "@bbc/react-transcript-editor": "https://github.com/AudiovisualMetadataPlatform/react-transcript-editor.git",
     "@vue/cli": "^5.0.8",
-    "@vuejs-community/vue-filter-date-format": "^1.6.3",
+    "@vuejs-community/vue-filter-date-format": "^1.7.1",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "bootstrap-vue-next": "^0.24.21",

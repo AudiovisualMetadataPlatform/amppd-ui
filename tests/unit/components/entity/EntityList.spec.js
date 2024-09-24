@@ -1,5 +1,5 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import BootstrapVue from 'bootstrap-vue-next'
+import {createBootstrap} from 'bootstrap-vue-next'
 import EntityList from '../../../../src/components/entity/EntityList.vue'
 import Vuex from 'vuex'
 
@@ -82,7 +82,7 @@ describe('EntityList.vue', () => {
     let wrapper;
     let refreshDataSpy;
     const localVue = createLocalVue();
-    localVue.use(BootstrapVue);
+    localVue.use(createBootstrap());
     localVue.use(Vuex);
     const $store = {
         state: {

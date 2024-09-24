@@ -1,5 +1,5 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import BootstrapVue from 'bootstrap-vue-next'
+import {createBootstrap} from 'bootstrap-vue-next'
 import { wrap } from 'underscore';
 import WorkflowList from '../../../../src/components/workflow/WorkflowList.vue'
 jest.mock('../../../../src/service/base-service',
@@ -44,7 +44,7 @@ jest.mock('../../../../src/service/workflow-service',
 describe('WorkflowList.vue', () => {
     let wrapper;
     const localVue = createLocalVue();
-    localVue.use(BootstrapVue);
+    localVue.use(createBootstrap());
     const $store = {
         state: {
             listOfWorkflows: [],

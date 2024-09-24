@@ -1,5 +1,5 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
-import BootstrapVue from "bootstrap-vue-next";
+import {createBootstrap} from "bootstrap-vue-next";
 import ItemFiles from "../../../../src/components/entity/ItemFiles.vue";
 
 jest.mock("../../../../src/service/base-service", function () {
@@ -134,7 +134,7 @@ describe("ItemFiles.vue", () => {
     let wrapper;
     let refreshDataSpy;
     const localVue = createLocalVue();
-    localVue.use(BootstrapVue);
+    localVue.use(createBootstrap());
     const $store = {
         state: {
             primaryFiles: {
