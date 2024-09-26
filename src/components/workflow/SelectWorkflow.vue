@@ -281,13 +281,13 @@
         class="spl-fr-btn"
       ></b-button>
       <b-modal v-model="showFRModal" id="modal-center" centered>
-        <template #modal-header="{}">
+        <template #modal-header>
           <h5 class="text-capitalize">
             Choose the Facial Recognition input file for
             {{ supplementList[0].primaryFileName }}:
           </h5>
         </template>
-        <template #default="{}">
+        <template #default>
           <b-form-group v-slot="{ ariaDescribedby }">
             <b-form-radio
               v-for="(supplement, index) in supplementList"

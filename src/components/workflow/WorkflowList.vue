@@ -245,7 +245,6 @@ export default {
   methods: {
     canCreate() {
       let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
-      console.log("actionKey" + actionKey);
       return this.acIsAdmin || this.acActions.includes(actionKey);
     },
     canUpdate() {
@@ -317,8 +316,8 @@ export default {
         self.listOfWorkflows[workflowIndex]
       );
     },
-    async handleWorkflowSearch() {
-      this.$bvModal.show("modal-lg");
+    handleWorkflowSearch() {
+      this.$bvModal?.show("modal-lg");
     },
     async handleWorkflowCreation() {
       const self = this;

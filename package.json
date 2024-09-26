@@ -24,7 +24,6 @@
     "vue-router": "^4.4.0",
     "vue3-mediaelement": "^0.0.8",
     "vuejs3-datepicker": "^1.0.19",
-    "vuera": "^0.2.7",
     "vuex": "^4.1.0",
     "vuex-pathify": "^3.0.0-beta",
     "vuex-persistedstate": "^4.1.0"

@@ -7,7 +7,7 @@
       @show="processModalData()"
       :no-close-on-backdrop="type === 'item-search'"
     >
-      <template #modal-header="{}">
+      <template #modal-header>
         <!-- Emulate built in modal header close button action -->
 
         <h5 class="text-capitalize" v-if="!isEntityList">
@@ -24,7 +24,7 @@
         <h5 class="text-capitalize" v-if="isEntityList">Search</h5>
       </template>
 
-      <template #default="{}">
+      <template #default>
         <div v-if="type === 'item-search'" class="form-group">
           <div class="container-fluid">
             <div class="row">

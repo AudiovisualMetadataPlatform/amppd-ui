@@ -26,12 +26,12 @@
         </div>
       </div>
       <b-modal v-model="showModal" id="modal-center" centered>
-        <template #modal-header="{}">
+        <template #modal-header>
           <h5 class="text-capitalize">
             Confirm
           </h5>
         </template>
-        <template #default="{}">
+        <template #default>
           <div class="row pad-all-2">
             Any unsaved changes will be lost. Do you want to continue?
           </div>

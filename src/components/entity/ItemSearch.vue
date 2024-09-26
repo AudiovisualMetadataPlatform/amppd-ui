@@ -71,7 +71,7 @@ export default {
     
     // pop up child component (the Search pop-up ialog)
     onSearch() {
-      this.$bvModal.show("modal-lg");
+      this.$bvModal?.show("modal-lg");
     },
 
     // call item search API 

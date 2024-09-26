@@ -1445,7 +1445,7 @@ export default {
     },
     onSearch(type) {
       this.searchType = type;
-      this.$bvModal.show("modal-lg");
+      this.$bvModal?.show("modal-lg");
     },
     onSearchDone(records) {
       this.records = records && records.length ? records : this.masterRecords;
