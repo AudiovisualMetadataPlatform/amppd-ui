@@ -46,7 +46,7 @@
 <script>
 import sync from "@/helpers/sync";
 import _ from "underscore";
-import { BFormCheckboxGroup } from "bootstrap-vue";
+import { BFormCheckboxGroup } from "bootstrap-vue-next";
 import ClickOutside from "vue-click-outside";
 // import Multiselect from 'vue-multiselect';
 

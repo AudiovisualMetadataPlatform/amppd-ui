@@ -9,7 +9,7 @@
       no-close-on-backdrop
       size="xl"
     >
-      <template #modal-header="{}">
+      <template #modal-header>
         <h5 class="modal-title" id="exampleModalLongTitle">
           Upload/Select Ground Truth
         </h5>
@@ -22,7 +22,7 @@
           <span @click="onCancel()">×</span>
         </button>
       </template>
-      <template #default="{}">
+      <template #default>
         <div class="form-row body-m">
           <div class="col-12">
             <h3>Select a Ground Truth</h3>
