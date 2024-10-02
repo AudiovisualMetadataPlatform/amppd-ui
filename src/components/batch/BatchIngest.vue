@@ -76,7 +76,7 @@
                         class="form-control-file btn btn-light btn-lg"
                         id="exampleFormControlFile1"
                         ref="inputFile"
-                        value="Upload batch manifest"
+
                         :disabled="inProgress || unitName.length === 0"
                         accept=".csv"
                         @change="
