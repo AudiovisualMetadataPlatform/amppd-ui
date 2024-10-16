@@ -104,12 +104,9 @@
         >
           <div class="d-flex w-100 mt-3">
             <div class="input-group image-preview col-11 p-0 mr-1">
-              <!-- <label for="exampleFormControlFile1" class="form-control-file btn btn-light btn-lg"><button>Browse</button></label> -->
               <input
                 type="file"
                 class="form-control-file btn btn-light btn-lg"
-                id="exampleFormControlFile1"
-                value="Upload"
                 ref="fileupload"
                 @change="getFile"
               />

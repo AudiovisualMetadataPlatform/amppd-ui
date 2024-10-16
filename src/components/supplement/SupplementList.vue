@@ -144,19 +144,15 @@ export default {
     acActions: sync("acActions"),
     baseUrl() {
       const self = this;
-      console.log("url:" + window.location);
       if (
         window.location.href.toLowerCase().indexOf("supplemental-files/") > -1
       ) {
-        console.log("supplement file");
         return "supplement";
       } else if (
         window.location.href.toLowerCase().indexOf("supplemental-files") > -1
       ) {
-        console.log("supplement list");
         return "list-supplement";
       }
-      console.log("invalid path");
       return "";
     },
   },
@@ -192,7 +188,6 @@ export default {
     async getSupplementData() {
       const self = this;
       self.showLoader = true;
-      console.log("getSupplementData ...");
       const supplementalFilesResponse = await self.getSupplementalFiles(self);
 
       if (supplementalFilesResponse) {
@@ -246,7 +241,6 @@ export default {
     async getData() {
       const self = this;
       if (self.baseUrl === "list-supplement") {
-        console.log("getSupplementData...");
         self.getSupplementData();
       }
     },
@@ -273,7 +267,6 @@ export default {
     },
   },
   mounted() {
-    console.log("SupplementList.mounted");
     this.getData();
   },
 };
