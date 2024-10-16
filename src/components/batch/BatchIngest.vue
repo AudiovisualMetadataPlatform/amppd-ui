@@ -74,9 +74,7 @@
                         v-bind="filename"
                         type="file"
                         class="form-control-file btn btn-light btn-lg"
-                        id="exampleFormControlFile1"
                         ref="inputFile"
-
                         :disabled="inProgress || unitName.length === 0"
                         accept=".csv"
                         @change="
