@@ -180,7 +180,7 @@ export default {
     selectedFile: sync("selectedFile"),
     accessControl: sync("accessControl"),
     isCreatePage() {
-      return window.location.hash.toLowerCase().indexOf("add-item") > -1;
+      return window.location.href.toLowerCase().indexOf("add-item") > -1;
     },
   },
   methods: {
