@@ -251,7 +251,7 @@ export default {
       } catch (error) {
         self.loading = false;
         self.$bvToast.toast(
-          "Something went wrong.Please try again!",
+          "Something went wrong. Please try again!",
           self.sharedService.erorrToastConfig
         );
       }
