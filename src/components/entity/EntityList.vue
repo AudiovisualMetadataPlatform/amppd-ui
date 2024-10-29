@@ -972,30 +972,30 @@ export default {
     configProperties: sync("configProperties"),
     baseUrl() {
       const self = this;
-      if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
+      if (window.location.href.toLowerCase().indexOf("unit") > -1) {
         return "unit";
-      } else if (window.location.hash.toLowerCase().indexOf("file") > -1) {
+      } else if (window.location.href.toLowerCase().indexOf("file") > -1) {
         return "file";
       } else if (
-        window.location.hash.toLowerCase().indexOf("collection") > -1 &&
-        window.location.hash.toLowerCase().indexOf("item") === -1
+        window.location.href.toLowerCase().indexOf("collection") > -1 &&
+        window.location.href.toLowerCase().indexOf("item") === -1
       ) {
         this.getItemsConfig();
         return "collection";
-      } else if (window.location.hash.toLowerCase().indexOf("item") > -1) {
+      } else if (window.location.href.toLowerCase().indexOf("item") > -1) {
         return "item";
       }
       return "";
     },
     purpose() {
-      return window.location.hash.toLowerCase().indexOf("details") > -1
+      return window.location.href.toLowerCase().indexOf("details") > -1
         ? "details"
         : "";
     },
     isCreatePage() {
       return (
-        window.location.hash.toLowerCase().indexOf("create") > -1 ||
-        window.location.hash.toLowerCase().indexOf("add-item") > -1
+        window.location.href.toLowerCase().indexOf("create") > -1 ||
+        window.location.href.toLowerCase().indexOf("add-item") > -1
       );
     },
     listOfTaskManager() {

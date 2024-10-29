@@ -288,17 +288,14 @@
           </h5>
         </template>
         <template #default>
-          <b-form-group v-slot="{ ariaDescribedby }">
+          <b-form-radio-group v-model="selectedSupplement">
             <b-form-radio
               v-for="(supplement, index) in supplementList"
               v-bind:key="index"
-              v-model="selectedSupplement"
-              :aria-describedby="ariaDescribedby"
-              name="some-radios"
               :value="supplement"
               >{{ supplement.name }}</b-form-radio
             >
-          </b-form-group>
+          </b-form-radio-group>
           <div class="row pad-all-2">
             <div class="float-left">
               <label class="switch">

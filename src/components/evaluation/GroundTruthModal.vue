@@ -141,8 +141,6 @@
                   type="file"
                   :accept="'.' + mstDetails.groundtruthFormat"
                   class="form-control-file btn btn-light btn"
-                  id="exampleFormControlFile1"
-                  value="Upload"
                   ref="fileupload"
                   @change="getFile"
                   :disabled="uploadGtFiles.length > 0"

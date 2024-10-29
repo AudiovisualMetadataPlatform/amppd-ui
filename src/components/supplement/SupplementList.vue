@@ -145,11 +145,11 @@ export default {
     baseUrl() {
       const self = this;
       if (
-        window.location.hash.toLowerCase().indexOf("supplemental-files/") > -1
+        window.location.href.toLowerCase().indexOf("supplemental-files/") > -1
       ) {
         return "supplement";
       } else if (
-        window.location.hash.toLowerCase().indexOf("supplemental-files") > -1
+        window.location.href.toLowerCase().indexOf("supplemental-files") > -1
       ) {
         return "list-supplement";
       }

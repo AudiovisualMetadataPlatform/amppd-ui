@@ -13,8 +13,6 @@
               <input
                 type="file"
                 class="form-control-file btn btn-light btn-lg"
-                id="exampleFormControlFile1"
-                value="upload"
                 @change="filesChange"
               />
             </label>
