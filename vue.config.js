@@ -1,4 +1,4 @@
-// const { BootstrapVueNextResolver} = require("bootstrap-vue-next");
+const { BootstrapVueNextResolver } = require("bootstrap-vue-next/resolvers");
 // const { defineConfig } = require('@vue/cli-service')
 // const { Components } = require('unplugin-vue-components/webpack')
 
@@ -23,7 +23,9 @@ module.exports = {
   },
   configureWebpack: {
     plugins: [
-      require('unplugin-vue-components/webpack').default({ /* options */ }),
+      require('unplugin-vue-components/webpack').default({
+        resolvers: [BootstrapVueNextResolver()]
+      }),
     ],
   }
 }
