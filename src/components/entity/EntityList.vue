@@ -10,7 +10,7 @@
         <main :class="!unitEntity.currentUnit ? 'mb-3' : 'mb-5'">
           <!-- AmpHeader - Details page -->
 
-          <BCard
+          <b-card
             class="text-center mt-5 mb-3"
             :class="
               baseUrl === 'file' && entity.mediaType === 'video'
@@ -54,16 +54,16 @@
                   ></mediaelement>
                 </div>
                 <div class="float-left">
-                  <BButton
+                  <b-button
                     v-b-toggle.collapse-1
                     variant="outline-primary"
                     class="btn-lg media-info-btn"
                   >
                     <span v-html="infoSvg"></span>
                     Media Information
-                  </BButton>
+                  </b-button>
                 </div>
-                <BCollapse
+                <b-collapse
                   v-if="selectedFile.mediaInfo"
                   id="collapse-1"
                   class="mt-2 media-details"
@@ -73,7 +73,7 @@
                     disabled
                     class="textArea mt-2 mb-2"
                   ></textarea>
-                </BCollapse>
+                </b-collapse>
               </div>
               <form
                 name="unitForm"
@@ -512,7 +512,7 @@
                 </div>
               </form>
             </div>
-          </BCard>
+          </b-card>
 
           <!-- AmpHeader - Details page Ends here-->
           <div
@@ -540,7 +540,7 @@
               role="tabpanel"
               aria-labelledby="pills-assign-tab"
             >
-              <div class="card card-body marg-t-0 bg-light-gray-1 BCard-spl">
+              <div class="card card-body marg-t-0 bg-light-gray-1 b-card-spl">
                 <div class="form-group">
                   <label v-if="accessControl._roleassignment._update" for="formGroupExampleInpu bold">Select User</label>
                   <div v-if="accessControl._roleassignment._update" data-v-4ae6b2fb="" class="">
@@ -703,7 +703,7 @@
                 </div>
               </div>
             </div>
-            <BCard class="m-0 text-left expand-ani">
+            <b-card class="m-0 text-left expand-ani">
               <!-- Title - Listing page -->
 
               <!-- Title - Unit Details page  -->
@@ -753,8 +753,8 @@
                 </div>
               </div>
               <div class="row row-spl" v-if="records && records.length">
-                <BCard
-                  class="m-3 w-100 text-left BCard-spl"
+                <b-card
+                  class="m-3 w-100 text-left b-card-spl"
                   v-for="elem in records"
                   :key="elem.id"
                 >
@@ -870,12 +870,12 @@
                       </div>
                     </div>
                   </div>
-                </BCard>
+                </b-card>
               </div>
               <div class="col-12 text-left" v-else>
                 <p>-No records found-</p>
               </div>
-            </BCard>
+            </b-card>
           </div>
         </main>
       </div>
@@ -911,9 +911,6 @@ import WorkflowResultService from "../../service/workflow-result-service";
 import ConfigPropertiesService from "@/service/config-properties-service";
 import EvaluationService from "@/service/evaluation-service";
 import AccessControlService from "@/service/access-control-service";
-
-import { BCard, BCollapse, BButton } from "bootstrap-vue-next";
-
 
 export default {
   name: "EntityList",
@@ -1599,11 +1596,11 @@ video {
   margin-bottom: 33px;
   padding-right: 0px;
 }
-.BCard-spl {
+.b-card-spl {
   background-color: #fafafa;
   margin: 0px 0px 8px 0px !important;
 }
-.BCard-spl > div:first-child {
+.b-card-spl > div:first-child {
   padding: 8px !important;
 }
 .row-spl {
