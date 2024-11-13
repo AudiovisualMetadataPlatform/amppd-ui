@@ -112,6 +112,7 @@ export default {
   },
   methods: {
     routeToHome() {
+      console.log("routeToHome()");
       const self = this;
       if (
         self.$route.path === "/workflow/edit" &&
@@ -121,10 +122,12 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
+        console.log("routing to home");
         self.$router.push("/");
       }
     },
     routeTo(menu, data) {
+      console.log("routeTo()");
       const self = this;
       if (self.$route.path === "/workflow/edit" && localStorage.getItem("activeWorkflowSession")) {
         alert("Workflow editor session is active. Please click on done button before leaving the page.");
@@ -135,6 +138,7 @@ export default {
             self.$router.push(`${menu.url}/${data.id}`);
           }
       } else {
+        console.log("routing to menu");
         self.$router.push(`${menu.url}`).catch(error => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
@@ -144,15 +148,19 @@ export default {
     },
     resolvePermissions(keys) {
       if(this.acIsAdmin) {
+        console.log("resolvePermissions: is Admin", keys);
         return false;
       } else {
         if(Array.isArray(keys) && keys.length > 0) {
+          console.log("resolvePermissions: keys is array", keys);
           return keys.map(key => {
             return this.acActions.indexOf(key) < 0;
           }).reduce((acc, current) => acc && current, true);
         } else if(typeof keys === "string") {
+          console.log("resolvePermissions: keys is string", keys);
           return this.acActions.indexOf(keys) < 0;
         } else {
+          console.log("resolvePermissions: permission denied", keys);
           return true;
         }
       }
