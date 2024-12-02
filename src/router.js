@@ -454,11 +454,11 @@ router.beforeEach(async (to, from, next) => {
   const { authorize } = to.meta;
   const currentUser = accountService.currentUserValue;
 
-  console.log("from: ", from, "\nto: ", to, "\nnext: ", next);
-  console.log("currentUser: ", currentUser);
+  console.log("router: from: ", from, "\nto: ", to, "\nnext: ", next);
+  console.log("router: currentUser: ", currentUser);
 
   if (env.getDisableAuth() == "true" || !authorize) {
-	  console.log("router: No auth needed.")
+    console.log("router: No auth needed.")
     return next();
   } else if (!currentUser) {
     console.log("router: Current user not logged in yet.");
@@ -469,11 +469,11 @@ router.beforeEach(async (to, from, next) => {
     // below API call is to validate the auth token before new page is loaded, in case the current login has expired;
     // there should be better way to achieve this without making such extra API call
     var success = await accountService.validate();
+    console.log("success = " + success);
     if (!success) {
-      // return next();
       store.state.isAuthenticated = false;
       store.commit("isAuthenticated");
-      console.log("router: Auth token invalid!")
+      console.log("router: Auth token invalid! routing to login page.")
       return next({ path: "/account/login", query: { returnUrl: to.path } });
     } else {
       store.state.isAuthenticated = true;
