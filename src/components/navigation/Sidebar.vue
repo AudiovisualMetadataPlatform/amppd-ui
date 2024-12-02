@@ -18,7 +18,7 @@
             >
               <b-nav-item
                 :id="menu.url"
-                @click="routeTo(menu)"
+                @click.prevent="routeTo(menu)"
                 :class="{ 
                   'd-none': resolvePermissions(menu.permissionKey)
                 }"

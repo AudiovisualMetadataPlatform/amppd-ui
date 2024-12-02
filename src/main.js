@@ -4,8 +4,8 @@ import router from "./router";
 import { store } from "./store/amp-store";
 // import { VuePlugin } from "vuera";
 import VueFilterDateFormat from "@vuejs-community/vue-filter-date-format";
-import {createBootstrap} from "bootstrap-vue-next/plugins";
 import moment from "moment";
+import {createBootstrap} from "bootstrap-vue-next/plugins";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
 
