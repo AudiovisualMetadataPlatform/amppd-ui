@@ -7,9 +7,7 @@
           <button
             id="btn-search"
             class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
-            data-toggle="modal"
-            data-target=".bd-example-modal-lg-2"
-            @click="handleWorkflowSearch()"
+            v-b-modal.modal-lg
           >
             Search Workflows
           </button>
@@ -315,9 +313,6 @@ export default {
         workflowIndex,
         self.listOfWorkflows[workflowIndex]
       );
-    },
-    handleWorkflowSearch() {
-      this.$bvModal?.show("modal-lg");
     },
     async handleWorkflowCreation() {
       const self = this;
