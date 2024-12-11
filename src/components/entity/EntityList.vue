@@ -723,6 +723,7 @@
                   <button
                     class="btn btn-primary btn-lg btn-edit"
                     type="button"
+                    v-b-modal.modal-lg
                     @click="onSearch('listing-collection')"
                   >
                     Search Collections
@@ -746,6 +747,7 @@
                   <button
                     class="btn btn-primary btn-lg btn-edit"
                     type="button"
+                    v-b-modal.modal-lg
                     @click="onSearch('listing-item')"
                   >
                     Search Items
@@ -1445,7 +1447,6 @@ export default {
     },
     onSearch(type) {
       this.searchType = type;
-      this.$bvModal?.show("modal-lg");
     },
     onSearchDone(records) {
       this.records = records && records.length ? records : this.masterRecords;

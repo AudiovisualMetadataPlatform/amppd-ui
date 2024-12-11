@@ -14,7 +14,7 @@
                       <button
                         class="btn btn-primary btn-lg btn-edit float-right"
                         type="button"
-                        @click="onSearch()"
+                        v-b-modal.modal-lg
                       >
                         Search Item
                       </button>
@@ -68,11 +68,6 @@ export default {
     searchItems(searchWord) {
       this.refreshData(searchWord);
     },
-    
-    // pop up child component (the Search pop-up ialog)
-    onSearch() {
-      this.$bvModal?.show("modal-lg");
-    },
 
     // call item search API 
     async refreshData(searchWord = "") {
@@ -100,14 +95,6 @@ export default {
         self.loading = false;
       }
     },
-  },
-
-  updated() {
-    this.onSearch();
-  },
-  
-  mounted() {
-    this.onSearch();
   },
 };
 </script>

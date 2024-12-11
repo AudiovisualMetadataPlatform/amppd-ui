@@ -1187,8 +1187,6 @@ export default {
           );
           break;
       }
-
-      this.$bvModal?.show("modal-lg");
     },
     getDateString() {
       const date = new Date();

@@ -4,10 +4,11 @@
       size="lg"
       id="modal-lg"
       centered
+      ref="searchModal"
       @show="processModalData()"
       :no-close-on-backdrop="type === 'item-search'"
     >
-      <template #modal-header>
+      <template #header>
         <!-- Emulate built in modal header close button action -->
 
         <h5 class="text-capitalize" v-if="!isEntityList">
@@ -579,7 +580,7 @@
         </template>
       </template>
 
-      <template #modal-footer="{ ok, hide }">
+      <template #footer="{ ok, hide }">
         <!-- Emulate built in modal footer ok and cancel button actions -->
         <button
           v-if="type !== 'statuses' && type !== 'workflow-search'"
@@ -757,6 +758,10 @@ export default {
   mounted() {
     const self = this;
     self.fields = self.allSearchFields;
+    // Display search modal on page load for item-search page
+    if(this.searchType === 'item-search') {
+      this.$refs.searchModal.show();
+    }
   },
   methods: {
     async searchWfKeyUp(e) {

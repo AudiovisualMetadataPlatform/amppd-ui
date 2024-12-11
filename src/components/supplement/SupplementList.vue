@@ -31,6 +31,7 @@
                   <button
                     class="btn btn-primary btn-lg btn-edit"
                     type="button"
+                    v-b-modal.modal-lg
                     @click="onSearch('listing-supplement')"
                   >
                     Search Files
@@ -164,7 +165,6 @@ export default {
     },
     onSearch(type) {
       this.searchType = type;
-      this.$bvModal?.show("modal-lg");
     },
     onSearchDone(records) {
       this.records = records && records.length ? records : this.masterRecords;
