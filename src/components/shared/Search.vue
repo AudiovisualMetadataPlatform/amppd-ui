@@ -115,7 +115,7 @@
                 v-for="source in clonedDataSource"
                 :key="source.id"
                 :value="source.id"
-                @change="onChange($event.target, source)"
+                @change="onChange(source, $event.target)"
               >
                 {{ source.statusName }}
               </b-form-checkbox>
@@ -147,7 +147,7 @@
                       type="checkbox"
                       v-model="selectedRecords"
                       :value="source.id"
-                      @change="onChange($event, source)"
+                      @change="onChange(source, $event)"
                     />
                   </td>
                   <template v-if="!isEntityList">
@@ -328,8 +328,7 @@
                 <tr
                   :key="source.id"
                   v-if="selectedRecords.indexOf(source.id) === -1"
-                  @click="onChange($event, source)"
-                  class=""
+                  @click="type === 'item-search' ? onChange(source, $event) : null"
                   :class="
                     type === 'item-search'
                       ? source.id === selectedItemId
@@ -344,7 +343,7 @@
                       type="checkbox"
                       v-model="selectedRecords"
                       :value="source.id"
-                      @change="onChange($event, source)"
+                      @change="onChange(source, $event)"
                     />
                   </td>
                   <template v-if="!isEntityList">
@@ -844,7 +843,7 @@ export default {
     },
 
     // event handler when selections in the search results list change
-    onChange(ev, record) {
+    onChange(record, event) {
       const self = this;
 
       // item-search allows only one record to be selected, so no need to handle selectedFilters/selectedRecords 
@@ -857,13 +856,12 @@ export default {
         self.selectedUnit.id = record.unitId;
         return;
       }
-      // console.log(self.selectAll);
 
       // for all other search types, multiple records can be selected, so need to handle selectedFilters/selectedRecords 
       // all other filters use checkbox except Status filter, which need special handling
       const isRecordSelected = self.selectedRecords.indexOf(record.id);   // if current record is selected, note: this seems to only apply to Status filter
       const isStatusSelected = self.type === "statuses" && isRecordSelected !== -1; // current status just got selected/checked
-      const isChecked = ev && ev.srcElement && ev.srcElement.checked; // current event is checking a checkbox
+      const isChecked = event && event?.srcElement?.checked; // current event is checking a checkbox
       console.log("isRecordSelected: ", isRecordSelected, " isStatusSelected: ", isStatusSelected, " isChecked: ", isChecked );
       
       // initialze selectedFilters for current type (if not yet)
