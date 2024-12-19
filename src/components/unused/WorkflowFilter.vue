@@ -111,7 +111,7 @@ export default {
   computed: {
     workflowDashboard: sync("workflowDashboard"),
     workflows: sync("workflowDashboard.searchResult.filters.workflows"),
-    getWorkflows() {
+    getPublishedWorkflows() {
       if (!this.workflows) return [];
       return this.workflows;
     },

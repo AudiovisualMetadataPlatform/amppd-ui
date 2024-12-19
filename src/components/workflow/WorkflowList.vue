@@ -268,7 +268,7 @@ export default {
       const annotations = searchFields.annotations;
       const tags = searchFields.tags;
       self.workflowService
-        .getFilteredWorkflows(name, creator, dateRange, annotations, tags)
+        .getActiveFilteredWorkflows(name, creator, dateRange, annotations, tags)
         .then((response) => {
           self.listOfWorkflows = self.sharedService.sortByAlphabatical(
             response.data.rows
@@ -281,7 +281,7 @@ export default {
     getWorkflowList() {
       const self = this;
       self.workflowService
-        .getAllWorkflows()
+        .getActiveWorkflows()
         .then((response) => {
           self.listOfWorkflows = self.sharedService.sortByAlphabatical(
             response.data.rows
