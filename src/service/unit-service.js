@@ -5,15 +5,15 @@ const baseService = new BaseService();
 export default class UnitService extends BaseService{
 
     /***
-     * To get the list of all units.
+     * To get the list of all units accessible to current user.
      * @params num, size
      */
 
     async getAllUnits(num,size){
         if(num && size){
-            return super.get_auth(`/units?page=${num}&size=${size}`)
+            return super.get_auth(`/permissions/units?actionType=Read&targetType=Unit&page=${num}&size=${size}`)
         }
-        else return super.get_auth('/units');
+        else return super.get_auth('/permissions/units?actionType=Read&targetType=Unit');
     }
 
     /***

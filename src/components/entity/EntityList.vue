@@ -172,7 +172,7 @@
                   <div class="row">
                     <div
                       class="text-left form-group"
-                      :class="baseUrl === 'collection' ? 'col-6' : 'col-12'"
+                      :class="baseUrl === 'unit' ? 'col-6' : 'col-12'"
                     >
                       <label>
                         <span class="text-capitalize">{{ baseUrl }}</span> Name:
@@ -211,7 +211,7 @@
                     </div>
                     <div
                       class="col-6 text-left form-group"
-                      v-if="baseUrl === 'collection'"
+                      v-if="baseUrl === 'unit' && unitEntity.currentUnit"
                     >
                       <label>Task Manager:</label>
                       <select
@@ -219,8 +219,8 @@
                         v-model="entity.taskManager"
                         :disabled="
                           showEdit ||
-                            (baseUrl === 'collection' &&
-                              !accessControl._collection._update)
+                            (baseUrl === 'unit' &&
+                              !accessControl._unit._update)
                         "
                         :class="{
                           'error-border': submitted && !entity.taskManager,
@@ -228,7 +228,7 @@
                         @change="onInputChange"
                       >
                         <option
-                          v-for="option in listOfTaskManager"
+                          v-for="option in configProperties.taskManagers"
                           :key="option"
                           >{{ option }}</option
                         >
@@ -409,7 +409,7 @@
                         @change="onInputChange"
                       >
                         <option
-                          v-for="option in listOfExternalResources"
+                          v-for="option in configProperties.externalSources"
                           :key="option"
                           >{{ option }}</option
                         >
@@ -838,10 +838,6 @@
                       "
                       v-if="purpose"
                     >
-                      <div class="col-3" v-if="baseUrl == 'unit'">
-                        <label>Task Manager</label>
-                        <p class="mb-0">{{ elem.taskManager }}</p>
-                      </div>
                       <div class="col-2" v-if="baseUrl == 'collection'">
                         <label>Source Name</label>
                         <p class="mb-0">{{ elem.externalSource }}</p>
@@ -970,7 +966,6 @@ export default {
     selectedCollection: sync("selectedCollection"),
     selectedItem: sync("selectedItem"),
     selectedFile: sync("selectedFile"),
-    itemConfigs: sync("itemConfigs"),
     configProperties: sync("configProperties"),
     baseUrl() {
       const self = this;
@@ -982,7 +977,6 @@ export default {
         window.location.href.toLowerCase().indexOf("collection") > -1 &&
         window.location.href.toLowerCase().indexOf("item") === -1
       ) {
-        this.getItemsConfig();
         return "collection";
       } else if (window.location.href.toLowerCase().indexOf("item") > -1) {
         return "item";
@@ -999,12 +993,6 @@ export default {
         window.location.href.toLowerCase().indexOf("create") > -1 ||
         window.location.href.toLowerCase().indexOf("add-item") > -1
       );
-    },
-    listOfTaskManager() {
-      return this.itemConfigs.taskManagers;
-    },
-    listOfExternalResources() {
-      return this.itemConfigs.externalSources;
     },
     mediaInfo() {
       return this.selectedFile && this.selectedFile.mediaInfo
@@ -1026,7 +1014,6 @@ export default {
       );
       self.selectedUser = "";
       self.idsExcluding.push(getUser.id);
-      // self.showLoader = true;
       self.accessControlService
         .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding)
         .then((response) => {
@@ -1034,12 +1021,10 @@ export default {
             response.data,
             "username"
           );
-          // self.showLoader = false;
         });
     },
     async handleAssignRolesSaveBtn() {
       const self = this;
-      // self.showLoader = true;
       self.accessControlService
         .updateRoleAssignments(self.unitEntity.currentUnit, self.newRoles)
         .then(async (res) => {
@@ -1058,10 +1043,8 @@ export default {
             }
           }
           self.refreshRoleAssignments(true);
-          // self.showLoader = false;
         })
         .catch((e) => {
-          // self.showLoader = false;
           self.$bvToast.toast(
             "Oops! Something went wrong.",
             self.sharedService.erorrToastConfig
@@ -1107,15 +1090,13 @@ export default {
       }
 
       // otherwise retrieve RoleAssignments and initialize/reset data
-      // self.showLoader = true;
       const assignRolesResponse = await 
         self.accessControlService.retrieveRoleAssignments(self.unitEntity.currentUnit);
       self.assignedRoles = assignRolesResponse.data;
       self.idsExcluding = self.assignedRoles.users.map((user) => user.id);
       let userResponse = await self.accessControlService
         .findActiveUsersByNameStartingIdsExcluding("", self.idsExcluding);
-      self.userList = self.sharedService.sortByAlphabatical(userResponse.data, "username");
-      // self.showLoader = false;        
+      self.userList = self.sharedService.sortByAlphabatical(userResponse.data, "username");      
 
       // reset newRoles and assignedRolesUnitChanged
       self.newRoles = [];
@@ -1133,7 +1114,6 @@ export default {
       }
 
       // otherwise retrieve RolesSettings and initialize/reset settingsRoles
-      // self.showLoader = true;
       const settingsRolesResponse = await 
         self.accessControlService.retrieveRoleActionConfig(self.unitEntity.currentUnit);
       self.settingsRoles = settingsRolesResponse.data;
@@ -1165,7 +1145,6 @@ export default {
       self.settingsRoles["rolesUpdated"] = new Set();      
       self.settingsRolesUnitChanged = false;
       
-      // self.showLoader = false;
       console.log ("Refreshed RolesSettings.");
       return true;
     },
@@ -1222,7 +1201,6 @@ export default {
         console.log("Updating role " + roleName + " with " + actionIds.length + " actions: " + actionIds);
       }
       // call updateRoleActionConfig API 
-      // self.showLoader = true;
       self.accessControlService
         .updateRoleActionConfig(self.unitEntity.currentUnit, roles)
         .then(async (res) => {
@@ -1239,10 +1217,8 @@ export default {
               );
           }          
           self.refreshRolesSettings(true);
-          // self.showLoader = false;
         })
         .catch((e) => {
-          // self.showLoader = false;
           self.$bvToast.toast(
             "Oops! Something went wrong.",
             self.sharedService.erorrToastConfig
@@ -1320,21 +1296,10 @@ export default {
             const unitSelectHtml = document.getElementById("unit-select");
             if (unitSelectHtml) unitSelectHtml.focus();
           }
-          console.log("EntityList.getAllUnits: unitList.length = " + self.unitEntity.unitList.length);
+          console.log("EntityList.getAllUnits: unitList = " + self.unitEntity.unitList);
+          return self.unitEntity.unitList;
         });        
       } catch (error) {
-        // self.showLoader = false;
-        console.log(error);
-      }
-    },
-    async getConfigs() {
-      const self = this;
-      try {
-        // self.showLoader = true;
-        self.configProperties = await self.configPropertiesService.getConfigProperties();           
-        // self.showLoader = false;
-      } catch (error) {
-        // self.showLoader = false;
         console.log(error);
       }
     },
@@ -1381,6 +1346,7 @@ export default {
         console.log("EntityList.getEntityData: mediaType = " + self.entity.mediaType);
         // self.showLoader = false;
       }
+      return self.entity;
     },
     async getUnitCollections() {
       const self = this;
@@ -1419,7 +1385,7 @@ export default {
         });
         // self.showLoader = false;
     },
-    async onView(objInstance) {
+    onView(objInstance) {
       const self = this;
       if (self.baseUrl === "collection" && self.purpose) {
         self.selectedItem = objInstance;
@@ -1454,10 +1420,6 @@ export default {
     onInputChange(ev) {
       this.isDataChanged = true;
     },
-    async getItemsConfig() {
-      const self = this;
-      self.entityService.getItemsConfig(self);
-    },
     handleSearchItem() {
       this.$router.push("/collections/items/item-search");
     },
@@ -1487,56 +1449,42 @@ export default {
       next();
     }
   },
-  // beforeCreate() {
-  //   console.log ("EntityList.beforeCreate(): showLoader = " + this.showLoader);
-  //   console.log ("EntityList.beforeCreate(): mediaSource = " + this.entity.mediaSource);
-  // },
-  // created() {
-  //   console.log ("EntityList.created(): showLoader = " + this.showLoader);
-  //   console.log ("EntityList.created(): mediaSource = " + this.entity.mediaSource);
-  // },
-  // beforeUpdate() {
-  //   console.log ("EntityList.beforeUpdate(): showLoader = " + this.showLoader);
-  //   console.log ("EntityList.beforeUpdate(): mediaSource = " + this.entity.mediaSource);
-  // },
-  // updated() {
-  //   console.log ("EntityList.updated(): showLoader = " + this.showLoader);
-  //   console.log ("EntityList.created(): mediaSource = " + this.entity.mediaSource);
-  // },
-  // beforeMount() {
-  //   console.log ("EntityList.beforeMount(): showLoader = " + this.showLoader);
-  //   console.log ("EntityList.beforeMount(): mediaSource = " + this.entity.mediaSource);
-  // },
   async mounted() {
     const self = this;
     
-    console.log ("EntityList.mounted(): showLoader = " + this.showLoader);
+    console.log ("EntityList.mounted start: showLoader = " + this.showLoader);
 
     // retrieve configProperties if not yet populated
     if (!self.configProperties || Object.keys(self.configProperties).length === 0) {
-      await self.getConfigs();
-      // console.log("EntityList.mounted: configs.length = " + self.configProperties.length);
+      try {
+        self.configProperties = await self.configPropertiesService.getConfigProperties();     
+        console.log("EntityList.mounted: taskManagers = " + self.configProperties.taskManagers + ", externalSources = " + self.configProperties.externalSources);      
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     // retrieve units list and currentUnit info from storage if available, otherwise initialize them 
     const uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
     if (!uEntity) {
       self.unitEntity = { unitList: [], currentUnit: "" };
+      console.log("EntityList.mounted: unitEntity initialized.");
     }
     else {
       self.unitEntity = uEntity;    
+      console.log("EntityList.mounted: unitList = " + self.unitEntity.unitList + ", currentUnit = " + self.unitEntity.currentUnit);
     }
 
     // retrieve units list if not yet populated
     if (!self.unitEntity.unitList || !self.unitEntity.unitList.length) {
-      await self.getAllUnits();
-      // console.log("EntityList.mounted: unitList.length = " + self.unitEntity.unitList.length);
+      let unitList = await self.getAllUnits();
+      console.log("EntityList.mounted - after getAllUnits: unitList = " + unitList);
     } 
 
     // if currentUnit set, getEntityData for the page 
     if (self.unitEntity.currentUnit) {
-      await self.getEntityData();
-      // console.log("EntityList.mounted: mediaSource = " + this.entity.mediaSource); 
+      let entity = await self.getEntityData();
+      console.log("EntityList.mounted: mediaSource = " + entity.mediaSource); 
     }
 
     // adjust size of PFile fields for PFile page
@@ -1548,6 +1496,7 @@ export default {
     }
 
     this.showLoader = false;
+    console.log ("EntityList.mounted end: showLoader = " + this.showLoader);
   },
 };
 </script>

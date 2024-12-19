@@ -443,9 +443,9 @@ export default {
         }
       }
     },
-    async getWorkflows() {
+    async getPublishedWorkflows() {
       let self = this;
-      this.workflowService.getWorkflows().then((response) => {
+      this.workflowService.getPublishedWorkflows().then((response) => {
         let workflowResponse = response.data;
         self.workflows = self.sharedService.sortByAlphabatical(
           workflowResponse.rows
@@ -895,7 +895,7 @@ export default {
   },
   mounted() {
     let self = this;
-    self.getWorkflows();
+    self.getPublishedWorkflows();
   },
   beforeDestroy() {
     const self = this;

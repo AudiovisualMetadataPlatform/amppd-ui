@@ -28,7 +28,7 @@ jest.mock('../../../../src/service/workflow-service',
                         return Promise.resolve({data: [{id:1, name: "TestName1", visible: true}, {id:2, name: "TestName2", visible: true}]});
                         
                     },
-                    getAllWorkflows: ()=>{
+                    getActiveWorkflows: ()=>{
                         return Promise.resolve({data: { rows:[{id:1, name: "TestName1", visible: true, annotations: ['test']}, {id:2, name: "TestName2", visible: true, annotations: ['test']}] }});
                         
                     },
