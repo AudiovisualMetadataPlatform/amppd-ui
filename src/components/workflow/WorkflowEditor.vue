@@ -26,7 +26,7 @@
         </div>
       </div>
       <b-modal v-model="showModal" id="modal-center" centered>
-        <template #modal-header>
+        <template #header>
           <h5 class="text-capitalize">
             Confirm
           </h5>
@@ -36,7 +36,7 @@
             Any unsaved changes will be lost. Do you want to continue?
           </div>
         </template>
-        <template #modal-footer="{ hide }">
+        <template #footer="{ hide }">
           <button class="btn btn-secondary" @click="hide()">
             Go Back
           </button>
