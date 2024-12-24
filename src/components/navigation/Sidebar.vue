@@ -19,18 +19,12 @@
               <b-nav-item
                 :id="menu.url"
                 @click.prevent="routeTo(menu)"
-                :class="{ 
-                  'd-none': resolvePermissions(menu.permissionKey)
-                }"
                 v-if="!menu.children && menu.url !== '/mgm-evaluation'"
               >
                 <span v-html="menu.icon"></span>
                 <span class="pl-2 menu-name">{{ menu.name }}</span>
               </b-nav-item>
               <b-nav-item-dropdown
-                :class="{ 
-                  'd-none': resolvePermissions(menu.permissionKey)
-                }"
                 v-else
               >
                 <template #button-content>
@@ -107,7 +101,18 @@ export default {
     acActions: sync("acActions"),
     orderedMenuList() {
       let self = this;
-      return this.sharedService.sortByNumber(self.menuList, "displayId");
+      // Update menu list based on user permissions when acIsAdmin is updated
+      if(!self.acIsAdmin) {
+        if(self.acActions.length > 0) {
+          // Filter menu list based on user permissions when acActions is updated
+          let filteredMenus = self.menuList.filter(menu => {
+            return !self.resolvePermissions(menu.permissionKey);
+          });
+          return self.sharedService.sortByNumber(filteredMenus, "displayId")
+        }
+      } else {
+        return self.sharedService.sortByNumber(self.menuList, "displayId");
+      }
     },
   },
   methods: {
