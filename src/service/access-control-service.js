@@ -110,9 +110,9 @@ export default class AccessControlService extends BaseService {
       this.resetAccessControl(instance, self.acIsAdmin);      
     } catch (error) {
       self.showLoader = false;
-      self.$bvToast.toast(
+      self.$toast.error(
         "Oops! Something went wrong.",
-        self.sharedService.erorrToastConfig
+        self.sharedService.toastNotificationConfig
       );
       console.error(error);
     }
@@ -286,9 +286,9 @@ export default class AccessControlService extends BaseService {
       self.showLoader = false;
     } catch (error) {
       self.showLoader = false;
-      self.$bvToast.toast(
+      self.$toast.error(
         "Oops! Something went wrong.",
-        self.sharedService.erorrToastConfig
+        self.sharedService.toastNotificationConfig
       );
       console.error(error);
     }

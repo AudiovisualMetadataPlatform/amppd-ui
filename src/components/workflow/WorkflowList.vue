@@ -323,9 +323,9 @@ export default {
           self.routeToEditorPage(workflowId);
         })
         .catch((e) => {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Unable to process your request. Please contact Administrator",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         });
     },
@@ -337,9 +337,9 @@ export default {
           this.$router.push(`/workflow/edit?id=${workflowId}`);
         })
         .catch((e) => {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Unable to process your request. Please contact Administrator",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         });
     },

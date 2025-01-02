@@ -101,9 +101,9 @@ export default {
         );
         self.showTestResults = true;
       } catch (error) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Oops! Something went wrong.",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         console.error(error.message);
       }

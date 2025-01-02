@@ -97,9 +97,9 @@ export default {
         })
         .catch((e) => {
           self.showModal = false;
-          self.$bvToast.toast(
+          self.$toast.error(
             "Unable to process your request. Please contact Administrator",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         });
     },

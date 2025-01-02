@@ -464,9 +464,9 @@ export default {
           .deleteWorkflowResult(self.selectedRecord.id)
           .then(() => {
             self.refreshData();
-            self.$bvToast.toast(
+            self.$toast.success(
               "Workflow result has been removed successfully.",
-              self.sharedService.successToastConfig
+              self.sharedService.toastNotificationConfig
             );
           });
       } catch (error) {
@@ -530,9 +530,9 @@ export default {
         self.workflowDashboard.loading = false;
       } catch (error) {
         self.workflowDashboard.loading = false;
-        self.$bvToast.toast(
+        self.$toast.error(
           "Oops! Something went wrong.",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         console.error(error.message);
       }
