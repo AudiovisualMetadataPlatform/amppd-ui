@@ -670,8 +670,8 @@
                         <b-dropdown id="dropdown-form">
                             <template #button-content>
                               <span>Show/Hide Columns</span>
-                              <span
-                                ><svg
+                              <span>
+                                <svg
                                   aria-hidden="true"
                                   focusable="false"
                                   class="svg-inline"
@@ -681,8 +681,9 @@
                                 >
                                   <g id="Layer_2" class="icon-white">
                                     <path d="M14 20l10 10 10-10z"></path>
-                                  </g></svg
-                              ></span>
+                                  </g>
+                                  </svg>
+                                </span>
                             </template>
                             <b-dropdown-form>
                               <b-form-checkbox
@@ -825,13 +826,12 @@ export default {
         "order"
       );
       if (col.field === "actions") {
-        //To remove the sortable icon
+        // To remove the sortable icon
         let actionsButton = document.getElementById("actions");
         if (actionsButton) {
-          actionsButton.childNodes[0].removeChild(
-            actionsButton.childNodes[0].childNodes[1]
-          );
-          actionsButton.childNodes[0].style.justifyContent = "center";
+          const actionButtonFirstChild = actionsButton.childNodes[0];
+          actionButtonFirstChild.removeChild(actionButtonFirstChild.lastChild);
+          actionButtonFirstChild.style.justifyContent = "center";
         }
       }
     },
