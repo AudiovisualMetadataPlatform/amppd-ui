@@ -539,9 +539,9 @@ export default {
 
     successMessage() {
       const self = this;
-      self.$bvToast.toast(
+      self.$toast.success(
         "Supplemental file has been successfully updated.",
-        self.sharedService.successToastConfig
+        self.sharedService.toastNotificationConfig
       );
     },
 
@@ -550,16 +550,16 @@ export default {
       e.preventDefault();
       self.submitted = true;
       if (!data.name || !data.category || !self.entityId) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Please provide required fields!",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         return;
       }
       if (self.action === "replace" && !data.file) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Please choose a file!",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         return;
       }
@@ -612,9 +612,9 @@ export default {
               self.$router
                 .push(`/supplemental-files/${newUrlType}/${response.id}`)
                 .then(() => {
-                  self.$bvToast.toast(
+                  self.$toast.success(
                     "Supplemental file has been successfully created.",
-                    self.sharedService.successToastConfig
+                    self.sharedService.toastNotificationConfig
                   );
                 });
             });
@@ -792,12 +792,12 @@ export default {
             error.response.data.validationErrors
           );
           errorMessages.map((el) =>
-            self.$bvToast.toast(el, self.sharedService.erorrToastConfig)
+            self.$toast.error(el, self.sharedService.toastNotificationConfig)
           );
         } else {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Something went wrong.Please try again!",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         }
       }

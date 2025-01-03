@@ -178,9 +178,9 @@ export default {
           supplementalFiles = res;
         })
         .catch((err) => {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Unable to retrive Supplemental Files. Please try again!",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         });
       return supplementalFiles;

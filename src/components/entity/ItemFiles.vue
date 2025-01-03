@@ -231,9 +231,9 @@ export default {
     saveFile(data, index) {
       const self = this;
       if (!self.selectedItem.id && !self.selectedItem.selectedItemId) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Item details cannot be found to add content file",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         return;
       } else if (!self.selectedItem.id && self.selectedItem.selectedItemId) {
@@ -275,12 +275,12 @@ export default {
               error.response.data.validationErrors
             );
             errorMessages.map((el) =>
-              self.$bvToast.toast(el, self.sharedService.erorrToastConfig)
+              self.$toast.error(el, self.sharedService.toastNotificationConfig)
             );
           } else {
-            self.$bvToast.toast(
+            self.$toast.error(
               "Something went wrong.Please try again!",
-              self.sharedService.erorrToastConfig
+              self.sharedService.toastNotificationConfig
             );
           }
         });
@@ -306,40 +306,20 @@ export default {
         self.itemService
           .addItemToCollection(self.selectedItem)
           .then((reponse) => {
-            self.$bvToast.toast("Item added successfully", {
-              title: "Notification",
-              appendToast: true,
-              variant: "success",
-              autoHideDelay: 5000,
-            });
+            self.$toast.success("Item added successfully", self.sharedService.toastNotificationConfig);
             self.$router.push("/collection/details");
           })
           .catch((error) => {
-            self.$bvToast.toast("Failed to add an Item", {
-              title: "Notification",
-              appendToast: true,
-              variant: "danger",
-              autoHideDelay: 5000,
-            });
+            self.$toast.error("Failed to add an Item", self.sharedService.toastNotificationConfig);
           });
       } else {
         self.itemService
           .updateItem(self.selectedItem)
           .then((reponse) => {
-            self.$bvToast.toast("Item updated successfully", {
-              title: "Notification",
-              appendToast: true,
-              variant: "success",
-              autoHideDelay: 5000,
-            });
+            self.$toast.success("Item updated successfully", self.sharedService.toastNotificationConfig);
           })
           .catch((error) => {
-            self.$bvToast.toast("Failed to add an Item", {
-              title: "Notification",
-              appendToast: true,
-              variant: "danger",
-              autoHideDelay: 5000,
-            });
+            self.$toast.error("Failed to add an Item", self.sharedService.toastNotificationConfig);
           });
       }
     },
@@ -363,16 +343,16 @@ export default {
           .then((success) => {
             self.showLoader = false;
             self.primaryFiles._embedded.primaryfiles.splice(index, 1);
-            self.$bvToast.toast(
+            self.$toast.success(
               "Content file has been removed successfully.",
-              self.sharedService.successToastConfig
+              self.sharedService.toastNotificationConfig
             );
           })
           .catch((err) => {
             self.showLoader = false;
-            self.$bvToast.toast(
+            self.$toast.error(
               "Unable to remove a content file. Please try again later!",
-              self.sharedService.erorrToastConfig
+              self.sharedService.toastNotificationConfig
             );
           });
       }

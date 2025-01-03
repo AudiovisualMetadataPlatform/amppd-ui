@@ -8,6 +8,8 @@ import moment from "moment";
 import {createBootstrap} from "bootstrap-vue-next/plugins";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
+import ToastPlugin from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-bootstrap.css';
 
 const app = createApp(App)
 
@@ -19,6 +21,9 @@ app.config.globalProperties.$filters = {
 
 // app.use(VuePlugin);
 app.use(createBootstrap());
+
+// Install toast notification plugin: https://www.npmjs.com/package/vue-toast-notification
+app.use(ToastPlugin);
 
 // app.use(VueFilterDateFormat, {
 //   dayOfWeekNames: [

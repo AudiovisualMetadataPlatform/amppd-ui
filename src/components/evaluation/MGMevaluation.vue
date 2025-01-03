@@ -233,9 +233,9 @@ export default {
       } catch (error) {
         console.log(error);
         self.loading = false;
-        self.$bvToast.toast(
+        self.$toast.error(
           "Oops! Something went wrong.",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
       }
     },

@@ -594,9 +594,9 @@ export default {
           self.loading = false;
         } catch (error) {
           console.log(error);
-          self.$bvToast.toast(
+          self.$toast.error(
             "Oops! Something went wrong.",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
           self.loading = false;
         }
@@ -647,9 +647,9 @@ export default {
             self.loading = false;
           } catch (error) {
             console.log(error);
-            self.$bvToast.toast(
+            self.$toast.error(
               "Oops! Something went wrong.",
-              self.sharedService.erorrToastConfig
+              self.sharedService.toastNotificationConfig
             );
             self.loading = false;
           }

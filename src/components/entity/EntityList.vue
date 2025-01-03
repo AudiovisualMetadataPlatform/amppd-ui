@@ -1044,16 +1044,16 @@ export default {
         .updateRoleAssignments(self.unitEntity.currentUnit, self.newRoles)
         .then(async (res) => {
           if (res.added.length || res.deleted.length) {
-            self.$bvToast.toast(
-              "User role assignments have been updated successfully.",
-              self.sharedService.successToastConfig
+            self.$toast.success(
+              "User role assignments have been updated successfully.", 
+              self.sharedService.toastNotificationConfig
             );
           }
           if (res.failed.length) {
             for (let i = 0; i < res.failed.length; i++) {
-              self.$bvToast.toast(
+              self.$toast.error(
                 `Failed to update ${res.failed[i].roleName} role assignments for ${res.failed[i].username}`,
-                self.sharedService.erorrToastConfig
+                self.sharedService.toastNotificationConfig
               );
             }
           }
@@ -1062,9 +1062,9 @@ export default {
         })
         .catch((e) => {
           // self.showLoader = false;
-          self.$bvToast.toast(
+          self.$toast.error(
             "Oops! Something went wrong.",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
           console.log(e);
         });
@@ -1228,14 +1228,14 @@ export default {
         .then(async (res) => {
           let nFailed = roles.length - res.length;
           if (nFailed === 0) {
-            self.$bvToast.toast(
+            self.$toast.success(
               "Roles permission configuration have been updated successfully.",
-              self.sharedService.successToastConfig
+              self.sharedService.toastNotificationConfig
             );
           } else {
-              self.$bvToast.toast(
+              self.$toast.error(
                 `Failed to update ${nFailed} roles with permissions configuration`,
-                self.sharedService.erorrToastConfig
+                self.sharedService.toastNotificationConfig
               );
           }          
           self.refreshRolesSettings(true);
@@ -1243,9 +1243,9 @@ export default {
         })
         .catch((e) => {
           // self.showLoader = false;
-          self.$bvToast.toast(
+          self.$toast.error(
             "Oops! Something went wrong.",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
           console.log(e);
         });

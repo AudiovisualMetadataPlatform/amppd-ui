@@ -123,15 +123,15 @@ export default {
             self.aliasChanges[i].outputLabel
           );
         }
-        self.$bvToast.toast(
+        self.$toast.success(
           "Output results have been updated successfully.",
-          self.sharedService.successToastConfig
+          self.sharedService.toastNotificationConfig
         );
         self.aliasChanges = [];
       } catch (error) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Unable to save changes. Please try again!",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
       }
     },

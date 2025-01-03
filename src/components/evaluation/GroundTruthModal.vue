@@ -250,9 +250,9 @@ export default {
         self.loading = false;
       } catch (error) {
         self.loading = false;
-        self.$bvToast.toast(
+        self.$toast.error(
           "Something went wrong. Please try again!",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
       }
     },
@@ -290,9 +290,9 @@ export default {
       e.preventDefault();
       self.upladFile = true;
       if (!data.name) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Please provide required fields!",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         return;
       }
@@ -352,12 +352,12 @@ export default {
             error.response.data.validationErrors
           );
           errorMessages.map((el) =>
-            self.$bvToast.toast(el, self.sharedService.erorrToastConfig)
+            self.$toast.error(el, self.sharedService.toastNotificationConfig)
           );
         } else {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Something went wrong.Please try again!",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         }
       }

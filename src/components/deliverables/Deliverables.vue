@@ -433,9 +433,9 @@ export default {
         self.workflowDashboard.searchResult.rows = response.rows;
         self.totalResults = response.totalResults;
       } catch (error) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Oops! Something went wrong.",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         console.error(error.message);
       }
