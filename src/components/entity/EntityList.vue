@@ -22,14 +22,14 @@
                 : 'mb-3'
             "
           >
-            <h1 class="text-left">
+            <h1 class="text-start">
               <span class="text-capitalize">{{
                 baseUrl === "file" ? "Content File" : baseUrl
               }}</span>
               Details
               <button
                 v-if="baseUrl === 'item' && entity.parentType === 'item-search'"
-                class="btn btn-primary btn-lg float-right"
+                class="btn btn-primary btn-lg float-end"
                 type="button"
                 @click="handleSearchItem()"
               >
@@ -53,7 +53,7 @@
                     height="495.4px"
                   ></mediaelement>
                 </div>
-                <div class="float-left">
+                <div class="float-start">
                   <b-button
                     v-b-toggle.collapse-1
                     variant="outline-primary"
@@ -84,9 +84,9 @@
                 }"
               >
                 <div v-if="baseUrl === 'file'">
-                  <div class="col-12 text-left form-group p-0 flex-div">
+                  <div class="col-12 text-start mb-3 p-0 flex-div">
                     <div style="width: 48%">
-                      <label>
+                      <label class="form-label">
                         <span class="text-capitalize">{{ baseUrl }}</span>
                         Name:
                       </label>
@@ -104,7 +104,7 @@
                       />
                     </div>
                     <div style="width: 48%">
-                      <label>Original Name:</label>
+                      <label class="form-label">Original Name:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -113,8 +113,8 @@
                       />
                     </div>
                   </div>
-                  <div class="col-12 text-left form-group p-0">
-                    <label>Description:</label>
+                  <div class="col-12 text-start mb-3 p-0">
+                    <label class="form-label">Description:</label>
                     <textarea
                       class="form-control w-100"
                       v-model="entity.description"
@@ -126,9 +126,9 @@
                       @change="onInputChange"
                     ></textarea>
                   </div>
-                  <div class="col-12 text-left form-group p-0 flex-div">
+                  <div class="col-12 text-start mb-3 p-0 flex-div">
                     <div style="width: 48%">
-                      <label>Created By:</label>
+                      <label class="form-label">Created By:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -137,7 +137,7 @@
                       />
                     </div>
                     <div style="width: 48%">
-                      <label>Date Created:</label>
+                      <label class="form-label">Date Created:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -146,9 +146,9 @@
                       />
                     </div>
                   </div>
-                  <div class="col-12 text-left form-group p-0 flex-div">
+                  <div class="col-12 text-start mb-3 p-0 flex-div">
                     <div style="width: 48%">
-                      <label>Modified By:</label>
+                      <label class="form-label">Modified By:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -171,15 +171,15 @@
                 <div v-else>
                   <div class="row">
                     <div
-                      class="text-left form-group"
+                      class="text-start mb-3"
                       :class="baseUrl === 'collection' ? 'col-6' : 'col-12'"
                     >
-                      <label>
+                      <label class="form-label">
                         <span class="text-capitalize">{{ baseUrl }}</span> Name:
                       </label>
                       <select
                         v-if="baseUrl == 'unit'"
-                        class="select custom-select w-100"
+                        class="select form-select w-100"
                         v-model="unitEntity.currentUnit"
                         @change="onUnitChange"
                         required
@@ -210,12 +210,12 @@
                       />
                     </div>
                     <div
-                      class="col-6 text-left form-group"
+                      class="col-6 text-start mb-3"
                       v-if="baseUrl === 'collection'"
                     >
-                      <label>Task Manager:</label>
+                      <label class="form-label">Task Manager:</label>
                       <select
-                        class="select custom-select w-100"
+                        class="select form-select w-100"
                         v-model="entity.taskManager"
                         :disabled="
                           showEdit ||
@@ -236,10 +236,10 @@
                     </div>
                   </div>
                   <div
-                    class="col-12 text-left form-group p-0"
+                    class="col-12 text-start mb-3 p-0"
                     v-if="baseUrl === 'file'"
                   >
-                    <label>Original Name:</label>
+                    <label class="form-label">Original Name:</label>
                     <input
                       type="text"
                       class="form-control w-100"
@@ -249,9 +249,9 @@
                   </div>
                   <div
                     v-if="unitEntity.currentUnit"
-                    class="col-12 text-left form-group p-0 expand-ani"
+                    class="col-12 text-start mb-3 p-0 expand-ani"
                   >
-                    <label>Description:</label>
+                    <label class="form-label">Description:</label>
                     <textarea
                       class="form-control w-100"
                       v-model="entity.description"
@@ -268,8 +268,8 @@
                   </div>
 
                   <div class="row" v-if="baseUrl === 'item'">
-                    <div class="col-6 text-left form-group">
-                      <label>Unit:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Unit:</label>
                       <input
                         v-if="
                           (isCreatePage || selectedItem.selectedItemId) &&
@@ -288,8 +288,8 @@
                         :disabled="true"
                       />
                     </div>
-                    <div class="col-6 text-left form-group">
-                      <label>Collection:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Collection:</label>
                       <input
                         v-if="
                           (isCreatePage || selectedItem.selectedItemId) &&
@@ -311,8 +311,8 @@
                   </div>
 
                   <div class="row" v-if="baseUrl === 'item'">
-                    <div class="col-6 text-left form-group">
-                      <label>Created By:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Created By:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -320,8 +320,8 @@
                         :disabled="true"
                       />
                     </div>
-                    <div class="col-6 text-left form-group">
-                      <label>Date Created:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Date Created:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -332,8 +332,8 @@
                   </div>
 
                   <div class="row" v-if="baseUrl === 'item'">
-                    <div class="col-6 text-left form-group">
-                      <label>Modified By:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Modified By:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -341,8 +341,8 @@
                         :disabled="true"
                       />
                     </div>
-                    <div class="col-6 text-left form-group">
-                      <label>Modified Date:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Modified Date:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -357,8 +357,8 @@
                     class="col-12 p-0 expand-ani"
                   >
                     <div class="row">
-                      <div class="col-3 text-left form-group">
-                        <label>Created By:</label>
+                      <div class="col-3 text-start mb-3">
+                        <label class="form-label">Created By:</label>
                         <input
                           type="text"
                           class="form-control w-100"
@@ -366,8 +366,8 @@
                           :disabled="true"
                         />
                       </div>
-                      <div class="col-3 text-left form-group">
-                        <label>Date Created:</label>
+                      <div class="col-3 text-start mb-3">
+                        <label class="form-label">Date Created:</label>
                         <input
                           type="text"
                           class="form-control w-100"
@@ -375,8 +375,8 @@
                           :disabled="true"
                         />
                       </div>
-                      <div class="col-3 text-left form-group">
-                        <label>Modified By:</label>
+                      <div class="col-3 text-start mb-3">
+                        <label class="form-label">Modified By:</label>
                         <input
                           type="text"
                           class="form-control w-100"
@@ -385,8 +385,8 @@
                         />
                       </div>
 
-                      <div class="col-3 text-left form-group">
-                        <label>Modified Date:</label>
+                      <div class="col-3 text-start mb-3">
+                        <label class="form-label">Modified Date:</label>
                         <input
                           type="text"
                           class="form-control w-100"
@@ -398,10 +398,10 @@
                   </div>
 
                   <div class="row" v-if="baseUrl === 'item'">
-                    <div class="col-6 text-left form-group">
-                      <label>External Source:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">External Source:</label>
                       <select
-                        class="select custom-select w-100"
+                        class="select form-select w-100"
                         :disabled="
                           baseUrl === 'item' && !accessControl._item._update
                         "
@@ -415,8 +415,8 @@
                         >
                       </select>
                     </div>
-                    <div class="col-6 text-left form-group">
-                      <label>External Id:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">External Id:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -430,10 +430,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="d-flex float-right">
+                <div class="d-flex float-end">
                   <a
                     v-if="unitEntity.currentUnit && baseUrl === 'unit' && accessControl._role._read"
-                    class="btn btn-lg btn-outline-primary mr-2"
+                    class="btn btn-lg btn-outline-primary me-2"
                     :class="{ activeBtn: showRolesSettings }"
                     id="pills-unit-roles-tab"
                     data-toggle="pill"
@@ -462,7 +462,7 @@
                   </a>
                   <a
                     v-if="unitEntity.currentUnit && baseUrl === 'unit' && accessControl._roleassignment._read"
-                    class="btn btn-lg btn-outline-primary mr-2"
+                    class="btn btn-lg btn-outline-primary me-2"
                     :class="{ activeBtn: showAssignRoles }"
                     id="pills-assign-tab"
                     data-toggle="pill"
@@ -499,7 +499,7 @@
                         (baseUrl === 'file' &&
                           accessControl._primaryfile._update)
                     "
-                    class="w-100 text-right p-0 expand-ani"
+                    class="text-end p-0 expand-ani"
                   >
                     <button
                       class="btn btn-primary btn-lg btn-edit"
@@ -541,8 +541,8 @@
               aria-labelledby="pills-assign-tab"
             >
               <div class="card card-body marg-t-0 bg-light-gray-1 b-card-spl">
-                <div class="form-group">
-                  <label v-if="accessControl._roleassignment._update" for="formGroupExampleInpu bold">Select User</label>
+                <div class="mb-3">
+                  <label v-if="accessControl._roleassignment._update" for="formGroupExampleInpu bold" class="form-label">Select User</label>
                   <div v-if="accessControl._roleassignment._update" data-v-4ae6b2fb="" class="">
                     <div data-v-4ae6b2fb="" class="input-group mb-3">
                       <input
@@ -564,14 +564,11 @@
                         >
                       </datalist>
 
-                      <div data-v-4ae6b2fb="" class="input-group-append">
-                        <button
-                          class="marg-tb-1 btn btn-primary btn-save add-btn"
-                          v-on:click="handleAddUser"
-                        >
-                          Add
-                        </button>
-                      </div>
+                      <button
+                        class="marg-tb-1 btn btn-primary btn-save add-btn input-group-text"
+                        v-on:click="handleAddUser">
+                        Add
+                      </button>
                     </div>
                   </div>
                   <ul class="list-group marg-t-2 mb-2 role-assign-ul">
@@ -584,7 +581,7 @@
                         {{ user.username }}
                       </div>
                       <div
-                        class="form-check form-check-inline mr-4"
+                        class="form-check form-check-inline me-4"
                         v-for="(role, roleIndex) in assignedRoles.roles"
                         :key="role.id"
                       >
@@ -613,7 +610,7 @@
                       </div>
                     </li>
                   </ul>
-                  <div v-if="accessControl._roleassignment._update" class="float-right">
+                  <div v-if="accessControl._roleassignment._update" class="float-end">
                     <button
                       type="submit"
                       class="marg-tb-1 btn btn-primary btn-save"
@@ -659,7 +656,7 @@
                       <tr>
                         <td
                           colspan="7"
-                          class="table-primary hdr-2 slim-col-1 font-weight-bold"
+                          class="table-primary hdr-2 slim-col-1 fw-bold"
                         >
                           <span>{{ actionLabel }}</span>
                         </td>
@@ -691,7 +688,7 @@
                       </tr>
                     </tbody>
                   </table>
-                  <div v-if="accessControl._role_unit._update" class="float-right">
+                  <div v-if="accessControl._role_unit._update" class="float-end">
                     <button
                       type="submit"
                       class="marg-tb-1 btn btn-primary btn-save"
@@ -703,17 +700,17 @@
                 </div>
               </div>
             </div>
-            <b-card class="m-0 text-left expand-ani">
+            <b-card class="m-0 text-start expand-ani">
               <!-- Title - Listing page -->
 
               <!-- Title - Unit Details page  -->
               <div class="d-flex w-100" v-if="baseUrl == 'unit'">
-                <div class="col-3 text-left p-0">
+                <div class="col-3 text-start p-0">
                   <h2>Unit Collections</h2>
                 </div>
-                <div class="col-9 text-right p0 btn-grp">
+                <div class="col-9 text-end p0 btn-grp">
                   <button
-                    class="btn btn-primary btn-lg btn-edit mr-2"
+                    class="btn btn-primary btn-lg btn-edit me-2"
                     v-if="accessControl._collection._create"
                     type="button"
                     @click="onCreateCollection()"
@@ -732,12 +729,12 @@
               </div>
               <!-- Title - Collection Details page  -->
               <div class="d-flex w-100" v-if="baseUrl == 'collection'">
-                <div class="col-3 text-left">
+                <div class="col-3 text-start">
                   <h2>Collection Items</h2>
                 </div>
-                <div class="col-9 text-right p-0 btn-grp">
+                <div class="col-9 text-end p-0 btn-grp">
                   <button
-                    class="btn btn-primary btn-lg btn-edit mr-2"
+                    class="btn btn-primary btn-lg btn-edit me-2"
                     type="button"
                     v-if="accessControl._item._create"
                     @click="onCreateItem"
@@ -756,7 +753,7 @@
               </div>
               <div class="row row-spl" v-if="records && records.length">
                 <b-card
-                  class="m-3 w-100 text-left b-card-spl"
+                  class="m-3 w-100 text-start b-card-spl"
                   v-for="elem in records"
                   :key="elem.id"
                 >
@@ -784,15 +781,15 @@
                               accessControl._collection._read) ||
                             baseUrl !== 'unit'
                         "
-                        class="col-1 text-right"
+                        class="col-1 text-end"
                       >
                         <!-- TODO
                           Remove active button for now until we fix the issue with inactive workflow result
                         <div                          
                           v-if="baseUrl === 'unit' && accessControl._collection._activate"
-                          class="d-flex float-right"
+                          class="d-flex float-end"
                         >
-                          <span class="mr-1">Active</span>
+                          <span class="me-1">Active</span>
                           <label
                             class="switch"
                             :title="elem.active ? 'Deactivate' : 'Activate'"
@@ -814,7 +811,7 @@
                               (baseUrl === 'collection' &&
                                 accessControl._item._read)
                           "
-                          class="float-right"
+                          class="float-end"
                         >
                           <button
                             class="btn btn-primary btn"
@@ -839,33 +836,33 @@
                       v-if="purpose"
                     >
                       <div class="col-3" v-if="baseUrl == 'unit'">
-                        <label>Task Manager</label>
+                        <label class="form-label">Task Manager</label>
                         <p class="mb-0">{{ elem.taskManager }}</p>
                       </div>
                       <div class="col-2" v-if="baseUrl == 'collection'">
-                        <label>Source Name</label>
+                        <label class="form-label">Source Name</label>
                         <p class="mb-0">{{ elem.externalSource }}</p>
                       </div>
                       <div class="col-2" v-if="baseUrl == 'collection'">
-                        <label>Source Id</label>
+                        <label class="form-label">Source Id</label>
                         <p class="mb-0">{{ elem.externalId }}</p>
                       </div>
                       <div class="col-2">
-                        <label>Date Created:</label>
+                        <label class="form-label">Date Created:</label>
                         <p class="mb-0">
                           {{ $filters.localDate(elem.createdDate ) }}
                         </p>
                       </div>
                       <div class="col-2">
-                        <label>Created By</label>
+                        <label class="form-label">Created By</label>
                         <p class="mb-0">{{ elem.createdBy }}</p>
                       </div>
                       <div class="col-2">
-                        <label>Modified By</label>
+                        <label class="form-label">Modified By</label>
                         <p class="mb-0">{{ elem.modifiedBy }}</p>
                       </div>
                       <div class="col-2">
-                        <label>Modified Date</label>
+                        <label class="form-label">Modified Date</label>
                         <p class="mb-0">
                           {{ $filters.localDate(elem.modifiedDate ) }}
                         </p>
@@ -874,7 +871,7 @@
                   </div>
                 </b-card>
               </div>
-              <div class="col-12 text-left" v-else>
+              <div class="col-12 text-start" v-else>
                 <p>-No records found-</p>
               </div>
             </b-card>
@@ -1572,7 +1569,7 @@ export default {
 .extra-padding {
   padding-bottom: 40px;
 }
-.float-left {
+.float-start {
   position: relative;
   margin-top: 10px;
 }

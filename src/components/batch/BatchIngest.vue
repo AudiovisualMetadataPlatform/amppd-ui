@@ -10,15 +10,13 @@
             <div class="pad-all-3">
               <div class="card">
                 <div class="card-body">
-                  <h1 class="text-left">
+                  <h1 class="text-start">
                     <span>Unit Details</span>
                   </h1>
-                  <div class="text-left form-group col-12">
-                    <label>
-                      <span>Unit Name:</span>
-                    </label>
+                  <div class="text-start mb-3 col-12">
+                    <label class="form-label">Unit Name:</label>
                     <select
-                      class="select custom-select w-100"
+                      class="select form-select w-100"
                       v-model="batchUnits.currentUnit"
                       @change="onUnitChange"
                       required
@@ -48,7 +46,7 @@
                         class="
                           btn btn-outline-primary btn-lg
                           marg-bot-3
-                          float-right
+                          float-end
                         "
                         :disabled="unitName.length === 0"
                         @click="batchIngestTemplate()"
@@ -68,12 +66,12 @@
                     </div>
                     <div class="col-lg-3"></div>
                   </div>
-                  <div class="form-row">
+                  <div class="row">
                     <div class="col-lg-6">
                       <input
                         v-bind="filename"
                         type="file"
-                        class="form-control-file btn btn-light btn-lg"
+                        class="btn btn-light btn-lg"
                         ref="inputFile"
                         :disabled="inProgress || unitName.length === 0"
                         accept=".csv"

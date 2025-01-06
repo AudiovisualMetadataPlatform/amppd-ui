@@ -3,8 +3,8 @@
     <loader :show="workflowSubmission.loading" />
     <div class="card pad-all-2">
       <h4>Select workflow</h4>
-      <div class="form-group">
-        <label for="workflow-name-select" class="sr-only">Select list:</label>
+      <div class="mb-3">
+        <label for="workflow-name-select" class="visually-hidden">Select list:</label>
         <select
           class="form-control"
           id="workflow-name-select"
@@ -93,7 +93,7 @@
                       <th scope="col">Workflow</th>
                       <th scope="col">Output</th>
                       <th scope="col">
-                        <span class="sr-only">actions</span>
+                        <span class="visually-hidden">actions</span>
                       </th>
                     </tr>
                   </thead>
@@ -191,7 +191,7 @@
                     {{ file.originalFilename }}
                   </button>
                   <button
-                    class="btn btn-link add-remove float-right file-list-item-add"
+                    class="btn btn-link add-remove float-end file-list-item-add"
                     v-on:click="removeFile(file.id)"
                   >
                     <svg
@@ -297,13 +297,13 @@
             >
           </b-form-radio-group>
           <div class="row pad-all-2">
-            <div class="float-left">
+            <div class="float-start">
               <label class="switch">
                 <input type="checkbox" v-model="isActiveSupplementSwitch" />
                 <span class="slider round"></span>
               </label>
             </div>
-            <div class="float-left text-left pad-l-1">
+            <div class="float-start text-start pad-l-1">
               Use this input for all files in this batch.
             </div>
           </div>

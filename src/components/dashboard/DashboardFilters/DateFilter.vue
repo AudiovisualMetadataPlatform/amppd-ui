@@ -24,20 +24,21 @@
         <div class="col d-flex flex-wrap justify-content-between">
           <label
             for="colFormLabelFrom"
-            class="col-sm-4 col-form-label col-form-label-sm"
-            >From</label
-          >
+            class="col-sm-4 form-label col-form-label col-form-label-sm">
+            From
+          </label>
           <datepicker
             v-model="fromDate"
             class="form-control form-control-sm col-sm-8 my-datepicker"
             format="MM/dd/yyyy"
+            :calendar-class="my-datepicker"
             v-on:input="setDisabledDate()"
           ></datepicker>
         </div>
         <div class="col d-flex flex-wrap justify-content-between">
           <label
             for="colFormLabelFrom2"
-            class="col-sm-4 col-form-label col-form-label-sm"
+            class="col-sm-4 form-label col-form-label col-form-label-sm"
             >To</label
           >
           <datepicker
@@ -50,7 +51,7 @@
         <div class="col d-flex flex-wrap justify-content-between">
           <div class="col-sm-12">
             <button
-              class="btn btn-info float-right m-2"
+              class="btn btn-info float-end m-2"
               @click="filterByDate($event)"
             >
               Filter

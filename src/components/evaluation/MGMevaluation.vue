@@ -20,9 +20,9 @@
                             <p class="mb-4">
                               {{ mgmCategoryDetails.help }}
                             </p>
-                            <div class="ml-5 pr-5" v-if="selectedTab === 0">
+                            <div class="ms-5 pe-5" v-if="selectedTab === 0">
                               <button
-                                class="btn btn-primary btn-lg btn-edit float-right"
+                                class="btn btn-primary btn-lg btn-edit float-end"
                                 type="button"
                                 @click="onNewTest()"
                               >
@@ -42,7 +42,7 @@
                             @click="getMgmHelp(index)"
                           >
                             <button
-                              class="btn collaps-btn pl-0"
+                              class="btn collaps-btn ps-0"
                               :class="visible.includes(i) ? null : 'collapsed'"
                               :aria-expanded="
                                 visible.includes(i) ? 'true' : 'false'
@@ -52,9 +52,9 @@
                             >
                               <span
                                 v-html="rightArrowSvg"
-                                style="font-size:18px"
+                                class="fs-6"
                               ></span>
-                              <span class="sr-only">Toggle hidden content</span
+                              <span class="visually-hidden">Toggle hidden content</span
                               ><strong
                                 style="margin-left: 10px; color: #153c4d !important;"
                               >
@@ -101,7 +101,7 @@
                         />
                       </dl>
                       <dl 
-                        class="d-flex col-12 mt-3 mb-0 pr-0" 
+                        class="d-flex col-12 mt-3 mb-0 pe-0" 
                         v-else
                       >
                         <div class="w-100 row div-test">
@@ -116,7 +116,7 @@
                   </div>
                 </b-overlay>
                 <b-overlay v-else rounded="sm" class="mt-4">
-                  <dl class="d-flex col-12 mt-3 mb-0 pl-0 pr-0">
+                  <dl class="d-flex col-12 mt-3 mb-0 ps-0 pe-0">
                     <div class="row card-container">
                       <div
                         class="col-sm-4"

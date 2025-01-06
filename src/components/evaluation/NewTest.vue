@@ -7,30 +7,28 @@
       v-for="(mst, i) in sharedService.sortByAlphabatical(mgmCategory.msts)"
       :key="i"
     >
-      <h3
-        class="w-100 d-flex justify-content-between align-items-center mgm-h3 card-title bg-light-gray"
-      >
+      <div
+        class="w-100 d-flex justify-content-between align-items-center mgm-h3 card-title bg-light-gray">
         <button
-          class="btn"
+          class="btn fs-4 "
           :class="visible.includes(i) ? null : 'collapsed'"
           :aria-expanded="visible.includes(i) ? 'true' : 'false'"
           :aria-controls="'mgm' + i"
-          style="font-size:24px; font-weight:400"
           @click="handleVisibility(i)"
         >
-          <span v-html="rightArrowSvg" style="font-size:1.25rem"></span>
-          <span class="sr-only">Toggle hidden content</span>
-          <span class="pl-2" style="font-size:1.25rem">{{ mst.name }}</span>
+          <span v-html="rightArrowSvg" class="fs-5"></span>
+          <span class="visually-hidden">Toggle hidden content</span>
+          <span class="ps-2 fs-5">{{ mst.name }}</span>
         </button>
         <b-form-radio
           v-model="selectedMst.body"
-          style="font-size:1.25rem;"
+          class="fs-5"
           name="mst-radios"
           :value="mst"
           @change="onChangeMst(i, mst)"
-          >&nbsp;select test</b-form-radio
-        >
-      </h3>
+          >select test
+        </b-form-radio>
+      </div>
       <b-collapse
         :id="'mgm' + i"
         class="mgm-content"
@@ -65,7 +63,7 @@
         </div>
       </div>
       <div
-        class="form-group marg-t-1"
+        class="mb-3 marg-t-1"
         v-if="
           selectedMst.detailBody &&
             selectedMst.mgmScoringParameters &&
@@ -103,9 +101,7 @@
               min="0"
               v-model="testParams[par.name]"
             />
-            <div class="input-group-append">
-              <span class="input-group-text" id="basic-addon2">seconds</span>
-            </div>
+            <span class="input-group-text" id="basic-addon2">seconds</span>
           </div>
           <div class="mb-3" v-else-if="par.type === 'SINGLE_SELECT'">
             <b-form-radio-group
@@ -154,7 +150,7 @@
             selectedMst.mgmScoringParameters.length
               ? "3"
               : "2"
-          }}) Select MGM Outputs to Test
+          }} Select MGM Outputs to Test
         </h3>
         <p class="m-b-0">
           Select the MGM output files to be tested against ground truth data
@@ -172,7 +168,7 @@
           selectedMst.mgmScoringParameters.length
             ? "4"
             : "3"
-        }}) Upload or Select Ground Truth Data
+        }} Upload or Select Ground Truth Data
       </h3>
       <p class="m-b-0">
         Upload a ground truth data file for each MGM output or select previously
@@ -198,10 +194,10 @@
                 <th scope="col" class="slim-col-3 border-top-0">
                   Ground Truth
                 </th>
-                <th scope="col" class="text-right slim-col-4 border-top-0">
+                <th scope="col" class="text-end slim-col-4 border-top-0">
                   Upload/Select Ground Truth
                 </th>
-                <th scope="col" class="text-right slim-col-5 border-top-0">
+                <th scope="col" class="text-end slim-col-5 border-top-0">
                   Remove Row
                 </th>
               </tr>
@@ -226,7 +222,7 @@
                     {{ record.gtSupplement.name }}</span
                   >
                 </td>
-                <td class="slim-col-4 text-right">
+                <td class="slim-col-4 text-end">
                   <button
                     type="button"
                     class="btn btn-outline-primary btn-md  uploadModal"
@@ -241,10 +237,10 @@
                     Upload/Select Ground Truth
                   </button>
                 </td>
-                <td class="text-right slim-col-5">
+                <td class="text-end slim-col-5">
                   <a
                     @click="removeRow(record)"
-                    class="float-right remove-row-top remove-row"
+                    class="float-end remove-row-top remove-row"
                   >
                     <svg
                       class="remove-svg"
@@ -267,7 +263,7 @@
       </div>
     </div>
     <button
-      class="btn btn-primary btn-lg marg-tb-3 float-right"
+      class="btn btn-primary btn-lg marg-tb-3 float-end"
       type="button"
       @click="onNewTestSubmit"
       :disabled="activeSubmitButton()"
@@ -276,7 +272,7 @@
     </button>
     <button
       type="button"
-      class="btn btn-outline-primary btn-lg mr-2 float-right"
+      class="btn btn-outline-primary btn-lg me-2 float-end"
       @click="onNewTestCancel"
     >
       Cancel
@@ -699,6 +695,10 @@ export default {
   padding: 0.75rem 1.25rem !important;
   border: 1px solid rgba(0, 0, 0, 0.125);
   margin-bottom: 0px;
+}
+
+.mgm-h3 .svg-inline {
+  vertical-align: middle;
 }
 
 .mgm-card .collapse .card,

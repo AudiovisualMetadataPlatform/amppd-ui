@@ -40,7 +40,7 @@
                       Filename: <span>{{ pfile.primaryfileOriginalname }}</span>
                     </h2>
                   </div>
-                  <div class="table-responsive">
+                  <div class="table-responsive dataTables_wrapper no-footer">
                     <button
                       v-on:click="searchModal"
                       id="btn-search-modal"
@@ -53,7 +53,7 @@
                     <div class="final-choice-top">
                       <span class="txt-v">Show Final Results Only</span>
                       <label class="switch" title="Final Result"
-                        ><span class="sr-only">Final Result</span>
+                        ><span class="visually-hidden">Final Result</span>
                         <input type="checkbox" v-on:click="filterByFinal" />
                         <span class="slider round"></span>
                       </label>
@@ -115,15 +115,13 @@
                       ref="searchInput"
                       tabindex="0"
                     />
-                    <div class="input-group-append">
-                      <button
-                        v-on:click="searchFiles"
-                        class="btn btn-success"
-                        type="button"
-                      >
-                        Go
-                      </button>
-                    </div>
+                    <button
+                      v-on:click="searchFiles"
+                      class="btn btn-success input-group-text"
+                      type="button"
+                    >
+                      Go
+                    </button>
                   </div>
                   <div class="scrollDiv">
                     <table

@@ -9,10 +9,10 @@
         <div class="panel-heading"><strong>Upload files</strong></div>
         <div class="panel-body">
           <div class="mb-4 file-upload bg-light-gray-1">
-            <label for="file-upload" class="file-upload-box">
+            <label for="file-upload" class="file-upload-box form-label">
               <input
                 type="file"
-                class="form-control-file btn btn-light btn-lg"
+                class="btn btn-light btn-lg"
                 @change="filesChange"
               />
             </label>
@@ -27,7 +27,7 @@
               <hr />
               <div class="row">
                 <div class="col-12 marg-b-1">
-                  <label for="item-name">File Name</label>
+                  <label for="item-name" class="form-label">File Name</label>
                   <input
                     v-if="action === 'add' || action === 'replace'"
                     type="text"
@@ -49,7 +49,7 @@
                       v-if="canUpdate"
                     >
                       <button
-                        class="btn btn-outline btn-right add-remove float-right button-replace"
+                        class="btn btn-outline btn-right add-remove float-end button-replace"
                         id="replaceFile"
                         @click="replaceFile($event)"
                       >
@@ -86,8 +86,8 @@
                 </div>
               </div>
               <div class="mt-3 row">
-                <div class="form-group  col-6">
-                  <label for="sup-item-name">Supplemental File Name*</label>
+                <div class="mb-3  col-6">
+                  <label for="sup-item-name" class="form-label">Supplemental File Name*</label>
                   <input
                     type="text"
                     class="form-control"
@@ -101,10 +101,10 @@
                     :disabled="!canUpdate"
                   />
                 </div>
-                <div class="form-group col-6">
-                  <label for="category-name">Category*</label>
+                <div class="mb-3 col-6">
+                  <label for="category-name" class="form-label">Category*</label>
                   <select
-                    class="select custom-select w-100"
+                    class="select form-select w-100"
                     v-model="supplement.fileDetails.category"
                     required
                     :class="{
@@ -126,7 +126,7 @@
               </div>
               <div class="row marg-b-2">
                 <div class="col-12">
-                  <label for="description">Description</label>
+                  <label for="description" class="form-label">Description</label>
                   <textarea
                     id="description"
                     class="form-control textArea"
@@ -139,10 +139,10 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="form-group col-6">
-            <label for="unit-name">Unit*</label>
+          <div class="mb-3 col-6">
+            <label for="unit-name" class="form-label">Unit*</label>
             <select
-              class="select custom-select w-100"
+              class="select form-select w-100"
               v-model="supplement.fileDetails.unit"
               @change="onInputChange('unit', true)"
               required
@@ -159,10 +159,10 @@
               >
             </select>
           </div>
-          <div class="form-group  col-6">
-            <label for="collection-name">Collection</label>
+          <div class="mb-3  col-6">
+            <label for="collection-name" class="form-label">Collection</label>
             <select
-              class="select custom-select w-100"
+              class="select form-select w-100"
               v-model="supplement.fileDetails.collection"
               @change="onInputChange('collection', true)"
               :disabled="
@@ -180,10 +180,10 @@
           </div>
         </div>
         <div class="row">
-          <div class="form-group  col-6">
-            <label for="item-name">Item</label>
+          <div class="mb-3  col-6">
+            <label for="item-name" class="form-label">Item</label>
             <select
-              class="select custom-select w-100"
+              class="select form-select w-100"
               v-model="supplement.fileDetails.item"
               @change="onInputChange('item', true)"
               :disabled="
@@ -198,10 +198,10 @@
               >
             </select>
           </div>
-          <div class="form-group  col-6">
-            <label for="primary-file-name">Content File</label>
+          <div class="mb-3  col-6">
+            <label for="primary-file-name" class="form-label">Content File</label>
             <select
-              class="select custom-select w-100"
+              class="select form-select w-100"
               v-model="supplement.fileDetails.primaryFile"
               @change="onInputChange('primaryFile', true)"
               :disabled="
@@ -222,7 +222,7 @@
         </div>
         <div class="row">
           <div class="col">
-            <label for="created-by">Created by</label>
+            <label for="created-by" class="form-label">Created by</label>
             <input
               type="text"
               class="form-control"
@@ -232,7 +232,7 @@
             />
           </div>
           <div class="col">
-            <label for="create-date">Date Created</label>
+            <label for="create-date" class="form-label">Date Created</label>
             <input
               type="text"
               class="form-control"
@@ -242,7 +242,7 @@
             />
           </div>
           <div class="col">
-            <label for="modified-by">Modified by</label>
+            <label for="modified-by" class="form-label">Modified by</label>
             <input
               type="text"
               class="form-control"
@@ -252,7 +252,7 @@
             />
           </div>
           <div class="col">
-            <label for="modified-date">Modified Date </label>
+            <label for="modified-date" class="form-label">Modified Date </label>
             <input
               type="text"
               class="form-control"
@@ -264,7 +264,7 @@
         </div>
         <button
           v-if="canUpdate"
-          class="marg-tb-1 mt-2 float-right  btn btn-primary btn-lg btn-edit"
+          class="marg-tb-1 mt-2 float-end  btn btn-primary btn-lg btn-edit"
           @click="saveFile($event, supplement.fileDetails)"
         >
           Save

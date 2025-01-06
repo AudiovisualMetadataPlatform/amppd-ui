@@ -42,7 +42,7 @@
                             {{ rec.description }}
                           </p>
                         </div>
-                        <div class="col-md-2 text-right">
+                        <div class="col-md-2 text-end">
                           <label
                             class="switch"
                             :title="rec.active ? 'Deactivate' : 'Activate'"

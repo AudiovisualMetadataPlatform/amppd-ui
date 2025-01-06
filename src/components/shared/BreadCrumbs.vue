@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12 p-0 fl-right" v-if="breadCrumbs && breadCrumbs.length">
+  <div class="col-12 p-1 float-start" v-if="breadCrumbs && breadCrumbs.length">
     <b-breadcrumb :items="breadCrumbs"></b-breadcrumb>
   </div>
 </template>

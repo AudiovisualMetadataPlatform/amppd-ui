@@ -10,7 +10,7 @@
 
         <b-collapse id="nav-collapse" class="nav-menus" is-nav>
           <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto" v-if="isAuthenticated">
+          <b-navbar-nav class="ms-auto" v-if="isAuthenticated">
             <span
               class="nav-span"
               v-for="menu in orderedMenuList"
@@ -22,14 +22,14 @@
                 v-if="!menu.children && menu.url !== '/mgm-evaluation'"
               >
                 <span v-html="menu.icon"></span>
-                <span class="pl-2 menu-name">{{ menu.name }}</span>
+                <span class="ps-2 menu-name">{{ menu.name }}</span>
               </b-nav-item>
               <b-nav-item-dropdown
                 v-else
               >
                 <template #button-content>
                   <span v-html="menu.icon"></span>
-                  <span class="pl-2  menu-name">{{ menu.name }}</span>
+                  <span class="ps-2  menu-name">{{ menu.name }}</span>
                   <span
                     v-if="menu.dropdownIcon"
                     v-html="menu.dropdownIcon"

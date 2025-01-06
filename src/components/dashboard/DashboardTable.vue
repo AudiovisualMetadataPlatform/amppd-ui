@@ -244,7 +244,7 @@
               class="slim-col-14"
             >
               <label class="switch" title="Final Result">
-                <span class="sr-only">Final Result</span>
+                <span class="visually-hidden">Final Result</span>
                 <input
                   type="checkbox"
                   v-model="rec.isFinal"
@@ -620,9 +620,11 @@ export default {
       this.refreshData();
     },
     workflowResultType: function() {
-      this.columns = this.columns.filter(
-        (column) => column.field !== "status" && column.field !== "actions"
-      );
+      if(!this.columns) {
+        this.columns = this.columns.filter(
+          (column) => column.field !== "status" && column.field !== "actions"
+        );
+      }
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.workflowDashboard.searchQuery.filterByTypes = [
         this.workflowResultType,

@@ -23,7 +23,7 @@
         </button>
       </template>
       <template #default>
-        <div class="form-row body-m">
+        <div class="row body-m">
           <div class="col-12">
             <h3>Select a Ground Truth</h3>
             <div class="scrollDiv gt-table">
@@ -120,27 +120,27 @@
                   </td>
                   <td>
                     <button
-                      class="btn btn-primary btn float-right"
+                      class="btn btn-primary btn float-end"
                       @click="handleUploadSaveBtn($event, file)"
                     >
                       Save
                     </button>
                     <button
-                      class="btn btn-link add-remove float-right mr-1"
+                      class="btn btn-link add-remove float-end me-1"
                       @click="removeFile(index)"
                     >
-                      <span v-html="removeIcon" class="pr-1"></span>Remove File
+                      <span v-html="removeIcon" class="pe-1"></span>Remove File
                     </button>
                   </td>
                 </tr>
               </tbody>
             </table>
             <div class="d-flex w-100 mt-3">
-              <div class="input-group image-preview col-11 p-0 mr-1">
+              <div class="input-group image-preview col-11 p-0 me-1">
                 <input
                   type="file"
                   :accept="'.' + mstDetails.groundtruthFormat"
-                  class="form-control-file btn btn-light btn"
+                  class="btn btn-light btn"
                   ref="fileupload"
                   @change="getFile"
                   :disabled="uploadGtFiles.length > 0"
@@ -148,7 +148,7 @@
               </div>
               <div class="col-1 p-0" style="padding: 5px !important;">
                 <button
-                  class="btn btn-primary btn float-right"
+                  class="btn btn-primary btn float-end"
                   @click="uploadFile()"
                   :disabled="uploadGtFiles.length > 0"
                 >

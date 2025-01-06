@@ -16,7 +16,7 @@
           target="popup"
           @click="routeToHelp($event)"
         >
-          <span class="sr-only"
+          <span class="visually-hidden"
             ><title>
               Help, opens a new window for help topics for this page.
             </title></span

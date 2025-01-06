@@ -16,26 +16,26 @@
             </ul>
             </p>
           </div>
-          <div class="form-group">
-            <label for="userId">User ID: {{this.$route.params.id}}</label>
+          <div class="mb-3">
+            <label for="userId" class="form-label">User ID: {{this.$route.params.id}}</label>
           </div>
-          <div class="form-group">
-            <label for="email">Email: {{approve_user_emailId}}</label>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email: {{approve_user_emailId}}</label>
           </div>
-          <div class="form-group" v-if="isUserApproved">
-            <label>The user has already been approved. </label>
+          <div class="mb-3" v-if="isUserApproved">
+            <label class="form-label">The user has already been approved. </label>
           </div>
-          <div class="form-group" v-if="isRequested" >
+          <div class="mb-3" v-if="isRequested" >
             <button class="btn btn-primary marg-bot-4" v-on:click="approveUser()" :disabled="disableAction">Approve</button>
           </div>
-          <div class="form-group" v-if="isRequested">
+          <div class="mb-3" v-if="isRequested">
             <button class="btn btn-primary marg-bot-4" v-on:click="rejectUser()" :disabled="disableAction">Reject</button>
           </div>
-          <div class="form-group" v-if="approve_user">
-            <label>The user has been approved. </label>
+          <div class="mb-3" v-if="approve_user">
+            <label class="form-label">The user has been approved. </label>
           </div>
-          <div class="form-group" v-if="reject_user">
-            <label>The user has been rejected successfully. </label>
+          <div class="mb-3" v-if="reject_user">
+            <label class="form-label">The user has been rejected successfully. </label>
           </div>
         </form>
       </div>  

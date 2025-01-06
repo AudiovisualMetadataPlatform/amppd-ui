@@ -1,7 +1,7 @@
 <template>
   <div class="w-100">
     <loader :show="showLoader" />
-    <b-card class="text-left">
+    <b-card class="text-start">
       <h2 class="mb-3">Content Files</h2>
       <table
         class="table"
@@ -47,25 +47,25 @@
             </td>
             <td>
               <button
-                class="btn btn-primary btn float-right"
+                class="btn btn-primary btn float-end"
                 @click="onView(file)"
                 v-if="!file.file && accessControl._primaryfile._read"
               >
                 View
               </button>
               <button
-                class="btn btn-primary btn float-right"
+                class="btn btn-primary btn float-end"
                 @click="saveFile(file, index)"
                 v-if="file.file && accessControl._primaryfile._create"
               >
                 Save
               </button>
               <button
-                class="btn btn-link add-remove float-right mr-1"
+                class="btn btn-link add-remove float-end me-1"
                 v-if="accessControl._primaryfile._delete"
                 @click="removeFile(index)"
               >
-                <span v-html="removeIcon" class="pr-1"></span>Remove File
+                <span v-html="removeIcon" class="pe-1"></span>Remove File
               </button>
             </td>
           </tr>
@@ -83,7 +83,7 @@
             aria-valuemax="100"
             style="width: 60%"
           >
-            <span class="sr-only">60% Complete</span>
+            <span class="visually-hidden">60% Complete</span>
           </div>
         </div>
       </div>
@@ -102,18 +102,18 @@
         <div class="panel-body"
           v-if="accessControl._primaryfile._create"
         >
-          <div class="d-flex w-100 mt-3">
-            <div class="input-group image-preview col-11 p-0 mr-1">
+          <div class="d-flex mt-3">
+            <div class="image-preview col-11 p-0 me-1">
               <input
                 type="file"
-                class="form-control-file btn btn-light btn-lg"
+                class="btn btn-light btn-lg w-100"
                 ref="fileupload"
                 @change="getFile"
               />
             </div>
             <div class="col-1 p-0" style="padding: 5px !important;">
               <button
-                class="btn btn-primary btn-lg float-right"
+                class="btn btn-primary btn-lg float-end"
                 @click="uploadFile()"
                 :disabled="dropFiles.length > 0"
               >
