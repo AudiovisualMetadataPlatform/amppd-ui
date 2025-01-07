@@ -19,7 +19,7 @@
               >
                 <div class="card home-card">
                   <h5 class="card-header">
-                    <span v-html="card.icon" class="mr-2 card-head"></span
+                    <span v-html="card.icon" class="me-2 card-head"></span
                     >{{ card.header }}
                   </h5>
                   <div class="card-body">

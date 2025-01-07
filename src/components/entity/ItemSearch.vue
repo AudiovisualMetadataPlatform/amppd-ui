@@ -12,7 +12,7 @@
                     <h1 class="col-lg-12">
                       Item Search
                       <button
-                        class="btn btn-primary btn-lg btn-edit float-right"
+                        class="btn btn-primary btn-lg btn-edit float-end"
                         type="button"
                         v-b-modal.modal-lg
                       >

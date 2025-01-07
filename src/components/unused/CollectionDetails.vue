@@ -24,9 +24,9 @@
                       <br />MODIFIED DATE: {{ collectionDetails.modifiedDate }}
                     </p>
 
-                    <div class="form-group col-lg-6">
-                      <label for="collection-name">Task Manager</label>
-                      <select class="browser-default custom-select" disabled>
+                    <div class="mb-3 col-lg-6">
+                      <label for="collection-name" class="form-label">Task Manager</label>
+                      <select class="browser-default form-select" disabled>
                         <option value="1">
                           {{ collectionDetails.taskManager }}
                         </option>
@@ -36,7 +36,7 @@
 
                     <div class="container-fluid">
                       <div class="row">
-                        <div class="col controls text-right">
+                        <div class="col controls text-end">
                           <button
                             class="btn btn-outline-danger btn-lg marg-bot-1"
                           >

@@ -1,14 +1,14 @@
 <template>
   <div class="w-100">
     <loader :show="showLoader" />
-    <b-card class="text-left">
+    <b-card class="text-start">
       <div class="d-flex">
         <div class="col-lg">
           <h2 class="card-title">Output Files</h2>
         </div>
         <button
           v-if="accessControl._workflowresult._update"
-          class="btn btn-primary btn float-right"
+          class="btn btn-primary btn float-end"
           type="button"
           @click="onAliasSave"
         >

@@ -51,7 +51,7 @@
                     {{ bundle.createdBy }}
                   </span>
                   <button
-                    class="btn btn-link float-right add-to-bundle"
+                    class="btn btn-link float-end add-to-bundle"
                     v-on:click="addAllFiles(bundle)"
                     v-bind:disabled="allSelected(bundle)"
                     :key="updateSelectedFiles"

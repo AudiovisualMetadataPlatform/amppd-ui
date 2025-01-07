@@ -244,7 +244,7 @@
               class="slim-col-14"
             >
               <label class="switch" title="Final Result">
-                <span class="sr-only">Final Result</span>
+                <span class="visually-hidden">Final Result</span>
                 <input
                   type="checkbox"
                   v-model="rec.isFinal"

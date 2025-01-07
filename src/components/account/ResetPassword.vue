@@ -11,7 +11,7 @@
             <h2 class="card-title">Reset Password</h2>
 
             <form>
-              <div class="form-group" v-if="errors.other_errors.length">
+              <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="form-errors"
                   v-for="error in errors.other_errors"
@@ -20,7 +20,7 @@
                 >
               </div>
 
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="exampleInputEmail1">Email address</label>
                 <!-- <label class="form-errors" v-if="errors.email_error.length">{{errors.email_error}}</label> -->
                 <input
@@ -33,8 +33,8 @@
                 />
               </div>
 
-              <div class="form-group">
-                <label for="password">Password</label>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
                 <label class="form-errors" v-if="errors.pswd_error.length">{{
                   errors.pswd_error
                 }}</label>
@@ -48,8 +48,8 @@
                 />
               </div>
 
-              <div class="form-group">
-                <label for="Password2">Confirm Password</label>
+              <div class="mb-3">
+                <label for="Password2" class="form-label">Confirm Password</label>
                 <label class="form-errors" v-if="errors.cpswd_error.length">{{
                   errors.cpswd_error
                 }}</label>

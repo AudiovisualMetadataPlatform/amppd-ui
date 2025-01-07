@@ -12,7 +12,7 @@
             <h2 class="card-title">Sign In</h2>
 
             <form>
-              <div class="form-group" v-if="errors.other_errors.length">
+              <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="form-errors"
                   v-for="error in errors.other_errors"
@@ -20,8 +20,8 @@
                   >{{ error }}</label
                 >
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
                 <label class="form-errors" v-if="errors.email_error.length">{{
                   errors.email_error
                 }}</label>
@@ -35,8 +35,8 @@
                 />
               </div>
 
-              <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
                 <label class="form-errors" v-if="errors.pswd_error.length">{{
                   errors.pswd_error
                 }}</label>

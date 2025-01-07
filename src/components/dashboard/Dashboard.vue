@@ -628,7 +628,7 @@
                         Show Relevant Results Only
                       </span>
                       <label class="switch my-0" title="Relevant Result">
-                        <span class="sr-only">Relevant Result</span>
+                        <span class="visually-hidden">Relevant Result</span>
                         <input
                           type="checkbox"
                           v-model="workflowDashboard.searchQuery.filterByRelevant"
@@ -642,7 +642,7 @@
                           parent !== 'TestResults' &&
                           parent !== 'Deliverables'
                         "
-                        class="ml-auto px-2 my-2"
+                        class="ms-auto px-2 my-2"
                       >
                       <input
                         id="export-results"
@@ -667,7 +667,7 @@
                         id="btn-show-hide"
                         class="dropdown mb-2"
                       >
-                        <b-dropdown id="dropdown-form">
+                        <b-dropdown id="dropdown-form" auto-close="outside">
                             <template #button-content>
                               <span>Show/Hide Columns</span>
                               <span>
@@ -710,8 +710,8 @@
                                 v-model="columns"
                                 @change="onChange($event.target, column)"
                                 class="mb-3"
-                                >{{ column.label }}</b-form-checkbox
-                              >
+                                >{{ column.label }}
+                              </b-form-checkbox>
                             </b-dropdown-form>
                         </b-dropdown>
                       </div>  

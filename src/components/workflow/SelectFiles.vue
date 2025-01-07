@@ -36,7 +36,7 @@
                 v-on:click="displaySelectBundle"
                 id="select-bundles"
                 type="button"
-                class="btn btn-primary float-right select-bundles"
+                class="btn btn-primary float-end select-bundles"
                 data-toggle="modal"
                 data-target=".select-from-saved-modal"
               >
@@ -45,14 +45,14 @@
             </div>
           </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <div class="container-fluid">
             <div class="row">
               <div class="col-12">
                 <div class="input-group mb-3">
                   <label
                     for="workflowSubmissionSelectFilesSearch"
-                    class="sr-only"
+                    class="visually-hidden"
                     >Search</label
                   >
                   <label
@@ -68,28 +68,26 @@
                     v-model="searchWord"
                     autocomplete="off"
                   />
-                  <div class="input-group-append">
-                    <button
-                      class="btn"
-                      type="button"
-                      v-on:click="searchFiles()"
+                  <button
+                    class="btn input-group-text"
+                    type="button"
+                    v-on:click="searchFiles()"
+                  >
+                    <svg
+                      data-v-6b33b2c4=""
+                      role="img"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 50 50"
+                      class="svg-search"
                     >
-                      <svg
+                      <title data-v-6b33b2c4="">search</title>
+                      <path
                         data-v-6b33b2c4=""
-                        role="img"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 50 50"
-                        class="svg-search"
-                      >
-                        <title data-v-6b33b2c4="">search</title>
-                        <path
-                          data-v-6b33b2c4=""
-                          d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"
-                        ></path>
-                      </svg>
-                      Search
-                    </button>
-                  </div>
+                        d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"
+                      ></path>
+                    </svg>
+                    Search
+                  </button>
                 </div>
               </div>
             </div>
@@ -134,7 +132,7 @@
                       d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"
                     ></path>
                   </svg>
-                  <span class="sr-only">Toggle hidden content</span>
+                  <span class="visually-hidden">Toggle hidden content</span>
                   {{ item.itemName }}
                 </button>
                 <button class="btn bg-transparent no-bx-shadow">
@@ -146,7 +144,7 @@
                     !workflowSubmission.workflowDetails
                       .inputWprkflowResultFormats.length
                   "
-                  class="btn btn-link float-right"
+                  class="btn btn-link float-end"
                   v-on:click="addAllFiles(index)"
                   v-bind:disabled="hasValues(index)"
                   :key="updateSelectedFiles"
@@ -230,7 +228,7 @@
                       {{ primaryfile.originalFilename }}
                     </button>
                     <button
-                      class="btn btn-link  add-remove float-right file-list-item-add"
+                      class="btn btn-link  add-remove float-end file-list-item-add"
                       v-on:click="addFile(index, file_index)"
                       v-bind:disabled="
                         hasValue(item.primaryfiles[file_index].id)
@@ -297,7 +295,7 @@
               )
             "
             type="button"
-            class="btn btn-primary btn-md ml-2"
+            class="btn btn-primary btn-md ms-2"
             data-toggle="modal"
             data-target=".save-modal"
             style="height: 2.5rem;"
@@ -309,7 +307,7 @@
           <h5>
             Content File:
             {{ Array.from(workflowSubmission.selectedFiles.values())[0].name }}
-            <span class="btn btn-light float-right mb-2 mt-1 al-cursor">{{
+            <span class="btn btn-light float-end mb-2 mt-1 al-cursor">{{
               Array.from(workflowSubmission.selectedFiles.values())[0]
                 .originalFilename
             }}</span>
@@ -325,7 +323,7 @@
             <div class="card-header" id="headingOne">
               <h2 class="mb-0">
                 <button
-                  class="btn btn-link btn-block text-left"
+                  class="btn btn-link text-start"
                   type="button"
                   data-toggle="collapse"
                   data-target="#collapseOne"
@@ -361,7 +359,7 @@
                           <th scope="col">Step</th>
                           <th scope="col">Output</th>
                           <th scope="col">
-                            <span class="sr-only">actions</span>
+                            <span class="visually-hidden">actions</span>
                           </th>
                         </tr>
                       </thead>
@@ -384,7 +382,7 @@
                           <td class="text-center slim-col-12 slim-col-4 ">
                             <b-form-radio
                               v-model="localSelIntWfResult[resultLabelIndex]"
-                              style="font-size:1.25rem;"
+                              class="mt-0 fs-5"
                               :name="
                                 'workflowResult-radios-' + [resultLabelIndex]
                               "
@@ -401,7 +399,7 @@
                   <button
                     type="button"
                     id="saveSelection"
-                    class="btn btn-md btn-outline-primary float-right mb-3"
+                    class="btn btn-md btn-outline-primary float-end mb-3"
                     @click="handleAddToSelection(resultLabelIndex)"
                   >
                     Add to selection

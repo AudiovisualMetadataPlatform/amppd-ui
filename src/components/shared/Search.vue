@@ -26,19 +26,17 @@
       </template>
 
       <template #default>
-        <div v-if="type === 'item-search'" class="form-group">
+        <div v-if="type === 'item-search'" class="mb-3">
           <div class="container-fluid">
             <div class="row">
               <div class="col-12">
                 <div class="input-group mb-3">
-                  <label for="exampleFormControlInput100" class="sr-only"
-                    >Search</label
-                  >
+                  <label for="exampleFormControlInput100" class="visually-hidden">Search</label>
                   <label
-                    class="form-errors"
-                    v-if="errors.search_error.length"
-                    >{{ errors.search_error }}</label
-                  >
+                    class="form-errors form-label"
+                    v-if="errors.search_error.length">
+                    {{ errors.search_error }}
+                  </label>
                   <input
                     type="text"
                     class="form-control"
@@ -48,27 +46,25 @@
                     autocomplete="off"
                     v-on:keyup.enter="searchKeyUp"
                   />
-                  <div class="input-group-append">
-                    <button
-                      class="btn search-btn"
-                      type="button"
-                      v-on:click="searchItems()"
+                  <button
+                    class="btn search-btn input-group-text"
+                    type="button"
+                    v-on:click="searchItems()"
+                  >
+                    <svg
+                      data-v-6b33b2c4=""
+                      role="img"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 50 50"
+                      class="svg-search"
                     >
-                      <svg
+                      <path
                         data-v-6b33b2c4=""
-                        role="img"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 50 50"
-                        class="svg-search"
-                      >
-                        <path
-                          data-v-6b33b2c4=""
-                          d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"
-                        ></path>
-                      </svg>
-                      Search
-                    </button>
-                  </div>
+                        d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"
+                      ></path>
+                    </svg>
+                    Search
+                  </button>
                 </div>
               </div>
             </div>
@@ -94,9 +90,7 @@
               placeholder="Search here"
               v-model="userSearchValue"
             />
-            <div class="input-group-append">
-              <button class="btn btn-success" type="submit">Go</button>
-            </div>
+            <button class="btn btn-success input-group-text" type="submit">Go</button>
           </div>
         </form>
       
@@ -133,7 +127,7 @@
               selectedFilters[type].length
           "
         >
-          <h5 class="pad-all-2 text-left">Selected</h5>
+          <h5 class="pad-all-2 text-start">Selected</h5>
           <table class="w-100 table table-striped">
             <tbody>
               <template v-for="source in clonedDataSource">
@@ -229,9 +223,9 @@
               <th
                 v-if="type !== 'item-search'"
                 :class="type === 'listing-supplement' ? 'supSelectAll' : ''"
+                colspan="2"
               >
-                <label>
-                  <input
+                <input
                     class="selectAll"
                     type="checkbox"
                     v-model="selectAll"
@@ -239,8 +233,7 @@
                     id="selectAll"
                     @change="onSelectAllChange($event)"
                   />
-                  <span class="selectAll pl-1">Select All</span>
-                </label>
+                  <label class="form-label" for="selectAll">Select All</label>
               </th>
               <template v-if="!isEntityList">
                 <th
@@ -337,7 +330,7 @@
                       : ''
                   "
                 >
-                  <td v-if="type !== 'item-search'" colspan="1">
+                  <td v-if="type !== 'item-search'" colspan="2">
                     <input
                       class="selectAll"
                       type="checkbox"
@@ -431,11 +424,11 @@
         <template v-if="type === 'workflow-search'">
           <div
             id="cloneable"
-            class="form-row row cloneable"
+            class="row cloneable"
             v-for="(row, searchIndex) in searchFields['rows']"
             :key="searchIndex"
           >
-            <div class="form-group col-md-3" v-if="!searchIndex">
+            <div class="mb-3 col-md-3" v-if="!searchIndex">
               <select
                 id="selectOptions-"
                 class="inputFilter form-control"
@@ -451,7 +444,7 @@
                 >
               </select>
             </div>
-            <div class="form-group col-md-3" v-else>
+            <div class="mb-3 col-md-3" v-else>
               <select
                 id="selectOptions-"
                 class="inputFilter form-control"
@@ -468,7 +461,7 @@
               </select>
             </div>
             <div
-              class="form-group col-md-4 dateRange"
+              class="mb-3 col-md-4 dateRange"
               v-if="row === 'dateRange'"
             >
               <input
@@ -485,7 +478,7 @@
               />
             </div>
             <div
-              class="form-group col-md-4 dateRange"
+              class="mb-3 col-md-4 dateRange"
               v-if="row === 'dateRange'"
             >
               <div></div>
@@ -512,7 +505,7 @@
                 "
               />
             </div>
-            <div id="" class="form-group col-md-8 searchWorkflows" v-else>
+            <div id="" class="mb-3 col-md-8 searchWorkflows" v-else>
               <input
                 type="text"
                 class="form-control"

@@ -11,7 +11,7 @@
             <h2 class="card-title">Forgot Password</h2>
 
             <form>
-              <div class="form-group" v-if="errors.other_errors.length">
+              <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="form-errors"
                   v-for="error in errors.other_errors"
@@ -20,9 +20,9 @@
                 >
               </div>
 
-              <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <label class="form-errors" v-if="errors.email_error.length">{{
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                <label class="form-errors form-label" v-if="errors.email_error.length">{{
                   errors.email_error
                 }}</label>
                 <input
@@ -46,8 +46,8 @@
                 Click to <a href="/" v-on:click="loginClicked()">Sign in</a>.
               </p>
 
-              <div class="form-group" v-if="resend_email">
-                <label>An email with a link to reset password has been sent. Please use the link as soon as possible as it will expire in a short time.</label>
+              <div class="mb-3" v-if="resend_email">
+                <label class="form-label">An email with a link to reset password has been sent. Please use the link as soon as possible as it will expire in a short time.</label>
                 <span><a href="#" @click="sendEmail()">&nbsp; Resend Email</a></span>
               </div>
             </form>

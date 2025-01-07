@@ -6,7 +6,7 @@
           Workflows
           <button
             id="btn-search"
-            class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
+            class="ms-1 btn btn-primary btn-lg marg-b-4 float-end"
             v-b-modal.modal-lg
           >
             Search Workflows
@@ -14,7 +14,7 @@
           <button
             v-if="canCreate()"
             id="btn-workflow-create"
-            class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
+            class="ms-1 btn btn-primary btn-lg marg-b-4 float-end"
             @click="handleWorkflowCreation()"
             :disabled="activeWorkflowSession"
           >
@@ -38,7 +38,7 @@
             </div>
             <div
               v-if="canUpdate()"
-              class="col-lg-2 text-right"
+              class="col-lg-2 text-end"
             >
               <button
                 class="btn btn-primary btn marg-t-5"
@@ -74,7 +74,7 @@
             <div class="col" v-if="workflow.tags && workflow.tags.length">
               <p class="mb-0">Tags:</p>
               <span
-                class="badge badge-secondary"
+                class="badge bg-secondary"
                 v-for="tag in workflow.tags"
                 :key="tag"
                 >{{ tag }}</span
@@ -83,13 +83,13 @@
             <!-- <div class="col">
                             Input File Formats:
                             <br />
-                            <span class="badge badge-secondary">Video</span>
+                            <span class="badge bg-secondary">Video</span>
                         <div class="col">
                             Input File Formats:
                             <br />
-                            <span class="badge badge-secondary">Video</span>
-                            <span class="badge badge-secondary">Audio</span>
-                        </div>    <span class="badge badge-secondary">Audio</span>
+                            <span class="badge bg-secondary">Video</span>
+                            <span class="badge bg-secondary">Audio</span>
+                        </div>    <span class="badge bg-secondary">Audio</span>
                         </div>-->
           </div>
           <b-card class="mgm-card bg-light-gray-1">
@@ -98,16 +98,15 @@
               @click="getWorkflowDetails(index)"
             >
               <button
-                class="btn"
+                class="btn fs-4"
                 :class="workflow.visible ? null : 'collapsed'"
                 :aria-expanded="workflow.visible ? 'true' : 'false'"
                 :aria-controls="'mgm' + index"
-                style="font-size:24px; font-weight:400"
                 @click="workflow.visible = !workflow.visible"
               >
-                <span v-html="rightArrowSvg" style="font-size:24px"></span>
-                <span class="sr-only">Toggle hidden content</span>
-                <span class="pl-3">MGM Parameter Settings</span>
+                <span v-html="rightArrowSvg" class="fs-4"></span>
+                <span class="visually-hidden">Toggle hidden content</span>
+                <span class="ps-3">MGM Parameter Settings</span>
               </button>
             </h3>
             <b-collapse
@@ -147,29 +146,29 @@
                   </b-navbar>
 
                   <dl
-                    class="d-flex col-12 mt-3 mb-0 pr-0"
+                    class="d-flex col-12 mt-3 mb-0 pe-0"
                     v-if="
                       workflow && workflow.details && workflow.details.length
                     "
                   >
                     <div
                       v-if="workflow.details[workflow.selectedNode].params.length==0"
-                      class="mr-5 d-flex"
+                      class="me-5 d-flex"
                     >
                       No parameter specified.
                     </div>
                     <div
-                      class="mr-5 d-flex"
+                      class="me-5 d-flex"
                       v-for="(p, paramIndex) in workflow.details[
                         workflow.selectedNode
                       ].params"
                       :key="paramIndex"
                     >
-                      <label class="font-weight-bold mb-0">{{ p.name }}:</label>
-                      <span class="ml-2">{{ p.value }}</span>
+                      <label class="fw-bold mb-0">{{ p.name }}:</label>
+                      <span class="ms-2">{{ p.value }}</span>
                     </div>
                     <a
-                      class="btn btn-primary float-right nav-link"
+                      class="btn btn-primary float-end nav-link"
                       id="pills-ner-tab-2"
                       role="tab"
                       @click="

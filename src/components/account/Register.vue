@@ -10,7 +10,7 @@
           <div class="card-body">
             <h2 class="card-title">Register</h2>
             <form>
-              <div class="form-group" v-if="errors.other_errors.length">
+              <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="form-errors"
                   v-for="error in errors.other_errors"
@@ -18,8 +18,8 @@
                   >{{ error }}</label
                 >
               </div>
-              <div class="form-group">
-                <label for="fname">First Name</label>
+              <div class="mb-3">
+                <label for="fname" class="form-label">First Name</label>
                 <label class="form-errors" v-if="errors.fname_error.length">{{
                   errors.fname_error
                 }}</label>
@@ -32,8 +32,8 @@
                   v-on:focus="onClick(`fname`)"
                 />
               </div>
-              <div class="form-group">
-                <label for="lname">Last Name</label>
+              <div class="mb-3">
+                <label for="lname" class="form-label">Last Name</label>
                 <label class="form-errors" v-if="errors.lname_error.length">{{
                   errors.lname_error
                 }}</label>
@@ -45,8 +45,8 @@
                   placeholder="Last Name"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
                 <label class="form-errors" v-if="errors.email_error.length">{{
                   errors.email_error
                 }}</label>
@@ -59,8 +59,8 @@
                   v-on:focus="onClick(`email`)"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
                 <label class="form-errors" v-if="errors.pswd_error.length">{{
                   errors.pswd_error
                 }}</label>
@@ -73,8 +73,8 @@
                   v-on:focus="onClick(`pswd`)"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputPassword2">Confirm Password</label>
+              <div class="mb-3">
+                <label for="exampleInputPassword2" class="form-label">Confirm Password</label>
                 <label class="form-errors" v-if="errors.cpswd_error.length">{{
                   errors.cpswd_error
                 }}</label>

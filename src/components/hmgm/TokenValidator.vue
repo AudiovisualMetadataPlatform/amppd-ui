@@ -5,9 +5,9 @@
       <template #body><div>
         Enter the editor password to view the page:
         <div class="form-input">
-          <label class="form-errors" v-if="invalidInput"
-            >Invalid password</label
-          >
+          <label class="form-errors form-label" v-if="invalidInput">
+            Invalid password
+          </label>
           <input
             v-model="userToken"
             type="text"

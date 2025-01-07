@@ -9,9 +9,9 @@
       <template #header><h3>Save file selection as a bundle</h3></template>
       <template #body><div class="input-group mb-3">
         <form>
-          <div class="form-group">
-            <label for="name">Bundle Name</label>
-            <label class="form-errors" v-if="inputError.length">{{
+          <div class="mb-3">
+            <label for="name" class="form-label">Bundle Name</label>
+            <label class="form-errors form-label" v-if="inputError.length">{{
               inputError
             }}</label>
             <input
@@ -24,8 +24,8 @@
               v-on:focus="clearError"
             />
           </div>
-          <div class="form-group">
-            <label for="description">Bundle Description</label>
+          <div class="mb-3">
+            <label for="description" class="form-label">Bundle Description</label>
             <input
               type="text"
               id="description"
