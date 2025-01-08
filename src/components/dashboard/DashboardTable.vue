@@ -1,21 +1,14 @@
 <template>
   <div class="dataTables_wrapper no-footer">
     <loader :show="workflowDashboard.loading" />
-    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap px-0 justify-content-between">
-      <div
-        class="
-          col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12
-          dataTables_length
-          my-auto
-        "
-      >
-        <label>
+    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap px-2 justify-content-between">
+      <div class="dataTables_length my-auto">
+        <label class="ps-1">
           Show 
           <select
             name="myTable_length"
             v-model="workflowDashboard.searchQuery.resultsPerPage"
             aria-controls="myTable"
-            class
             @change="
               refreshData();
               updateUserValues();
@@ -30,7 +23,7 @@
         </label>
       </div>
       <b-pagination
-        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100"
+        class="col-xl-6 col-lg-6 col-md-6 col-sm-12"
         v-model="workflowDashboard.searchQuery.pageNum"
         :total-rows="workflowDashboard.searchResult.totalResults"
         :per-page="workflowDashboard.searchQuery.resultsPerPage"
@@ -46,9 +39,7 @@
       <slot name="show-hide-columns"></slot>
     </div>
 
-    <div
-      class="table-responsive"
-    >
+    <div class="table-responsive">
       <table id="myTable" class="table dataTable no-footer">
         <thead>
           <tr v-if="parent === 'NewTest' || parent === 'TestResults'">
@@ -236,8 +227,7 @@
                 class="add-to-test-checkbox"
                 type="checkbox"
                 v-model="mgmEvaluation.selectedRecords"
-                :value="rec"
-              />
+                :value="rec"/>
             </td>
             <td
               v-if="parent === 'Deliverables' && checkAvailability('isFinal')"
@@ -272,10 +262,10 @@
       </table>
     </div>     
      
-    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap justify-content-between">
+    <div v-if="parent !== 'Deliverables'" class="d-flex flex-row justify-content-between">
       <label>{{ totalText }}</label>
       <b-pagination
-        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100"
+        class="col-xl-6 col-lg-6 col-md-6 col-sm-12"
         v-model="workflowDashboard.searchQuery.pageNum"
         :total-rows="workflowDashboard.searchResult.totalResults"
         :per-page="workflowDashboard.searchQuery.resultsPerPage"
@@ -292,7 +282,7 @@
 
     <!-- Modal for delete confirmation -->
     <b-modal v-model="showModal" id="modal-center" centered>
-      <template #modal-header>
+      <template #header>
         <h5 class="text-capitalize">
           Confirm
         </h5>
@@ -303,7 +293,7 @@
           action cannot be rolled back.
         </div>
       </template>
-      <template #modal-footer="{ hide }">
+      <template #footer="{ hide }">
         <button class="btn btn-outline" @click="hide()">
           Cancel
         </button>

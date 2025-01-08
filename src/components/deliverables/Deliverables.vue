@@ -1,10 +1,7 @@
 <template>
-  <div class="deliverables w-100">
+  <div class="deliverables w-100 px-0">
     <loader :show="loading" />
-    <div
-      class="container-fluid"
-      v-bind:class="[{ modalOpen: showModal }, 'container', 'col-12']"
-    >
+    <div class="container-fluid">
       <div class="row">
         <div class="col-12 bg-light-gray-1">
           <main class="m-0">
@@ -40,7 +37,7 @@
                       Filename: <span>{{ pfile.primaryfileOriginalname }}</span>
                     </h2>
                   </div>
-                  <div class="table-responsive dataTables_wrapper no-footer">
+                  <div class="table-responsive dataTables_wrapper">
                     <button
                       v-on:click="searchModal"
                       id="btn-search-modal"
