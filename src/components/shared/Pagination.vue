@@ -9,23 +9,23 @@
     >
       <li
         @click="paginate(currentPage - 1)"
-        :class="['page-arrow', { 'hide-page': currentPage <= 1 }]"
+        :class="['page-arrow page-item', { 'hide-page': currentPage <= 1 }]"
       >
-        <a href="javascript:void(0);">Previous</a>
+        <button class="page-link text-center">Previous</button>
       </li>
       <li
         v-for="p in pages"
-        v-bind:class="['paginate_button current', { active: p == currentPage }]"
+        v-bind:class="['page-item', { active: p == currentPage }]"
         @click="paginate(p)"
         :key="p"
       >
-        <a href="javascript:void(0);">{{ p }}</a>
+        <button class="page-link">{{ p }}</button>
       </li>
       <li
         @click="paginate(currentPage + 1)"
-        :class="['page-arrow', { 'hide-page': currentPage >= numPages }]"
+        :class="['page-arrow page-item', { 'hide-page': currentPage >= numPages }]"
       >
-        <a href="javascript:void(0);">Next</a>
+        <button class="page-link text-center">Next</button>
       </li>
     </ul>
   </div>
@@ -160,5 +160,13 @@ export default {
 .hide-page {
   pointer-events: none;
   opacity: 0.5;
+}
+ul.pagination .page-item:last-child .page-link {
+  border-top-right-radius: 0.2em;
+  border-bottom-right-radius: 0.2em;
+}
+ul.pagination .page-item:first-child .page-link {
+  border-top-left-radius: 0.2em;
+  border-bottom-left-radius: 0.2em;
 }
 </style>

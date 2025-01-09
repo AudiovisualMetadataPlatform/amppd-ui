@@ -29,8 +29,8 @@
                     AMP Dashboard
                   </h1>
                   <div v-if="filterCount > 0">
-                    <div class="col d-flex flex-wrap px-0">
-                      <div class="col-sm-2 label-bold">
+                    <div class="d-flex flex-wrap px-0">
+                      <div class="col-sm-2 fw-bold">
                         CURRENTLY FILTERED BY
                       </div>
                       <button
@@ -39,24 +39,10 @@
                           workflowDashboard.searchQuery.filterByDates.length > 0
                         "
                       >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeDateFilter()"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col"
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeDateFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto"
                               >{{
                                 parent === "TestResults"
                                   ? "Output date"
@@ -64,8 +50,7 @@
                               }}
                               range</label
                             >
-                            <label class="row no-padding-col"
-                              >{{
+                            <label>{{
                                 workflowDashboard.searchQuery.filterByDates[0].getMonth() +
                                   1
                               }}/{{
@@ -93,28 +78,11 @@
                             .length > 0
                         "
                       >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeTestDateFilter()"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col">
-                              Test date range</label
-                            >
-                            <label class="row no-padding-col"
-                              >{{
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeTestDateFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto">Test date range</label>
+                            <label>{{
                                 workflowDashboard.searchQuery.filterByTestDates[0].getMonth() +
                                   1
                               }}/{{
@@ -143,29 +111,11 @@
                         v-bind:index="index"
                         v-bind:key="index"
                       >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeSubmitterFilter(index)"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col"
-                              >Submitter</label
-                            >
-                            <label class="row no-padding-col">{{
-                              submitter
-                            }}</label>
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeSubmitterFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto">Submitter</label>
+                            <label>{{ submitter }}</label>
                           </div>
                         </div>
                       </button>
@@ -176,29 +126,11 @@
                         v-bind:index="index"
                         v-bind:key="index"
                       >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeUnitFilter(index)"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col"
-                              >Unit</label
-                            >
-                            <label class="row no-padding-col">{{
-                              unit.unitName
-                            }}</label>
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeUnitFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto">Unit</label>
+                            <label>{{ unit.unitName }}</label>
                           </div>
                         </div>
                       </button>
@@ -210,29 +142,11 @@
                         v-bind:index="index"
                         v-bind:key="index"
                       >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeCollectionFilter(index)"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col"
-                              >Collection</label
-                            >
-                            <label class="row no-padding-col">{{
-                              collection.collectionName
-                            }}</label>
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeCollectionFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto">Collection</label>
+                            <label>{{ collection.collectionName }}</label>
                           </div>
                         </div>
                       </button>
@@ -244,29 +158,11 @@
                         v-bind:index="index"
                         v-bind:key="index"
                       >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeExternalIdFilter(index)"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col"
-                              >External ID</label
-                            >
-                            <label class="row no-padding-col">{{
-                              externalId
-                            }}</label>
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeExternalIdFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto">External ID</label>
+                            <label>{{ externalId }}</label>
                           </div>
                         </div>
                       </button>
@@ -277,29 +173,11 @@
                         v-bind:index="index"
                         v-bind:key="index"
                       >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeItemFilter(index)"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col"
-                              >Item</label
-                            >
-                            <label class="row no-padding-col">{{
-                              item.itemName
-                            }}</label>
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeItemFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto">Item</label>
+                            <label>{{ item.itemName }}</label>
                           </div>
                         </div>
                       </button>
@@ -310,29 +188,11 @@
                         v-bind:index="index"
                         v-bind:key="index"
                       >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeFileFilter(index)"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col"
-                              >Content File</label
-                            >
-                            <label class="row no-padding-col">{{
-                              file.primaryfileName
-                            }}</label>
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeFileFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto">Content File</label>
+                            <label>{{ file.primaryfileName }}</label>
                           </div>
                         </div>
                       </button>
@@ -344,29 +204,11 @@
                         v-bind:index="index"
                         v-bind:key="index"
                       >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeWorkflowFilter(index)"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col"
-                              >Workflow</label
-                            >
-                            <label class="row no-padding-col">{{
-                              workflow
-                            }}</label>
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeWorkflowFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto">Workflow</label>
+                            <label>{{ workflow }}</label>
                           </div>
                         </div>
                       </button>
@@ -378,27 +220,11 @@
                         v-bind:index="index"
                         v-bind:key="index"
                       >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeStepFilter(index)"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col"
-                              >Step</label
-                            >
-                            <label class="row no-padding-col">{{ step }}</label>
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeStepFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto">Step</label>
+                            <label>{{ step }}</label>
                           </div>
                         </div>
                       </button>
@@ -411,29 +237,11 @@
                           v-bind:index="index"
                           v-bind:key="index"
                         >
-                          <div class="row">
-                            <svg
-                              class="col-auto"
-                              xmlns="http://www.w3.org/2000/svg"
-                              xmlns:xlink="http://www.w3.org/1999/xlink"
-                              version="1.1"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              @click="removeOutputFilter(index)"
-                            >
-                              <path
-                                fill="#808080"
-                                d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                              ></path>
-                            </svg>
-                            <div class="col-sm-1">
-                              <label class="row label-bold no-padding-col"
-                                >Output</label
-                              >
-                              <label class="row no-padding-col">{{
-                                output
-                              }}</label>
+                          <div class="d-flex flex-row justify-content-between">
+                            <span v-html="closeIconSvg" class="col-auto" @click="removeOutputFilter(index)"></span>
+                            <div class="d-flex flex-column">
+                              <label class="fw-bold col-auto">Output</label>
+                              <label>{{ output }}</label>
                             </div>
                           </div>
                         </button>
@@ -449,29 +257,11 @@
                           v-bind:index="index"
                           v-bind:key="index"
                         >
-                          <div class="row">
-                            <svg
-                              class="col-auto"
-                              xmlns="http://www.w3.org/2000/svg"
-                              xmlns:xlink="http://www.w3.org/1999/xlink"
-                              version="1.1"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              @click="removeStatusFilter(index)"
-                            >
-                              <path
-                                fill="#808080"
-                                d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                              ></path>
-                            </svg>
-                            <div class="col-sm-1">
-                              <label class="row label-bold no-padding-col"
-                                >Status</label
-                              >
-                              <label class="row no-padding-col">{{
-                                status
-                              }}</label>
+                          <div class="d-flex flex-row justify-content-between">
+                            <span v-html="closeIconSvg" class="col-auto" @click="removeStatusFilter(index)"></span>
+                            <div class="d-flex flex-column">
+                              <label class="fw-bold col-auto">Status</label>
+                              <label>{{ status }}</label>
                             </div>
                           </div>
                         </button>
@@ -484,57 +274,20 @@
                         v-bind:index="index"
                         v-bind:key="index"
                       >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="removeSearchFilter(index)"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="row label-bold no-padding-col"
-                              >Search Term</label
-                            >
-                            <label class="row no-padding-col">{{
-                              searchTerm
-                            }}</label>
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeSearchFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto">Search Term</label>
+                            <label>{{ searchTerm }}</label>
                           </div>
                         </div>
                       </button>
                       <button
                         class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-if="filterCount > 1"
-                      >
-                        <div class="row">
-                          <svg
-                            class="col-auto"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            version="1.1"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            @click="clearAll()"
-                          >
-                            <path
-                              fill="#808080"
-                              d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
-                            ></path>
-                          </svg>
-                          <div class="col-sm-1">
-                            <label class="bold" style="min-height: 16px"
-                              >Clear all</label
-                            >
-                          </div>
+                        v-if="filterCount > 1">
+                        <div class="d-flex flex-row justify-content-between align-items-center clear-all-filters-button">
+                          <span v-html="closeIconSvg" class="col-auto" @click="clearAll()"></span>
+                          <label class="fw-bold">Clear all</label>
                         </div>
                       </button>
                     </div>
@@ -619,7 +372,7 @@
                       v-if="parent !== 'Deliverables'"
                       :parent="parent"
                       class="px-2 my-1"
-                    />                 
+                    />
                     <span 
                       v-if="parent !== 'NewTest' && parent !== 'TestResults'"
                       class="px-2 my-2"
@@ -652,7 +405,7 @@
                         value="Export to CSV"
                       />
                     </span>
-                  </div>                        
+                  </div>
 
                   <DashboardTable
                     v-if="columns.length"
@@ -670,22 +423,9 @@
                         <b-dropdown id="dropdown-form" auto-close="outside">
                             <template #button-content>
                               <span>Show/Hide Columns</span>
-                              <span>
-                                <svg
-                                  aria-hidden="true"
-                                  focusable="false"
-                                  class="svg-inline"
-                                  role="img"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 48 48"
-                                >
-                                  <g id="Layer_2" class="icon-white">
-                                    <path d="M14 20l10 10 10-10z"></path>
-                                  </g>
-                                  </svg>
-                                </span>
+                              <i class="fa fa-sort-down ms-1"></i>
                             </template>
-                            <b-dropdown-form>
+                            <b-dropdown-form class="dashboard-filters">
                               <b-form-checkbox
                                 v-for="column in dashboardColumns.filter(
                                   (item) => {
@@ -709,7 +449,7 @@
                                 :checked="column"
                                 v-model="columns"
                                 @change="onChange($event.target, column)"
-                                class="mb-3"
+                                class="mb-3 form-check"
                                 >{{ column.label }}
                               </b-form-checkbox>
                             </b-dropdown-form>
@@ -734,6 +474,7 @@
 
 <script>
 import sync from "@/helpers/sync";
+import config from "../../assets/constants/common-contant.js";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import DashboardTable from "@/components/dashboard/DashboardTable.vue";
 import DateFilter from "@/components/dashboard/DashboardFilters/DateFilter";
@@ -764,6 +505,7 @@ export default {
       sharedService: new SharedService(),
       isFilterApiLoaded: false,
       columns: [],
+      closeIconSvg: config.common.icons["close_icon"],
     };
   },
   computed: {
@@ -1277,10 +1019,6 @@ export default {
   margin: 0.5em !important;
 }
 
-.spacer {
-  height: 24px;
-}
-
 .selected-filter-button {
   background-color: white;
   border: 2px solid;
@@ -1295,26 +1033,16 @@ export default {
   margin-right: 10px;
   flex-wrap: wrap;
   min-width: max-content;
-}
-
-.label-bold {
-  font-weight: bold;
-  flex-wrap: wrap;
-}
-
-.no-padding-col {
-  margin-bottom: 0px;
-  flex-wrap: wrap;
+  width: auto;
+  div.flex-row {
+    gap: 1em;
+  }
 }
 
 .btn-info {
   color: #fff !important;
   background-color: #17a2b8 !important;
   border-color: #17a2b8 !important;
-}
-
-.filter-gap {
-  height: 18px !important;
 }
 
 #dropdown-form {
@@ -1330,15 +1058,15 @@ export default {
   fill: #fff !important;
 }
 
-form.b-dropdown-form {
-  width: 350px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex-wrap: wrap;
+.dashboard-filters {
+  column-count: 2;
 }
 
-form.b-dropdown-form > * {
-  flex: 0 0 50%;
+.clear-all-filters-button {
+  height: 3em;
+}
+
+#btn-show-hide i {
+  vertical-align: text-top;
 }
 </style>
