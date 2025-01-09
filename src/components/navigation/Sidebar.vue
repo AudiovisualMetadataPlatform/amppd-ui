@@ -151,19 +151,15 @@ export default {
     },
     resolvePermissions(keys) {
       if(this.acIsAdmin) {
-        console.log("resolvePermissions: is Admin", keys);
         return false;
       } else {
         if(Array.isArray(keys) && keys.length > 0) {
-          console.log("resolvePermissions: keys is array", keys);
           return keys.map(key => {
             return this.acActions.indexOf(key) < 0;
           }).reduce((acc, current) => acc && current, true);
         } else if(typeof keys === "string") {
-          console.log("resolvePermissions: keys is string", keys);
           return this.acActions.indexOf(keys) < 0;
         } else {
-          console.log("resolvePermissions: permission denied", keys);
           return true;
         }
       }
