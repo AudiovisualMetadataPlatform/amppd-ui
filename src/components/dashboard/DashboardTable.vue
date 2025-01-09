@@ -22,20 +22,14 @@
           Entries 
         </label>
       </div>
-      <b-pagination
-        class="col-xl-6 col-lg-6 col-md-6 col-sm-12"
-        v-model="workflowDashboard.searchQuery.pageNum"
-        :total-rows="workflowDashboard.searchResult.totalResults"
-        :per-page="workflowDashboard.searchQuery.resultsPerPage"
-        @change="paginate($event)"
-        size="sm"
-        align="center"
-        first-number
-        limit="9"
-        last-number
-        prev-text="Prev"
-        next-text="Next"
-      ></b-pagination>
+      <pagination
+        :pageNum="workflowDashboard.searchQuery.pageNum"
+        :resultsPerPage="Number.parseInt(workflowDashboard.searchQuery.resultsPerPage)"
+        :totalResults="workflowDashboard.searchResult.totalResults"
+        :maxPages="9"
+        @paginate="paginate"
+        :showTotalText="false"
+      />
       <slot name="show-hide-columns"></slot>
     </div>
 
@@ -262,22 +256,16 @@
       </table>
     </div>     
      
-    <div v-if="parent !== 'Deliverables'" class="d-flex flex-row justify-content-between">
-      <label>{{ totalText }}</label>
-      <b-pagination
-        class="col-xl-6 col-lg-6 col-md-6 col-sm-12"
-        v-model="workflowDashboard.searchQuery.pageNum"
-        :total-rows="workflowDashboard.searchResult.totalResults"
-        :per-page="workflowDashboard.searchQuery.resultsPerPage"
-        @change="paginate($event)"
-        size="sm"
-        align="center"
-        first-number
-        limit="9"
-        last-number
-        prev-text="Prev"
-        next-text="Next"
-      ></b-pagination>
+    <div v-if="parent !== 'Deliverables'">
+      <pagination
+        class="col-xl-10 col-lg-10 col-md-10 col-sm-12"
+        :pageNum="workflowDashboard.searchQuery.pageNum"
+        :resultsPerPage="Number.parseInt(workflowDashboard.searchQuery.resultsPerPage)"
+        :totalResults="workflowDashboard.searchResult.totalResults"
+        :maxPages="9"
+        @paginate="paginate"
+        :showTotalText="true"
+      />
     </div>
 
     <!-- Modal for delete confirmation -->
@@ -314,12 +302,14 @@ import Loader from "@/components/shared/Loader.vue";
 import SharedService from "../../service/shared-service";
 import { accountService } from "@/service/account-service.js";
 import EvaluationService from "@/service/evaluation-service";
+import Pagination from "@/components/shared/Pagination.vue";
 
 export default {
   name: "DashboardTable",
   components: {
     SortableHeader,
     Loader,
+    Pagination,
   },
   data() {
     return {

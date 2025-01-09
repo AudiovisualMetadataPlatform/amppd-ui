@@ -1,6 +1,6 @@
 <template>
   <div class="pagination-wrapper" v-if="totalResults > 0">
-    <div class="dataTables_info">
+    <div class="dataTables_info" v-if="showTotalText">
       <label>{{ totalText }}</label>
     </div>
     <ul
@@ -9,23 +9,23 @@
     >
       <li
         @click="paginate(currentPage - 1)"
-        :class="['page-arrow page-item', { 'hide-page': currentPage <= 1 }]"
+        :class="['page-arrow page-number-item', { 'disable-page-item': currentPage <= 1 }]"
       >
-        <button class="page-link text-center">Previous</button>
+        <button class="page-number-link text-center">Previous</button>
       </li>
       <li
         v-for="p in pages"
-        v-bind:class="['page-item', { active: p == currentPage }]"
+        v-bind:class="['page-number-item', { active: p == currentPage }]"
         @click="paginate(p)"
         :key="p"
       >
-        <button class="page-link">{{ p }}</button>
+        <button class="page-number-link">{{ p }}</button>
       </li>
       <li
         @click="paginate(currentPage + 1)"
-        :class="['page-arrow page-item', { 'hide-page': currentPage >= numPages }]"
+        :class="['page-arrow page-number-item', { 'disable-page-item': currentPage >= numPages }]"
       >
-        <button class="page-link text-center">Next</button>
+        <button class="page-number-link text-center">Next</button>
       </li>
     </ul>
   </div>
@@ -49,6 +49,10 @@ export default {
       default: 4,
     },
     pageNum: Number,
+    showTotalText: {
+      type: Boolean,
+      default: true,
+    },
   },
   computed: {
     totalText() {
@@ -154,19 +158,28 @@ export default {
   padding: 6px 10px;
   width: 30px;
 }
-.pagination > li.hide-page > a {
-  color: #888;
-}
-.hide-page {
+.disable-page-item {
   pointer-events: none;
-  opacity: 0.5;
 }
-ul.pagination .page-item:last-child .page-link {
+ul.pagination .page-number-item:last-child .page-number-link {
   border-top-right-radius: 0.2em;
   border-bottom-right-radius: 0.2em;
 }
-ul.pagination .page-item:first-child .page-link {
+ul.pagination .page-number-item:first-child .page-number-link {
   border-top-left-radius: 0.2em;
   border-bottom-left-radius: 0.2em;
+}
+ul li button.page-number-link {
+  color: #163c4d !important;
+  border: 1px solid #dee2e6;
+  background-color: white;
+  display: block;
+  cursor: pointer;
+  padding: 0.375em 0.75em;
+  font-size: 0.85em;
+}
+ul li.page-number-item.active button.page-number-link{
+  background-color: #163c4d !important;
+  color: white !important
 }
 </style>

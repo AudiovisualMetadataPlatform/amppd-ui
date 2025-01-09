@@ -85,12 +85,11 @@
                       <pagination
                         v-if="searchQuery"
                         :pageNum="searchQuery.pageNum"
-                        :resultsPerPage="
-                          Number.parseInt(searchQuery.resultsPerPage)
-                        "
+                        :resultsPerPage="Number.parseInt(searchQuery.resultsPerPage)"
                         :totalResults="totalResults"
                         :maxPages="3"
                         @paginate="paginate"
+                        :showTotalText="true"
                       />
                     </div>
                   </div>
