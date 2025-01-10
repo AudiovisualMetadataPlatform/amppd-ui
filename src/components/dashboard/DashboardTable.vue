@@ -12,8 +12,7 @@
             @change="
               refreshData();
               updateUserValues();
-            "
-          >
+            ">
             <option value="10">10</option>
             <option value="25">25</option>
             <option value="50">50</option>
@@ -104,8 +103,8 @@
               <a v-if="canAccessLink(rec, false) && outputReady(rec)"
                 @click="workflowResultService.getSymlinkContent(rec, true, parent, $event)"                
                 target="_blank"
-                class="complete-output"
-                >{{ rec.outputName }}
+                class="complete-output">
+                {{ rec.outputName }}
               </a>
               <a v-else-if="canAccessLink(rec, false)"
                 role="link" aria-disabled="true">{{ rec.outputName }}
@@ -115,13 +114,10 @@
             <td v-if="checkAvailability('outputLabel')">            
               <a v-if="canAccessLink(rec, false) && outputReady(rec)"
                 @click="workflowResultService.getSymlinkContent(rec, true, parent, $event)"                
-                target="_blank"
-                class="complete-output"
-                >{{ rec.outputLabel }}
+                target="_blank" class="complete-output">
+                {{ rec.outputLabel }}
               </a>
-              <a v-else-if="canAccessLink(rec, false)"
-                role="link" aria-disabled="true">{{ rec.outputLabel }}
-              </a>         
+              <a v-else-if="canAccessLink(rec, false)" role="link" aria-disabled="true">{{ rec.outputLabel }}</a>         
             <span v-else> {{ rec.outputLabel }} </span>
             </td>
             <td v-if="checkAvailability('groundTruth')">
@@ -130,70 +126,31 @@
             <td v-if="checkAvailability('scores')">
               {{ rec.scores }}
             </td>
-            <td
-              v-if="
-                parent !== 'NewTest' &&
-                  parent !== 'TestResults' &&
-                  checkAvailability('status')
-              "
-            >
-              <button
-                v-if="rec.status === 'COMPLETE'"
-                type="button"
-                class="btn-sm btn btn-success eq-width"
-              >
+            <td v-if="parent !== 'NewTest' && parent !== 'TestResults' && checkAvailability('status')">
+              <button v-if="rec.status === 'COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">
                 Complete
               </button>
-              <button
-                v-else-if="rec.status === 'IN_PROGRESS'"
-                type="button"
-                class="btn-sm btn btn-warning eq-width"
-              >
+              <button v-else-if="rec.status === 'IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width">
                 In Progress
               </button>
-              <button
-                v-else-if="rec.status === 'PAUSED'"
-                type="button"
-                class="btn-sm btn btn-primary eq-width"
-              >
+              <button v-else-if="rec.status === 'PAUSED'" type="button" class="btn-sm btn btn-primary eq-width">
                 Paused
               </button>
-              <button
-                v-else-if="rec.status === 'ERROR'"
-                type="button"
-                class="btn-sm btn btn-danger eq-width"
-              >
+              <button v-else-if="rec.status === 'ERROR'" type="button" class="btn-sm btn btn-danger eq-width">
                 Error
               </button>
-              <button
-                v-else-if="rec.status === 'SCHEDULED'"
-                type="button"
-                class="btn-sm btn btn-blue eq-width"
-              >
+              <button v-else-if="rec.status === 'SCHEDULED'" type="button" class="btn-sm btn btn-blue eq-width">
                 Scheduled
               </button>
-              <button
-                v-else-if="rec.status === 'DELETED'"
-                type="button"
-                class="btn-sm btn eq-width"
-              >
+              <button v-else-if="rec.status === 'DELETED'" type="button" class="btn-sm btn eq-width">
                 Deleted
               </button>
             </td>
             <td
-              v-if="
-                parent !== 'NewTest' &&
-                  parent !== 'TestResults' &&
-                  checkAvailability('actions')
-              "
-              class="toggleActions"
-            >
-              <a
-                class="btn btn-link add-remove to-delete"
-                :class="{
-                  'disabled dis-color': currentUser.username !== rec.submitter,
-                }"
-              >
+              v-if="parent !== 'NewTest' && parent !== 'TestResults' && checkAvailability('actions')"
+              class="toggleActions">
+              <a class="btn btn-link add-remove to-delete"
+                :class="{ 'disabled dis-color': currentUser.username !== rec.submitter }">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="28"
@@ -211,29 +168,18 @@
               </a>
             </td>
             <td
-              v-if="
-                (parent === 'NewTest' || parent === 'TestResults') &&
-                  checkAvailability('addToTest')
-              "
-              class="text-center slim-col-14"
-            >
+              v-if="(parent === 'NewTest' || parent === 'TestResults') && checkAvailability('addToTest')"
+              class="text-center slim-col-14">
               <input
                 class="add-to-test-checkbox"
                 type="checkbox"
                 v-model="mgmEvaluation.selectedRecords"
                 :value="rec"/>
             </td>
-            <td
-              v-if="parent === 'Deliverables' && checkAvailability('isFinal')"
-              class="slim-col-14"
-            >
+            <td v-if="parent === 'Deliverables' && checkAvailability('isFinal')" class="slim-col-14">
               <label class="switch" title="Final Result">
                 <span class="visually-hidden">Final Result</span>
-                <input
-                  type="checkbox"
-                  v-model="rec.isFinal"
-                  v-on:click="setWorkflowResultFinal(rec.id)"
-                />
+                <input type="checkbox" v-model="rec.isFinal" v-on:click="setWorkflowResultFinal(rec.id)"/>
                 <span class="slider round"></span>
               </label>
             </td>
@@ -241,11 +187,7 @@
         </tbody>
         <tbody v-else>
           <tr>
-            <td
-              v-if="workflowDashboard.loading"
-              :colspan="columns.length"
-              class="no-results"
-            >
+            <td v-if="workflowDashboard.loading" :colspan="columns.length" class="no-results">
               <i class="fas fa-cog fa-spin"></i> Loading
             </td>
             <td v-else :colspan="columns.length" class="no-results">
