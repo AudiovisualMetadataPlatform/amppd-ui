@@ -176,6 +176,7 @@ export default {
       selectedTab: 0,
       activeTab: "test-results",
       visible: [],
+      mgmCategoryDetails: {}
     };
   },
   computed: {
