@@ -96,7 +96,7 @@
 <script>
 import sync from "@/helpers/sync";
 import Typeahead from "../../shared/TypeAhead.vue";
-import ClickOutside from "vue-click-outside";
+import vClickOutside from "click-outside-vue3";
 
 export default {
   name: "SubmitterFilter",
@@ -160,7 +160,7 @@ export default {
     },
   },
   directives: {
-    ClickOutside,
+    clickOutside: vClickOutside.directive,
   },
   mounted() {
     // prevent click outside event with popupItem.
