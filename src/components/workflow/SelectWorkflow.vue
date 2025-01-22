@@ -308,7 +308,7 @@
             </div>
           </div>
         </template>
-        <template #modal-footer="{ hide }">
+        <template #footer="{ hide }">
           <button class="btn btn-secondary" @click="hide()">
             Cancel
           </button>
