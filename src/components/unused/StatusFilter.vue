@@ -47,7 +47,7 @@
 import sync from "@/helpers/sync";
 import _ from "underscore";
 import { BFormCheckboxGroup } from "bootstrap-vue-next";
-import ClickOutside from "vue-click-outside";
+import vClickOutside from "click-outside-vue3";
 // import Multiselect from 'vue-multiselect';
 
 export default {
@@ -107,7 +107,7 @@ export default {
     },
   },
   directives: {
-    ClickOutside,
+    clickOutside: vClickOutside.directive,
   },
   mounted() {
     // prevent click outside event with popupItem.

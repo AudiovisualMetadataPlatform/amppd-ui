@@ -15,7 +15,7 @@
       }}
     </button>
     <div
-      v-click-outside="closeFilter"
+      v-if="this.displayFilter === true" v-click-outside="closeFilter"
       class="dropdown-menu compact-form"
       :class="{ show: this.displayFilter === true }"
       aria-labelledby="dropdownMenuButton"
@@ -58,7 +58,7 @@
 <script>
 import sync from "@/helpers/sync";
 import Datepicker from "vuejs3-datepicker";
-import ClickOutside from "vue-click-outside";
+import vClickOutside from "click-outside-vue3";
 export default {
   name: "DateFilter",
   components: {
@@ -97,8 +97,10 @@ export default {
       self.state.disabledDates.to = new Date(self.fromDate);
     },
     closeFilter() {
-      this.displayFilter = false;
-      this.$emit("displayChanged", this.displayFilter);
+      if(this.displayFilter) {
+        this.displayFilter = false;
+        this.$emit("displayChanged", this.displayFilter);
+      }
     },
     filterByDate(e) {
       e.preventDefault();
@@ -143,7 +145,7 @@ export default {
     },
   },
   directives: {
-    ClickOutside,
+    clickOutside: vClickOutside.directive,
   },
   mounted() {
     // prevent click outside event with popupItem.
