@@ -600,9 +600,11 @@ export default {
       this.refreshData();
     },
     workflowResultType: function() {
-      this.columns = this.columns.filter(
-        (column) => column.field !== "status" && column.field !== "actions"
-      );
+      if(!this.columns) {
+        this.columns = this.columns.filter(
+          (column) => column.field !== "status" && column.field !== "actions"
+        );
+      }
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.workflowDashboard.searchQuery.filterByTypes = [
         this.workflowResultType,
