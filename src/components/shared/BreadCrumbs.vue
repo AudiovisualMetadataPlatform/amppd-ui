@@ -1,6 +1,20 @@
 <template>
-  <div class="col-12 p-1 float-start" v-if="breadCrumbs && breadCrumbs.length">
-    <b-breadcrumb :items="breadCrumbs"></b-breadcrumb>
+  <div class="col-12 p-1" v-if="breadCrumbs && breadCrumbs.length">
+    <b-breadcrumb class="float-end">
+      <b-breadcrumb-item
+        v-for="(crumb, index) in breadCrumbs"
+        :active="index === breadCrumbs.length - 1"
+      >
+      <b-link
+        v-if="index !== breadCrumbs.length - 1"
+        :to="crumb.href"
+        replace
+      >
+        {{ crumb.text }}
+      </b-link>
+      <span v-else>{{ crumb.text }}</span>
+      </b-breadcrumb-item>
+    </b-breadcrumb>
   </div>
 </template>
 <script>
@@ -13,7 +27,6 @@ export default {
       let breadCrumbs = [];
       // needed to handle the intermediary entries for nested vue routes
       let breadcrumb = "";
-      let lastIndexFound = 0;
       for (let i = 0; i < pathArray.length; ++i) {
         breadcrumb = `${breadcrumb}${"/"}${pathArray[i]}`;
         if (
@@ -30,8 +43,8 @@ export default {
   },
 };
 </script>
-<style scoped>
-.breadcrumb {
-  justify-content: right;
+<style>
+.breadcrumb li.breadcrumb-item a {
+  text-decoration: none;
 }
 </style>
