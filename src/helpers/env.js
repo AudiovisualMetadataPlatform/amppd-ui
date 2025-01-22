@@ -2,8 +2,10 @@ export const env = {
 
   getEnv(key) {
     let config = window.config
-    let value = config[key] || process.env[key]
-    //console.log(`Env.getEnv: config[${key}] = ${config[key]}, return value = ${value}`)
+    // When page reloads config is set to "undefined", therefore check its value before reading key value pairs
+    let value = config 
+      ? config[key] || process.env[key] // Read value from process.env when value is "null" in config
+      : process.env[key]
     return value
   },
 

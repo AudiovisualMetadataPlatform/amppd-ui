@@ -107,7 +107,7 @@ var router = createRouter({
           actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
         },
-        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Workflows" }],
+        breadCrumb: [{ text: "Home", href: "/#" }, { text: "Workflows" }],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
     },
@@ -132,7 +132,7 @@ var router = createRouter({
           actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"),
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT"),
         },
-        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Workflows" }],
+        breadCrumb: [{ text: "Home", href: "/#" }, { text: "Workflows" }],
         helpUrl: env.getEnv("VUE_APP_DOC_WORKFLOW_SUBMISSIONS"),
       },
     },
@@ -145,7 +145,7 @@ var router = createRouter({
           actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOWRESULT")
         },
-        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Dashboard" }],
+        breadCrumb: [{ text: "Home", href: "/#" }, { text: "Dashboard" }],
         helpUrl: env.getEnv("VUE_APP_DOC_THE_DASHBOARD"),
       },
     },
@@ -159,8 +159,8 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_BAG")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Workflows", href: "#/workflow/submit" },
+          { text: "Home", href: "/#" },
+          { text: "Workflows", href: "/workflow/submit" },
           { text: "Deliverables" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_DELIVERABLES"),
@@ -175,7 +175,7 @@ var router = createRouter({
           actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE"),
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_BATCH")
         },
-        breadCrumb: [{ text: "Home", href: "#/" }, { text: "Batch Ingest" }],
+        breadCrumb: [{ text: "Home", href: "/#" }, { text: "Batch Ingest" }],
         helpUrl: env.getEnv("VUE_APP_DOC_UPLOADING_FILES_VIA_BATCH_INGEST"),
       },
     },
@@ -188,7 +188,7 @@ var router = createRouter({
           actionType: env.getEnv("VUE_APP_AC_ACTIONTYPE_READ"),
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_MGMEVALUATIONTEST")
         },
-        breadCrumb: [{ text: "Home", href: "#/" }, { text: "MGM Evaluation" }],
+        breadCrumb: [{ text: "Home", href: "/#" }, { text: "MGM Evaluation" }],
         helpUrl: env.getEnv("VUE_APP_DOC_MGM_EVALUATION"),
       },
     },
@@ -202,8 +202,8 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_MGMEVALUATIONTEST")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "MGM Evaluation", href: "#/mgm-evaluation" },
+          { text: "Home", href: "/#" },
+          { text: "MGM Evaluation", href: "/mgm-evaluation" },
           { text: "MGM Category" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_MGM_EVALUATION"),
@@ -219,8 +219,8 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_MGMEVALUATIONTEST")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "MGM Evaluation", href: "#/mgm-evaluation" },
+          { text: "Home", href: "/#" },
+          { text: "MGM Evaluation", href: "/mgm-evaluation" },
           { text: "Test Results" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_MGM_EVALUATION"),
@@ -236,8 +236,8 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_UNIT")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
+          { text: "Home", href: "/#" },
+          { text: "Unit Details", href: "/unit/details" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_UNITS"),
       },
@@ -252,9 +252,9 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_COLLECTION")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection", href: "#/collection/create" },
+          { text: "Home", href: "/#" },
+          { text: "Unit Details", href: "/unit/details" },
+          { text: "Collection", href: "/collection/create" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_COLLECTIONS"),
       },
@@ -269,9 +269,9 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_COLLECTION")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection Details", href: "#/collection/details" },
+          { text: "Home", href: "/#" },
+          { text: "Unit Details", href: "/unit/details" },
+          { text: "Collection Details", href: "/collection/details" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_COLLECTIONS"),
       },
@@ -286,10 +286,10 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_ITEM")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection Details", href: "#/collection/details" },
-          { text: "Item", href: "#/collection/add-items" },
+          { text: "Home", href: "/#" },
+          { text: "Unit Details", href: "/unit/details" },
+          { text: "Collection Details", href: "/collection/details" },
+          { text: "Item", href: "/collection/add-items" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
       },
@@ -304,10 +304,10 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_ITEM")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection Details", href: "#/collection/details" },
-          { text: "Item Details", href: "#/collections/items/details" },
+          { text: "Home", href: "/#" },
+          { text: "Unit Details", href: "/unit/details" },
+          { text: "Collection Details", href: "/collection/details" },
+          { text: "Item Details", href: "/collections/items/details" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
       },
@@ -322,10 +322,10 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection Details", href: "#/collection/details" },
-          { text: "Item Details", href: "#/collections/items/details" },
+          { text: "Home", href: "/#" },
+          { text: "Unit Details", href: "/unit/details" },
+          { text: "Collection Details", href: "/collection/details" },
+          { text: "Item Details", href: "/collections/items/details" },
           { text: "Content File Details" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_PRIMARY_FILE"),
@@ -341,8 +341,8 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_ITEM")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
+          { text: "Home", href: "/#" },
+          { text: "Unit Details", href: "/unit/details" },
           { text: "Item Search" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
@@ -358,9 +358,9 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_ITEM")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection Details", href: "#/collection/details" },
+          { text: "Home", href: "/#" },
+          { text: "Unit Details", href: "/unit/details" },
+          { text: "Collection Details", href: "/collection/details" },
           { text: "Item Details" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_ITEMS"),
@@ -376,12 +376,12 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_PRIMARYFILE")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Unit Details", href: "#/unit/details" },
-          { text: "Collection Details", href: "#/collection/details" },
+          { text: "Home", href: "/#" },
+          { text: "Unit Details", href: "/unit/details" },
+          { text: "Collection Details", href: "/collection/details" },
           {
             text: "Item Details",
-            href: "#/collections/items/item-search/details",
+            href: "/collections/items/item-search/details",
           },
           { text: "Content File Details" },
         ],
@@ -398,7 +398,7 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
+          { text: "Home", href: "/#" },
           { text: "Supplemental Files" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
@@ -414,9 +414,9 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Supplemental Files", href: "#/supplemental-files" },
-          { text: "File Details", href: "#/supplemental-files/add" },
+          { text: "Home", href: "/#" },
+          { text: "Supplemental Files", href: "/supplemental-files" },
+          { text: "File Details", href: "/supplemental-files/add" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
       },
@@ -431,8 +431,8 @@ var router = createRouter({
           targetType: env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT")
         },
         breadCrumb: [
-          { text: "Home", href: "#/" },
-          { text: "Supplemental Files", href: "#/supplemental-files" },
+          { text: "Home", href: "/#" },
+          { text: "Supplemental Files", href: "/supplemental-files" },
           { text: "File Details" },
         ],
         helpUrl: env.getEnv("VUE_APP_DOC_AMP_USER_GUIDE"),
