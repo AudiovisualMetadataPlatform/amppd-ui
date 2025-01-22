@@ -563,12 +563,12 @@ export default {
         );
       }
     },
-    onChangeMst(mstIndex, mstObj) {
+    async onChangeMst(mstIndex, mstObj) {
       const self = this;
       self.handleVisibility(mstIndex, "forceOpen");
       self.selectedMst.index = mstIndex;
       self.selectedMst.body = mstObj;
-      self.getDetailsMgmScoringTool(mstObj.id);
+      await self.getDetailsMgmScoringTool(mstObj.id);
       this.testParams = { "Match types": "Yes" };
       self.clearSelectedRecords();
     },
