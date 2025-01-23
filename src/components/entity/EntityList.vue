@@ -9,7 +9,6 @@
       <div class="col-12 bg-light-gray-1">
         <main :class="!unitEntity.currentUnit ? 'mb-3' : 'mb-5'">
           <!-- AmpHeader - Details page -->
-
           <b-card
             class="text-center mt-5 mb-3"
             :class="
@@ -513,13 +512,9 @@
               </form>
             </div>
           </b-card>
-
           <!-- AmpHeader - Details page Ends here-->
           <div
-            v-if="
-              baseUrl === 'item' &&
-                (selectedItem.id || selectedItem.selectedItemId)
-            "
+            v-if="baseUrl === 'item' && (selectedItem.id || selectedItem.selectedItemId)"
           >
             <ItemFiles></ItemFiles>
           </div>
@@ -876,6 +871,21 @@
               </div>
             </b-card>
           </div>
+          <!-- Unsaved changes confirm/leave modal -->
+          <b-modal 
+            ref="leaveModal"
+            title="Notification"
+            @ok="handleLeaveModal(true)"
+            @cancel="handleLeaveModal(false)"
+            hide-header-close
+            no-close-on-backdrop
+          >
+            <p>Changes you have made may not be saved.</p>
+            <template #footer="{ok, cancel}">
+              <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">Cancel</button>
+              <button type="button" class="btn btn-primary btn-sm" @click="ok();">Leave</button>
+            </template>
+          </b-modal>
         </main>
       </div>
     </div>
@@ -1458,28 +1468,20 @@ export default {
     handleSearchItem() {
       this.$router.push("/collections/items/item-search");
     },
+    handleLeaveModal(confirmed) {
+      if (confirmed) {
+        this.next();
+      } else {
+        this.next(false);
+      }
+    },
   },
   beforeRouteLeave(to, from, next) {
+    // Show modal only when there's unsaved data
     if (this.isDataChanged) {
-      this.$bvModal
-        .msgBoxConfirm(`Changes you have made may not be saved.`, {
-          title: "Notification",
-          size: "md",
-          buttonSize: "sm",
-          //   okVariant: 'danger',
-          okTitle: "Leave",
-          cancelTitle: "Cancel",
-          footerClass: "p-2", 
-          hideHeaderClose: true,
-          centered: false,
-          noCloseOnBackdrop: true,
-        })
-        .then((value) => {
-          if (value) next();
-        })
-        .catch((err) => {
-          // An error occurred
-        });
+      // Assign next to this.next to be used by modal actions in 'handleLeaveModal'
+      this.next = next;
+      this.$refs.leaveModal.show();
     } else {
       next();
     }
