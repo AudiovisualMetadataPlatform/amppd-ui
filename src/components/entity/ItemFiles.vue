@@ -134,6 +134,22 @@
         </div>
       </div>
     </b-card>
+    <!-- Remove file confirmation modal -->
+    <b-modal 
+      ref="confirmModal" 
+      title="Confirmation" 
+      @ok="handleConfirmModal(true)" 
+      @cancel="handleConfirmModal(false)"
+      centered
+      size="md"
+      footerClass="p-2"
+    >
+      Are you sure you want to delete?
+      <template #footer="{ ok, cancel }">
+        <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
+        <button type="button" class="btn btn-primary btn-sm" @click="ok();">Yes</button>
+      </template>
+    </b-modal>
   </div>
 </template>
 
@@ -166,6 +182,8 @@ export default {
       files: [],
       showLoader: false,
       dropFiles: [],
+      // object to hold info of the file to be removed
+      fileToRemove: { file: null, index: null },
       // dropFileName: ""
     };
   },
@@ -332,11 +350,15 @@ export default {
       }
     },
     async onRemovePrimaryFile(file, index) {
+      // Set file info for the current file chosen to be removed
+      this.fileToRemove = { file, index }
+      this.$refs.confirmModal.show();
+    },
+    handleConfirmModal(confirmed) {
       const self = this;
-      const confirmMessage = await self.sharedService.showConfirmationWindow(
-        self.$bvModal
-      );
-      if (confirmMessage) {
+      // When clicked on 'Yes', and info of file to be removed are available remove file
+      if (confirmed && self.fileToRemove.file && self.fileToRemove.index) {
+        const { file, index } = self.fileToRemove;
         self.showLoader = true;
         self.fileService
           .removePrimaryFile(file.id)
@@ -355,6 +377,9 @@ export default {
               self.sharedService.toastNotificationConfig
             );
           });
+      } else {
+        // When clicked on 'No', hide the modal
+        this.$refs.confirmModal.hide();
       }
     },
   },
