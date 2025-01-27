@@ -52,11 +52,11 @@
                     height="495.4px"
                   ></mediaelement>
                 </div>
-                <div class="float-start">
+                <div class="float-start media-info-btn">
                   <b-button
                     v-b-toggle.collapse-1
                     variant="outline-primary"
-                    class="btn-lg media-info-btn"
+                    class="btn-lg"
                   >
                     <span v-html="infoSvg"></span>
                     Media Information
@@ -1576,7 +1576,7 @@ export default {
   margin-top: 10px;
 }
 .media-info-btn {
-  position: absolute;
+  margin-right: auto;
 }
 .media-details {
   margin-top: 60px !important;
@@ -1587,6 +1587,8 @@ export default {
 .media-player {
   width: 50%;
   margin-right: 15px;
+  display: flex;
+  flex-direction: column;
 }
 video {
   margin-top: 0px;
