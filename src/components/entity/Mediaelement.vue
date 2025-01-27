@@ -5,11 +5,13 @@
     :width="width"
     :autoplay="autoplay"
     :preload="preload"
+    ref="mediaElement"
   ></video>
-  <audio v-else :width="width" :autoplay="autoplay" :preload="preload"></audio>
+  <audio v-else :width="width" :autoplay="autoplay" :preload="preload" ref="mediaElement"></audio>
 </template>
 
 <script>
+import "mediaelement/build/mediaelementplayer.css";
 export default {
   name: "Mediaelement",
   props: {
@@ -62,17 +64,15 @@ export default {
     },
   },
   data: () => ({
-    refresh: false,
     player: null,
   }),
   mounted() {
     const { MediaElementPlayer } = global;
     const componentObject = this;
-    // console.log("MediaElement: loading MediaElementPlayer");
-    this.player = new MediaElementPlayer(this.$el, {
-      pluginPath: "https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/",
-      shimScriptAccess: "always",
+    this.player = new MediaElementPlayer(this.$refs.mediaElement, {
       forceLive: this.forceLive,
+      // Load the control icons from the SVG file
+      iconSprite: "../images/mejs-controls.svg",
       success: (mediaElement, originalNode, instance) => {
         instance.setSrc(componentObject.source);
         if (componentObject.autoplay) {
@@ -81,25 +81,22 @@ export default {
           });
         }
         this.success(mediaElement, originalNode, instance);
-        // console.log("MediaElement: MediaElementPlayer loaded.");
       },
       error: (e) => {
         this.error(e);
-        // console.log("MediaElement: error: " + e);
       },
     });
   },
   methods: {
-    Features(key) {
-      const { mejs } = global;
-      return mejs.Features[key];
-    },
     remove() {
       this.player.remove();
+      this.player = null;
     },
   },
   beforeDestroy() {
-    this.remove();
+    if(this.player) {
+      this.remove();
+    }
   },
   watch: {
     source: function(newSource) {
@@ -116,3 +113,20 @@ export default {
   },
 };
 </script>
+<style>
+/* MediaElement.js style overrides */
+
+/* Remove outline for player on focus */
+.mejs__container:focus {
+  outline: none;
+}
+/* Remove border for volume sliders */
+.mejs__horizontal-volume-total,
+.mejs__volume-total {
+  border: none;
+}
+/* Make the mejs loading spinner spin on its own axis */
+.mejs__overlay-loading-bg-img {
+  transform-origin: center;
+}
+</style>

@@ -31,7 +31,8 @@
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import config from "./assets/constants/common-contant.js";
 import { env } from "@/helpers/env.js";
-import "vue3-mediaelement";
+import "mediaelement";
+
 export default {
   components: {
     Sidebar,
