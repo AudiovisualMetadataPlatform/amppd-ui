@@ -631,7 +631,8 @@ h6 {
   text-decoration: none;
 }
 
-.bg-dark-1 a:hover .icon-white {
+.bg-dark-1 a:hover .icon-white,
+.bg-dark-1 button:hover .icon-white {
   fill: #f4871e;
 }
 
