@@ -15,6 +15,7 @@
                       toggleable="lg"
                       type="dark"
                       class="mb-3 nav-pills"
+                      container="fluid justify-content-start px-0"
                     >
                       <span
                         v-for="(item, i) in ['Review Scores', 'Review Outputs']"
@@ -76,6 +77,7 @@
                                 toggleable="lg"
                                 type="dark"
                                 class="mb-3 nav-pills"
+                                container="fluid justify-content-start px-0"
                               >
                                 <span
                                   v-for="(item, i) in ['Bar chart', 'Table']"
@@ -614,53 +616,9 @@ export default {
 
 <style lang="css">
 @import "../../styles/style.css";
-nav.nav-pills {
-  justify-content: flex-start !important;
-  padding: 0.4rem !important;
-  background: #e9ecef !important;
-  border-radius: 0.5rem !important;
-  list-style: none;
-}
-.nav-pills .nav-item.active {
-  background: #153c4d !important;
-  color: white !important;
-}
 .active-score {
   background: #153c4d !important;
   color: white !important;
-}
-.nav-item.active .a:link,
-.nav-item.active a {
-  color: white !important;
-}
-a:link,
-a {
-  color: #153c4d !important;
-}
-.nav-pills .active {
-  border-radius: 0.25rem !important;
-}
-.nav-pills .nav-link {
-  border-radius: 0.25rem;
-}
-a:hover {
-  color: #f4871e !important;
-  text-decoration: none;
-}
-
-.action-btn-grp {
-  padding: 8px !important;
-}
-.btn-new-test {
-  margin-right: 40px;
-}
-.a-link:hover {
-  cursor: pointer;
-}
-.active-tab {
-  background: #153c4d !important;
-  color: white !important;
-  border-color: #153c4d !important;
 }
 .scrollingDiv {
   height: 600px;

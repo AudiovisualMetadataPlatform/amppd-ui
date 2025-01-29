@@ -30,7 +30,7 @@
         >
           <div class="row">
             <div class="col-lg-10">
-              <h3 contenteditable="true" class="pointer-events-none">
+              <h3 contenteditable="true" class="pe-none">
                 {{ workflow.name }}
               </h3>
               <!-- <p contenteditable="true">{{ workflow.description }}</p> -->
@@ -98,7 +98,7 @@
               @click="getWorkflowDetails(index)"
             >
               <button
-                class="btn fs-4"
+                class="btn fs-4 mgm-param-toggle"
                 :class="workflow.visible ? null : 'collapsed'"
                 :aria-expanded="workflow.visible ? 'true' : 'false'"
                 :aria-controls="'mgm' + index"
@@ -123,13 +123,13 @@
                 <b-overlay
                   :show="!workflow || !workflow.details"
                   rounded="sm"
-                  c
                 >
                   <b-navbar
                     id="pills-tab-1"
                     toggleable="lg"
                     type="dark"
                     class="nav-pills"
+                    container="fluid justify-content-start px-0"
                   >
                     <span v-if="!workflow.details || workflow.details.length==0">
                       No step specified in workflow.
@@ -144,9 +144,8 @@
                       >
                     </span>
                   </b-navbar>
-
                   <dl
-                    class="d-flex col-12 mt-3 mb-0 pe-0"
+                    class="d-flex col-12 mt-3 mb-0 pe-0 ps-3"
                     v-if="
                       workflow && workflow.details && workflow.details.length
                     "
@@ -168,7 +167,7 @@
                       <span class="ms-2">{{ p.value }}</span>
                     </div>
                     <a
-                      class="btn btn-primary float-end nav-link"
+                      class="btn btn-primary nav-link align-items-center ms-auto"
                       id="pills-ner-tab-2"
                       role="tab"
                       @click="
@@ -183,7 +182,7 @@
                         width="16"
                         height="16"
                         fill="currentColor"
-                        class="bi bi-file-text"
+                        class="bi bi-file-text me-1"
                         viewBox="0 0 16 16"
                       >
                         <path
@@ -301,17 +300,14 @@ export default {
         const workflowDetails = wfDetails.tempParams;
         self.listOfWorkflows[index].details = workflowDetails;
         self.listOfWorkflows[index].selectedNode = 0;
-        this.$set(self.listOfWorkflows, index, self.listOfWorkflows[index]);
+        self.listOfWorkflows.index = self.listOfWorkflows[index];
       }
     },
     onChangeNode(workflowIndex, nodeIndex) {
       const self = this;
       self.listOfWorkflows[workflowIndex].selectedNode = nodeIndex;
-      this.$set(
-        self.listOfWorkflows,
-        workflowIndex,
-        self.listOfWorkflows[workflowIndex]
-      );
+      self.listOfWorkflows.workflowIndex = self.listOfWorkflows[workflowIndex];
+      self.listOfWorkflows[workflowIndex].visible = true;
     },
     async handleWorkflowCreation() {
       const self = this;
@@ -371,88 +367,41 @@ export default {
 .mgm-card {
   margin: 10px 0px !important;
 }
-
 .mgm-card .card-body {
   padding: 0px !important;
 }
-
 .mgm-h3 {
   padding: 0.75rem 1.25rem !important;
   border: 1px solid rgba(0, 0, 0, 0.125);
   margin-bottom: 0px;
 }
-
+.mgm-param-toggle {
+  &:focus, &:active {
+    border-color: transparent !important;
+  }
+}
 .mgm-card .collapse .card,
 .mgm-card .collapse .card-body {
   /* padding: 10px !important; */
   border: 0px !important;
 }
-
 .mgm-content {
   padding: 1.25rem !important;
-}
-nav.nav-pills {
-  justify-content: flex-start !important;
-  padding: 0.5rem !important;
-  background: #e9ecef !important;
-  border-radius: 0.5rem !important;
-  list-style: none;
-}
-
-.nav-pills .nav-item.active {
-  background: #153c4d !important;
-  color: white !important;
-}
-
-.nav-item.active .a:link,
-.nav-item.active a {
-  color: white !important;
-}
-
-a:link,
-a {
-  color: #153c4d !important;
-}
-
-.nav-pills .active {
-  border-radius: 0.25rem !important;
-}
-
-a:hover {
-  color: #f4871e;
-  text-decoration: none;
-}
-.nav {
-  list-style: none !important;
 }
 .bg-light-gray {
   background-color: rgba(0, 0, 0, 0.03) !important;
 }
 h3.card-title .btn {
-  /* font-size: 1.5rem; */
   line-height: 1rem;
   text-decoration: none;
   color: #153c4d;
 }
+a#pills-ner-tab-2 {
+  padding: 0.5rem 1rem;
 
-.nav-pills .nav-link {
-  border-radius: 0.25rem;
-}
-.nav-link:focus,
-.nav-link:hover {
-  text-decoration: none;
-}
-a:hover {
-  color: #f4871e !important;
-  text-decoration: none;
-}
-
-.pointer-events-none {
-  pointer-events: none;
-}
-
-.nav-link {
-  margin-left: auto;
-  margin-right: 0;
+  &:hover {
+    color: #f4871e !important;
+    text-decoration: none;
+  }
 }
 </style>

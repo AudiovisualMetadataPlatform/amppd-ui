@@ -673,3 +673,24 @@ button svg {
     padding: 0;
   }
 }
+
+nav.nav-pills {
+  padding: 0.5rem !important;
+  background: #e9ecef !important;
+  border-radius: 0.5rem !important;
+}
+
+.nav-pills .nav-item.active {
+  background: #153c4d !important;
+  color: white !important;
+  border-radius: 0.25rem !important;
+}
+
+.nav-pills li.nav-item {
+  padding: 0.5rem 1rem;
+}
+
+.nav-item.active .a:link,
+.nav-item.active a {
+  color: white !important;
+}
