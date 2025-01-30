@@ -22,7 +22,7 @@
                             </p>
                             <div class="ms-5 pe-5" v-if="selectedTab === 0">
                               <button
-                                class="btn btn-primary btn-lg btn-edit float-end text-nowrap"
+                                class="btn btn-primary btn-lg btn-edit float-end"
                                 type="button"
                                 @click="onNewTest()"
                               >
@@ -33,48 +33,64 @@
                           <h3 style="margin-bottom: 0px;">
                             {{ mgmCategoryDetails.name + " MGMs" }}
                           </h3>
-                          <div
+                          <p
                             class="mb-0"
-                            v-for="(mgm, i) in sharedService.sortByAlphabatical(mgmCategoryDetails.mgms)"
+                            v-for="(mgm, i) in sharedService.sortByAlphabatical(
+                              mgmCategoryDetails.mgms
+                            )"
                             :key="i"
+                            @click="getMgmHelp(index)"
                           >
                             <button
-                              class="btn mgm-help-collapse ps-0"
+                              class="btn collaps-btn ps-0"
                               :class="visible.includes(i) ? null : 'collapsed'"
-                              :aria-expanded="visible.includes(i) ? 'true' : 'false'"
-                              v-b-toggle="'mgm' + i"
+                              :aria-expanded="
+                                visible.includes(i) ? 'true' : 'false'
+                              "
+                              :aria-controls="'mgm' + i"
                               @click="handleVisibility(i)"
                             >
-                              <span v-html="rightArrowSvg" class="fs-6"></span>
-                              <span class="visually-hidden">Toggle hidden content</span>
-                              <strong
+                              <span
+                                v-html="rightArrowSvg"
+                                class="fs-6"
+                              ></span>
+                              <span class="visually-hidden">Toggle hidden content</span
+                              ><strong
                                 style="margin-left: 10px; color: #153c4d !important;"
                               >
-                                <a style="color: #153c4d !important;">
-                                  {{ mgm.name }}
-                                </a>
+                                <a style="color: #153c4d !important;">{{
+                                  mgm.name
+                                }}</a>
                               </strong>
                             </button>
                             <b-collapse
                               :id="'mgm' + i"
                               class="mgm-help"
+                              :visible="visible.includes(i)"
                             >
-                                {{ mgm.help }}
+                              {{ mgm.help }}
                             </b-collapse>
-                          </div>
+                          </p>
                         </div>
                       </div>
-                        <b-tabs 
-                          v-model="selectedTab" 
-                          nav-item-class="bsvn-tab"
-                          nav-class="bsvn-tab-header"
-                          nav-wrapper-class="bsvn-tab-header-wrapper"
-                          card
-                          class="mt-3"
+                      <b-navbar
+                        id="pills-tab-1"
+                        toggleable="lg"
+                        type="dark"
+                        class="mb-3 nav-pills"
+                      >
+                        <span
+                          v-for="(item, i) in ['Test Results', 'New Test']"
+                          :key="i"
                         >
-                          <b-tab title="Test Results" />
-                          <b-tab title="New Test" />
-                        </b-tabs>
+                          <b-nav-item
+                            :class="selectedTab === i ? 'active' : ''"
+                            @click="onChangeTab(i)"
+                            >{{ item }}</b-nav-item
+                          >
+                        </span>
+                      </b-navbar>
+
                       <dl
                         class="d-flex col-12 mt-3 mb-0 p-0"
                         v-if="selectedTab === 0"
@@ -246,19 +262,61 @@ main {
 .row .card-container {
   width: calc(100% + 15px);
 }
+
+nav.nav-pills {
+  justify-content: flex-start !important;
+  padding: 0.4rem !important;
+  background: #e9ecef !important;
+  border-radius: 0.5rem !important;
+  list-style: none;
+}
+.nav-pills .nav-item.active {
+  background: #153c4d !important;
+  color: white !important;
+}
+.nav-item.active .a:link,
+.nav-item.active a {
+  color: white !important;
+}
+a:link,
+a {
+  color: #153c4d !important;
+}
+.nav-pills .active {
+  border-radius: 0.25rem !important;
+}
+.nav-pills .nav-link {
+  border-radius: 0.25rem;
+}
+a:hover {
+  color: #f4871e !important;
+  text-decoration: none;
+}
+
+.action-btn-grp {
+  padding: 8px !important;
+}
+.btn-new-test {
+  margin-right: 40px;
+}
+.a-link:hover {
+  cursor: pointer;
+}
+.active-tab {
+  background: #153c4d !important;
+  color: white !important;
+  border-color: #153c4d !important;
+}
 .div-test {
   padding-bottom: 15px;
 }
 .mgm-help {
   padding-left: 30px !important;
 }
-.mgm-help-collapse {
+.collaps-btn {
   box-shadow: none !important;
-  &:hover {
-    color: #153c4d !important;
-  }
-  &:focus, &:active {
-    border-color: transparent !important;
-  }
+}
+.collaps-btn:hover {
+  color: #153c4d !important;
 }
 </style>

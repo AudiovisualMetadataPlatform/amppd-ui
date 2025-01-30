@@ -651,6 +651,12 @@ export default {
   }
 }
 
+.v-pills-card {
+  padding-top: 40px !important;
+}
+.v-pills-body {
+  display: block !important;
+}
 .mst-items {
   align-items: flex-start !important;
 }
@@ -673,29 +679,69 @@ export default {
 .selected-mgm-outputs {
   background-color: #fef4ea;
 }
+
 .btn:focus {
   box-shadow: none !important;
 }
 .mgm-card {
   margin: 10px 0px !important;
 }
+
 .mgm-card .card-body {
   padding: 0px !important;
 }
+
 .mgm-h3 {
   padding: 0.75rem 1.25rem !important;
   border: 1px solid rgba(0, 0, 0, 0.125);
   margin-bottom: 0px;
 }
+
 .mgm-h3 .svg-inline {
   vertical-align: middle;
 }
+
 .mgm-card .collapse .card,
 .mgm-card .collapse .card-body {
   border: 0px !important;
 }
+
 .mgm-content {
   padding: 1.25rem !important;
+}
+nav.nav-pills {
+  justify-content: flex-start !important;
+  padding: 0.5rem !important;
+  background: #e9ecef !important;
+  border-radius: 0.5rem !important;
+  list-style: none;
+}
+
+.nav-pills .nav-item.active {
+  background: #153c4d !important;
+  color: white !important;
+}
+
+.nav-item.active .a:link,
+.nav-item.active a {
+  color: white !important;
+}
+
+a:link,
+a {
+  color: #153c4d !important;
+}
+
+.nav-pills .active {
+  border-radius: 0.25rem !important;
+}
+
+a:hover {
+  color: #f4871e;
+  text-decoration: none;
+}
+.nav {
+  list-style: none !important;
 }
 .bg-light-gray {
   background-color: rgba(0, 0, 0, 0.03) !important;
@@ -708,6 +754,28 @@ h3.card-title .btn {
 .card-title {
   margin-bottom: 0px !important;
 }
+
+.nav-pills .nav-link {
+  border-radius: 0.25rem;
+}
+.nav-link:focus,
+.nav-link:hover {
+  text-decoration: none;
+}
+a:hover {
+  color: #f4871e !important;
+  text-decoration: none;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.nav-link {
+  margin-left: auto;
+  margin-right: 0;
+}
+
 .custom-radio .custom-control-input:checked ~ .custom-control-label::after {
   width: 1.25rem !important;
   height: 1.25rem !important;
@@ -730,9 +798,11 @@ h3.card-title .btn {
   width: 1rem !important;
   height: 1rem !important;
 }
+
 .custom-control-label {
   cursor: pointer !important;
 }
+
 .param-radio
   > .custom-radio
   .custom-control-input:checked
