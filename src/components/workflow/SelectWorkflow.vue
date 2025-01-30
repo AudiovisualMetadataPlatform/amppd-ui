@@ -281,7 +281,7 @@
         class="spl-fr-btn"
       ></b-button>
       <b-modal v-model="showFRModal" id="modal-center" centered>
-        <template #modal-header>
+        <template #header>
           <h5 class="text-capitalize">
             Choose the Facial Recognition input file for
             {{ supplementList[0].primaryFileName }}:
