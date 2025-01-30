@@ -64,25 +64,17 @@
                           </div>
                         </div>
                       </div>
-                      <b-navbar
-                        id="pills-tab-1"
-                        toggleable="lg"
-                        type="dark"
-                        class="nav-pills"
-                        container="fluid justify-content-start px-0"
-                      >
-                        <span
-                          v-for="(item, i) in ['Test Results', 'New Test']"
-                          :key="i"
+                        <b-tabs 
+                          v-model="selectedTab" 
+                          nav-item-class="bsvn-tab"
+                          nav-class="bsvn-tab-header"
+                          nav-wrapper-class="bsvn-tab-header-wrapper"
+                          card
+                          class="mt-3"
                         >
-                          <b-nav-item
-                            :class="selectedTab === i ? 'active' : ''"
-                            @click="onChangeTab(i)"
-                            >{{ item }}</b-nav-item
-                          >
-                        </span>
-                      </b-navbar>
-
+                          <b-tab title="Test Results" />
+                          <b-tab title="New Test" />
+                        </b-tabs>
                       <dl
                         class="d-flex col-12 mt-3 mb-0 p-0"
                         v-if="selectedTab === 0"

@@ -674,23 +674,26 @@ button svg {
   }
 }
 
-nav.nav-pills {
-  padding: 0.5rem !important;
-  background: #e9ecef !important;
-  border-radius: 0.5rem !important;
+/* Style overrides for <b-tabs> component and its children imported from bootstrap-vue-next */
+.bsvn-tab-header {
+  padding-bottom: 0.5rem;
 }
-
-.nav-pills .nav-item.active {
-  background: #153c4d !important;
+.bsvn-tab-header-wrapper {
+  border-bottom: none !important;
+  border-radius: 0.375em !important;
+}
+.bsvn-tab {
+  color: #153c4d !important;
+  border-radius: 0.375em;
+  &:hover {
+    color: #f4871e !important;
+    border-color: transparent !important;
+  }
+}
+.bsvn-tab.active {
+  background-color: #153c4d !important;
   color: white !important;
-  border-radius: 0.25rem !important;
-}
-
-.nav-pills li.nav-item {
-  padding: 0.5rem 1rem;
-}
-
-.nav-item.active .a:link,
-.nav-item.active a {
-  color: white !important;
+  &:hover {
+    color: white !important;
+  }
 }

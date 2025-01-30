@@ -114,89 +114,75 @@
               class="mgm-content"
               v-model="workflow.visible"
             >
-              <div
-                :class="{
-                  'p-2':
-                    !workflow || !workflow.details || !workflow.details.length,
-                }"
+              <b-overlay
+                :show="!workflow || !workflow.details"
+                rounded="sm"
               >
-                <b-overlay
-                  :show="!workflow || !workflow.details"
-                  rounded="sm"
+                <b-tabs
+                  id="pills-tab-1"
+                  nav-item-class="bsvn-tab"
+                  nav-class="bsvn-tab-header"
+                  nav-wrapper-class="bsvn-tab-header-wrapper"
+                  card
+                  v-if="workflow.details && workflow.details.length"
                 >
-                  <b-navbar
-                    id="pills-tab-1"
-                    toggleable="lg"
-                    type="dark"
-                    class="nav-pills"
-                    container="fluid justify-content-start px-0"
+                  <b-tab v-if="workflow.details?.length == 0 || !workflow.details">
+                    No step specified in workflow.
+                  </b-tab>
+                  <b-tab
+                    v-for="(node, i) in workflow.details"
+                    :key="i"
+                    :title="node.nodeName"
+                    @click="onChangeNode(index, i)"
+                    :active="workflow.selectedNode === i"
                   >
-                    <span v-if="!workflow.details || workflow.details.length==0">
-                      No step specified in workflow.
-                    </span>
-                    <span v-for="(node, i) in workflow.details" :key="i">
-                      <b-nav-item
-                        :class="
-                          node && workflow.selectedNode === i ? 'active' : ''
-                        "
-                        @click="onChangeNode(index, i)"
-                        >{{ node.nodeName }}</b-nav-item
+                    <dl class="d-flex col-12 mt-3 mb-0 pe-0 ps-3">
+                      <div
+                        v-if="workflow.details[workflow.selectedNode].params.length==0"
+                        class="me-5 d-flex"
                       >
-                    </span>
-                  </b-navbar>
-                  <dl
-                    class="d-flex col-12 mt-3 mb-0 pe-0 ps-3"
-                    v-if="
-                      workflow && workflow.details && workflow.details.length
-                    "
+                        No parameter specified.
+                      </div>
+                      <div
+                        class="me-5 d-flex"
+                        v-for="(p, paramIndex) in workflow.details[workflow.selectedNode].params"
+                        :key="paramIndex"
+                      >
+                        <label class="fw-bold mb-0">{{ p.name }}:</label>
+                        <span class="ms-2">{{ p.value }}</span>
+                      </div>
+                    </dl>
+                  </b-tab> 
+                </b-tabs>
+                <a
+                  class="btn btn-primary nav-link align-items-center float-end mb-2"
+                  id="pills-ner-tab-2"
+                  role="tab"
+                  @click="
+                    routeToHelp(
+                    $event,
+                    workflow.details[workflow.selectedNode].node_id
+                    )
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-file-text me-1"
+                    viewBox="0 0 16 16"
                   >
-                    <div
-                      v-if="workflow.details[workflow.selectedNode].params.length==0"
-                      class="me-5 d-flex"
-                    >
-                      No parameter specified.
-                    </div>
-                    <div
-                      class="me-5 d-flex"
-                      v-for="(p, paramIndex) in workflow.details[
-                        workflow.selectedNode
-                      ].params"
-                      :key="paramIndex"
-                    >
-                      <label class="fw-bold mb-0">{{ p.name }}:</label>
-                      <span class="ms-2">{{ p.value }}</span>
-                    </div>
-                    <a
-                      class="btn btn-primary nav-link align-items-center ms-auto"
-                      id="pills-ner-tab-2"
-                      role="tab"
-                      @click="
-                        routeToHelp(
-                          $event,
-                          workflow.details[workflow.selectedNode].node_id
-                        )
-                      "
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        class="bi bi-file-text me-1"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"
-                        ></path>
-                        <path
-                          d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"
-                        ></path>
-                      </svg>
-                      Tool documentation
-                    </a>
-                  </dl>
-                </b-overlay>
-              </div>
+                    <path
+                      d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"
+                    ></path>
+                    <path
+                      d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"
+                    ></path>
+                  </svg>
+                  Tool Documentation
+                </a>
+              </b-overlay>
             </b-collapse>
           </b-card>
         </b-card>
@@ -360,7 +346,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .btn:focus {
   box-shadow: none !important;
 }
@@ -382,7 +368,6 @@ export default {
 }
 .mgm-card .collapse .card,
 .mgm-card .collapse .card-body {
-  /* padding: 10px !important; */
   border: 0px !important;
 }
 .mgm-content {
