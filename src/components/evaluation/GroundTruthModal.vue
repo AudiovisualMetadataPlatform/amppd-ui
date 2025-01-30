@@ -9,18 +9,10 @@
       no-close-on-backdrop
       size="xl"
     >
-      <template #modal-header>
+      <template #header>
         <h5 class="modal-title" id="exampleModalLongTitle">
           Upload/Select Ground Truth
         </h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span @click="onCancel()">×</span>
-        </button>
       </template>
       <template #default>
         <div class="row body-m">
@@ -136,17 +128,17 @@
               </tbody>
             </table>
             <div class="d-flex w-100 mt-3">
-              <div class="input-group image-preview col-11 p-0 me-1">
+              <div class="input-group w-100 p-0 me-1">
                 <input
                   type="file"
                   :accept="'.' + mstDetails.groundtruthFormat"
-                  class="btn btn-light btn"
+                  class="btn btn-light btn w-100"
                   ref="fileupload"
                   @change="getFile"
                   :disabled="uploadGtFiles.length > 0"
                 />
               </div>
-              <div class="col-1 p-0" style="padding: 5px !important;">
+              <div class="p-0 align-self-center">
                 <button
                   class="btn btn-primary btn float-end"
                   @click="uploadFile()"
@@ -159,7 +151,7 @@
           </div>
         </div>
       </template>
-      <template #modal-footer="{}">
+      <template #footer>
         <button
           type="button"
           class="btn btn-outline-warning"
