@@ -36,8 +36,6 @@ declare module 'vue' {
     BNavItemDropdown: typeof import('bootstrap-vue-next/components/BNav')['BNavItemDropdown']
     BOverlay: typeof import('bootstrap-vue-next/components/BOverlay')['BOverlay']
     BreadCrumbs: typeof import('./src/components/shared/BreadCrumbs.vue')['default']
-    BTab: typeof import('bootstrap-vue-next/components/BTabs')['BTab']
-    BTabs: typeof import('bootstrap-vue-next/components/BTabs')['BTabs']
     CollectionDetails: typeof import('./src/components/unused/CollectionDetails.vue')['default']
     CollectionDetailsItemCard: typeof import('./src/components/unused/CollectionDetailsItemCard.vue')['default']
     CollectionFilter: typeof import('./src/components/unused/CollectionFilter.vue')['default']

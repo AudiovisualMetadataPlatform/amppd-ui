@@ -10,10 +10,23 @@
               <b-overlay rounded="sm" class="mt-2">
                 <div>
                   <div class="">
-                    <b-tabs v-model="selectedResultTab" class="mb-3">
-                      <b-tab title="Review Scores"></b-tab>
-                      <b-tab title="Review Outputs"></b-tab>
-                    </b-tabs>
+                    <b-navbar
+                      id="pills-tab-1"
+                      toggleable="lg"
+                      type="dark"
+                      class="mb-3 nav-pills"
+                    >
+                      <span
+                        v-for="(item, i) in ['Review Scores', 'Review Outputs']"
+                        :key="i"
+                      >
+                        <b-nav-item
+                          :class="selectedResultTab === i ? 'active' : ''"
+                          @click="onChangeResultTab(i)"
+                          >{{ item }}</b-nav-item
+                        >
+                      </span>
+                    </b-navbar>
 
                     <dl
                       class="d-flex col-12 mt-3 mb-0 pe-0 ps-0"
@@ -63,7 +76,6 @@
                                 toggleable="lg"
                                 type="dark"
                                 class="mb-3 nav-pills"
-                                container="fluid justify-content-start px-0"
                               >
                                 <span
                                   v-for="(item, i) in ['Bar chart', 'Table']"
@@ -535,6 +547,15 @@ export default {
         self.activeScoreTab = "bar-chart";
       }
     },
+    onChangeResultTab(index) {
+      const self = this;
+      self.selectedResultTab = index;
+      if (index === 1) {
+        self.activeResultTab = "review-ouputs";
+      } else {
+        self.activeResultTab = "review-scores";
+      }
+    },
     async networkCalls(testResultIds) {
       const self = this;
       self.loading = true;
@@ -593,9 +614,53 @@ export default {
 
 <style lang="css">
 @import "../../styles/style.css";
+nav.nav-pills {
+  justify-content: flex-start !important;
+  padding: 0.4rem !important;
+  background: #e9ecef !important;
+  border-radius: 0.5rem !important;
+  list-style: none;
+}
+.nav-pills .nav-item.active {
+  background: #153c4d !important;
+  color: white !important;
+}
 .active-score {
   background: #153c4d !important;
   color: white !important;
+}
+.nav-item.active .a:link,
+.nav-item.active a {
+  color: white !important;
+}
+a:link,
+a {
+  color: #153c4d !important;
+}
+.nav-pills .active {
+  border-radius: 0.25rem !important;
+}
+.nav-pills .nav-link {
+  border-radius: 0.25rem;
+}
+a:hover {
+  color: #f4871e !important;
+  text-decoration: none;
+}
+
+.action-btn-grp {
+  padding: 8px !important;
+}
+.btn-new-test {
+  margin-right: 40px;
+}
+.a-link:hover {
+  cursor: pointer;
+}
+.active-tab {
+  background: #153c4d !important;
+  color: white !important;
+  border-color: #153c4d !important;
 }
 .scrollingDiv {
   height: 600px;
