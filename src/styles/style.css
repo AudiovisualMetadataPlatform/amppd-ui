@@ -673,3 +673,27 @@ button svg {
     padding: 0;
   }
 }
+
+/* Style overrides for <b-tabs> component and its children imported from bootstrap-vue-next */
+.bsvn-tab-header {
+  padding-bottom: 0.5rem;
+}
+.bsvn-tab-header-wrapper {
+  border-bottom: none !important;
+  border-radius: 0.375em !important;
+}
+.bsvn-tab {
+  color: #153c4d !important;
+  border-radius: 0.375em;
+  &:hover {
+    color: #f4871e !important;
+    border-color: transparent !important;
+  }
+}
+.bsvn-tab.active {
+  background-color: #153c4d !important;
+  color: white !important;
+  &:hover {
+    color: white !important;
+  }
+}
