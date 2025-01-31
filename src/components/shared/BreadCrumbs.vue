@@ -4,6 +4,7 @@
       <b-breadcrumb-item
         v-for="(crumb, index) in breadCrumbs"
         :active="index === breadCrumbs.length - 1"
+        underline-opacity="0"
       >
       <b-link
         v-if="index !== breadCrumbs.length - 1"
@@ -43,8 +44,13 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .breadcrumb li.breadcrumb-item a {
-  text-decoration: none;
+  color: #153c4d !important;
+  text-decoration: none !important;
+}
+
+.breadcrumb li.breadcrumb-item a:hover {
+  color: #f4871e !important;
 }
 </style>
