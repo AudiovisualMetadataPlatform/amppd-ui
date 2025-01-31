@@ -280,7 +280,7 @@ export default {
         .uploadFile(self.selectedItem.id, formData)
         .then((el) => {
           self.showLoader = false;
-          this.$set(self.primaryFiles._embedded.primaryfiles, index, el.data);
+          self.primaryFiles._embedded.primaryfiles.index = el.data;
         })
         .catch((error) => {
           self.showLoader = false;
