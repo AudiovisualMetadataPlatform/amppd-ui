@@ -274,7 +274,8 @@
       </div></template>
     </modal>
     <SaveBundle />
-    <div>
+    <!-- Check whether supplementList is not empty -->
+    <div v-if="supplementList?.length > 0">
       <b-button
         id="fr-done-btn"
         @click="showFRModal = true"

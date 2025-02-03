@@ -53,8 +53,9 @@
                   <label
                     for="workflowSubmissionSelectFilesSearch"
                     class="visually-hidden"
-                    >Search</label
                   >
+                    Search
+                  </label>
                   <label
                     class="form-errors"
                     v-if="errors.search_error.length"
@@ -69,7 +70,7 @@
                     autocomplete="off"
                   />
                   <button
-                    class="btn input-group-text"
+                    class="btn input-group-text search-btn"
                     type="button"
                     v-on:click="searchFiles()"
                   >
@@ -295,10 +296,9 @@
               )
             "
             type="button"
-            class="btn btn-primary btn-md ms-2"
+            class="btn btn-primary btn-md ms-2 text-nowrap h-100"
             data-toggle="modal"
             data-target=".save-modal"
-            style="height: 2.5rem;"
           >
             Go back
           </button>
@@ -474,7 +474,8 @@ export default {
   methods: {
     handleAddToSelection(accordionIndex) {
       const self = this;
-      for (
+      if(self.workflowSubmission.selectedIntWfResult?.length > 0) {
+        for (
         let i = 0;
         i <
         self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
@@ -519,6 +520,14 @@ export default {
           self.workflowSubmission.selectedIntWfResult.splice(i, 1, {});
         }
       }
+      } else {
+        // Display a warning when no file is selected
+        self.$toast.warning(
+          "Please select a file to add to selection.",
+          self.sharedService.toastNotificationConfig
+        );
+      }
+      
     },
     onChangeIntWfResult(indexResultLabel, row) {
       const self = this;
@@ -756,5 +765,8 @@ export default {
 }
 .al-cursor {
   cursor: alias !important;
+}
+.search-btn:active {
+  border-color: transparent !important;
 }
 </style>
