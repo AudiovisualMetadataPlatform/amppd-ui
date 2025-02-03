@@ -5,93 +5,91 @@
       <div class="row">
         <div class="col-12 bg-light-gray-1">
           <main class="m-0">
-            <div class="pad-all-3">
-              <div class="card">
-                <div class="card-body">
-                  <h1 class="card-title">AMP Deliverables</h1>
+            <div class="card">
+              <div class="card-body">
+                <h1 class="card-title">AMP Deliverables</h1>
+                <button
+                  v-bind:disabled="!canDeliverFinalResults"
+                  class="btn btn-primary my-3"
+                  data-toggle="modal"
+                  data-target=".bd-example-modal-lg"
+                >
+                  Deliver Final Results
+                </button>
+                <div>
+                  <h2 class="sub-title">
+                    Collection: <span>{{ pfile.collectionName }}</span>
+                  </h2>
+                  <h2 class="sub-title">
+                    Item: <span>{{ pfile.itemName }}</span>
+                  </h2>
+                  <h2 class="sub-title">
+                    External Source: <span>{{ pfile.externalSource }}</span>
+                  </h2>
+                  <h2 class="sub-title">
+                    External ID: <span>{{ pfile.externalId }}</span>
+                  </h2>
+                  <h2 class="sub-title">
+                    Content File: <span>{{ pfile.primaryfileName }}</span>
+                  </h2>
+                  <h2 class="sub-title">
+                    Filename: <span>{{ pfile.primaryfileOriginalname }}</span>
+                  </h2>
+                </div>
+                <div class="table-responsive dataTables_wrapper">
                   <button
-                    v-bind:disabled="!canDeliverFinalResults"
-                    class="btn btn-primary my-3"
+                    v-on:click="searchModal"
+                    id="btn-search-modal"
+                    class="btn btn-primary marg-bot-4"
                     data-toggle="modal"
-                    data-target=".bd-example-modal-lg"
+                    data-target=".bd-example-modal-lg-2"
                   >
-                    Deliver Final Results
+                    Search
                   </button>
-                  <div>
-                    <h2 class="sub-title">
-                      Collection: <span>{{ pfile.collectionName }}</span>
-                    </h2>
-                    <h2 class="sub-title">
-                      Item: <span>{{ pfile.itemName }}</span>
-                    </h2>
-                    <h2 class="sub-title">
-                      External Source: <span>{{ pfile.externalSource }}</span>
-                    </h2>
-                    <h2 class="sub-title">
-                      External ID: <span>{{ pfile.externalId }}</span>
-                    </h2>
-                    <h2 class="sub-title">
-                      Content File: <span>{{ pfile.primaryfileName }}</span>
-                    </h2>
-                    <h2 class="sub-title">
-                      Filename: <span>{{ pfile.primaryfileOriginalname }}</span>
-                    </h2>
+                  <div class="final-choice-top">
+                    <span class="txt-v">Show Final Results Only</span>
+                    <label class="switch" title="Final Result"
+                      ><span class="visually-hidden">Final Result</span>
+                      <input type="checkbox" v-on:click="filterByFinal" />
+                      <span class="slider round"></span>
+                    </label>
                   </div>
-                  <div class="table-responsive dataTables_wrapper">
-                    <button
-                      v-on:click="searchModal"
-                      id="btn-search-modal"
-                      class="btn btn-primary marg-bot-4"
-                      data-toggle="modal"
-                      data-target=".bd-example-modal-lg-2"
-                    >
-                      Search
-                    </button>
-                    <div class="final-choice-top">
-                      <span class="txt-v">Show Final Results Only</span>
-                      <label class="switch" title="Final Result"
-                        ><span class="visually-hidden">Final Result</span>
-                        <input type="checkbox" v-on:click="filterByFinal" />
-                        <span class="slider round"></span>
-                      </label>
-                    </div>
-                    <div
-                      id="myTable_wrapper"
-                      class="dataTables_wrapper no-footer"
-                    >
-                      <div class="dataTables_length mt-1" id="myTable_length">
-                        <label
-                          >Show
-                          <select
-                            name="myTable_length"
-                            aria-controls="myTable"
-                            class=""
-                            v-model="searchQuery.resultsPerPage"
-                          >
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                          </select>
-                          entries</label
+                  <div
+                    id="myTable_wrapper"
+                    class="dataTables_wrapper no-footer"
+                  >
+                    <div class="dataTables_length mt-1" id="myTable_length">
+                      <label
+                        >Show
+                        <select
+                          name="myTable_length"
+                          aria-controls="myTable"
+                          class=""
+                          v-model="searchQuery.resultsPerPage"
                         >
-                      </div>
-                      <DashboardTable
-                        v-if="columns.length"
-                        :columns="columns"
-                        parent="Deliverables"
-                        @deliverableSortQuery="sortQuery()"
-                      />
-                      <pagination
-                        v-if="searchQuery"
-                        :pageNum="searchQuery.pageNum"
-                        :resultsPerPage="Number.parseInt(searchQuery.resultsPerPage)"
-                        :totalResults="totalResults"
-                        :maxPages="3"
-                        @paginate="paginate"
-                        :showTotalText="true"
-                      />
+                          <option value="10">10</option>
+                          <option value="25">25</option>
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                        </select>
+                        entries</label
+                      >
                     </div>
+                    <DashboardTable
+                      v-if="columns.length"
+                      :columns="columns"
+                      parent="Deliverables"
+                      @deliverableSortQuery="sortQuery()"
+                    />
+                    <pagination
+                      v-if="searchQuery"
+                      :pageNum="searchQuery.pageNum"
+                      :resultsPerPage="Number.parseInt(searchQuery.resultsPerPage)"
+                      :totalResults="totalResults"
+                      :maxPages="3"
+                      @paginate="paginate"
+                      :showTotalText="true"
+                    />
                   </div>
                 </div>
               </div>

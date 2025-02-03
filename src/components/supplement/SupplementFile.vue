@@ -4,15 +4,15 @@
     <form>
       <div
         v-if="action !== 'view' || action === 'replace'"
-        class="marg-t-2 panel panel-default hidden-container"
+        class="mt-3 panel panel-default hidden-container"
       >
         <div class="panel-heading"><strong>Upload files</strong></div>
         <div class="panel-body">
           <div class="mb-4 file-upload bg-light-gray-1">
-            <label for="file-upload" class="file-upload-box form-label">
+            <label for="file-upload" class="file-upload-box form-label mb-0">
               <input
                 type="file"
-                class="btn btn-light btn-lg"
+                class="btn btn-light btn-lg w-100"
                 @change="filesChange"
               />
             </label>
@@ -21,7 +21,7 @@
       </div>
 
       <div id="upload-details-body">
-        <div class="marg-t-3 panel panel-default">
+        <div class="mt-4 panel panel-default">
           <div class="hidden-container">
             <div>
               <hr />
@@ -124,7 +124,7 @@
                   </select>
                 </div>
               </div>
-              <div class="row marg-b-2">
+              <div class="row">
                 <div class="col-12">
                   <label for="description" class="form-label">Description</label>
                   <textarea

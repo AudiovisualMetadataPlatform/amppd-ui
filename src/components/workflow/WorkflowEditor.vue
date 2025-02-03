@@ -32,7 +32,7 @@
           </h5>
         </template>
         <template #default>
-          <div class="row pad-all-2">
+          <div class="row p-3">
             Any unsaved changes will be lost. Do you want to continue?
           </div>
         </template>

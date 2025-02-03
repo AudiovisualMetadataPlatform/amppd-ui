@@ -6,351 +6,349 @@
         <div class="col-12"
           :class="{ 'bg-light-gray-1': parent !== 'NewTest' && parent !== 'TestResults' }">
           <main class="m-0">
-            <div class="pad-all-3">
-              <div class="card"
-                :class="{ 'mb-0': parent === 'NewTest' || parent === 'TestResults' }">
-                <div class="card-body px-2">
-                  <h1 v-if="parent !== 'NewTest' && parent !== 'TestResults'" class="card-title pb-3">
-                    AMP Dashboard
-                  </h1>
-                  <div v-if="filterCount > 0">
-                    <div class="d-flex flex-wrap px-0">
-                      <div class="col-sm-2 fw-bold">CURRENTLY FILTERED BY</div>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-if="workflowDashboard.searchQuery.filterByDates.length > 0">
-                        <div class="d-flex flex-row justify-content-between">
-                          <span v-html="closeIconSvg" class="col-auto" @click="removeDateFilter(index)"></span>
-                          <div class="d-flex flex-column">
-                            <label class="fw-bold col-auto">
-                              {{ parent === "TestResults" ? "Output date" : "Date" }}
-                              range
-                            </label>
-                            <label>{{
-                                workflowDashboard.searchQuery.filterByDates[0].getMonth() +
-                                  1
-                              }}/{{
-                                workflowDashboard.searchQuery.filterByDates[0].getDate()
-                              }}/{{
-                                workflowDashboard.searchQuery.filterByDates[0].getFullYear()
-                              }}
-                              -
-                              {{
-                                workflowDashboard.searchQuery.filterByDates[1].getMonth() +
-                                  1
-                              }}/{{
-                                workflowDashboard.searchQuery.filterByDates[1].getDate()
-                              }}/{{
-                                workflowDashboard.searchQuery.filterByDates[1].getFullYear()
-                              }}</label
-                            >
-                          </div>
+            <div class="card"
+              :class="{ 'mb-0': parent === 'NewTest' || parent === 'TestResults' }">
+              <div class="card-body px-2">
+                <h1 v-if="parent !== 'NewTest' && parent !== 'TestResults'" class="card-title pb-3">
+                  AMP Dashboard
+                </h1>
+                <div v-if="filterCount > 0">
+                  <div class="d-flex flex-wrap px-0">
+                    <div class="col-sm-2 fw-bold">CURRENTLY FILTERED BY</div>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-if="workflowDashboard.searchQuery.filterByDates.length > 0">
+                      <div class="d-flex flex-row justify-content-between">
+                        <span v-html="closeIconSvg" class="col-auto" @click="removeDateFilter(index)"></span>
+                        <div class="d-flex flex-column">
+                          <label class="fw-bold col-auto">
+                            {{ parent === "TestResults" ? "Output date" : "Date" }}
+                            range
+                          </label>
+                          <label>{{
+                              workflowDashboard.searchQuery.filterByDates[0].getMonth() +
+                                1
+                            }}/{{
+                              workflowDashboard.searchQuery.filterByDates[0].getDate()
+                            }}/{{
+                              workflowDashboard.searchQuery.filterByDates[0].getFullYear()
+                            }}
+                            -
+                            {{
+                              workflowDashboard.searchQuery.filterByDates[1].getMonth() +
+                                1
+                            }}/{{
+                              workflowDashboard.searchQuery.filterByDates[1].getDate()
+                            }}/{{
+                              workflowDashboard.searchQuery.filterByDates[1].getFullYear()
+                            }}</label
+                          >
                         </div>
-                      </button>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-if="workflowDashboard.searchQuery.filterByTestDates.length > 0">
-                        <div class="d-flex flex-row justify-content-between">
-                          <span v-html="closeIconSvg" class="col-auto" @click="removeTestDateFilter(index)"></span>
-                          <div class="d-flex flex-column">
-                            <label class="fw-bold col-auto">Test date range</label>
-                            <label>{{
-                                workflowDashboard.searchQuery.filterByTestDates[0].getMonth() +
-                                  1
-                              }}/{{
-                                workflowDashboard.searchQuery.filterByTestDates[0].getDate()
-                              }}/{{
-                                workflowDashboard.searchQuery.filterByTestDates[0].getFullYear()
-                              }}
-                              -
-                              {{
-                                workflowDashboard.searchQuery.filterByTestDates[1].getMonth() +
-                                  1
-                              }}/{{
-                                workflowDashboard.searchQuery.filterByTestDates[1].getDate()
-                              }}/{{
-                                workflowDashboard.searchQuery.filterByTestDates[1].getFullYear()
-                              }}</label>
-                          </div>
+                      </div>
+                    </button>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-if="workflowDashboard.searchQuery.filterByTestDates.length > 0">
+                      <div class="d-flex flex-row justify-content-between">
+                        <span v-html="closeIconSvg" class="col-auto" @click="removeTestDateFilter(index)"></span>
+                        <div class="d-flex flex-column">
+                          <label class="fw-bold col-auto">Test date range</label>
+                          <label>{{
+                              workflowDashboard.searchQuery.filterByTestDates[0].getMonth() +
+                                1
+                            }}/{{
+                              workflowDashboard.searchQuery.filterByTestDates[0].getDate()
+                            }}/{{
+                              workflowDashboard.searchQuery.filterByTestDates[0].getFullYear()
+                            }}
+                            -
+                            {{
+                              workflowDashboard.searchQuery.filterByTestDates[1].getMonth() +
+                                1
+                            }}/{{
+                              workflowDashboard.searchQuery.filterByTestDates[1].getDate()
+                            }}/{{
+                              workflowDashboard.searchQuery.filterByTestDates[1].getFullYear()
+                            }}</label>
                         </div>
-                      </button>
+                      </div>
+                    </button>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-for="(submitter, index) in workflowDashboard.searchQuery.filterBySubmitters"
+                      v-bind:submitter="submitter"
+                      v-bind:index="index"
+                      v-bind:key="index">
+                      <div class="d-flex flex-row justify-content-between">
+                        <span v-html="closeIconSvg" class="col-auto" @click="removeSubmitterFilter(index)"></span>
+                        <div class="d-flex flex-column">
+                          <label class="fw-bold col-auto">Submitter</label>
+                          <label>{{ submitter }}</label>
+                        </div>
+                      </div>
+                    </button>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-for="(unit, index) in selectedFilters.units"
+                      v-bind:workflow="unit.unitName"
+                      v-bind:index="index"
+                      v-bind:key="index">
+                      <div class="d-flex flex-row justify-content-between">
+                        <span v-html="closeIconSvg" class="col-auto" @click="removeUnitFilter(index)"></span>
+                        <div class="d-flex flex-column">
+                          <label class="fw-bold col-auto">Unit</label>
+                          <label>{{ unit.unitName }}</label>
+                        </div>
+                      </div>
+                    </button>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-for="(collection, index) in selectedFilters.collections"
+                      v-bind:workflow="collection.collectionName"
+                      v-bind:index="index"
+                      v-bind:key="index">
+                      <div class="d-flex flex-row justify-content-between">
+                        <span v-html="closeIconSvg" class="col-auto" @click="removeCollectionFilter(index)"></span>
+                        <div class="d-flex flex-column">
+                          <label class="fw-bold col-auto">Collection</label>
+                          <label>{{ collection.collectionName }}</label>
+                        </div>
+                      </div>
+                    </button>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-for="(externalId, index) in workflowDashboard.searchQuery.filterByExternalIds"
+                      v-bind:externalId="externalId"
+                      v-bind:index="index"
+                      v-bind:key="index">
+                      <div class="d-flex flex-row justify-content-between">
+                        <span v-html="closeIconSvg" class="col-auto" @click="removeExternalIdFilter(index)"></span>
+                        <div class="d-flex flex-column">
+                          <label class="fw-bold col-auto">External ID</label>
+                          <label>{{ externalId }}</label>
+                        </div>
+                      </div>
+                    </button>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-for="(item, index) in selectedFilters.items"
+                      v-bind:item="item.itemName"
+                      v-bind:index="index"
+                      v-bind:key="index">
+                      <div class="d-flex flex-row justify-content-between">
+                        <span v-html="closeIconSvg" class="col-auto" @click="removeItemFilter(index)"></span>
+                        <div class="d-flex flex-column">
+                          <label class="fw-bold col-auto">Item</label>
+                          <label>{{ item.itemName }}</label>
+                        </div>
+                      </div>
+                    </button>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-for="(file, index) in selectedFilters.primaryfiles"
+                      v-bind:file="file.primaryfileName"
+                      v-bind:index="index"
+                      v-bind:key="index">
+                      <div class="d-flex flex-row justify-content-between">
+                        <span v-html="closeIconSvg" class="col-auto" @click="removeFileFilter(index)"></span>
+                        <div class="d-flex flex-column">
+                          <label class="fw-bold col-auto">Content File</label>
+                          <label>{{ file.primaryfileName }}</label>
+                        </div>
+                      </div>
+                    </button>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-for="(workflow, index) in workflowDashboard.searchQuery.filterByWorkflows"
+                      v-bind:workflow="workflow"
+                      v-bind:index="index"
+                      v-bind:key="index">
+                      <div class="d-flex flex-row justify-content-between">
+                        <span v-html="closeIconSvg" class="col-auto" @click="removeWorkflowFilter(index)"></span>
+                        <div class="d-flex flex-column">
+                          <label class="fw-bold col-auto">Workflow</label>
+                          <label>{{ workflow }}</label>
+                        </div>
+                      </div>
+                    </button>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-for="(step, index) in workflowDashboard.searchQuery.filterBySteps"
+                      v-bind:step="step"
+                      v-bind:index="index"
+                      v-bind:key="index">
+                      <div class="d-flex flex-row justify-content-between">
+                        <span v-html="closeIconSvg" class="col-auto" @click="removeStepFilter(index)"></span>
+                        <div class="d-flex flex-column">
+                          <label class="fw-bold col-auto">Step</label>
+                          <label>{{ step }}</label>
+                        </div>
+                      </div>
+                    </button>
+                    <span v-if="parent !== 'NewTest'">
                       <button
                         class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(submitter, index) in workflowDashboard.searchQuery.filterBySubmitters"
-                        v-bind:submitter="submitter"
+                        v-for="(output, index) in workflowDashboard.searchQuery.filterByOutputs"
+                        v-bind:output="output"
                         v-bind:index="index"
                         v-bind:key="index">
                         <div class="d-flex flex-row justify-content-between">
-                          <span v-html="closeIconSvg" class="col-auto" @click="removeSubmitterFilter(index)"></span>
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeOutputFilter(index)"></span>
                           <div class="d-flex flex-column">
-                            <label class="fw-bold col-auto">Submitter</label>
-                            <label>{{ submitter }}</label>
+                            <label class="fw-bold col-auto">Output</label>
+                            <label>{{ output }}</label>
                           </div>
                         </div>
                       </button>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(unit, index) in selectedFilters.units"
-                        v-bind:workflow="unit.unitName"
-                        v-bind:index="index"
-                        v-bind:key="index">
-                        <div class="d-flex flex-row justify-content-between">
-                          <span v-html="closeIconSvg" class="col-auto" @click="removeUnitFilter(index)"></span>
-                          <div class="d-flex flex-column">
-                            <label class="fw-bold col-auto">Unit</label>
-                            <label>{{ unit.unitName }}</label>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(collection, index) in selectedFilters.collections"
-                        v-bind:workflow="collection.collectionName"
-                        v-bind:index="index"
-                        v-bind:key="index">
-                        <div class="d-flex flex-row justify-content-between">
-                          <span v-html="closeIconSvg" class="col-auto" @click="removeCollectionFilter(index)"></span>
-                          <div class="d-flex flex-column">
-                            <label class="fw-bold col-auto">Collection</label>
-                            <label>{{ collection.collectionName }}</label>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(externalId, index) in workflowDashboard.searchQuery.filterByExternalIds"
-                        v-bind:externalId="externalId"
-                        v-bind:index="index"
-                        v-bind:key="index">
-                        <div class="d-flex flex-row justify-content-between">
-                          <span v-html="closeIconSvg" class="col-auto" @click="removeExternalIdFilter(index)"></span>
-                          <div class="d-flex flex-column">
-                            <label class="fw-bold col-auto">External ID</label>
-                            <label>{{ externalId }}</label>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(item, index) in selectedFilters.items"
-                        v-bind:item="item.itemName"
-                        v-bind:index="index"
-                        v-bind:key="index">
-                        <div class="d-flex flex-row justify-content-between">
-                          <span v-html="closeIconSvg" class="col-auto" @click="removeItemFilter(index)"></span>
-                          <div class="d-flex flex-column">
-                            <label class="fw-bold col-auto">Item</label>
-                            <label>{{ item.itemName }}</label>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(file, index) in selectedFilters.primaryfiles"
-                        v-bind:file="file.primaryfileName"
-                        v-bind:index="index"
-                        v-bind:key="index">
-                        <div class="d-flex flex-row justify-content-between">
-                          <span v-html="closeIconSvg" class="col-auto" @click="removeFileFilter(index)"></span>
-                          <div class="d-flex flex-column">
-                            <label class="fw-bold col-auto">Content File</label>
-                            <label>{{ file.primaryfileName }}</label>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(workflow, index) in workflowDashboard.searchQuery.filterByWorkflows"
-                        v-bind:workflow="workflow"
-                        v-bind:index="index"
-                        v-bind:key="index">
-                        <div class="d-flex flex-row justify-content-between">
-                          <span v-html="closeIconSvg" class="col-auto" @click="removeWorkflowFilter(index)"></span>
-                          <div class="d-flex flex-column">
-                            <label class="fw-bold col-auto">Workflow</label>
-                            <label>{{ workflow }}</label>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(step, index) in workflowDashboard.searchQuery.filterBySteps"
-                        v-bind:step="step"
-                        v-bind:index="index"
-                        v-bind:key="index">
-                        <div class="d-flex flex-row justify-content-between">
-                          <span v-html="closeIconSvg" class="col-auto" @click="removeStepFilter(index)"></span>
-                          <div class="d-flex flex-column">
-                            <label class="fw-bold col-auto">Step</label>
-                            <label>{{ step }}</label>
-                          </div>
-                        </div>
-                      </button>
-                      <span v-if="parent !== 'NewTest'">
-                        <button
-                          class="btn btn-outline col-sm-2 selected-filter-button"
-                          v-for="(output, index) in workflowDashboard.searchQuery.filterByOutputs"
-                          v-bind:output="output"
-                          v-bind:index="index"
-                          v-bind:key="index">
-                          <div class="d-flex flex-row justify-content-between">
-                            <span v-html="closeIconSvg" class="col-auto" @click="removeOutputFilter(index)"></span>
-                            <div class="d-flex flex-column">
-                              <label class="fw-bold col-auto">Output</label>
-                              <label>{{ output }}</label>
-                            </div>
-                          </div>
-                        </button>
-                      </span>
-                      <span v-if="parent !== 'NewTest' && parent !== 'TestResults'">
-                        <button
-                          class="btn btn-outline col-sm-2 selected-filter-button"
-                          v-for="(status, index) in workflowDashboard.searchQuery.filterByStatuses"
-                          v-bind:status="status"
-                          v-bind:index="index"
-                          v-bind:key="index">
-                          <div class="d-flex flex-row justify-content-between">
-                            <span v-html="closeIconSvg" class="col-auto" @click="removeStatusFilter(index)"></span>
-                            <div class="d-flex flex-column">
-                              <label class="fw-bold col-auto">Status</label>
-                              <label>{{ status }}</label>
-                            </div>
-                          </div>
-                        </button>
-                      </span>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-for="(searchTerm, index) in workflowDashboard.searchQuery.filterBySearchTerms"
-                        v-bind:searchTerm="searchTerm"
-                        v-bind:index="index"
-                        v-bind:key="index">
-                        <div class="d-flex flex-row justify-content-between">
-                          <span v-html="closeIconSvg" class="col-auto" @click="removeSearchFilter()"></span>
-                          <div class="d-flex flex-column">
-                            <label class="fw-bold col-auto">Search Term</label>
-                            <label>{{ searchTerm }}</label>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        class="btn btn-outline col-sm-2 selected-filter-button"
-                        v-if="filterCount > 1">
-                        <div class="d-flex flex-row justify-content-between align-items-center clear-all-filters-button">
-                          <span v-html="closeIconSvg" class="col-auto" @click="clearAll()"></span>
-                          <label class="fw-bold">Clear all</label>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div class="col d-flex flex-wrap filter-btns px-0">
-                    <DateFilter
-                      :parent="parent"
-                      v-if="parent === 'TestResults'"
-                      label="Test Date"
-                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.dateFilter)"
-                    />
-                    <DateFilter
-                      :parent="parent"
-                      @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.dateFilter)"
-                    />
-                    <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('submitter')">Submitter</b-button>                        
-                    <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('unit')">Unit</b-button>
-                    <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('collection')">Collection</b-button>
-                    <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('item')">Item</b-button>
-                    <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('primaryfile')">Content File</b-button>
-                    <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('workflow')">Workflow</b-button>
-                    <b-button 
-                      v-if="parent !== 'NewTest'" 
-                      class="btn btn-info dropdown" 
-                      v-b-modal.modal-lg @click="onOpenModal('output')">
-                      Output
-                    </b-button>                        
-                    <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('step')">Step</b-button>
-                    <b-button 
-                      v-if="parent !== 'NewTest' && parent !== 'TestResults'" 
-                      class="btn btn-info dropdown" 
-                      v-b-modal.modal-lg @click="onOpenModal('status')">
-                      Status
-                    </b-button>
-                    <search-filter
-                      v-if="parent !== 'Deliverables'"
-                      :parent="parent"
-                      class="px-2 my-1" />
-                    <span  v-if="parent !== 'NewTest' && parent !== 'TestResults'" class="px-2 my-2">
-                      <span class="txt-v px-1 py-2">Show Relevant Results Only</span>
-                      <label class="switch my-0" title="Relevant Result">
-                        <span class="visually-hidden">Relevant Result</span>
-                        <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant" />
-                        <span class="slider round"></span>
-                      </label>
                     </span>
-                    <span
-                      v-if="parent !== 'NewTest' && parent !== 'TestResults' && parent !== 'Deliverables'"
-                      class="ms-auto px-2 my-2">
-                      <input
-                        id="export-results"
-                        type="button"
-                        class="btn btn-outline-primary btn-sm"
-                        v-on:click="exportResults"
-                        value="Export to CSV" />
+                    <span v-if="parent !== 'NewTest' && parent !== 'TestResults'">
+                      <button
+                        class="btn btn-outline col-sm-2 selected-filter-button"
+                        v-for="(status, index) in workflowDashboard.searchQuery.filterByStatuses"
+                        v-bind:status="status"
+                        v-bind:index="index"
+                        v-bind:key="index">
+                        <div class="d-flex flex-row justify-content-between">
+                          <span v-html="closeIconSvg" class="col-auto" @click="removeStatusFilter(index)"></span>
+                          <div class="d-flex flex-column">
+                            <label class="fw-bold col-auto">Status</label>
+                            <label>{{ status }}</label>
+                          </div>
+                        </div>
+                      </button>
                     </span>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-for="(searchTerm, index) in workflowDashboard.searchQuery.filterBySearchTerms"
+                      v-bind:searchTerm="searchTerm"
+                      v-bind:index="index"
+                      v-bind:key="index">
+                      <div class="d-flex flex-row justify-content-between">
+                        <span v-html="closeIconSvg" class="col-auto" @click="removeSearchFilter()"></span>
+                        <div class="d-flex flex-column">
+                          <label class="fw-bold col-auto">Search Term</label>
+                          <label>{{ searchTerm }}</label>
+                        </div>
+                      </div>
+                    </button>
+                    <button
+                      class="btn btn-outline col-sm-2 selected-filter-button"
+                      v-if="filterCount > 1">
+                      <div class="d-flex flex-row justify-content-between align-items-center clear-all-filters-button">
+                        <span v-html="closeIconSvg" class="col-auto" @click="clearAll()"></span>
+                        <label class="fw-bold">Clear all</label>
+                      </div>
+                    </button>
                   </div>
-
-                  <DashboardTable
-                    v-if="columns.length"
-                    :columns="columns"
-                    :parent="parent"
-                    :workflowResultType="workflowResultType"
-                    :workflowResultOutput="workflowResultOutput">
-                    <template #show-hide-columns>
-                      <div
-                        v-if="parent !== 'NewTest' && parent !== 'Deliverables'"
-                        id="btn-show-hide"
-                        class="dropdown mb-2">
-                        <b-dropdown id="dropdown-form" auto-close="outside">
-                            <template #button-content>
-                              <span>Show/Hide Columns</span>
-                              <i class="fa fa-sort-down ms-1"></i>
-                            </template>
-                            <b-dropdown-form class="dashboard-filters">
-                              <b-form-checkbox
-                                v-for="column in dashboardColumns.filter(
-                                  (item) => {
-                                    if (parent === 'TestResults')
-                                      return (
-                                        item.field !== 'status' &&
-                                        item.field !== 'actions' &&
-                                        item.field !== 'addToTest'
-                                      );
-                                    else
-                                      return (
-                                        item.field !== 'testDate' &&
-                                        item.field !== 'groundTruth' &&
-                                        item.field !== 'scores' &&
-                                        item.field !== 'addToTest'
-                                      );
-                                  }
-                                )"
-                                :key="column.field"
-                                :value="column"
-                                :checked="column"
-                                v-model="columns"
-                                @change="onChange($event.target, column)"
-                                class="mb-3 form-check">
-                                {{ column.label }}
-                              </b-form-checkbox>
-                            </b-dropdown-form>
-                        </b-dropdown>
-                      </div>  
-                    </template>
-                  </DashboardTable>
-                  <Search
-                    :searchType="searchType"
-                    :dataSource="searchSource"
-                    :key="searchType + searchSource.length"
-                  />
                 </div>
+
+                <div class="col d-flex flex-wrap filter-btns px-0">
+                  <DateFilter
+                    :parent="parent"
+                    v-if="parent === 'TestResults'"
+                    label="Test Date"
+                    @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.dateFilter)"
+                  />
+                  <DateFilter
+                    :parent="parent"
+                    @displayChanged="changeDisplayedFilter(workflowDashboard.filtersEnabled.dateFilter)"
+                  />
+                  <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('submitter')">Submitter</b-button>                        
+                  <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('unit')">Unit</b-button>
+                  <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('collection')">Collection</b-button>
+                  <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('item')">Item</b-button>
+                  <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('primaryfile')">Content File</b-button>
+                  <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('workflow')">Workflow</b-button>
+                  <b-button 
+                    v-if="parent !== 'NewTest'" 
+                    class="btn btn-info dropdown" 
+                    v-b-modal.modal-lg @click="onOpenModal('output')">
+                    Output
+                  </b-button>                        
+                  <b-button class="btn btn-info dropdown" v-b-modal.modal-lg @click="onOpenModal('step')">Step</b-button>
+                  <b-button 
+                    v-if="parent !== 'NewTest' && parent !== 'TestResults'" 
+                    class="btn btn-info dropdown" 
+                    v-b-modal.modal-lg @click="onOpenModal('status')">
+                    Status
+                  </b-button>
+                  <search-filter
+                    v-if="parent !== 'Deliverables'"
+                    :parent="parent"
+                    class="px-2 my-1" />
+                  <span  v-if="parent !== 'NewTest' && parent !== 'TestResults'" class="px-2 my-2">
+                    <span class="txt-v px-1 py-2">Show Relevant Results Only</span>
+                    <label class="switch my-0" title="Relevant Result">
+                      <span class="visually-hidden">Relevant Result</span>
+                      <input type="checkbox" v-model="workflowDashboard.searchQuery.filterByRelevant" />
+                      <span class="slider round"></span>
+                    </label>
+                  </span>
+                  <span
+                    v-if="parent !== 'NewTest' && parent !== 'TestResults' && parent !== 'Deliverables'"
+                    class="ms-auto px-2 my-2">
+                    <input
+                      id="export-results"
+                      type="button"
+                      class="btn btn-outline-primary btn-sm"
+                      v-on:click="exportResults"
+                      value="Export to CSV" />
+                  </span>
+                </div>
+
+                <DashboardTable
+                  v-if="columns.length"
+                  :columns="columns"
+                  :parent="parent"
+                  :workflowResultType="workflowResultType"
+                  :workflowResultOutput="workflowResultOutput">
+                  <template #show-hide-columns>
+                    <div
+                      v-if="parent !== 'NewTest' && parent !== 'Deliverables'"
+                      id="btn-show-hide"
+                      class="dropdown mb-2">
+                      <b-dropdown id="dropdown-form" auto-close="outside">
+                          <template #button-content>
+                            <span>Show/Hide Columns</span>
+                            <i class="fa fa-sort-down ms-1"></i>
+                          </template>
+                          <b-dropdown-form class="dashboard-filters">
+                            <b-form-checkbox
+                              v-for="column in dashboardColumns.filter(
+                                (item) => {
+                                  if (parent === 'TestResults')
+                                    return (
+                                      item.field !== 'status' &&
+                                      item.field !== 'actions' &&
+                                      item.field !== 'addToTest'
+                                    );
+                                  else
+                                    return (
+                                      item.field !== 'testDate' &&
+                                      item.field !== 'groundTruth' &&
+                                      item.field !== 'scores' &&
+                                      item.field !== 'addToTest'
+                                    );
+                                }
+                              )"
+                              :key="column.field"
+                              :value="column"
+                              :checked="column"
+                              v-model="columns"
+                              @change="onChange($event.target, column)"
+                              class="mb-3 form-check">
+                              {{ column.label }}
+                            </b-form-checkbox>
+                          </b-dropdown-form>
+                      </b-dropdown>
+                    </div>  
+                  </template>
+                </DashboardTable>
+                <Search
+                  :searchType="searchType"
+                  :dataSource="searchSource"
+                  :key="searchType + searchSource.length"
+                />
               </div>
             </div>
           </main>

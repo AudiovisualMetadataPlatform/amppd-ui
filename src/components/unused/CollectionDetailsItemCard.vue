@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-light-gray-1 pad-all-1">
+  <div class="card bg-light-gray-1 p-2">
     <div class="container-fluid">
       <div class="row">
         <div class="col">
@@ -69,12 +69,12 @@
       </div>
       <div class="row">
         <div class="col text-end controls">
-          <button class="btn btn-outline-danger btn marg-t-1">Delete</button>
-          <button class="btn btn-outline-primary btn marg-t-1">Edit</button>
-          <button class="btn btn-outline-primary btn marg-t-1">
+          <button class="btn btn-outline-danger btn mt-2">Delete</button>
+          <button class="btn btn-outline-primary btn mt-2">Edit</button>
+          <button class="btn btn-outline-primary btn mt-2">
             View workflow results
           </button>
-          <a href="add-files.html" class="btn btn-primary btn marg-t-1"
+          <a href="add-files.html" class="btn btn-primary btn mt-2"
             >Add files</a
           >
         </div>
@@ -85,7 +85,7 @@
         class="container"
       >
         <ul
-          class="list-unstyled file-list marg-t-5"
+          class="list-unstyled file-list"
           v-for="rec in collectionDetails.items[index] &&
             collectionDetails.items[index].primaryFiles"
           :key="rec.id"

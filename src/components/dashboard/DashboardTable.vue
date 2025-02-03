@@ -218,7 +218,7 @@
         </h5>
       </template>
       <template #default>
-        <div class="row pad-all-2">
+        <div class="row p-3">
           Are you sure you want to delete this result from the Dashboard? This
           action cannot be rolled back.
         </div>

@@ -7,7 +7,7 @@
           <main class="m-0">
             <Logout />
             <h1>Collection Details</h1>
-            <div class="pad-all-3">
+            <div class="p-4">
               <div class="card">
                 <div class="card-body">
                   <div class="row">
@@ -38,16 +38,16 @@
                       <div class="row">
                         <div class="col controls text-end">
                           <button
-                            class="btn btn-outline-danger btn-lg marg-bot-1"
+                            class="btn btn-outline-danger btn-lg mb-2"
                           >
                             Delete
                           </button>
                           <button
-                            class="btn btn-outline-primary btn-lg marg-bot-1"
+                            class="btn btn-outline-primary btn-lg mb-2"
                           >
                             Edit
                           </button>
-                          <button class="btn btn-primary btn-lg marg-bot-1">
+                          <button class="btn btn-primary btn-lg mb-2">
                             View workflow results
                           </button>
                         </div>
@@ -60,7 +60,7 @@
                   v-for="(rec, index) in collectionDetails &&
                     collectionDetails.items"
                   :key="rec.id"
-                  class="pad-all-3 my-collection"
+                  class="p-4 my-collection"
                 >
                   <!-- collection name/description -->
                   <CollectionDetailsItemCard :index="index" />

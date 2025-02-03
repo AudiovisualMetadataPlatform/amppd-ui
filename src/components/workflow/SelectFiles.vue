@@ -15,7 +15,7 @@
     >
       <h2>Select files</h2>
       <form
-        class="marg-t-3 filter-form"
+        class="mt-4 filter-form"
         v-on:submit.prevent
         v-on:keyup.enter="searchFiles()"
       >
@@ -284,7 +284,7 @@
           intermediaryWorkflowResults.length
       "
     >
-      <div class="card pad-all-2 marg-t-0">
+      <div class="card p-3">
         <div class="d-flex" style="justify-content: space-between;">
           <h4>
             Select the files to be used as input for the selected workflow
@@ -303,7 +303,7 @@
             Go back
           </button>
         </div>
-        <div class="col-lg-12 marg-t-3 marg-b-2">
+        <div class="col-lg-12 mt-4">
           <h5>
             Content File:
             {{ Array.from(workflowSubmission.selectedFiles.values())[0].name }}
@@ -749,13 +749,13 @@ export default {
 .select-bundles {
   margin: 5px;
 }
-.form-errors {
+/* .form-errors {
   color: red;
   margin: 0% !important;
   font-size: 0.9rem;
   padding-left: 3px;
   width: inherit;
-}
+} */
 .item-name {
   white-space: normal !important;
   text-align: left !important;

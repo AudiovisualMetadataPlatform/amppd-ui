@@ -535,9 +535,9 @@
               role="tabpanel"
               aria-labelledby="pills-assign-tab"
             >
-              <div class="card card-body marg-t-0 bg-light-gray-1 b-card-spl">
+              <div class="card card-body bg-light-gray-1 b-card-spl">
                 <div class="mb-3">
-                  <label v-if="accessControl._roleassignment._update" for="formGroupExampleInpu bold" class="form-label">Select User</label>
+                  <label v-if="accessControl._roleassignment._update" for="formGroupExampleInpu" class="form-label fw-bold">Select User</label>
                   <div v-if="accessControl._roleassignment._update" data-v-4ae6b2fb="" class="">
                     <div data-v-4ae6b2fb="" class="input-group mb-3">
                       <input
@@ -566,13 +566,13 @@
                       </button>
                     </div>
                   </div>
-                  <ul class="list-group marg-t-2 mb-2 role-assign-ul">
+                  <ul class="list-group mb-2 role-assign-ul">
                     <li
                       class="list-group-item d-flex"
                       v-for="(user, userIndex) in assignedRoles.users"
                       :key="userIndex"
                     >
-                      <div class="bold pad-r-3 u-width">
+                      <div class="fw-bold pe-4 u-width">
                         {{ user.username }}
                       </div>
                       <div
@@ -605,7 +605,7 @@
                       </div>
                     </li>
                   </ul>
-                  <div v-if="accessControl._roleassignment._update" class="float-end">
+                  <div v-if="accessControl._roleassignment._update" class="float-end mt-1">
                     <button
                       type="submit"
                       class="marg-tb-1 btn btn-primary btn-save"
@@ -625,7 +625,7 @@
               role="tabpanel"
               aria-labelledby="pills-unit-roles-tab"
             >
-              <div class="card card-body marg-t-0">
+              <div class="card card-body">
                 <div class="table-responsive-lg">
                   <table id="myTable" class="table w-100 permissions">
                     <thead>

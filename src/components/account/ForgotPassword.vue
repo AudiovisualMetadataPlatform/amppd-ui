@@ -37,7 +37,7 @@
 
               <button
                 type="submit"
-                class="btn btn-primary marg-bot-4"
+                class="btn btn-primary mb-3"
                 v-on:click="sendEmail()"
               >
                 Send email
@@ -134,12 +134,14 @@ export default {
 };
 </script>
 
-<style lang="css">
+<style scoped>
 @import "../../styles/style.css";
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
+a {
+  color: #153c4d !important;
+  text-decoration: none !important;
+
+  &:hover {
+    color: #f4871e !important;
+  }
 }
 </style>

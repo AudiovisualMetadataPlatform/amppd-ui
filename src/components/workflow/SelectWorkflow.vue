@@ -1,7 +1,7 @@
 <template>
   <div class="col-lg-5">
     <loader :show="workflowSubmission.loading" />
-    <div class="card pad-all-2">
+    <div class="card p-3">
       <h4>Select workflow</h4>
       <div class="mb-3">
         <label for="workflow-name-select" class="visually-hidden">Select list:</label>
@@ -48,7 +48,7 @@
             </li>
           </ul>
         </div>
-        <div class="pad-all-2"></div>
+        <div class="p-3"></div>
         <h4>Selected Files</h4>
         <div class="container no-pad no-marg">
           <div>
@@ -297,14 +297,14 @@
               >{{ supplement.name }}</b-form-radio
             >
           </b-form-radio-group>
-          <div class="row pad-all-2">
+          <div class="row p-3">
             <div class="float-start">
               <label class="switch">
                 <input type="checkbox" v-model="isActiveSupplementSwitch" />
                 <span class="slider round"></span>
               </label>
             </div>
-            <div class="float-start text-start pad-l-1">
+            <div class="float-start text-start ps-2">
               Use this input for all files in this batch.
             </div>
           </div>
