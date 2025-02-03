@@ -842,6 +842,10 @@ svg.icon-user {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-right: 5px !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
 }
 .no-bx-shadow{
   box-shadow: none !important;
