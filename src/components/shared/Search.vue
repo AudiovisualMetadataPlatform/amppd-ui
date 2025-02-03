@@ -127,7 +127,7 @@
               selectedFilters[type].length
           "
         >
-          <h5 class="pad-all-2 text-start">Selected</h5>
+          <h5 class="p-3 text-start">Selected</h5>
           <table class="w-100 table table-striped">
             <tbody>
               <template v-for="source in clonedDataSource">
@@ -523,7 +523,7 @@
             >
               <button
                 id="addRow"
-                class="btn btn-link marg-t-0 pad-all-0 addRow"
+                class="btn btn-link addRow"
                 data-toggle="popover"
                 data-trigger="hover"
                 data-content="Add a new row"
@@ -548,7 +548,7 @@
               @click="handleRemoveRowBtn(searchIndex, row)"
             >
               <button
-                class="btn btn-outline marg-t-0 pad-all-0 removeRow"
+                class="btn btn-outline removeRow"
                 data-toggle="popover"
                 data-trigger="hover"
                 data-content="Remove this row"
@@ -956,7 +956,6 @@ export default {
     },
     onCancel() {
       if (this.type === "item-search") {
-        this.dataSource = [];
         this.clonedDataSource = [];
         this.searchWord = "";
         this.selectedItemId = null;
@@ -1153,13 +1152,13 @@ table tbody tr:nth-of-type(odd) {
     opacity: 1;
   }
 }
-.form-errors {
+/* .form-errors {
   color: red;
   margin: 0% !important;
   font-size: 0.9rem;
   padding-left: 3px;
   width: inherit;
-}
+} */
 .no-data-error {
   width: 100%;
   text-align: center;

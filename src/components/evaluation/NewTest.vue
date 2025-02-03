@@ -63,7 +63,7 @@
         </div>
       </div>
       <div
-        class="mb-3 marg-t-1"
+        class="mb-3 mt-2"
         v-if="
           selectedMst.detailBody &&
             selectedMst.mgmScoringParameters &&

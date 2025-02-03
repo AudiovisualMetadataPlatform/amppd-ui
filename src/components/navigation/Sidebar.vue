@@ -203,12 +203,6 @@ export default {
 
 <style lang="css">
 @import "../../styles/style.css";
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
-}
 nav ul li {
   list-style: none;
   font-size: 1rem;

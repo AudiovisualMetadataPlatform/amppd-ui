@@ -103,7 +103,7 @@
           v-if="accessControl._primaryfile._create"
         >
           <div class="d-flex mt-3">
-            <div class="image-preview col-11 p-0 me-1">
+            <div class="p-0 me-1 w-100">
               <input
                 type="file"
                 class="btn btn-light btn-lg w-100"
@@ -111,7 +111,7 @@
                 @change="getFile"
               />
             </div>
-            <div class="col-1 p-0" style="padding: 5px !important;">
+            <div class="p-0 align-self-center">
               <button
                 class="btn btn-primary btn-lg float-end"
                 @click="uploadFile()"
@@ -430,17 +430,5 @@ export default {
   background-color: #007bff;
   transition: width 0.6s ease;
 }
-.btn-primary {
-  background: #f4871e !important;
-  border-color: #f4871e !important;
-  color: #153c4d !important;
-}
 
-.btn-primary:hover,
-.btn-secondary:hover,
-.btn-outline-primary:hover {
-  background: #153c4d !important;
-  border-color: #153c4d v;
-  color: #fff !important;
-}
 </style>

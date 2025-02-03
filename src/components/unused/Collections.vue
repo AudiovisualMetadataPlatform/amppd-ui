@@ -6,7 +6,7 @@
         <div class="col-10 bg-light-gray-1">
           <main class="m-0">
             <Logout />
-            <div class="pad-all-3">
+            <div class="p-4">
               <div class="card">
                 <div class="card-body">
                   <h1 class="card-title">Create a new collection</h1>
@@ -22,7 +22,7 @@
               </div>
             </div>
             <div
-              class="pad-all-3 my-collection"
+              class="p-4 my-collection"
               v-if="Collections && Collections._embedded.collections.length > 0"
             >
               <div class="card">
@@ -32,7 +32,7 @@
                   <div
                     v-for="rec in Collections._embedded.collections"
                     :key="rec.id"
-                    class="card bg-light-gray-1 pad-all-1"
+                    class="card bg-light-gray-1 p-2"
                   >
                     <div class="container">
                       <div class="row">
@@ -56,7 +56,7 @@
                           </label>
                           <button
                             :disabled="!rec.active"
-                            class="btn btn-primary btn marg-t-5"
+                            class="btn btn-primary btn"
                             @click="onClickHandler(rec.id)"
                           >
                             View
@@ -76,7 +76,7 @@
                 </div>
               </div>
             </div>
-            <div class="pad-all-3 my-collection" v-else>
+            <div class="p-4 my-collection" v-else>
               <loader v-if="Collections.loading" :show="Collections.loading" />
               <div v-else colspan="8" class="no-results">No results</div>
             </div>

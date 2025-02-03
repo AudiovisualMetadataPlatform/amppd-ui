@@ -41,7 +41,7 @@
               class="col-lg-2 text-end"
             >
               <button
-                class="btn btn-primary btn marg-t-5"
+                class="btn btn-primary btn mt-4"
                 href="#"
                 data-toggle="popover"
                 data-content="Link goes to galaxy"
