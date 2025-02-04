@@ -669,6 +669,11 @@ export default {
 }
 .remove-row {
   cursor: pointer;
+  color: #153c4d !important;
+  text-decoration: none !important;
+  &:hover {
+    color: #f4871e !important;
+  }
 }
 .selected-mgm-outputs {
   background-color: #fef4ea;

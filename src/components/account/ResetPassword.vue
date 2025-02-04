@@ -10,7 +10,7 @@
           <div class="card-body">
             <h2 class="card-title">Reset Password</h2>
 
-            <form>
+            <form class="needs-validation" id="resetPwdForm">
               <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="form-errors"
@@ -22,7 +22,6 @@
 
               <div class="mb-3">
                 <label for="exampleInputEmail1">Email address</label>
-                <!-- <label class="form-errors" v-if="errors.email_error.length">{{errors.email_error}}</label> -->
                 <input
                   type="email"
                   class="form-control"
@@ -31,13 +30,11 @@
                   placeholder="Registered Email address"
                   v-bind:readonly="isReadOnly"
                 />
+                <label class="invalid-feedback" v-if="errors.email_error.length">{{errors.email_error}}</label>
               </div>
 
               <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <label class="form-errors" v-if="errors.pswd_error.length">{{
-                  errors.pswd_error
-                }}</label>
                 <input
                   type="password"
                   class="form-control"
@@ -46,13 +43,11 @@
                   placeholder="Create New Password"
                   v-on:focus="onClick(`pswd`)"
                 />
+                <label class="invalid-feedback" v-if="errors.pswd_error.length">{{errors.pswd_error}}</label>
               </div>
 
               <div class="mb-3">
                 <label for="Password2" class="form-label">Confirm Password</label>
-                <label class="form-errors" v-if="errors.cpswd_error.length">{{
-                  errors.cpswd_error
-                }}</label>
                 <input
                   type="password"
                   class="form-control"
@@ -61,6 +56,7 @@
                   placeholder="Confirm New Password"
                   v-on:focus="onClick(`cpswd`)"
                 />
+                <label class="invalid-feedback" v-if="errors.cpswd_error.length">{{errors.cpswd_error}}</label>
               </div>
 
               <button class="btn btn-primary marg-bot-4" v-on:click="reset()">
@@ -117,19 +113,20 @@ export default {
       }
       if (!this.pswd) {
         this.errors.pswd_error = "(Password required)";
-        this.errors.errorExist = true;
       } else if (this.pswd.length < 8) {
         this.errors.pswd_error = "(Password must be at least 8 characters)";
-        this.errors.errorExist = true;
       }
       if (!this.cpswd) {
         this.errors.cpswd_error = "(Confirm Password required)";
-        this.errors.errorExist = true;
       } else if (this.pswd && this.cpswd && this.cpswd != this.pswd) {
         this.errors.other_errors.push("Both password fields must match.");
       }
-
-      if (this.errors.other_errors.length == 0 && !this.errors.errorExist) {
+      const form = document.querySelector("#resetPwdForm");
+      if (!form.checkValidity()
+          || this.pswd && this.cpswd && this.cpswd != this.pswd) {
+        form.classList.add("was-validated");
+        return;
+      } else {
         console.log("entered axios if");
         await accountService
           .sendResetRequest(this.reset_token, this.pswd, this.emailid)
@@ -177,13 +174,3 @@ export default {
   },
 };
 </script>
-
-<style lang="css">
-@import "../../styles/style.css";
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
-}
-</style>

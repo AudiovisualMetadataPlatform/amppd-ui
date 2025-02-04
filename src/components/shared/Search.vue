@@ -1152,13 +1152,6 @@ table tbody tr:nth-of-type(odd) {
     opacity: 1;
   }
 }
-/* .form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
-  width: inherit;
-} */
 .no-data-error {
   width: 100%;
   text-align: center;
