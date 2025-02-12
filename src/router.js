@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 import Login from "./components/account/Login.vue";
 import Deliverables from "./components/deliverables/Deliverables.vue";
@@ -26,7 +26,7 @@ import { store } from "./store/amp-store.js";
 
 
 var router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes: [
     {
       path: "/",
