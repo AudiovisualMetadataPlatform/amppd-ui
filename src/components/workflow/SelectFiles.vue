@@ -46,7 +46,7 @@
           <!-- Do not perform form validation for partial workflows -->
           <form 
             :class="!workflowSubmission.workflowDetails.inputWprkflowResultFormats.length ? 'needs-validation' : ''"
-            id="searchFilesForm"
+            ref="searchFilesForm"
           >
             <div class="input-group mb-3">
               <label for="workflowSubmissionSelectFilesSearch" class="visually-hidden">
@@ -555,7 +555,7 @@ export default {
     },
     handleSearchChange() {
       // Reset form validation
-      const form = document.querySelector("#searchFilesForm");
+      const form = this.$refs.searchFilesForm;
       form.classList.remove("was-validated");
     },
     async searchFiles() {
@@ -609,7 +609,7 @@ export default {
       } else {
         self.errors.search_error = "Please enter a search keyword";
         // Add the form validation for invalid search
-        const form = document.querySelector("#searchFilesForm");
+        const form = this.$refs.searchFilesForm
         form.classList.add("was-validated");
       }
     },

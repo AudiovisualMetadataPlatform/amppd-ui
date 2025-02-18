@@ -10,7 +10,7 @@
           <div class="card-body">
             <h2 class="card-title">Forgot Password</h2>
 
-            <form class="needs-validation" id="forgotPwdForm">
+            <form class="needs-validation" ref="forgotPasswordForm">
               <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="invalid-feedback"
@@ -101,7 +101,7 @@ export default {
         console.log("email blank");
         this.errors.email_error = "Email required.";
         // Only use validation on invalid input
-        const form = document.querySelector("#forgotPwdForm");
+        const form = self.$refs.forgotPasswordForm;
         form.classList.add("was-validated");
       }
 
@@ -131,7 +131,7 @@ export default {
     },
     onClick(data) {
       // Reset form validation on focus
-      const form = document.querySelector("#forgotPwdForm");
+      const form = this.$refs.forgotPasswordForm;
       form.classList.remove("was-validated");
       if (data == "email") this.errors.email_error = "";
     },

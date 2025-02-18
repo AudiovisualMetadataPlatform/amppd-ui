@@ -10,7 +10,7 @@
           <div class="card-body">
             <h2 class="card-title">Reset Password</h2>
 
-            <form class="needs-validation" id="resetPwdForm">
+            <form class="needs-validation" ref="resetPasswordForm">
               <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="form-errors"
@@ -121,7 +121,7 @@ export default {
       } else if (this.pswd && this.cpswd && this.cpswd != this.pswd) {
         this.errors.other_errors.push("Both password fields must match.");
       }
-      const form = document.querySelector("#resetPwdForm");
+      const form = this.$refs.resetPasswordForm;
       if (!form.checkValidity()
           || this.pswd && this.cpswd && this.cpswd != this.pswd) {
         form.classList.add("was-validated");

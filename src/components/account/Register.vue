@@ -9,7 +9,7 @@
         <div class="card col-6">
           <div class="card-body">
             <h2 class="card-title">Register</h2>
-            <form class="needs-validation" id="registerUserForm">
+            <form class="needs-validation" ref="registerForm">
               <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="form-errors"
@@ -161,7 +161,7 @@ export default {
       if (this.pswd && this.confirm_pswd && this.confirm_pswd != this.pswd) {
         this.errors.other_errors.push("Passwords do not match");
       }
-      const form = document.querySelector("#registerUserForm");
+      const form = this.$refs.registerForm;
       if (!form.checkValidity()
           || this.pswd && this.confirm_pswd && this.confirm_pswd != this.pswd) {
         form.classList.add("was-validated");
@@ -200,7 +200,7 @@ export default {
     },
     onClick(data) {
       // Reset form validation on focus
-      const form = document.querySelector("#registerUserForm");
+      const form = this.$refs.registerForm;
       form.classList.contains("was-validated") && form.classList.remove("was-validated");
       // Reset error message(s) on focus
       if (data == "fname") this.errors.fname_error = "";

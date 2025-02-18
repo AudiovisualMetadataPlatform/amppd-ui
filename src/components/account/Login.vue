@@ -10,7 +10,7 @@
         <div class="card col-6">
           <div class="card-body">
             <h2 class="card-title">Sign In</h2>
-            <form class="needs-validation" id="loginUserForm">
+            <form class="needs-validation" ref="loginUserForm">
               <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="form-errors"
@@ -139,7 +139,7 @@ export default {
       event.preventDefault();
       let self = this;
       self.errors.other_errors = [];
-      const form = document.querySelector("#loginUserFormn");
+      const form = self.$refs.loginUserForm;
       if (!self.email) {
         self.errors.email_error = "(Email required)";
       }
@@ -184,7 +184,7 @@ export default {
     },
     onClick() {
       // Reset form validation on focus
-      const form = document.querySelector("#loginUserForm");
+      const form = this.$refs.loginUserForm;
       form.classList.contains("was-validated") && form.classList.remove("was-validated");
       // Reset error messages
       this.errors.email_error = "";

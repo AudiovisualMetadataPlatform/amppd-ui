@@ -8,7 +8,7 @@
     >
       <template #header><h3>Save file selection as a bundle</h3></template>
       <template #body>
-        <form class="needs-validation" id="saveBundleForm">
+        <form class="needs-validation" ref="saveBundleForm">
           <div class="mb-3">
             <label for="name" class="form-label">Bundle Name</label>
             <input
@@ -183,7 +183,7 @@ export default {
     validateBundleInputs() {
       if (this.bundleName.length === 0) {
         this.inputError = "(Bundle name required!)";
-        const form = document.querySelector('#saveBundleForm');
+        const form = this.$refs.saveBundleForm;
         form.classList.add('was-validated');
         return false;
       }
