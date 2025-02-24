@@ -9,12 +9,11 @@
         <h2 class="card-title">Approve User</h2>
         <form>
           <div class="error">
-            <p v-if="errors.length">
+            <p v-if="errors.length"></p>
             <b>Please correct the following error(s):</b>
             <ul>
             <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
             </ul>
-            </p>
           </div>
           <div class="mb-3">
             <label for="userId" class="form-label">User ID: {{this.$route.params.id}}</label>
