@@ -11,10 +11,12 @@
         "
       >
         <thead>
+          <tr>
           <th>File Label</th>
           <th>Filename</th>
           <th>Description</th>
           <th></th>
+          </tr>
         </thead>
         <tbody>
           <tr

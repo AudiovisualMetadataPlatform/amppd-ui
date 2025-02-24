@@ -77,10 +77,12 @@
             <h3>Upload Ground Truth</h3>
             <table class="table" v-if="uploadGtFiles && uploadGtFiles.length">
               <thead>
+                <tr>
                 <th>File Label*</th>
                 <th>Filename</th>
                 <th>Description</th>
                 <th></th>
+                </tr>
               </thead>
               <tbody>
                 <tr v-for="(file, index) in uploadGtFiles" :key="file.id">
