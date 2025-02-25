@@ -1,21 +1,6 @@
 <template>
   <div class="col-12 p-1" v-if="breadCrumbs && breadCrumbs.length">
-    <b-breadcrumb class="float-end">
-      <b-breadcrumb-item
-        v-for="(crumb, index) in breadCrumbs"
-        :active="index === breadCrumbs.length - 1"
-        underline-opacity="0"
-      >
-      <b-link
-        v-if="index !== breadCrumbs.length - 1"
-        :to="crumb.href"
-        replace
-      >
-        {{ crumb.text }}
-      </b-link>
-      <span v-else>{{ crumb.text }}</span>
-      </b-breadcrumb-item>
-    </b-breadcrumb>
+    <b-breadcrumb class="float-end" :items="breadCrumbs" />
   </div>
 </template>
 <script>
@@ -44,7 +29,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style>
 .breadcrumb li.breadcrumb-item a {
   color: #153c4d !important;
   text-decoration: none !important;
