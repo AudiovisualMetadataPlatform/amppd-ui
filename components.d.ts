@@ -14,7 +14,6 @@ declare module 'vue' {
     BarChart: typeof import('./src/components/evaluation/BarChart.vue')['default']
     BatchIngest: typeof import('./src/components/batch/BatchIngest.vue')['default']
     BBreadcrumb: typeof import('bootstrap-vue-next/components/BBreadcrumb')['BBreadcrumb']
-    BBreadcrumbItem: typeof import('bootstrap-vue-next/components/BBreadcrumb')['BBreadcrumbItem']
     BButton: typeof import('bootstrap-vue-next/components/BButton')['BButton']
     BCard: typeof import('bootstrap-vue-next/components/BCard')['BCard']
     BCollapse: typeof import('bootstrap-vue-next/components/BCollapse')['BCollapse']
