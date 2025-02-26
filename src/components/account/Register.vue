@@ -9,7 +9,7 @@
         <div class="card col-6">
           <div class="card-body">
             <h2 class="card-title">Register</h2>
-            <form>
+            <form class="needs-validation" ref="registerForm">
               <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="form-errors"
@@ -20,9 +20,6 @@
               </div>
               <div class="mb-3">
                 <label for="fname" class="form-label">First Name</label>
-                <label class="form-errors" v-if="errors.fname_error.length">{{
-                  errors.fname_error
-                }}</label>
                 <input
                   type="txt"
                   class="form-control"
@@ -30,26 +27,25 @@
                   v-model="fname"
                   placeholder="First Name"
                   v-on:focus="onClick(`fname`)"
+                  required
                 />
+                <label class="invalid-feedback" v-if="errors.fname_error.length">{{errors.fname_error}}</label>
               </div>
               <div class="mb-3">
                 <label for="lname" class="form-label">Last Name</label>
-                <label class="form-errors" v-if="errors.lname_error.length">{{
-                  errors.lname_error
-                }}</label>
                 <input
                   type="txt"
                   class="form-control"
                   id="lname"
                   v-model="lname"
                   placeholder="Last Name"
+                  v-on:focus="onClick(`fname`)"
+                  required
                 />
+                <label class="invalid-feedback" v-if="errors.lname_error.length">{{errors.lname_error}}</label>
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email address</label>
-                <label class="form-errors" v-if="errors.email_error.length">{{
-                  errors.email_error
-                }}</label>
                 <input
                   type="email"
                   class="form-control"
@@ -57,13 +53,12 @@
                   v-model="email"
                   placeholder="Enter email address"
                   v-on:focus="onClick(`email`)"
+                  required
                 />
+                <label class="invalid-feedback" v-if="errors.email_error.length">{{errors.email_error}}</label>
               </div>
               <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
-                <label class="form-errors" v-if="errors.pswd_error.length">{{
-                  errors.pswd_error
-                }}</label>
                 <input
                   type="password"
                   class="form-control"
@@ -71,13 +66,12 @@
                   v-model="pswd"
                   placeholder="Password"
                   v-on:focus="onClick(`pswd`)"
+                  required
                 />
+                <label class="invalid-feedback" v-if="errors.pswd_error.length">{{errors.pswd_error}}</label>
               </div>
               <div class="mb-3">
                 <label for="exampleInputPassword2" class="form-label">Confirm Password</label>
-                <label class="form-errors" v-if="errors.cpswd_error.length">{{
-                  errors.cpswd_error
-                }}</label>
                 <input
                   type="password"
                   class="form-control"
@@ -85,7 +79,9 @@
                   v-model="confirm_pswd"
                   placeholder="Confirm Password"
                   v-on:focus="onClick(`cpswd`)"
+                  required
                 />
+                <label class="invalid-feedback" v-if="errors.cpswd_error.length">{{errors.cpswd_error}}</label>
               </div>
               <button
                 type="submit"
@@ -141,41 +137,36 @@ export default {
       this.errors.errorExist = false;
       if (!this.fname) {
         this.errors.fname_error = "(First Name required)";
-        this.errors.errorExist = true;
       } else if (this.fname.length < 2) {
         this.errors.fname_error = "(Name must be atleast 2 characters)";
-        this.errors.errorExist = true;
       }
       if (!this.lname) {
         this.errors.lname_error = "(Last Name required)";
-        this.errors.errorExist = true;
       } else if (this.lname.length < 2) {
         this.errors.lname_error = "(Last name must be atleast 2 characters)";
-        this.errors.errorExist = true;
       }
       if (!this.email) {
         this.errors.email_error = "(Email required)";
-        this.errors.errorExist = true;
       } else if (!this.validateEmail(this.email)) {
         this.errors.email_error = "(Invalid Email)";
-        this.errors.errorExist = true;
       }
       if (!this.pswd) {
         this.errors.pswd_error = "(Password required)";
-        this.errors.errorExist = true;
       } else if (this.pswd.length < 8) {
         this.errors.pswd_error = "(Password must be at least 8 characters)";
-        this.errors.errorExist = true;
       }
       if (!this.confirm_pswd) {
         this.errors.cpswd_error = "(Confirm Password required)";
-        this.errors.errorExist = true;
       }
       if (this.pswd && this.confirm_pswd && this.confirm_pswd != this.pswd) {
         this.errors.other_errors.push("Passwords do not match");
-        this.errors.errorExist = true;
       }
-      if (this.errors.other_errors.length == 0 && !this.errorExist) {
+      const form = this.$refs.registerForm;
+      if (!form.checkValidity()
+          || this.pswd && this.confirm_pswd && this.confirm_pswd != this.pswd) {
+        form.classList.add("was-validated");
+        return;
+      } else {
         await accountService
           .sendRegisterRequest(
             this.email,
@@ -208,6 +199,10 @@ export default {
       this.$router.push("/");
     },
     onClick(data) {
+      // Reset form validation on focus
+      const form = this.$refs.registerForm;
+      form.classList.contains("was-validated") && form.classList.remove("was-validated");
+      // Reset error message(s) on focus
       if (data == "fname") this.errors.fname_error = "";
       else if (data == "lname") this.errors.lname_error = "";
       else if (data == "email") this.errors.email_error = "";
@@ -223,12 +218,6 @@ export default {
 
 <style scoped>
 @import "../../styles/style.css";
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
-}
 a {
   color: #153c4d !important;
   text-decoration: none !important;

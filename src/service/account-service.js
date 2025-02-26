@@ -85,6 +85,7 @@ function login(username, password) {
       .catch(error => {
         console.log("Error");
         console.log(error);
+        return null;
       });
 }
 
