@@ -30,8 +30,8 @@
                   placeholder="Registered Email address"
                   v-bind:readonly="isReadOnly"
                 />
-                <!-- TODO below line can be removed, as errors.email_error is never populated, and above email input is readonly -->
-                <label class="invalid-feedback" v-if="errors.email_error">{{errors.email_error}}</label>
+                <!-- below line can be removed, as errors.email_error is never populated, and above email input is readonly
+                <label class="invalid-feedback" v-if="errors.email_error">{{errors.email_error}}</label>  -->
               </div>
 
               <div class="mb-3">
