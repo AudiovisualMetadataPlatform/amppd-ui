@@ -28,7 +28,6 @@
         </b-dropdown-item>
       </b-nav-item-dropdown>
     </span>
-    <!-- <div class="right-pane"><button type = "button" v-on:click="signout()">Logout</button></div> -->
   </div>
 </template>
 
@@ -47,6 +46,9 @@ export default {
     }
   },
   methods: {
+    clearLogoutTimer() {
+      clearTimeout(logoutTimer);
+    },
     signout() {
       const self = this;
       if (
@@ -68,6 +70,7 @@ export default {
         this.$router.push("/");
         // After successful logout we need to reset the state to prevent from showing old data
         this.$store.replaceState(defaultState);
+        
       }
     },
     routeTo(submenu) {

@@ -74,6 +74,7 @@ import sync from "@/helpers/sync";
 import AccessControlService from "@/service/access-control-service";
 import SharedService from "@/service/shared-service";
 import Loader from "@/components/shared/Loader.vue";
+import jwtDecode from 'jwt-decode';
 
 export default {
   name: "LoginComponent",
@@ -121,6 +122,35 @@ export default {
     }
   },
   methods: {
+    getTokenExpirationDate(token) {
+      const decoded = jwtDecode(token);
+      if (!decoded.exp) {
+        return null;
+      }
+      const date = new Date(0);
+      date.setUTCSeconds(decoded.exp);
+      return date;
+    },
+    getTimeUntilExpiration(token) {
+      const expirationDate = getTokenExpirationDate(token);
+      if (!expirationDate) {
+        return null;
+      }
+    
+      const now = new Date();
+      const diff = expirationDate.getTime() - now.getTime();
+      return diff > 0 ? diff : 0;
+    },
+    startLogoutTimer(token) {
+      const timeUntilExpiration = getTimeUntilExpiration(token);
+    
+      if (timeUntilExpiration) {
+        logoutTimer = setTimeout(() => {
+          // Call your logout function here
+          logout(); 
+        }, timeUntilExpiration);
+      }
+    },
     async activateNewUser() {
       let self = this;
       try {
