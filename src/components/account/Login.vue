@@ -57,7 +57,7 @@
               </button>
               <p class="form-text text-muted">
                 Don't have an account?
-                <a href="#" v-on:click="registerClicked()">Sign up</a>.
+                <a href="#" @click.prevent="registerClicked()">Sign up</a>.
               </p>
             </form>
           </div>
@@ -168,7 +168,7 @@ export default {
             acActions: self.acActions,
           }));
           if (self.$route.query.returnUrl) {
-            console.log("going to " + self.$route.query.returnUrl);
+            console.log("going to returnUrl: " + self.$route.query.returnUrl);
             self.$router.push(self.$route.query.returnUrl);
           } else {
             self.$router.push("/");
