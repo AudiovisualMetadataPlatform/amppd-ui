@@ -274,13 +274,19 @@
       </div></template>
     </modal>
     <SaveBundle />
-    <!-- Check whether supplementList is not empty -->
-    <div v-if="supplementList?.length > 0">
-      <b-button
+    <!--TODO 
+      fr-done-btn is moved out of below if block as a work-around for the issue that supplementList is empty when the button is empty
+      when the button is first rendered, upon Run Workflow, it's populated but somehow the page doesn't get updated, 
+      so ref to it triggers NPE. A better fix would be to figure out a way to update the page reactively.
+    -->
+    <b-button
         id="fr-done-btn"
         @click="showFRModal = true"
         class="spl-fr-btn"
-      ></b-button>
+      >
+    </b-button>
+    <!-- Check whether supplementList is not empty -->
+    <div v-if="supplementList?.length > 0">
       <b-modal v-model="showFRModal" id="modal-center" centered>
         <template #header>
           <h5 class="text-capitalize">
@@ -347,7 +353,7 @@ export default {
       selectedFilesArray: [],
       errors: [],
       showFRModal: false,
-      supplementList: [],
+      supplementList: [], // list of supplements for a particular Supplement MGM node and particular PFile
       selectedSupplement: [],
       isActiveSupplementSwitch: false,
       defaultFacialRecognition: [],
@@ -710,17 +716,17 @@ export default {
             self.workflowSubmission.selectedWorkflowParameters;
           const supplementNodes = workflowNodes.filter(
             (node) => node.node_id === "supplement"
-          );
+          ); // all Supplement MGM nodes in the workflow
           if (supplementNodes.length) {
-            console.log("Facial recognition operation");
+            console.log("Getting supplements for all PFiles for each MGM in the workflow requiring supplements ...");
             let supplements = await self.getSupplementsForPrimaryfiles(
               supplementNodes
             );
 
             //Empty Content File listing
             const emptySupplementalPFiles = {};
-            for (let i = 0; i < supplements.length; i++) {
-              for (let j = 0; j < supplements[i].length; j++) {
+            for (let i = 0; i < supplements.length; i++) { // loop through each supplementNode
+              for (let j = 0; j < supplements[i].length; j++) { // loop through each PFile for the current supplementNode
                 if (!supplements[i][j].length) {
                   if (Object.keys(emptySupplementalPFiles).length) {
                     let matched = true;
@@ -790,13 +796,13 @@ export default {
 
               let paths = [];
               //User input in the case of multiple supplements are found
-              for (let i = 0; i < supplements.length; i++) {
-                for (let j = 0; j < supplements[i].length; j++) {
+              for (let i = 0; i < supplements.length; i++) { // loop through each supplementNode
+                for (let j = 0; j < supplements[i].length; j++) { // loop through each PFile for the current supplementNode
                   let oneSupplement = [];
-                  if (supplements[i][j].length > 1) {
-                    self.supplementList = supplements[i][j];
+                  if (supplements[i][j].length > 1) { // more than one supplements exist for current supplementNode and PFile
+                    self.supplementList = supplements[i][j]; // list of supplements for current supplementNode and PFile
                     // Toggle button's activity
-                    if (self.defaultFacialRecognition.length) {
+                    if (self.defaultFacialRecognition.length) { // if "Use this supplement for all files" was choosen by now
                       let matched = true;
                       for (let frValue of self.defaultFacialRecognition) {
                         for (let sup of self.supplementList) {
@@ -809,7 +815,7 @@ export default {
                           }
                         }
                       }
-                      if (!matched) {
+                      if (!matched) { // if default supplement doesn't match, ask user to select from current supplement list
                         self.selectedSupplement = supplements[i][j][0];
                         self.showFRModal = true;
                         await self.pauser();
@@ -821,7 +827,7 @@ export default {
                           self.isActiveSupplementSwitch = false;
                         }
                       }
-                    } else {
+                    } else { // no default supplement, ask user to select from current supplement list
                       self.selectedSupplement = supplements[i][j][0];
                       self.showFRModal = true;
                       await self.pauser();
@@ -831,7 +837,7 @@ export default {
                         self.isActiveSupplementSwitch = false;
                       }
                     }
-                  } else {
+                  } else {  // just one supplements exist for current supplementNode and PFile, use that one, no need to choose
                     oneSupplement = supplements[i][j][0];
                   }
                   paths.push({ [j]: oneSupplement.absolutePathname });
