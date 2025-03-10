@@ -358,9 +358,11 @@ export default {
     },
     handleConfirmModal(confirmed) {
       const self = this;
+      const { file, index } = self.fileToRemove;
+      console.log("handleConfirmModal: confirmed = " + confirmed + ", file = " + file + ", index = " + index);
       // When clicked on 'Yes', and info of file to be removed are available remove file
-      if (confirmed && self.fileToRemove.file && self.fileToRemove.index) {
-        const { file, index } = self.fileToRemove;
+      if (confirmed && file) {
+        console.log("Removing file " + file + " at index " + index);
         self.showLoader = true;
         self.fileService
           .removePrimaryFile(file.id)
@@ -380,6 +382,7 @@ export default {
             );
           });
       } else {
+        console.log("Removing file action cancelled.");
         // When clicked on 'No', hide the modal
         this.$refs.confirmModal.hide();
       }
