@@ -361,7 +361,7 @@ export default {
       const { file, index } = self.fileToRemove;
       console.log("handleConfirmModal: confirmed = " + confirmed + ", file = " + file + ", index = " + index);
       // When clicked on 'Yes', and info of file to be removed are available remove file
-      if (confirmed && self.fileToRemove.file) {
+      if (confirmed && file) {
         console.log("Removing file " + file + " at index " + index);
         self.showLoader = true;
         self.fileService
