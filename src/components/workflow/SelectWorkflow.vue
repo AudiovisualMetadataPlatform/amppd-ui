@@ -295,7 +295,7 @@
           </h5>
         </template>
         <template #default>
-          <b-form-radio-group v-model="selectedSupplement">
+          <b-form-radio-group v-model="selectedSupplement" stacked>
             <b-form-radio
               v-for="(supplement, index) in supplementList"
               v-bind:key="index"
