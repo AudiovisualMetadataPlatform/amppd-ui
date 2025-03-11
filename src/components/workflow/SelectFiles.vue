@@ -14,11 +14,6 @@
       "
     >
       <h2>Select files</h2>
-      <form
-        class="mt-4 filter-form"
-        v-on:submit.prevent
-        v-on:keyup.enter="searchFiles()"
-      >
         <div
           class="container-fluid"
           v-if="
@@ -45,6 +40,7 @@
         <div class="mb-3">
           <!-- Do not perform form validation for partial workflows -->
           <form 
+            @submit.prevent="searchFiles"
             :class="!workflowSubmission.workflowDetails.inputWprkflowResultFormats.length ? 'needs-validation' : ''"
             ref="searchFilesForm"
           >
@@ -89,7 +85,6 @@
           </form>
         </div>
         <div></div>
-      </form>
       <div v-if="workflowSubmissionsearchResults">
         <h4>Search Results</h4>
         <hr class="w-100" />
