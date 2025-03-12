@@ -458,22 +458,31 @@ router.beforeEach(async (to, from, next) => {
   console.log("router: currentUser: ", currentUser);
 
   if (env.getDisableAuth() == "true" || !authorize) {
-    console.log("router: No auth needed.")
+    console.log("router: No auth needed.");
+    // if user was logged in, validate token and clear up auth info if timed out
+    if (currentUser) {
+      var success = await accountService.validate();
+      if (!success) {
+        store.state.isAuthenticated = false;
+        store.commit("isAuthenticated");
+        console.log("User was previously logged in but currently auto logged out!");
+      }
+    }
     return next();
   } else if (!currentUser) {
     console.log("router: Current user not logged in yet.");
     // not logged in so redirect to access-denied page with login link and with the return url
-    return router.push({ path: "/access-denied", query: { returnUrl: to.path }});
+    return next({ path: "/access-denied", query: { returnUrl: to.path }});
   } else {
     // TODO
     // below API call is to validate the auth token before new page is loaded, in case the current login has expired;
     // there should be better way to achieve this without making such extra API call
+    console.log("Validating current user login token ...");
     var success = await accountService.validate();
-    console.log("success = " + success);
     if (!success) {
       store.state.isAuthenticated = false;
       store.commit("isAuthenticated");
-      console.log("router: Auth token invalid! routing to login page.")
+      console.log("router: Auth token invalid or timed out! routing to login page.")
       return next({ path: "/account/login", query: { returnUrl: to.path } });
     } else {
       store.state.isAuthenticated = true;
@@ -481,14 +490,14 @@ router.beforeEach(async (to, from, next) => {
       // let acActions = router.app.$store.state.acActions;
       let acActions = store.state.acActions;
       let acIsAdmin = store.state.acIsAdmin;
-      console.log("router: initPermissions =  ", acActions," isAdmin = ", acIsAdmin);
+      console.log("router: Auth token valid. initPermissions =  ", acActions," isAdmin = ", acIsAdmin);
       if (acActions.includes(action) || acIsAdmin) {
         console.log(currentUser.username + " can perform action " + action);
         return next();
       }
       else {
         console.log(currentUser.username + " can't perform action " + action);
-        return router.push("/access-denied");
+        return next("/access-denied");
       }
     }
   }
