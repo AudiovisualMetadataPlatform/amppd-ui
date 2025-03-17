@@ -20,7 +20,9 @@ export default class BaseService{
         if ([401, 403].indexOf(error.status) !== -1) {
             // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
             accountService.logout();
-            // TODO better call router.push("/account/login") with returnUrl of current location
+            // TODO 
+            // reloading current location cause browser reload homepage instead of login page;
+            // better call router.push("/account/login") with returnUrl of current location
             // location.reload(true);
         }
 
