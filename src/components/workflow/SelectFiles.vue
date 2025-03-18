@@ -130,10 +130,7 @@
                 </button>
                 <!-- -->
                 <button
-                  v-if="
-                    !workflowSubmission.workflowDetails
-                      .inputWprkflowResultFormats.length
-                  "
+                  v-if="!workflowSubmission.workflowDetails.inputWprkflowResultFormats.length"
                   class="btn btn-link float-end"
                   v-on:click="addAllFiles(index)"
                   v-bind:disabled="hasValues(index)"
@@ -220,9 +217,7 @@
                     <button
                       class="btn btn-link  add-remove float-end file-list-item-add"
                       v-on:click="addFile(index, file_index)"
-                      v-bind:disabled="
-                        hasValue(item.primaryfiles[file_index].id)
-                      "
+                      v-bind:disabled="hasValue(item.primaryfiles[file_index].id)"
                     >
                       <svg
                         class="icon-plus"
@@ -305,8 +300,7 @@
         <div class="accordion" id="accordionExample">
           <div
             class="card m-0"
-            v-for="(resultLabels, resultLabelIndex) in workflowSubmission
-              .workflowDetails.inputWprkflowResultLabels"
+            v-for="(resultLabels, resultLabelIndex) in workflowSubmission.workflowDetails.inputWprkflowResultLabels"
             :key="resultLabelIndex"
           >
             <div class="card-header" id="headingOne">
@@ -372,13 +366,8 @@
                             <b-form-radio
                               v-model="localSelIntWfResult[resultLabelIndex]"
                               class="mt-0 fs-5"
-                              :name="
-                                'workflowResult-radios-' + [resultLabelIndex]
-                              "
+                              :name="'workflowResult-radios-' + [resultLabelIndex]"
                               :value="res"
-                              @change="
-                                onChangeIntWfResult(resultLabelIndex, res)
-                              "
                             />
                           </td>
                         </tr>
@@ -463,64 +452,23 @@ export default {
   methods: {
     handleAddToSelection(accordionIndex) {
       const self = this;
-      if(self.workflowSubmission.selectedIntWfResult?.length > 0) {
-        for (
-        let i = 0;
-        i <
-        self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
-          .length;
-        i++
-      ) {
-        if (i === accordionIndex) {
-          if (
-            self.workflowSubmission.selectedIntWfResult[i] &&
-            self.workflowSubmission.selectedIntWfResult[i].id
-          ) {
-            self.workflowSubmission.selectedIntWfResult.splice(
-              i,
-              1,
-              this.localSelIntWfResult[accordionIndex]
-            );
-            break;
-          } else if (
-            self.workflowSubmission.selectedIntWfResult[i] &&
-            !self.workflowSubmission.selectedIntWfResult[i].id
-          ) {
-            self.workflowSubmission.selectedIntWfResult.splice(
-              i,
-              1,
-              this.localSelIntWfResult[accordionIndex]
-            );
-            break;
-          } else {
-            self.workflowSubmission.selectedIntWfResult.splice(
-              accordionIndex,
-              1,
-              this.localSelIntWfResult[accordionIndex]
-            );
-            break;
+      // Check if a file is selected
+      if(self.localSelIntWfResult?.length > 0) {
+        for (let i = 0; i < self.workflowSubmission.workflowDetails.inputWprkflowResultFormats.length; i++) {
+          if (i === accordionIndex) {
+              self.workflowSubmission.selectedIntWfResult
+                .splice(i, 1, this.localSelIntWfResult[accordionIndex]);
+              break;
+          } else if (!self.workflowSubmission.selectedIntWfResult[i]?.id) {
+            self.workflowSubmission.selectedIntWfResult.splice(i, 1, {});
           }
-        } else if (
-          self.workflowSubmission.selectedIntWfResult[i] &&
-          self.workflowSubmission.selectedIntWfResult[i].id
-        ) {
-          console.log("");
-        } else {
-          self.workflowSubmission.selectedIntWfResult.splice(i, 1, {});
         }
-      }
       } else {
         // Display a warning when no file is selected
         self.$toast.warning(
-          "Please select a file to add to selection.",
-          self.sharedService.toastNotificationConfig
+          "Please select a file to add to selection.", self.sharedService.toastNotificationConfig
         );
       }
-      
-    },
-    onChangeIntWfResult(indexResultLabel, row) {
-      const self = this;
-      // console.log(indexResultLabel, row);
     },
     removeFile(id) {
       let self = this;
@@ -627,23 +575,12 @@ export default {
             self.accordionVisible = [0];
             self.localSelIntWfResult = [];
             self.workflowSubmission.selectedIntWfResult = [];
-            let outputTypesArr =
-              self.workflowSubmission.workflowDetails
-                .inputWprkflowResultFormats;
+            let outputTypesArr = self.workflowSubmission.workflowDetails.inputWprkflowResultFormats;
             let outputTypes = String(outputTypesArr);
-            self.intermediaryWorkflowResults = await self.workflowService.getCompleteWorkflowResultsForPrimaryfileOutputTypes(
-              outputTypes,
-              key
-            );
-            if (
-              self.workflowSubmission.selectedIntWfResult &&
-              self.workflowSubmission.selectedIntWfResult.length
-            ) {
-              for (
-                let i = 0;
-                i < self.workflowSubmission.selectedIntWfResult.length;
-                i++
-              ) {
+            self.intermediaryWorkflowResults = 
+              await self.workflowService.getCompleteWorkflowResultsForPrimaryfileOutputTypes(outputTypes, key);
+            if (self.workflowSubmission.selectedIntWfResult?.length > 0) {
+              for (let i = 0; i < self.workflowSubmission.selectedIntWfResult.length; i++) {
                 self.workflowSubmission.selectedIntWfResult[i] &&
                   delete self.workflowSubmission.selectedIntWfResult[i];
               }
@@ -651,10 +588,7 @@ export default {
             self.loading = false;
           } catch (error) {
             console.log(error);
-            self.$toast.error(
-              "Oops! Something went wrong.",
-              self.sharedService.toastNotificationConfig
-            );
+            self.$toast.error("Oops! Something went wrong.", self.sharedService.toastNotificationConfig);
             self.loading = false;
           }
         }
