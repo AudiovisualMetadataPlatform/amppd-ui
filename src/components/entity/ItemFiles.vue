@@ -225,7 +225,6 @@ export default {
     getDropFile(e) {
       const self = this;
       self.dropFiles = e.dataTransfer.files;
-      //  self.dropFileName = self.dropFiles[0].name;
       this.uploadFile();
     },
     uploadFile() {
@@ -258,6 +257,7 @@ export default {
         return;
       } else if (!self.selectedItem.id && self.selectedItem.selectedItemId) {
         self.selectedItem.id = self.selectedItem.selectedItemId;
+        console.log("saveFile: selectedItem id is " + self.selectedItem.id);
       }
 
       const formData = new FormData();
@@ -282,7 +282,8 @@ export default {
         .uploadFile(self.selectedItem.id, formData)
         .then((el) => {
           self.showLoader = false;
-          self.primaryFiles._embedded.primaryfiles.index = el.data;
+          self.primaryFiles._embedded.primaryfiles[index] = el.data;
+          console.log("Saved file " + self.primaryFiles._embedded.primaryfiles[index]);
         })
         .catch((error) => {
           self.showLoader = false;
@@ -297,11 +298,13 @@ export default {
             errorMessages.map((el) =>
               self.$toast.error(el, self.sharedService.toastNotificationConfig)
             );
+            console.log("saveFile validationErrors: " + errorMessages);
           } else {
             self.$toast.error(
               "Something went wrong.Please try again!",
               self.sharedService.toastNotificationConfig
             );
+            console.log("saveFile errors: " + error);
           }
         });
     },
