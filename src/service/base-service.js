@@ -2,6 +2,7 @@ import { requestOptions } from "../helpers/request-options";
 import axios from 'axios';
 import { accountService } from '@/service/account-service';
 import { env } from "../helpers/env";
+// import router  from "../router";
 
   
 export default class BaseService{
@@ -20,10 +21,10 @@ export default class BaseService{
         if ([401, 403].indexOf(error.status) !== -1) {
             // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
             accountService.logout();
-            // TODO 
-            // reloading current location cause browser reload homepage instead of login page;
-            // better call router.push("/account/login") with returnUrl of current location
+            // original code reloads current location, which causes browser reload homepage instead of login page;
+            // better solution would be redirecting to login page with return URL of current page
             // location.reload(true);
+            // router.push("/account/login");
         }
 
         return Promise.reject(error);
