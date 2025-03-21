@@ -41,7 +41,7 @@
                                       class="scores-files"
                                       @click="workflowResultService.getSymlinkContent(testResult.workflowResult, false, null, $event)"
                                       target="_blank"
-                                      >{{ testResult.primaryFilename }}</a
+                                      >{{ testResult.primaryfileName }}</a
                                     >
                                     (<a
                                       class="scores-files" 
@@ -139,7 +139,7 @@
                                         :key="testResult.id"
                                       >
                                         <th scope="row">
-                                          {{ testResult.primaryFilename }}
+                                          {{ testResult.primaryfileName }}
                                         </th>
                                         <td>
                                           {{
@@ -245,7 +245,7 @@
                                     name="optradio"
                                     v-model="selectedTestResult"
                                     :value="testResult"
-                                  />{{ testResult.primaryFilename }}
+                                  />{{ testResult.primaryfileName }}
                                 </label>
                               </div>
                             </div>
@@ -554,7 +554,7 @@ export default {
         };
         for (let i = 0; i < self.mgmEvaluationTests.length; i++) {
           self.barChartData.datasets.push({
-            label: self.mgmEvaluationTests[i].primaryFilename,
+            label: self.mgmEvaluationTests[i].primaryfileName,
             backgroundColor: `rgba(${Math.floor(
               Math.random() * 256
             )}, ${Math.floor(Math.random() * 256)}, ${Math.floor(

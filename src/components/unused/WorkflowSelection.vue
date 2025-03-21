@@ -32,10 +32,10 @@ export default {
     parameters: sync("parameters"),
   },
   methods: {
-    async getWorkflows() {
+    async getPublishedWorkflows() {
       let self = this;
 
-      this.workflowService.getWorkflows().then((response) => {
+      this.workflowService.getPublishedWorkflows().then((response) => {
         self.workflows = response.data;
       });
     },
@@ -51,7 +51,7 @@ export default {
   },
   mounted() {
     let self = this;
-    self.getWorkflows();
+    self.getPublishedWorkflows();
   },
 };
 </script>

@@ -111,10 +111,6 @@ const state = {
   isAuthenticated: false,
   selectedFile: {},
   selectedFilters: {},
-  itemConfigs: {
-    externalSources: [],
-    taskManagers: [],
-  },
   configProperties: {},
   allUnits: {}, // all units the current user can read
   mgmEvaluation: {

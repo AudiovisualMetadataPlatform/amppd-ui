@@ -68,7 +68,7 @@ jest.mock('../../../../src/service/primary-file-service',
         return jest.fn().mockImplementation(
             function () {
                 const superFn = {
-                    getItemsConfig: (id) => {
+                    getEntityConfigs: (id) => {
                         return Promise.resolve({"externalSources":["MCO","DarkAvalon"],"taskManagers":["Jira","Trello"]})
                     }
                 };
@@ -112,7 +112,7 @@ describe('EntityList.vue', () => {
             selectedUnit: {},
             selectedFile: {},
             selectedFilters: {},
-            itemConfigs: {
+            entityConfigs: {
                 externalSources: [],
                 taskManagers: []
             },
@@ -168,7 +168,7 @@ describe('EntityList.vue', () => {
     });
 
     it('should fetch config values', async () => {
-        await wrapper.vm.getItemsConfig();
-        expect(wrapper.vm.itemConfigs.externalSources.length).toBe(2)
+        await wrapper.vm.getEntityConfigs();
+        expect(wrapper.vm.entityConfigs.externalSources.length).toBe(2)
     });
 });
