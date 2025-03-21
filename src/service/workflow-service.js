@@ -103,16 +103,25 @@ export default class WorkflowService extends BaseService {
         tempName = tempName.replace(/(^\w)|(\s+\w)/g, match => match.toUpperCase());
         return tempName;
     }
-    getWorkflows() {
+
+    getPublishedWorkflows() {
         return super.get_auth('/workflows?showPublished=true');
     }
 
-    getAllWorkflows() {
+    getActiveWorkflows() {
         return super.get_auth('/workflows');
     }
 
-    getFilteredWorkflows(name, creator, dateRange, annotations, tags) {
+    getInactiveWorkflows() {
+        return super.get_auth('/workflows?showHidden=true');
+    }
+
+    getActiveFilteredWorkflows(name, creator, dateRange, annotations, tags) {
         return super.get_auth(`/workflows?name=${name}&creator=${creator}&dateRange=${dateRange}&annotations=${annotations}&tags=${tags}`);
+    }
+
+    getInactiveFilteredWorkflows(name, creator, dateRange, annotations, tags) {
+        return super.get_auth(`/workflows?showHidden=true&name=${name}&creator=${creator}&dateRange=${dateRange}&annotations=${annotations}&tags=${tags}`);
     }
 
     async getWorkflowDetails(id) {

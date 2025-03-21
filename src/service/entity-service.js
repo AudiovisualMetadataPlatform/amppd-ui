@@ -21,19 +21,23 @@ export default class EntityService {
 
     async onUpdateEntityDetails(self) {
         if (self.baseUrl === 'unit') {
+        
+            // unit Validation rules
+            if (!self.entity.name || !self.entity.taskManager) {
+                self.$toast.error("Please provide required fields!", self.sharedService.toastNotificationConfig);
+                return false;
+            }
             self.unitService.updateUnitDetails(self.selectedUnit.id, self.entity).then(response => {
                 self.isDataChanged = false;
                 self.$toast.success("Unit details updated successfully.", self.sharedService.toastNotificationConfig);
             });
         } else if (self.baseUrl === 'collection') {
             self.submitted = true;
-
+            
             // Collection Validation rules
-            if (!self.entity.name || !self.entity.taskManager) {
-
+            if (!self.entity.name) {
                 self.$toast.error("Please provide required fields!", self.sharedService.toastNotificationConfig);
                 return false;
-
             }
             if (!self.isCreatePage) {
                 self.collectionService.updateCollection(self.entity).then(response => {
@@ -72,7 +76,8 @@ export default class EntityService {
             }
         } else if (self.baseUrl === 'file') {
             self.submitted = true;
-            // Collection Validation rules
+            
+            // file Validation rules
             if (!self.entity.name) {
                 self.$toast.error("Please provide required fields!", self.sharedService.toastNotificationConfig);
                 return false;
@@ -92,13 +97,12 @@ export default class EntityService {
                     errorMessages.map(el => self.$toast.error(el, self.sharedService.toastNotificationConfig));
                 } else {
                     self.$toast.error("File details update failed!", self.sharedService.toastNotificationConfig);
-
                 }
             });
         } else if (self.baseUrl === 'item') {
             self.submitted = true;
 
-            // Collection Validation rules
+            // item Validation rules
             if (!self.entity.name) {
                 self.$toast.error("Please provide required fields!", self.sharedService.toastNotificationConfig);
                 return false;
@@ -117,7 +121,6 @@ export default class EntityService {
                     self.selectedItem.selectedItemId = response.id;
                     self.isDataChanged = false;
                     self.$router.push("/collections/items/details");
-                    // self.$router.push("/collection/details");
                 }).catch(error => {
                     self.showLoader = false;
                     self.submitted = false;
@@ -127,13 +130,11 @@ export default class EntityService {
                     } else {
                         self.$toast.error("Failed to add an Item", self.sharedService.toastNotificationConfig);
                     }
-
                 });
             } else {
                 self.itemService.updateItem(self.entity).then(success => {
                     self.showLoader = false;
                     self.$toast.success("Item details updated successfully", self.sharedService.toastNotificationConfig);
-                    // self.showEdit = !self.showEdit;
                     self.submitted = false;
                     self.isDataChanged = false;
                 }).catch(error => {
@@ -145,20 +146,8 @@ export default class EntityService {
                     } else {
                         self.$toast.error("Item details update failed!", self.sharedService.toastNotificationConfig);
                     }
-
                 });
             }
-        }
-    }
-
-    async getItemsConfig(self) {
-        if(!self.itemConfigs.externalSources.length || !self.itemConfigs.taskManagers.length) {
-            await self.itemService.getItemsConfig().then(res => {
-                self.itemConfigs.externalSources = res.externalSources;
-                self.itemConfigs.taskManagers = res.taskManagers;
-            }).catch(err => {
-                self.$toast.error("Unable to retrive config details. Please try again!", self.sharedService.toastNotificationConfig);
-            })
         }
     }
 
