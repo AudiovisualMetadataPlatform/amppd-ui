@@ -17,6 +17,7 @@ const state = {
     selectedIntWfResult: [],
   },
   workflowSubmissionsearchResults: false,
+
   workflowDashboard: {
     loading: false,
     filtersEnabled: {
@@ -73,51 +74,6 @@ const state = {
     },
     rows: [],
   },
-  typeAheadResult: "",
-  Collections: {
-    page: { number: 1, size: 20, totalElements: 0 },
-    _embedded: { collections: [] },
-    loading: false,
-  },
-  selectedCollection: null,
-  collectionDetails: {
-    items: {},
-  },
-
-  Items: {
-    page: {
-      number: 1,
-      size: 20,
-      totalElements: 0,
-    },
-    _embedded: {
-      items: [],
-    },
-  },
-  selectedItem: {},
-
-  primaryFiles: {
-    page: {
-      number: 1,
-      size: 20,
-      totalElements: 0,
-    },
-    _embedded: {
-      primaryfiles: [],
-    },
-  },
-  selectedPrimaryFile: {},
-  selectedUnit: {},
-  isAuthenticated: false,
-  selectedFile: {},
-  selectedFilters: {},
-  configProperties: {},
-  allUnits: {}, // all units the current user can read
-  mgmEvaluation: {
-    selectedRecords: [],
-  },
-  mgmCategories: [],
-
   dashboardColumns: [
     { order: "a", label: "Test Date", field: "testDate" },
     { order: "b", label: "Date", field: "dateCreated" },
@@ -138,6 +94,45 @@ const state = {
     { order: "r", label: "Actions", field: "actions" },
     { order: "s", label: "Add to Test", field: "addToTest" },
   ],
+  typeAheadResult: "",
+
+  Collections: {
+    page: { number: 1, size: 20, totalElements: 0 },
+    _embedded: { collections: [] },
+    loading: false,
+  },
+  Items: {
+    page: {
+      number: 1,
+      size: 20,
+      totalElements: 0,
+    },
+    _embedded: {
+      items: [],
+    },
+  },
+  primaryFiles: {
+    page: {
+      number: 1,
+      size: 20,
+      totalElements: 0,
+    },
+    _embedded: {
+      primaryfiles: [],
+    },
+  },
+
+  allUnits: {}, // all units the current user can read
+  selectedUnit: {},
+  selectedCollection: null,
+  selectedItem: {},
+  selectedFile: {},
+  selectedFilters: {},
+  mgmEvaluation: {
+    selectedRecords: [],
+  },
+  mgmCategories: [],
+  configProperties: {},
 
   accessControl: {  // permissions for current user within current unit
     // actionsUnits: new Map(),	// HashMap of unitId -> HashSet{actionKey}
@@ -210,6 +205,7 @@ const state = {
     },
   },
 
+  isAuthenticated: false,
   acIsAdmin: false,   // whether current user is admin
   acUnitsActions: [], // 2-D array of all units with all permitted actions per unit for current user
   acUnitsMedia: [],		// IDs of units in which current user can view primaryfile media

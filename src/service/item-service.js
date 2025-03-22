@@ -42,7 +42,7 @@ export default class ItemService extends BaseService{
      * @params obj, id
      */
 
-     async updateItem(obj){        
+     async updateItem(obj){    
         return await super.patch_auth(`/items/${obj.id}`, obj).then(result => result.data)
     }
 

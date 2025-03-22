@@ -1056,7 +1056,6 @@ export default {
           self.refreshRoleAssignments(true);
         })
         .catch((e) => {
-          // self.showLoader = false;
           self.$toast.error(
             "Oops! Something went wrong.",
             self.sharedService.toastNotificationConfig
@@ -1231,7 +1230,6 @@ export default {
           self.refreshRolesSettings(true);
         })
         .catch((e) => {
-          // self.showLoader = false;
           self.$toast.error(
             "Oops! Something went wrong.",
             self.sharedService.toastNotificationConfig
@@ -1242,8 +1240,7 @@ export default {
     async getUnitDetails() {
       const self = this;
       try {
-        // self.showLoader = true;
-        const unitDetails = await self.entityService.getUnitDetails(
+         const unitDetails = await self.entityService.getUnitDetails(
           self.unitEntity.currentUnit,
           self
         );      
@@ -1252,9 +1249,7 @@ export default {
           self.entity = unitDetails.response;
           this.getUnitCollections();
         }
-        // self.showLoader = false;
       } catch (error) {
-        // self.showLoader = false;
         console.log(error);
       }
     },
@@ -1286,12 +1281,10 @@ export default {
     async getAllUnits() {
       const self = this;
       try {
-        // self.showLoader = true;
         
         self.unitService.getAllUnits().then((res) => {
           self.allUnits = res.data;
           self.unitEntity.unitList = self.sharedService.sortByAlphabatical(this.allUnits);
-          // self.showLoader = false;
           if (
             self.unitEntity.unitList &&
             self.unitEntity.unitList.length === 1
@@ -1324,9 +1317,12 @@ export default {
         self.assignedRolesUnitChanged = true;
         self.settingsRolesUnitChanged = true;
       } else if (self.baseUrl === "collection") {
+        // TODO below is a workaround to fix veux sync issue when selectedCollection does not get updated upon reload/push
         // if current collection exists but fields not populated, get its details
-        if (self.selectedCollection && self.selectedCollection.id && !self.selectedCollection.name) {
+        if (self.selectedCollection && self.selectedCollection.id && 
+          (!self.selectedCollection.name || !self.selectedCollection.deletable)) {
           self.selectedCollection = await self.collectionService.getCollectionDetails(self.selectedCollection.id);
+          console.log("EntityList.getEntityData for collection: populated selectedCollection " + self.selectedCollection.id);
         }
         self.entity = self.selectedCollection;
         if (self.selectedCollection && !self.isCreatePage)
@@ -1336,34 +1332,37 @@ export default {
           self.showEdit = false;
         }
       } else if (self.baseUrl === "item") {
+        // TODO below is a tmp fix for the case when loading the page for a newly created item, 
+        // selectedItem.id is null, while selectedItem.selectedItemId is populated
+        if (!self.selectedItem.id && self.selectedItem.selectedItemId) {
+          self.selectedItem.id = self.selectedItem.selectedItemId;
+          console.log("EntityList.getEntityData for item: populated selectedItem.id " + self.selectedItem.id);
+        }
         self.entity = self.selectedItem;
         if (self.isCreatePage) {
           self.selectedItem = self.entity = {};
           self.showEdit = false;
         }
       } else if (self.baseUrl === "file") {
-        // self.showLoader = true;
         self.entity = self.selectedFile;
         if (self.accessControl._primaryfile_media._read) {
           let mediaSourceUrl = await self.workflowResultService.getMediaSymlink(
             self.selectedFile.id
           );
           self.entity.mediaSource = mediaSourceUrl;
-          console.log("EntityList.getEntityData: mediaSource = " + self.entity.mediaSource);
+          console.log("EntityList.getEntityData for file: mediaSource = " + self.entity.mediaSource);
         }
         let mediaSourceType = await self.primaryFileService.getPrimaryFile(
           self.selectedFile.id
         );
         self.entity.mediaInfo = mediaSourceType.mediaInfo;
         self.entity.mediaType = mediaSourceType.mimeType.substring(0, 5);
-        console.log("EntityList.getEntityData: mediaType = " + self.entity.mediaType);
-        // self.showLoader = false;
+        console.log("EntityList.getEntityData for file: mediaType = " + self.entity.mediaType);
       }
       return self.entity;
     },
     async getUnitCollections() {
       const self = this;
-      // self.showLoader = true;
       self.collectionService
         .getCollectionByUnitId(self.selectedUnit.id)
         .then((response) => {
@@ -1373,7 +1372,6 @@ export default {
             self.records = self.sharedService.sortByAlphabatical(self.records);
             self.masterRecords = JSON.parse(JSON.stringify(self.records));
           }
-          // self.showLoader = false;
 
           //Adding expand animation css
           const expandAniHtml = document.getElementsByClassName("expand-ani");
@@ -1384,11 +1382,9 @@ export default {
     },
     async getCollectionItems() {
       const self = this;
-      // self.showLoader = true;
       self.itemService
         .getCollectionItems(self.selectedCollection.id)
         .then((response) => {
-          // self.showLoader = false;
           if (response && response.data && response.data._embedded) {
             self.records =
               response.data._embedded[Object.keys(response.data._embedded)[0]];
@@ -1396,7 +1392,6 @@ export default {
             self.masterRecords = JSON.parse(JSON.stringify(self.records));
           }
         });
-        // self.showLoader = false;
     },
     onView(objInstance) {
       const self = this;
@@ -1457,7 +1452,7 @@ export default {
   async mounted() {
     const self = this;
     
-    console.log ("EntityList.mounted start: showLoader = " + this.showLoader);
+    // console.log ("EntityList.mounted start: showLoader = " + this.showLoader);
 
     // retrieve configProperties if not yet populated
     if (!self.configProperties || Object.keys(self.configProperties).length === 0) {
@@ -1501,7 +1496,7 @@ export default {
     }
 
     this.showLoader = false;
-    console.log ("EntityList.mounted end: showLoader = " + this.showLoader);
+    // console.log ("EntityList.mounted end: showLoader = " + this.showLoader);
   },
 };
 </script>
