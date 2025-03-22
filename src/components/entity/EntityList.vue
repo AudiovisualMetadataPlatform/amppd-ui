@@ -1317,12 +1317,12 @@ export default {
         self.assignedRolesUnitChanged = true;
         self.settingsRolesUnitChanged = true;
       } else if (self.baseUrl === "collection") {
-        // TODO below is a workaround to fix veux sync issue when selectedCollection not get updated upon reload/push
+        // TODO below is a workaround to fix veux sync issue when selectedCollection does not get updated upon reload/push
         // if current collection exists but fields not populated, get its details
         if (self.selectedCollection && self.selectedCollection.id && 
           (!self.selectedCollection.name || !self.selectedCollection.deletable)) {
           self.selectedCollection = await self.collectionService.getCollectionDetails(self.selectedCollection.id);
-          console.log("EntityList.getEntityData for collection: populated selectedCollection with ID " + self.selectedCollection.id);
+          console.log("EntityList.getEntityData for collection: populated selectedCollection " + self.selectedCollection.id);
         }
         self.entity = self.selectedCollection;
         if (self.selectedCollection && !self.isCreatePage)
@@ -1332,12 +1332,11 @@ export default {
           self.showEdit = false;
         }
       } else if (self.baseUrl === "item") {
-        // TODO 
-        // this is a tmp fix for the case upon loading the page upon newly created item, 
+        // TODO below is a tmp fix for the case when loading the page for a newly created item, 
         // selectedItem.id is null, while selectedItem.selectedItemId is populated
         if (!self.selectedItem.id && self.selectedItem.selectedItemId) {
           self.selectedItem.id = self.selectedItem.selectedItemId;
-          console.log("EntityList.getEntityData for item: populated selectedItem.id: " + self.selectedItem.id);
+          console.log("EntityList.getEntityData for item: populated selectedItem.id " + self.selectedItem.id);
         }
         self.entity = self.selectedItem;
         if (self.isCreatePage) {
