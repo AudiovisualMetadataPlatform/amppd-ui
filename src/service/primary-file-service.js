@@ -48,4 +48,14 @@ export default class PrimaryFileService extends BaseService {
   async removePrimaryFile(id) {
     return await super.delete_auth(`/primaryfiles/${id}`);
   }
+
+  /***
+   * To get primaryFile data statistics by id.
+   * @params id
+   */
+  async getPrimaryFileStatistics(id) {        
+    return await super.get_auth(`/PrimaryFiles/${id}/statistics`)
+        .then(result => result.data)
+  }  
+
 }

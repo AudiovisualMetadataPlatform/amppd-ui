@@ -65,6 +65,7 @@
               <button
                 class="btn btn-link add-remove float-end me-1"
                 v-if="accessControl._primaryfile._delete"
+                :disabled="!file.deletable"
                 @click="removeFile(index)"
               >
                 <span v-html="removeIcon" class="pe-1"></span>Remove File
@@ -146,6 +147,7 @@
       size="md"
       footerClass="p-2"
     >
+    
       Are you sure you want to delete?
       <template #footer="{ ok, cancel }">
         <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
@@ -184,8 +186,11 @@ export default {
       files: [],
       showLoader: false,
       dropFiles: [],
+      fileStatistics, // DataentityStatistics for the primaryfile to be deleted
       // object to hold info of the file to be removed
       fileToRemove: { file: null, index: null },
+      // warnings to display in confirmation modal upon file deletion 
+      deleteWarnings: { header: null, statistics: null, question: null }
       // dropFileName: ""
     };
   },
@@ -201,8 +206,29 @@ export default {
     },
   },
   methods: {
+    getDeleteWarnings(fileStatistics) {
+      statistics = [];
+      if (fileStatistics.countPrimaryfileSupplements) { 
+        statistics.push(file.countPrimaryfileSupplements + " primaryfile supplements");
+      }
+      if (fileStatistics.countWorkflowResults) { 
+        statistics.push(file.countWorkflowResults + " workflow results");
+      }
+      if (fileStatistics.countMgmEvaluationTests) { 
+        statistics.push(file.countMgmEvaluationTests + " evaluation test results");
+      }
+      if (statistics.length) {
+        header = "By deleting this file, you will also delelte the following associated data:";
+        question = "Do you want to continue?";
+      }
+      else {
+        header = '';
+        question = "Are you sure you want to delete this content file?";
+      }
+      return {header, statistics, question};
+    },
     onCancel() {
-      var result = confirm("Are you sure want to cancel!");
+      var result = confirm("Are you sure you want to cancel?");
       if (result) this.showEdit = !this.showEdit;
     },
     async getPrimaryFiles() {
@@ -357,6 +383,8 @@ export default {
     async onRemovePrimaryFile(file, index) {
       // Set file info for the current file chosen to be removed
       this.fileToRemove = { file, index }
+      this.fileStatistics = await this.fileService.getPrimaryFileStatistics(file.id);
+      this.deleteWarnings = this.getDeleteWarnings(fileStatistics);
       this.$refs.confirmModal.show();
     },
     handleConfirmModal(confirmed) {
