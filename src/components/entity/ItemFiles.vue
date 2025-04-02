@@ -147,8 +147,15 @@
       size="md"
       footerClass="p-2"
     >
-    
-      Are you sure you want to delete?
+      <div v-if="deleteWarnings.statistics">
+			  <p>{{ deleteWarnings.header }}</p>
+        <ul>
+          <li v-for="(entityCount) in deleteWarnings.statistics">
+            {{ entityCount }}
+          </li>
+        </ul>
+		  </div>
+			<p>{{ deleteWarnings.question }} </p>
       <template #footer="{ ok, cancel }">
         <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
         <button type="button" class="btn btn-primary btn-sm" @click="ok();">Yes</button>
