@@ -39,4 +39,14 @@ export default class UnitService extends BaseService{
         return await super.patch_auth(`/units/${id}`,data)
            .then(result => result.data)
     }
+
+    /***
+     * To get unit data statistics by id.
+     * @params id
+     */
+    async getUnitStatistics(id) {        
+        return await super.get_auth(`/units/${id}/statistics`)
+            .then(result => result.data)
+    }
+    
 }

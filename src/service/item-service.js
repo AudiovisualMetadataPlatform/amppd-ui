@@ -64,4 +64,13 @@ export default class ItemService extends BaseService{
         return await super.get_auth(`/items/search?keyword=${keyword}`).then(result => result.data)
     }
 
+    /***
+     * To get item data statistics by id.
+     * @params id
+     */
+    async getItemStatistics(id) {        
+        return await super.get_auth(`/items/${id}/statistics`)
+            .then(result => result.data)
+    }
+
 }

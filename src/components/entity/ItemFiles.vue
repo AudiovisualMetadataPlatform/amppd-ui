@@ -65,6 +65,7 @@
               <button
                 class="btn btn-link add-remove float-end me-1"
                 v-if="accessControl._primaryfile._delete"
+                :disabled="!file.deletable"
                 @click="removeFile(index)"
               >
                 <span v-html="removeIcon" class="pe-1"></span>Remove File
@@ -146,7 +147,15 @@
       size="md"
       footerClass="p-2"
     >
-      Are you sure you want to delete?
+      <div v-if="deleteWarnings.statistics">
+			  <p>{{ deleteWarnings.header }}</p>
+        <ul>
+          <li v-for="(entityCount) in deleteWarnings.statistics">
+            {{ entityCount }}
+          </li>
+        </ul>
+		  </div>
+			<p>{{ deleteWarnings.question }} </p>
       <template #footer="{ ok, cancel }">
         <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
         <button type="button" class="btn btn-primary btn-sm" @click="ok();">Yes</button>
@@ -184,8 +193,11 @@ export default {
       files: [],
       showLoader: false,
       dropFiles: [],
+      fileStatistics: {}, // DataentityStatistics for the primaryfile to be deleted
+      // warnings to display in confirmation modal upon file deletion 
+      deleteWarnings: { header: null, statistics: null, question: null },
       // object to hold info of the file to be removed
-      fileToRemove: { file: null, index: null },
+      fileToRemove: { file: null, index: null }
       // dropFileName: ""
     };
   },
@@ -201,8 +213,29 @@ export default {
     },
   },
   methods: {
+    getDeleteWarnings(fileStatistics) {
+      let statistics = [], header = '', question = '';
+      if (fileStatistics.countPrimaryfileSupplements) { 
+        statistics.push(fileStatistics.countPrimaryfileSupplements + " primaryfile supplements");
+      }
+      if (fileStatistics.countWorkflowResults) { 
+        statistics.push(fileStatistics.countWorkflowResults + " workflow results");
+      }
+      if (fileStatistics.countMgmEvaluationTests) { 
+        statistics.push(fileStatistics.countMgmEvaluationTests + " evaluation test results");
+      }
+      if (statistics.length) {
+        header = "Deleting this file will also delelte the following associated data:";
+        question = "Do you want to continue?";
+      }
+      else {
+        question = "Are you sure you want to delete this file?";
+      }
+      console.log("getDeleteWarnings question: " + question);
+      return {header, statistics, question};
+    },
     onCancel() {
-      var result = confirm("Are you sure want to cancel!");
+      var result = confirm("Are you sure you want to cancel?");
       if (result) this.showEdit = !this.showEdit;
     },
     async getPrimaryFiles() {
@@ -357,6 +390,9 @@ export default {
     async onRemovePrimaryFile(file, index) {
       // Set file info for the current file chosen to be removed
       this.fileToRemove = { file, index }
+      this.fileStatistics = await this.fileService.getPrimaryfileStatistics(file.id);
+      console.log("onRemovePrimaryFile: " + this.fileStatistics);
+      this.deleteWarnings = this.getDeleteWarnings(this.fileStatistics);
       this.$refs.confirmModal.show();
     },
     handleConfirmModal(confirmed) {
