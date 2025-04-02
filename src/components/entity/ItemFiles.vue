@@ -193,11 +193,11 @@ export default {
       files: [],
       showLoader: false,
       dropFiles: [],
-      fileStatistics, // DataentityStatistics for the primaryfile to be deleted
-      // object to hold info of the file to be removed
-      fileToRemove: { file: null, index: null },
+      fileStatistics: {}, // DataentityStatistics for the primaryfile to be deleted
       // warnings to display in confirmation modal upon file deletion 
-      deleteWarnings: { header: null, statistics: null, question: null }
+      deleteWarnings: { header: null, statistics: null, question: null },
+      // object to hold info of the file to be removed
+      fileToRemove: { file: null, index: null }
       // dropFileName: ""
     };
   },
@@ -214,24 +214,24 @@ export default {
   },
   methods: {
     getDeleteWarnings(fileStatistics) {
-      statistics = [];
+      let statistics = [], header = '', question = '';
       if (fileStatistics.countPrimaryfileSupplements) { 
-        statistics.push(file.countPrimaryfileSupplements + " primaryfile supplements");
+        statistics.push(fileStatistics.countPrimaryfileSupplements + " primaryfile supplements");
       }
       if (fileStatistics.countWorkflowResults) { 
-        statistics.push(file.countWorkflowResults + " workflow results");
+        statistics.push(fileStatistics.countWorkflowResults + " workflow results");
       }
       if (fileStatistics.countMgmEvaluationTests) { 
-        statistics.push(file.countMgmEvaluationTests + " evaluation test results");
+        statistics.push(fileStatistics.countMgmEvaluationTests + " evaluation test results");
       }
       if (statistics.length) {
-        header = "By deleting this file, you will also delelte the following associated data:";
+        header = "Deleting this file will also delelte the following associated data:";
         question = "Do you want to continue?";
       }
       else {
-        header = '';
-        question = "Are you sure you want to delete this content file?";
+        question = "Are you sure you want to delete this file?";
       }
+      console.log("getDeleteWarnings question: " + question);
       return {header, statistics, question};
     },
     onCancel() {
@@ -390,8 +390,9 @@ export default {
     async onRemovePrimaryFile(file, index) {
       // Set file info for the current file chosen to be removed
       this.fileToRemove = { file, index }
-      this.fileStatistics = await this.fileService.getPrimaryFileStatistics(file.id);
-      this.deleteWarnings = this.getDeleteWarnings(fileStatistics);
+      this.fileStatistics = await this.fileService.getPrimaryfileStatistics(file.id);
+      console.log("onRemovePrimaryFile: " + this.fileStatistics);
+      this.deleteWarnings = this.getDeleteWarnings(this.fileStatistics);
       this.$refs.confirmModal.show();
     },
     handleConfirmModal(confirmed) {

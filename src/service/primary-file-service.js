@@ -53,8 +53,8 @@ export default class PrimaryFileService extends BaseService {
    * To get primaryFile data statistics by id.
    * @params id
    */
-  async getPrimaryFileStatistics(id) {        
-    return await super.get_auth(`/PrimaryFiles/${id}/statistics`)
+  async getPrimaryfileStatistics(id) {        
+    return await super.get_auth(`/primaryfiles/${id}/statistics`)
         .then(result => result.data)
   }  
 
