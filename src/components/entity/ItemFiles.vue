@@ -63,12 +63,13 @@
                 Save
               </button>
               <button
-                class="btn btn-link add-remove float-end me-1"
+                class="btn btn-danger add-remove float-end me-2"
                 v-if="accessControl._primaryfile._delete"
                 :disabled="!file.deletable"
                 @click="removeFile(index)"
               >
-                <span v-html="removeIcon" class="pe-1"></span>Remove File
+                <span class="pe-1"></span>Remove File
+                <!-- <span v-html="removeIcon" class="remove-icon pe-1"></span>Remove File -->
               </button>
             </td>
           </tr>
