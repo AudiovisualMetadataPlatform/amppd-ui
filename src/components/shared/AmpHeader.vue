@@ -535,10 +535,6 @@ button svg {
   text-align: left;
 }
 
-/* .remove-icon {
-  color: white; 
-} */
-
 .list-unstyled {
   width: 99.5%;
 }
