@@ -63,13 +63,12 @@
                 Save
               </button>
               <button
-                class="btn btn-danger add-remove float-end me-2"
+                class="btn btn-danger float-end me-2"
                 v-if="accessControl._primaryfile._delete"
                 :disabled="!file.deletable"
-                @click="removeFile(index)"
+                @click="deleteFile(index)"
               >
-                <span class="pe-1"></span>Remove File
-                <!-- <span v-html="removeIcon" class="remove-icon pe-1"></span>Remove File -->
+                Delete File
               </button>
             </td>
           </tr>
@@ -342,7 +341,7 @@ export default {
           }
         });
     },
-    removeFile(index) {
+    deleteFile(index) {
       const self = this;
       if (self.primaryFiles._embedded.primaryfiles[index].file)
         self.primaryFiles._embedded.primaryfiles.splice(index, 1);
