@@ -508,6 +508,27 @@
                       Save
                     </button>
                   </div>
+                  <div
+                    v-if="
+                      (unitEntity.currentUnit &&
+                        baseUrl === 'unit' &&
+                        accessControl._unit._update) ||
+                        (baseUrl === 'collection' &&
+                          accessControl._collection._update) ||
+                        (baseUrl === 'item' && accessControl._item._update) ||
+                        (baseUrl === 'file' &&
+                          accessControl._primaryfile._update)
+                    "
+                    class="text-end p-0 expand-ani"
+                  >
+                    <button
+                      class="btn btn-primary btn-lg btn-edit"
+                      type="button"
+                      @click="onUpdateEntityDetails"
+                    >
+                      Save
+                    </button>
+                  </div>                  
                 </div>
               </form>
             </div>
@@ -801,11 +822,8 @@
                         <div
                           v-if="
                             (elem.active &&
-                              baseUrl === 'unit' &&
-                              accessControl._collection._read) ||
-                              (baseUrl === 'collection' &&
-                                accessControl._item._read)
-                          "
+                              baseUrl === 'unit' && accessControl._collection._read) ||
+                              (baseUrl === 'collection' && accessControl._item._read)"
                           class="float-end"
                         >
                           <button
@@ -814,7 +832,7 @@
                           >
                             View
                           </button>
-                        </div>
+                        </div>                     
                       </div>
                     </div>
 
