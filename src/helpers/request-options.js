@@ -57,10 +57,10 @@ function headers(formData = false) {
 }
 
 function tokenHeaders(editorInput) {
-    const authString = localStorage.getItem(editorInput);
-    console.log("Auth String: " + authString);
-    if(authString && authString.length>0){
-        const authHeader = authString && authString.length>0 ? { 'Authorization': 'AMPPD ' + authString  } : {}
+    const hmgmToken = localStorage.getItem(editorInput);
+    if(hmgmToken){
+        const authHeader = { 'Authorization': 'HMGM ' + hmgmToken  };
+        console.log("tokenHeaders: generating HMGM Auth header with stored hmgmToken: " + hmgmToken);
         return {
             headers: {
                 ...authHeader,

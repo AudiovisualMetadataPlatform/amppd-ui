@@ -320,8 +320,8 @@ export default {
     this.mediaUrl = this.$route.query.mediaUrl;
 
     let requires_auth_token = await auth_token_required(
-      this.authString,
-      this.datasetUrl
+      this.datasetUrl,
+      this.authString
     );
     if (requires_auth_token === false) {
       this.authValidated();

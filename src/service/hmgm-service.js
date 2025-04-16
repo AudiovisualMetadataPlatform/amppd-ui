@@ -4,29 +4,31 @@ import { env } from "../helpers/env";
 
 const baseService = new BaseService();
 
-async function auth_token_required(auth_string, input_file){
-    if(env.getDisableAuth() == 'true'){
+async function auth_token_required(editorInput, authString) {
+    if (env.getDisableAuth() == 'true') {
+        console.log("HMGM authentication: AMP authentication disabled." );
         return false;
     }
     // check if the current user is logged in and the locally stored auth token is valid
     var validated = await accountService.validate();
     // if yes, no need to ask for HMGM auth string
-    if(validated===true){
+    if (validated) {
+        console.log("HMGM authentication: current user is logged in AMP." );
         return false;
     }
-    // otherwise, check HMGM auth string
-    var user_token = localStorage.getItem(input_file);
-    if(!user_token){
-        console.log("No input token defined")
+    // otherwise, check HMGM auth token
+    var hmgmToken = localStorage.getItem(editorInput);
+    if (!hmgmToken) {
+        console.log("HMGM authentication: No HMGM auth token stored. Need user to input passcode.");
         return true;
     }
-    console.log("User token: " + user_token);
-    return !auth_token_valid(auth_string, input_file, user_token);
+    console.log("HMGM authentication: Found and validating stored HMGM auth token: " + hmgmToken);
+    return !auth_token_valid(editorInput, hmgmToken, authString);
 }
 
-async function auth_token_valid(auth_string, input_file, user_token){   
+async function auth_token_valid(editorInput, userPass, authString){   
     if(env.getDisableAuth() == 'true'){
-        console.log("Authenticated disabled: " + success);
+        console.log("HMGM authentication: AMP authentication disabled." );
         return true;
     } 
 
@@ -34,20 +36,24 @@ async function auth_token_valid(auth_string, input_file, user_token){
     // because the backend validate auth string upon any HMGM API call;
     // the purpose here might be to prevent the page from being shown beore any HMGM API call is made
     // although there should be better way to achieve that than using an extra API to check
-    const url = `/hmgm/authorize-editor?authString=${auth_string}&userToken=${user_token}&editorInput=${input_file}`;
-    var success = await baseService.get(url).then(x=>{
-        if(x.data==true){
-            const token = `${input_file};;;;${user_token};;;;${auth_string}`;
-            localStorage.setItem(input_file, token);
+    const url = `/hmgm/authorize-editor?editorInput=${editorInput}&userPass=${userPass}&authString=${authString}`;
+    baseService.get(url).then(x => {
+        if (x.data) {
+            const token = x.data;
+            localStorage.setItem(editorInput, token);
+            console.log("HMGM authentication succeeded: token = " + token);
+            return true;
         }
-        return x.data;
+        else {
+            console.log("HMGM authentication failed: editorInput = " + editorInput);
+            return false;
+        }
     }).catch(e=>{
-        console.log("Error: " + e);
+        console.log("Error during HMGM authentication: editorInput = " + editorInput, e);
         return false;
     });
 
-    console.log("User authenticated for HMGM editor: " + success);
-    return success;
+    
 }
 
 function getTranscript(datasetPath, reset) {

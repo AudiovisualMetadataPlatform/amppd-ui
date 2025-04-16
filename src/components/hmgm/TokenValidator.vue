@@ -9,7 +9,7 @@
             Invalid password
           </label>
           <input
-            v-model="userToken"
+            v-model="userPass"
             type="text"
             v-on:keyup.enter="submitToken"
           />
@@ -52,7 +52,7 @@ export default {
   },
   data() {
     return {
-      userToken: null,
+      userPass: null,
       invalidInput: false,
     };
   },
@@ -60,9 +60,9 @@ export default {
   methods: {
     async submitToken() {
       var valid = await auth_token_valid(
-        this.authString,
         this.datasetUrl,
-        this.userToken
+        this.userPass,
+        this.authString
       );
       console.log(valid);
       this.invalidInput = !valid;

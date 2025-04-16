@@ -507,7 +507,7 @@
                     >
                       Save
                     </button>
-                  </div>
+                  </div>               
                 </div>
               </form>
             </div>
@@ -801,11 +801,8 @@
                         <div
                           v-if="
                             (elem.active &&
-                              baseUrl === 'unit' &&
-                              accessControl._collection._read) ||
-                              (baseUrl === 'collection' &&
-                                accessControl._item._read)
-                          "
+                              baseUrl === 'unit' && accessControl._collection._read) ||
+                              (baseUrl === 'collection' && accessControl._item._read)"
                           class="float-end"
                         >
                           <button
@@ -814,7 +811,7 @@
                           >
                             View
                           </button>
-                        </div>
+                        </div>                     
                       </div>
                     </div>
 
