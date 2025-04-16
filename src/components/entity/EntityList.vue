@@ -507,28 +507,7 @@
                     >
                       Save
                     </button>
-                  </div>
-                  <div
-                    v-if="
-                      (unitEntity.currentUnit &&
-                        baseUrl === 'unit' &&
-                        accessControl._unit._update) ||
-                        (baseUrl === 'collection' &&
-                          accessControl._collection._update) ||
-                        (baseUrl === 'item' && accessControl._item._update) ||
-                        (baseUrl === 'file' &&
-                          accessControl._primaryfile._update)
-                    "
-                    class="text-end p-0 expand-ani"
-                  >
-                    <button
-                      class="btn btn-primary btn-lg btn-edit"
-                      type="button"
-                      @click="onUpdateEntityDetails"
-                    >
-                      Save
-                    </button>
-                  </div>                  
+                  </div>               
                 </div>
               </form>
             </div>
