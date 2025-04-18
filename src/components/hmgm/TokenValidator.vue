@@ -60,6 +60,7 @@ export default {
   methods: {
     async submitToken() {
       var valid = await auth_token_valid(
+        null,
         this.datasetUrl,
         this.userPass,
         this.authString

@@ -4,6 +4,7 @@ import { env } from "../helpers/env";
 
 const baseService = new BaseService();
 
+// User input passcode is required if authentication is turned on and no previous valid HMGM token is stored
 async function auth_token_required(editorInput, authString) {
     if (env.getDisableAuth() == 'true') {
         console.log("HMGM authentication: AMP authentication disabled." );
@@ -22,21 +23,19 @@ async function auth_token_required(editorInput, authString) {
         console.log("HMGM authentication: No HMGM auth token stored. Need user to input passcode.");
         return true;
     }
+    // The following API call to validate HMGM token and auth string is unnecessary in most cases, 
+    // because as long as a previous HMGM token is stored for the editor input (which is unique per HMGM job), 
+    // the token should always be valid, as AMPPD currently doesn't expire HMGM token.
+    // Furthermore, the backend validates HMGM token upon each HMGM API call.
+    // The only situation when revalidating is useful is if the HMGM editor URL provided in the task is modified 
+    // with wrong auth string, or the HMGM token in local storage is somehow compromised, in which case
+    // below API call can prevent the page from being shown before any HMGM API call is made.
     console.log("HMGM authentication: Found and validating stored HMGM auth token: " + hmgmToken);
-    return !auth_token_valid(editorInput, hmgmToken, authString);
+    return !auth_token_valid(hmgmToken, editorInput, null, authString);
 }
 
-async function auth_token_valid(editorInput, userPass, authString){   
-    if(env.getDisableAuth() == 'true'){
-        console.log("HMGM authentication: AMP authentication disabled." );
-        return true;
-    } 
-
-    // TODO the following API call to check auth string might be unnecessary, 
-    // because the backend validate auth string upon any HMGM API call;
-    // the purpose here might be to prevent the page from being shown beore any HMGM API call is made
-    // although there should be better way to achieve that than using an extra API to check
-    const url = `/hmgm/authorize-editor?editorInput=${editorInput}&userPass=${userPass}&authString=${authString}`;
+async function auth_token_valid(hmgmToken, editorInput, userPass, authString){   
+    const url = `/hmgm/authorize-editor?hmgmToken=${hmgmToken}&editorInput=${editorInput}&userPass=${userPass}&authString=${authString}`;
     baseService.get(url).then(x => {
         if (x.data) {
             const token = x.data;
