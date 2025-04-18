@@ -5,7 +5,7 @@
 <script>
 import { onMounted, onBeforeUnmount, ref } from 'vue';
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import * as ReactDOM from 'react-dom';
 import BBCTranscriptEditor from "@bbc/react-transcript-editor/dist";
 
 export default {
@@ -29,14 +29,15 @@ export default {
   },
   setup(props, { emit }) {
     const bbcEditorContainer = ref(null);
-    let reactRoot = null;
     onMounted(() => {
-      reactRoot = createRoot(bbcEditorContainer.value);
-      reactRoot.render(React.createElement(BBCTranscriptEditor, props));
+      ReactDOM.render(
+        React.createElement(BBCTranscriptEditor, props),
+        bbcEditorContainer.value
+      );
     });
 
     onBeforeUnmount(() => {
-      reactRoot.unmount();
+      ReactDOM.unmountComponentAtNode(bbcEditorContainer.value);
     });
 
     return {
