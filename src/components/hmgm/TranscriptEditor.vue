@@ -28,7 +28,8 @@
             />
           </div>
         </div>
-        <BBCTranscriptEditorWrapper
+        <!--
+        <BBCTranscriptEditor
           :key="key"
           v-if="transcriptDataValue && sttType"
           :transcriptData="transcriptDataValue"
@@ -40,7 +41,8 @@
           :autoSaveContentType="'draftjs'"
           :ref="player"
         >
-        </BBCTranscriptEditorWrapper>
+        </BBCTranscriptEditor>
+      -->
       </div>
     </div>
     <modal v-if="showModal" @close="modalDismiss" class="my-modal">
@@ -128,7 +130,6 @@ import Loader from "@/components/shared/Loader.vue";
 import Logout from "@/components/shared/Logout.vue";
 import TokenValidator from "@/components/hmgm/TokenValidator";
 // import BBCTranscriptEditor from "@bbc/react-transcript-editor/dist";
-import BBCTranscriptEditorWrapper from "./BBCTranscriptEditorWrapper.vue";
 import Modal from "@/components/shared/Modal.vue";
 import {
   getTranscript,
@@ -143,7 +144,7 @@ export default {
     AmpHeader,
     Loader,
     Logout,
-    BBCTranscriptEditorWrapper,
+    // BBCTranscriptEditor,
     TokenValidator,
     Modal,
   },
