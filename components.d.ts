@@ -13,7 +13,6 @@ declare module 'vue' {
     BAlert: typeof import('bootstrap-vue-next/components/BAlert')['BAlert']
     BarChart: typeof import('./src/components/evaluation/BarChart.vue')['default']
     BatchIngest: typeof import('./src/components/batch/BatchIngest.vue')['default']
-    BBCTranscriptEditorWrapper: typeof import('./src/components/hmgm/BBCTranscriptEditorWrapper.vue')['default']
     BBreadcrumb: typeof import('bootstrap-vue-next/components/BBreadcrumb')['BBreadcrumb']
     BButton: typeof import('bootstrap-vue-next/components/BButton')['BButton']
     BCard: typeof import('bootstrap-vue-next/components/BCard')['BCard']
