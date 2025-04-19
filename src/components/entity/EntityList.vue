@@ -509,6 +509,50 @@
                     </button>
                   </div>               
                 </div>
+                <div class="d-flex float-start text-end m-0 p-0 expand-ani">
+                  <!-- TODO
+                    deletable is null only when non-asset entity is just saved and no GET API has been called on it, 
+                    in which case we can allow delete, as it most likely would be deletable at this point.
+                    The only exception is if the current user continues all the way to create PFiles under
+                    this entity, and someone else happens to run workflows on these PFiles right away
+                    before the current user has a chance to trigger a GET request on the entity.
+                    There is no easy way on backend to populate deletable without customizing the GET entity endpoints.
+                    The only alternative solution is to have frontend always make an extra GET call upon success save.
+                    This is kind a performance overhead and not worthwhile for the above rare corner case.
+                   -->                  
+                   <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'unit' && accessControl._unit._delete"
+                    :disabled="!entity.id || entity.deletable != null && !entity.deletable"
+                    @click="onDeleteEntity(entity, 'unit')"
+                  > 
+                    Delete Unit
+                  </button>
+                  <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'collection' && accessControl._collection._delete"
+                    :disabled="!entity.id || entity.deletable != null && !entity.deletable"
+                    @click="onDeleteEntity(entity, 'collection')"
+                  > 
+                    Delete Collection
+                  </button>
+                  <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'item' && accessControl._item._delete"
+                    :disabled="!entity.id || entity.deletable != null && !entity.deletable"
+                    @click="onDeleteEntity(entity, 'item')"
+                  > 
+                    Delete Item
+                  </button>
+                  <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'file' && accessControl._primaryfile._delete"
+                    :disabled="!entity.id || !entity.deletable" 
+                    @click="onDeleteEntity(entity, 'primaryfile')"
+                  > <!-- deletable is always populated for PFile upon returning from save -->
+                    Delete File
+                  </button>
+                </div>                                  
               </form>
             </div>
           </b-card>
@@ -749,7 +793,7 @@
               <div class="row row-spl" v-if="records && records.length">
                 <b-card
                   class="m-3 w-100 text-start b-card-spl"
-                  v-for="elem in records"
+                  v-for="(elem, index) in records"
                   :key="elem.id"
                 >
                   <div class="col-12 p-0">
@@ -807,7 +851,7 @@
                         >
                           <button
                             class="btn btn-primary btn"
-                            @click="onView(elem)"
+                            @click="onView(elem, index)"
                           >
                             View
                           </button>
@@ -881,6 +925,30 @@
             <template #footer="{ok, cancel}">
               <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">Cancel</button>
               <button type="button" class="btn btn-primary btn-sm" @click="ok();">Leave</button>
+            </template>
+          </b-modal>
+          <!-- Delete entity confirmation modal -->
+          <b-modal 
+            ref="deleteModal" 
+            title="Confirmation" 
+            @ok="handleDeleteModal(true)" 
+            @cancel="handleDeleteModal(false)"
+            centered
+            size="md"
+            footerClass="p-2"
+          >
+            <div v-if="deleteWarnings.statistics">
+              <p>{{ deleteWarnings.header }}</p>
+              <ul>
+                <li v-for="(entityCount) in deleteWarnings.statistics">
+                  {{ entityCount }}
+                </li>
+              </ul>
+            </div>
+            <p>{{ deleteWarnings.question }} </p>
+            <template #footer="{ ok, cancel }">
+              <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
+              <button type="button" class="btn btn-primary btn-sm" @click="ok();">Yes</button>
             </template>
           </b-modal>
         </main>
@@ -964,6 +1032,8 @@ export default {
       userList: [],
       idsExcluding: [],
       selectedUser: "",
+      entityStatistics: {}, // data statistics for entity to be deleted     
+      deleteWarnings: { header: null, statistics: null, question: null }  // warnings for entity deletion 
     };
   },
   computed: {
@@ -1286,7 +1356,6 @@ export default {
             self.unitEntity.unitList &&
             self.unitEntity.unitList.length === 1
           ) {
-            // TODO need to save unitEntity as well in this branch
             self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
             self.onUnitChange();
           } else {
@@ -1390,13 +1459,14 @@ export default {
           }
         });
     },
-    onView(objInstance) {
+    onView(childEntity, index) {
       const self = this;
-      if (self.baseUrl === "collection" && self.purpose) {
-        self.selectedItem = objInstance;
+      childEntity.index = index; // childEntity's index among its parent children
+      if (self.baseUrl === "collection" && self.purpose) {        
+        self.selectedItem = childEntity;
         self.$router.push("/collections/items/details");
       } else if (self.baseUrl === "unit" && self.purpose) {
-        self.selectedCollection = objInstance;
+        self.selectedCollection = childEntity;
         self.$router.push("/collection/details");
       }
     },
@@ -1433,6 +1503,51 @@ export default {
         this.next();
       } else {
         this.next(false);
+      }
+    },
+    async onDeleteEntity(entity, entityType) {
+      this.entityStatistics = await this.entityService.getEntityStatistics(entity.id, entityType);
+      console.log("onDeleteEntity: entityStatistics = " + this.entityStatistics);
+      this.deleteWarnings = this.entityService.getDeleteWarnings(this.fileStatistics);
+      this.$refs.confirmModal.show();
+    },
+    async handleDeleteModal(confirmed, entity, entityType) {
+      console.log("handleDeleteModal: confirmed = " + confirmed + ", entityId = " + entity.id + ", entityType = " + entityType);      
+      if (confirmed) { // When clicked on 'Yes', delete entity
+        this.showLoader = true;
+        this.entityService.deleteEntity(entity, entityType)
+          .then((success) => {
+            this.showLoader = false;
+            this.$toast.success(
+              "Successfully deleted " + entityType + " " + entity.id,
+              this.sharedService.toastNotificationConfig
+            );
+            // remove entity from its parent's chidlren, and reset the corresponding selected entity, and route to parent page
+            if (entityType == 'unit') {
+                selectedUnit = null;
+                sessionStorage.removeItem("unitEntity");
+                this.$router.push("/unit/details");
+            } else if (entityType == 'collection') {
+                selectedCollection = null;
+                this.$router.push("/unit/details");
+            } else if (entityType == 'item') {
+                selectedItem = null;
+                this.$router.push("/collections/details");
+            } else if (entityType == 'primaryfile') {
+                selectedFile = null;
+                this.$router.push("/collections/items/details");
+            }              
+          })
+          .catch((err) => {
+            this.showLoader = false;
+            this.$toast.error(
+              "Unable to delete " + entityType + " " + entity.id +  ". Please try again later!",
+              this.sharedService.toastNotificationConfig
+            );
+          });
+      } else { // When clicked on 'No', hide the modal
+        console.log("Deleting action on " + entityType + " " + entity.id + " is cancelled.");
+        this.$refs.deleteModal.hide();
       }
     },
   },

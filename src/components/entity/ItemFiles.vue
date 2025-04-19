@@ -50,7 +50,7 @@
             <td>
               <button
                 class="btn btn-primary btn float-end"
-                @click="onView(file)"
+                @click="onView(file, index)"
                 v-if="!file.file && accessControl._primaryfile._read"
               >
                 View
@@ -65,7 +65,7 @@
               <button
                 class="btn btn-danger float-end me-2"
                 v-if="accessControl._primaryfile._delete"
-                :disabled="!file.deletable"
+                :disabled="file.id && !file.deletable"
                 @click="deleteFile(index)"
               >
                 Delete File
@@ -379,7 +379,8 @@ export default {
           });
       }
     },
-    onView(file) {
+    onView(file, index) {
+      file.index = index; // PFile's index among its parent item's children
       this.selectedFile = file;
       if (this.selectedItem.parentType === "item-search") {
         this.$router.push("/collections/items/item-search/details/file");
@@ -395,7 +396,7 @@ export default {
       this.deleteWarnings = this.getDeleteWarnings(this.fileStatistics);
       this.$refs.confirmModal.show();
     },
-    handleConfirmModal(confirmed) {
+    async handleConfirmModal(confirmed) {
       const self = this;
       const { file, index } = self.fileToRemove;
       console.log("handleConfirmModal: confirmed = " + confirmed + ", file = " + file + ", index = " + index);
