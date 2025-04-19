@@ -793,7 +793,7 @@
               <div class="row row-spl" v-if="records && records.length">
                 <b-card
                   class="m-3 w-100 text-start b-card-spl"
-                  v-for="(elem) in records"
+                  v-for="elem in records"
                   :key="elem.id"
                 >
                   <div class="col-12 p-0">
