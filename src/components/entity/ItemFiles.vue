@@ -50,7 +50,7 @@
             <td>
               <button
                 class="btn btn-primary btn float-end"
-                @click="onView(file, index)"
+                @click="onView(file)"
                 v-if="!file.file && accessControl._primaryfile._read"
               >
                 View
@@ -379,8 +379,7 @@ export default {
           });
       }
     },
-    onView(file, index) {
-      file.index = index; // PFile's index among its parent item's children
+    onView(file) {
       this.selectedFile = file;
       if (this.selectedItem.parentType === "item-search") {
         this.$router.push("/collections/items/item-search/details/file");

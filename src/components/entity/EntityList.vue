@@ -793,7 +793,7 @@
               <div class="row row-spl" v-if="records && records.length">
                 <b-card
                   class="m-3 w-100 text-start b-card-spl"
-                  v-for="(elem, index) in records"
+                  v-for="(elem) in records"
                   :key="elem.id"
                 >
                   <div class="col-12 p-0">
@@ -851,7 +851,7 @@
                         >
                           <button
                             class="btn btn-primary btn"
-                            @click="onView(elem, index)"
+                            @click="onView(elem)"
                           >
                             View
                           </button>
@@ -1459,9 +1459,8 @@ export default {
           }
         });
     },
-    onView(childEntity, index) {
+    onView(childEntity) {
       const self = this;
-      childEntity.index = index; // childEntity's index among its parent children
       if (self.baseUrl === "collection" && self.purpose) {        
         self.selectedItem = childEntity;
         self.$router.push("/collections/items/details");
