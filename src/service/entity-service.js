@@ -1,11 +1,11 @@
 import UnitService from './unit-service';
+import BaseService from "./base-service.js";
 import { env } from '../helpers/env'; 
 
 const unitService = new UnitService();
+const baseService = new BaseService();
 
 export default class EntityService extends BaseService {
-    
-    constructor() {}
 
     async getUnitDetails(defaultUnit, context) {
         let unitDetails = {};
@@ -225,8 +225,8 @@ export default class EntityService extends BaseService {
         return {header, statistics, question};
     }
 
-    async deleteEntity(entityId, entityType) {
-        return await super.delete_auth(`/${entityType}s/${entityId}`); 
+    async deleteEntity(entity) {
+        return await super.delete_auth(`/${entity.type}s/${entity.id}`); 
     }
 
     async getEntityStatistics(entityId, entityType) {  

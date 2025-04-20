@@ -98,7 +98,7 @@ async function validate() {
         console.log("IN ERROR");
         return false;
       });
-  console.log("User authenticated: " + success);
+  // console.log("User authenticated: " + success);
   return success;
 }
 

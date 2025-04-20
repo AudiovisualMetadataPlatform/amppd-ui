@@ -524,7 +524,7 @@
                     class="btn btn-danger btn-lg"
                     v-if="baseUrl === 'unit' && accessControl._unit._delete"
                     :disabled="!entity.id || entity.deletable != null && !entity.deletable"
-                    @click="onDeleteEntity(entity, 'unit')"
+                    @click="onDeleteEntity(entity.id, 'unit')"
                   > 
                     Delete Unit
                   </button>
@@ -532,7 +532,7 @@
                     class="btn btn-danger btn-lg"
                     v-if="baseUrl === 'collection' && accessControl._collection._delete"
                     :disabled="!entity.id || entity.deletable != null && !entity.deletable"
-                    @click="onDeleteEntity(entity, 'collection')"
+                    @click="onDeleteEntity(entity.id, 'collection')"
                   > 
                     Delete Collection
                   </button>
@@ -540,7 +540,7 @@
                     class="btn btn-danger btn-lg"
                     v-if="baseUrl === 'item' && accessControl._item._delete"
                     :disabled="!entity.id || entity.deletable != null && !entity.deletable"
-                    @click="onDeleteEntity(entity, 'item')"
+                    @click="onDeleteEntity(entity.id, 'item')"
                   > 
                     Delete Item
                   </button>
@@ -548,7 +548,7 @@
                     class="btn btn-danger btn-lg"
                     v-if="baseUrl === 'file' && accessControl._primaryfile._delete"
                     :disabled="!entity.id || !entity.deletable" 
-                    @click="onDeleteEntity(entity, 'primaryfile')"
+                    @click="onDeleteEntity(entity.id, 'primaryfile')"
                   > <!-- deletable is always populated for PFile upon returning from save -->
                     Delete File
                   </button>
@@ -931,7 +931,7 @@
           <b-modal 
             ref="deleteModal" 
             title="Confirmation" 
-            @ok="handleDeleteModal(true)" 
+            @ok="handleDeleteModal(true, )" 
             @cancel="handleDeleteModal(false)"
             centered
             size="md"
@@ -1032,6 +1032,7 @@ export default {
       userList: [],
       idsExcluding: [],
       selectedUser: "",
+      entityToDelete: { id: null, type: null },
       entityStatistics: {}, // data statistics for entity to be deleted     
       deleteWarnings: { header: null, statistics: null, question: null }  // warnings for entity deletion 
     };
@@ -1334,9 +1335,10 @@ export default {
         "unitEntity",
         JSON.stringify({ ...self.unitEntity })
       );
+      console.log("EntityList.onUnitChange: switching to unit " + self.unitEntity.currentUnit);
       await self.getEntityData();
       //Checking Access Control
-      self.accessControlService.checkAccessControl(this);
+      self.accessControlService.checkAccessControl(this);      
     },
     async toggleCollectionActive(collection) {
       collection.active = !collection.active;
@@ -1352,12 +1354,10 @@ export default {
         self.unitService.getAllUnits().then((res) => {
           self.allUnits = res.data;
           self.unitEntity.unitList = self.sharedService.sortByAlphabatical(this.allUnits);
-          if (
-            self.unitEntity.unitList &&
-            self.unitEntity.unitList.length === 1
-          ) {
+          if (self.unitEntity.unitList && self.unitEntity.unitList.length === 1) {            
             self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
             self.onUnitChange();
+            console.log("EntityList.getAllUnits: got only 1 unit");
           } else {
             let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
             if (!uEntity)
@@ -1367,12 +1367,12 @@ export default {
               );
             const unitSelectHtml = document.getElementById("unit-select");
             if (unitSelectHtml) unitSelectHtml.focus();
+            console.log("EntityList.getAllUnits: got " + self.unitEntity.unitList.length + " units.");
           }
-          console.log("EntityList.getAllUnits: unitList = " + self.unitEntity.unitList);
           return self.unitEntity.unitList;
         });        
       } catch (error) {
-        console.log(error);
+        console.log("Error in EntityList.getAllUnits:", error);
       }
     },
     async getEntityData() {
@@ -1382,6 +1382,7 @@ export default {
         await self.getUnitDetails();
         self.assignedRolesUnitChanged = true;
         self.settingsRolesUnitChanged = true;
+        console.log("EntityList.getEntityData: done for unit " + self.entity.id);
       } else if (self.baseUrl === "collection") {
         // TODO below is a workaround to fix veux sync issue when selectedCollection does not get updated upon reload/push
         // if current collection exists but fields not populated, get its details
@@ -1397,18 +1398,21 @@ export default {
           self.selectedCollection = self.entity = {};
           self.showEdit = false;
         }
+        console.log("EntityList.getEntityData: done for collection " + self.entity.id);
       } else if (self.baseUrl === "item") {
         // TODO below is a tmp fix for the case when loading the page for a newly created item, 
         // selectedItem.id is null, while selectedItem.selectedItemId is populated
         if (!self.selectedItem.id && self.selectedItem.selectedItemId) {
           self.selectedItem.id = self.selectedItem.selectedItemId;
-          console.log("EntityList.getEntityData for item: populated selectedItem.id " + self.selectedItem.id);
+          console.log("EntityList.getEntityData for item: populated selectedItem.id: " + self.selectedItem.id);
         }
         self.entity = self.selectedItem;
         if (self.isCreatePage) {
           self.selectedItem = self.entity = {};
           self.showEdit = false;
         }
+        console.log("EntityList.getEntityData: done for item " + self.entity.id);
+        // note: getPrimaryFiles is done in ItemFiles
       } else if (self.baseUrl === "file") {
         self.entity = self.selectedFile;
         if (self.accessControl._primaryfile_media._read) {
@@ -1416,14 +1420,14 @@ export default {
             self.selectedFile.id
           );
           self.entity.mediaSource = mediaSourceUrl;
-          console.log("EntityList.getEntityData for file: mediaSource = " + self.entity.mediaSource);
+          console.log("EntityList.getEntityData for file: got meidaSource: " + self.entity.mediaSource);
         }
-        let mediaSourceType = await self.primaryFileService.getPrimaryFile(
+        let mediaSourceFile = await self.primaryFileService.getPrimaryFile(
           self.selectedFile.id
         );
-        self.entity.mediaInfo = mediaSourceType.mediaInfo;
-        self.entity.mediaType = mediaSourceType.mimeType.substring(0, 5);
-        console.log("EntityList.getEntityData for file: mediaType = " + self.entity.mediaType);
+        self.entity.mediaInfo = mediaSourceFile.mediaInfo;
+        self.entity.mediaType = mediaSourceFile.mimeType.substring(0, 5);
+        console.log("EntityList.getEntityData: done for file " + self.entity.id);
       }
       return self.entity;
     },
@@ -1504,48 +1508,57 @@ export default {
         this.next(false);
       }
     },
-    async onDeleteEntity(entity, entityType) {
-      this.entityStatistics = await this.entityService.getEntityStatistics(entity.id, entityType);
+    async onDeleteEntity(entityId, entityType) {
+      console.log("onDeleteEntity: entityId = " + entityId + ", entityType = " + entityType); 
+      this.entityToDelete = { id: entityId, type: entityType };
+      this.entityStatistics = await this.entityService.getEntityStatistics(entityId, entityType);
       console.log("onDeleteEntity: entityStatistics = " + this.entityStatistics);
-      this.deleteWarnings = this.entityService.getDeleteWarnings(this.fileStatistics);
-      this.$refs.confirmModal.show();
+      this.deleteWarnings = this.entityService.getDeleteWarnings(this.entityStatistics, entityType);
+      this.$refs.deleteModal.show();
     },
-    async handleDeleteModal(confirmed, entity, entityType) {
-      console.log("handleDeleteModal: confirmed = " + confirmed + ", entityId = " + entity.id + ", entityType = " + entityType);      
+    async handleDeleteModal(confirmed) {
+      console.log("handleDeleteModal: confirmed = " + confirmed);  
       if (confirmed) { // When clicked on 'Yes', delete entity
         this.showLoader = true;
-        this.entityService.deleteEntity(entity, entityType)
+        this.entityService.deleteEntity(this.entityToDelete)
           .then((success) => {
             this.showLoader = false;
             this.$toast.success(
-              "Successfully deleted " + entityType + " " + entity.id,
+              `Successfully deleted ${this.entityToDelete.type} ${this.entityToDelete.id}`,
               this.sharedService.toastNotificationConfig
             );
-            // remove entity from its parent's chidlren, and reset the corresponding selected entity, and route to parent page
-            if (entityType == 'unit') {
-                selectedUnit = null;
+            console.log(`Successfully deleted ${this.entityToDelete.type} ${this.entityToDelete.id}`);
+            // route to parent (selected entity) page, which will trigger refresh of its children
+            if (this.entityToDelete.type == 'unit') {
+                selectedUni = null;
+                // remove stored unit list and current unit info to trigger refresh on unit list
                 sessionStorage.removeItem("unitEntity");
+                console.log("routing to /unit/details with no unit selected");
                 this.$router.push("/unit/details");
-            } else if (entityType == 'collection') {
+            } else if (this.entityToDelete.type == 'collection') {
                 selectedCollection = null;
+                console.log("routing to /unit/details");
                 this.$router.push("/unit/details");
-            } else if (entityType == 'item') {
+            } else if (this.entityToDelete.type == 'item') {
                 selectedItem = null;
+                console.log("routing to /collections/details");
                 this.$router.push("/collections/details");
-            } else if (entityType == 'primaryfile') {
+            } else if (this.entityToDelete.type == 'primaryfile') {
                 selectedFile = null;
+                console.log("routing to /collections/items/details");
                 this.$router.push("/collections/items/details");
             }              
           })
           .catch((err) => {
             this.showLoader = false;
             this.$toast.error(
-              "Unable to delete " + entityType + " " + entity.id +  ". Please try again later!",
+              `Failed to delete ${this.entityToDelete.type} ${this.entityToDelete.id}. Please try again later!`,
               this.sharedService.toastNotificationConfig
             );
+            console.log(`Failed to delete ${this.entityToDelete.type} ${this.entityToDelete.id}`, err);
           });
       } else { // When clicked on 'No', hide the modal
-        console.log("Deleting action on " + entityType + " " + entity.id + " is cancelled.");
+        console.log("Deleting on " + this.entityToDelete.type + " " + this.entityToDelete.id + " is cancelled.");
         this.$refs.deleteModal.hide();
       }
     },
@@ -1583,19 +1596,19 @@ export default {
     }
     else {
       self.unitEntity = uEntity;    
-      console.log("EntityList.mounted: unitList = " + self.unitEntity.unitList + ", currentUnit = " + self.unitEntity.currentUnit);
+      console.log("EntityList.mounted: found unitEntity in local storage: currentUnit = " + self.unitEntity.currentUnit);
     }
 
     // retrieve units list if not yet populated
     if (!self.unitEntity.unitList || !self.unitEntity.unitList.length) {
       let unitList = await self.getAllUnits();
-      console.log("EntityList.mounted - after getAllUnits: unitList = " + unitList);
+      // console.log("EntityList.mounted - after getAllUnits: unitList = " + unitList);
     } 
 
     // if currentUnit set, getEntityData for the page 
     if (self.unitEntity.currentUnit) {
       let entity = await self.getEntityData();
-      console.log("EntityList.mounted: mediaSource = " + entity.mediaSource); 
+      // console.log("EntityList.mounted - after getEntityData: mediaSource = " + entity.mediaSource); 
     }
 
     // adjust size of PFile fields for PFile page
@@ -1647,7 +1660,7 @@ export default {
 }
 .media-player {
   width: 50%;
-  margin-right: 15px;
+  margin-right: 15px;       
   display: flex;
   flex-direction: column;
 }

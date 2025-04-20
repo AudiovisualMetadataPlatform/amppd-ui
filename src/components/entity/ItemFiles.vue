@@ -249,6 +249,7 @@ export default {
               self.primaryFiles._embedded.primaryfiles
             );
           }
+          console.log("ItemFiles.getPrimaryFiles: done for item " + self.selectedItem.id);
         });
     },
     getFile(e) {
@@ -404,7 +405,7 @@ export default {
         console.log("Removing file " + file + " at index " + index);
         self.showLoader = true;
         self.fileService
-          .removePrimaryFile(file.id)
+          .deletePrimaryFile(file.id)
           .then((success) => {
             self.showLoader = false;
             self.primaryFiles._embedded.primaryfiles.splice(index, 1);
