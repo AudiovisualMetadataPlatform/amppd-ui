@@ -30,6 +30,7 @@ export default {
   setup(props, { emit }) {
     const bbcEditorContainer = ref(null);
     onMounted(() => {
+      // This code needs React 17 or lower
       ReactDOM.render(
         React.createElement(BBCTranscriptEditor, props),
         bbcEditorContainer.value
