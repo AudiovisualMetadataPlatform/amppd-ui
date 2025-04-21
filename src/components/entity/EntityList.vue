@@ -524,7 +524,7 @@
                     class="btn btn-danger btn-lg"
                     v-if="baseUrl === 'unit' && accessControl._unit._delete"
                     :disabled="!entity.id || entity.deletable != null && !entity.deletable"
-                    @click="onDeleteEntity(entity.id, 'unit')"
+                    @click.prevent="onDeleteEntity(entity.id, 'unit')"
                   > 
                     Delete Unit
                   </button>
@@ -532,7 +532,7 @@
                     class="btn btn-danger btn-lg"
                     v-if="baseUrl === 'collection' && accessControl._collection._delete"
                     :disabled="!entity.id || entity.deletable != null && !entity.deletable"
-                    @click="onDeleteEntity(entity.id, 'collection')"
+                    @click.prevent="onDeleteEntity(entity.id, 'collection')"
                   > 
                     Delete Collection
                   </button>
@@ -540,7 +540,7 @@
                     class="btn btn-danger btn-lg"
                     v-if="baseUrl === 'item' && accessControl._item._delete"
                     :disabled="!entity.id || entity.deletable != null && !entity.deletable"
-                    @click="onDeleteEntity(entity.id, 'item')"
+                    @click.prevent="onDeleteEntity(entity.id, 'item')"
                   > 
                     Delete Item
                   </button>
@@ -548,7 +548,7 @@
                     class="btn btn-danger btn-lg"
                     v-if="baseUrl === 'file' && accessControl._primaryfile._delete"
                     :disabled="!entity.id || !entity.deletable" 
-                    @click="onDeleteEntity(entity.id, 'primaryfile')"
+                    @click.prevent="onDeleteEntity(entity.id, 'primaryfile')"
                   > <!-- deletable is always populated for PFile upon returning from save -->
                     Delete File
                   </button>
@@ -1528,25 +1528,38 @@ export default {
               this.sharedService.toastNotificationConfig
             );
             console.log(`Successfully deleted ${this.entityToDelete.type} ${this.entityToDelete.id}`);
-            // route to parent (selected entity) page, which will trigger refresh of its children
+            // TODO: 
+            // Resetting selected entity to null for the deleted entity would cause issues with current code design,
+            // as the current page will get refreshed (possibly due to show/hide on the delete confirmation modal),
+            // in which case selected entity could be referenced. 
+            // Restting the selected item id for deleted item wouldn't work either for similar reasons.
+            // Without reset, the current page would get refreshed, wihch means for item and pfile, the page's subcomponent
+            // will try to call API to retrieve its children (getPrimaryFiles/getOutputFileList) and get 500 error.
+            // The current workaround is to catch these errors and ignore them, as the page will route to parent anyways.
+            // The best solution is to prevent the current page from being refreshed in the first place.
+            // route to parent (selected entity) page
             if (this.entityToDelete.type == 'unit') {
-                selectedUni = null;
-                // remove stored unit list and current unit info to trigger refresh on unit list
-                sessionStorage.removeItem("unitEntity");
-                console.log("routing to /unit/details with no unit selected");
-                this.$router.push("/unit/details");
+              // this.selectedUnit = null;
+              // remove stored unit list and current unit info to trigger refresh on unit list
+              sessionStorage.removeItem("unitEntity");
+              console.log("routing to /unit/details with no unit selected");
+              this.$router.push("/unit/details");
             } else if (this.entityToDelete.type == 'collection') {
-                selectedCollection = null;
-                console.log("routing to /unit/details");
-                this.$router.push("/unit/details");
+              // this.selectedCollection = null;
+              console.log("routing to /unit/details");
+              this.$router.push("/unit/details");
             } else if (this.entityToDelete.type == 'item') {
-                selectedItem = null;
-                console.log("routing to /collections/details");
-                this.$router.push("/collections/details");
+              // this.selectedItem = null;
+              // if (this.selectedItem) {
+              //   this.selectedItem.id = null;
+              //   console.log("handleDeleteModal: setting null selectedItem.id");
+              // }
+              console.log("routing to /collection/details");
+              this.$router.push("/collection/details");
             } else if (this.entityToDelete.type == 'primaryfile') {
-                selectedFile = null;
-                console.log("routing to /collections/items/details");
-                this.$router.push("/collections/items/details");
+              // this.selectedFile = null;
+              console.log("routing to /collections/items/details");
+              this.$router.push("/collections/items/details");
             }              
           })
           .catch((err) => {

@@ -250,6 +250,10 @@ export default {
             );
           }
           console.log("ItemFiles.getPrimaryFiles: done for item " + self.selectedItem.id);
+        })
+        .catch((err) => {
+          // This happens when item just got deleted but the item page still refreshes before routing to parent page
+          console.log("ItemFiles.getPrimaryFile: failed for item " + self.selectedItem.id);
         });
     },
     getFile(e) {
@@ -437,7 +441,10 @@ export default {
   },
   mounted() {
     const self = this;
-    if (self.selectedItem && self.selectedItem.id) self.getPrimaryFiles();
+    if (self.selectedItem && self.selectedItem.id) {
+      console.log("ItemFiles.mounted: callinging getPrimaryFiles on item " + self.selectedItem.id);
+      self.getPrimaryFiles();
+    }
   },
 };
 </script>
