@@ -1,12 +1,11 @@
 import UnitService from './unit-service';
+import BaseService from "./base-service.js";
 import { env } from '../helpers/env'; 
 
 const unitService = new UnitService();
+const baseService = new BaseService();
 
-export default class EntityService {
-    
-    constructor() {}
-
+export default class EntityService extends BaseService {
 
     async getUnitDetails(defaultUnit, context) {
         let unitDetails = {};
@@ -17,7 +16,6 @@ export default class EntityService {
         });
         return unitDetails;
     }
-
 
     async onUpdateEntityDetails(self) {
         self.submitted = true; 
@@ -186,5 +184,54 @@ export default class EntityService {
             });
         }
     }
+
+    getDeleteWarnings(entityStatistics, entityType) {
+        let statistics = [], header = '', question = '';
+        if (entityStatistics.countCollections) { 
+            statistics.push(entityStatistics.countCollections + " collection(s)");
+        }
+        if (entityStatistics.countItems) { 
+            statistics.push(entityStatistics.countItems + " item(s)");
+        }
+        if (entityStatistics.countPrimaryfiles) { 
+            statistics.push(entityStatistics.countPrimaryfiles + " primaryfile(s)");
+        }
+        if (entityStatistics.countUnitSupplements) { 
+            statistics.push(entityStatistics.countUnitSupplements + " unit supplement(s)");
+        }
+        if (entityStatistics.countCollectionSupplements) { 
+            statistics.push(entityStatistics.countCollectionSupplements + " collection supplement(s)");
+        }
+        if (entityStatistics.countItemSupplements) { 
+            statistics.push(entityStatistics.countItemSupplements + " item supplement(s)");
+        }
+        if (entityStatistics.countPrimaryfileSupplements) { 
+            statistics.push(entityStatistics.countPrimaryfileSupplements + " primaryfile supplement(s)");
+        }
+        if (entityStatistics.countWorkflowResults) { 
+            statistics.push(entityStatistics.countWorkflowResults + " workflow result(s)");
+        }
+        if (entityStatistics.countMgmEvaluationTests) { 
+            statistics.push(entityStatistics.countMgmEvaluationTests + " evaluation test result(s)");
+        }
+        if (statistics.length) {
+            header = `Deleting this ${entityType} will also delelte the following associated data:`;
+            question = "Do you want to continue?";
+        }
+        else {
+            question = `Are you sure you want to delete this ${entityType}?`;
+        }
+        console.log("getDeleteWarnings question: " + question);
+        return {header, statistics, question};
+    }
+
+    async deleteEntity(entity) {
+        return await super.delete_auth(`/${entity.type}s/${entity.id}`); 
+    }
+
+    async getEntityStatistics(entityId, entityType) {  
+        return await super.get_auth(`/${entityType}s/${entityId}/statistics`)
+            .then(result => result.data)
+    }  
 
 }

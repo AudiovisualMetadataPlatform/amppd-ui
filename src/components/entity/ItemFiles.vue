@@ -65,7 +65,7 @@
               <button
                 class="btn btn-danger float-end me-2"
                 v-if="accessControl._primaryfile._delete"
-                :disabled="!file.deletable"
+                :disabled="file.id && !file.deletable"
                 @click="deleteFile(index)"
               >
                 Delete File
@@ -193,12 +193,12 @@ export default {
       files: [],
       showLoader: false,
       dropFiles: [],
-      fileStatistics: {}, // DataentityStatistics for the primaryfile to be deleted
+      // DataentityStatistics for the primaryfile to be deleted
+      fileStatistics: {}, 
       // warnings to display in confirmation modal upon file deletion 
       deleteWarnings: { header: null, statistics: null, question: null },
       // object to hold info of the file to be removed
       fileToRemove: { file: null, index: null }
-      // dropFileName: ""
     };
   },
   computed: {
@@ -249,6 +249,10 @@ export default {
               self.primaryFiles._embedded.primaryfiles
             );
           }
+          console.log("ItemFiles.getPrimaryFiles: done for item " + self.selectedItem.id);
+        })
+        .catch((err) => {
+          console.log("ItemFiles.getPrimaryFile: failed for item " + self.selectedItem.id);
         });
     },
     getFile(e) {
@@ -395,7 +399,7 @@ export default {
       this.deleteWarnings = this.getDeleteWarnings(this.fileStatistics);
       this.$refs.confirmModal.show();
     },
-    handleConfirmModal(confirmed) {
+    async handleConfirmModal(confirmed) {
       const self = this;
       const { file, index } = self.fileToRemove;
       console.log("handleConfirmModal: confirmed = " + confirmed + ", file = " + file + ", index = " + index);
@@ -404,7 +408,7 @@ export default {
         console.log("Removing file " + file + " at index " + index);
         self.showLoader = true;
         self.fileService
-          .removePrimaryFile(file.id)
+          .deletePrimaryFile(file.id)
           .then((success) => {
             self.showLoader = false;
             self.primaryFiles._embedded.primaryfiles.splice(index, 1);
@@ -436,7 +440,10 @@ export default {
   },
   mounted() {
     const self = this;
-    if (self.selectedItem && self.selectedItem.id) self.getPrimaryFiles();
+    if (self.selectedItem && self.selectedItem.id) {
+      console.log("ItemFiles.mounted: callinging getPrimaryFiles on item " + self.selectedItem.id);
+      self.getPrimaryFiles();
+    }
   },
 };
 </script>

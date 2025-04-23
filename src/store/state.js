@@ -124,7 +124,7 @@ const state = {
 
   allUnits: {}, // all units the current user can read
   selectedUnit: {},
-  selectedCollection: null,
+  selectedCollection: {},
   selectedItem: {},
   selectedFile: {},
   selectedFilters: {},

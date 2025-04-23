@@ -509,6 +509,50 @@
                     </button>
                   </div>               
                 </div>
+                <div class="d-flex float-start text-end m-0 p-0 expand-ani">
+                  <!-- TODO
+                    deletable is null only when non-asset entity is just saved and no GET API has been called on it, 
+                    in which case we can allow delete, as it most likely would be deletable at this point.
+                    The only exception is if the current user continues all the way to create PFiles under
+                    this entity, and someone else happens to run workflows on these PFiles right away
+                    before the current user has a chance to trigger a GET request on the entity.
+                    There is no easy way on backend to populate deletable without customizing the GET entity endpoints.
+                    The only alternative solution is to have frontend always make an extra GET call upon success save.
+                    This is kind a performance overhead and not worthwhile for the above rare corner case.
+                   -->                  
+                   <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'unit' && accessControl._unit._delete"
+                    :disabled="!entity.id || entity.deletable != null && !entity.deletable"
+                    @click.prevent="onDeleteEntity(entity.id, 'unit')"
+                  > 
+                    Delete Unit
+                  </button>
+                  <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'collection' && accessControl._collection._delete"
+                    :disabled="!entity.id || entity.deletable != null && !entity.deletable"
+                    @click.prevent="onDeleteEntity(entity.id, 'collection')"
+                  > 
+                    Delete Collection
+                  </button>
+                  <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'item' && accessControl._item._delete"
+                    :disabled="!entity.id || entity.deletable != null && !entity.deletable"
+                    @click.prevent="onDeleteEntity(entity.id, 'item')"
+                  > 
+                    Delete Item
+                  </button>
+                  <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'file' && accessControl._primaryfile._delete"
+                    :disabled="!entity.id || !entity.deletable" 
+                    @click.prevent="onDeleteEntity(entity.id, 'primaryfile')"
+                  > <!-- deletable is always populated for PFile upon returning from save -->
+                    Delete File
+                  </button>
+                </div>                                  
               </form>
             </div>
           </b-card>
@@ -883,6 +927,30 @@
               <button type="button" class="btn btn-primary btn-sm" @click="ok();">Leave</button>
             </template>
           </b-modal>
+          <!-- Delete entity confirmation modal -->
+          <b-modal 
+            ref="deleteModal" 
+            title="Confirmation" 
+            @ok="handleDeleteModal(true, )" 
+            @cancel="handleDeleteModal(false)"
+            centered
+            size="md"
+            footerClass="p-2"
+          >
+            <div v-if="deleteWarnings.statistics">
+              <p>{{ deleteWarnings.header }}</p>
+              <ul>
+                <li v-for="(entityCount) in deleteWarnings.statistics">
+                  {{ entityCount }}
+                </li>
+              </ul>
+            </div>
+            <p>{{ deleteWarnings.question }} </p>
+            <template #footer="{ ok, cancel }">
+              <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
+              <button type="button" class="btn btn-primary btn-sm" @click="ok();">Yes</button>
+            </template>
+          </b-modal>
         </main>
       </div>
     </div>
@@ -964,6 +1032,9 @@ export default {
       userList: [],
       idsExcluding: [],
       selectedUser: "",
+      entityToDelete: { id: null, type: null },
+      entityStatistics: {}, // data statistics for entity to be deleted     
+      deleteWarnings: { header: null, statistics: null, question: null }  // warnings for entity deletion 
     };
   },
   computed: {
@@ -1237,7 +1308,7 @@ export default {
     async getUnitDetails() {
       const self = this;
       try {
-         const unitDetails = await self.entityService.getUnitDetails(
+        const unitDetails = await self.entityService.getUnitDetails(
           self.unitEntity.currentUnit,
           self
         );      
@@ -1264,9 +1335,16 @@ export default {
         "unitEntity",
         JSON.stringify({ ...self.unitEntity })
       );
-      await self.getEntityData();
-      //Checking Access Control
-      self.accessControlService.checkAccessControl(this);
+      console.log("EntityList.onUnitChange: switching to unit " + self.unitEntity.currentUnit);
+      // if currentUnit set, getEntityData for the page 
+      if (self.unitEntity.currentUnit) {
+        await self.getEntityData();
+      } else { // otherwise, reset entity data
+        self.entity = {};
+        self.selectedUnit = {};
+      }
+      // update Access Control based on currentUnit
+      self.accessControlService.checkAccessControl(this);      
     },
     async toggleCollectionActive(collection) {
       collection.active = !collection.active;
@@ -1282,13 +1360,10 @@ export default {
         self.unitService.getAllUnits().then((res) => {
           self.allUnits = res.data;
           self.unitEntity.unitList = self.sharedService.sortByAlphabatical(this.allUnits);
-          if (
-            self.unitEntity.unitList &&
-            self.unitEntity.unitList.length === 1
-          ) {
-            // TODO need to save unitEntity as well in this branch
+          if (self.unitEntity.unitList && self.unitEntity.unitList.length === 1) {            
             self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
             self.onUnitChange();
+            console.log("EntityList.getAllUnits: got only 1 unit");
           } else {
             let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
             if (!uEntity)
@@ -1298,21 +1373,22 @@ export default {
               );
             const unitSelectHtml = document.getElementById("unit-select");
             if (unitSelectHtml) unitSelectHtml.focus();
+            console.log("EntityList.getAllUnits: got " + self.unitEntity.unitList.length + " units.");
           }
-          console.log("EntityList.getAllUnits: unitList = " + self.unitEntity.unitList);
           return self.unitEntity.unitList;
         });        
       } catch (error) {
-        console.log(error);
+        console.log("Error in EntityList.getAllUnits:", error);
       }
     },
     async getEntityData() {
       // TODO: at each entity level, get its details, no need to get its children as that's already included in details
       const self = this;
-      if (self.baseUrl === "unit" && self.selectedUnit) {
+      if (self.baseUrl === "unit") {
         await self.getUnitDetails();
         self.assignedRolesUnitChanged = true;
         self.settingsRolesUnitChanged = true;
+        console.log("EntityList.getEntityData: done for unit " + self.entity.id);
       } else if (self.baseUrl === "collection") {
         // TODO below is a workaround to fix veux sync issue when selectedCollection does not get updated upon reload/push
         // if current collection exists but fields not populated, get its details
@@ -1328,18 +1404,21 @@ export default {
           self.selectedCollection = self.entity = {};
           self.showEdit = false;
         }
+        console.log("EntityList.getEntityData: done for collection " + self.entity.id);
       } else if (self.baseUrl === "item") {
         // TODO below is a tmp fix for the case when loading the page for a newly created item, 
         // selectedItem.id is null, while selectedItem.selectedItemId is populated
         if (!self.selectedItem.id && self.selectedItem.selectedItemId) {
           self.selectedItem.id = self.selectedItem.selectedItemId;
-          console.log("EntityList.getEntityData for item: populated selectedItem.id " + self.selectedItem.id);
+          console.log("EntityList.getEntityData for item: populated selectedItem.id: " + self.selectedItem.id);
         }
         self.entity = self.selectedItem;
         if (self.isCreatePage) {
           self.selectedItem = self.entity = {};
           self.showEdit = false;
         }
+        console.log("EntityList.getEntityData: done for item " + self.entity.id);
+        // note: getPrimaryFiles is done in ItemFiles
       } else if (self.baseUrl === "file") {
         self.entity = self.selectedFile;
         if (self.accessControl._primaryfile_media._read) {
@@ -1347,14 +1426,14 @@ export default {
             self.selectedFile.id
           );
           self.entity.mediaSource = mediaSourceUrl;
-          console.log("EntityList.getEntityData for file: mediaSource = " + self.entity.mediaSource);
+          console.log("EntityList.getEntityData for file: got meidaSource: " + self.entity.mediaSource);
         }
-        let mediaSourceType = await self.primaryFileService.getPrimaryFile(
+        let mediaSourceFile = await self.primaryFileService.getPrimaryFile(
           self.selectedFile.id
         );
-        self.entity.mediaInfo = mediaSourceType.mediaInfo;
-        self.entity.mediaType = mediaSourceType.mimeType.substring(0, 5);
-        console.log("EntityList.getEntityData for file: mediaType = " + self.entity.mediaType);
+        self.entity.mediaInfo = mediaSourceFile.mediaInfo;
+        self.entity.mediaType = mediaSourceFile.mimeType.substring(0, 5);
+        console.log("EntityList.getEntityData: done for file " + self.entity.id);
       }
       return self.entity;
     },
@@ -1390,13 +1469,13 @@ export default {
           }
         });
     },
-    onView(objInstance) {
+    onView(childEntity) {
       const self = this;
-      if (self.baseUrl === "collection" && self.purpose) {
-        self.selectedItem = objInstance;
+      if (self.baseUrl === "collection" && self.purpose) {        
+        self.selectedItem = childEntity;
         self.$router.push("/collections/items/details");
       } else if (self.baseUrl === "unit" && self.purpose) {
-        self.selectedCollection = objInstance;
+        self.selectedCollection = childEntity;
         self.$router.push("/collection/details");
       }
     },
@@ -1435,6 +1514,68 @@ export default {
         this.next(false);
       }
     },
+    async onDeleteEntity(entityId, entityType) {
+      console.log("onDeleteEntity: entityId = " + entityId + ", entityType = " + entityType); 
+      this.entityToDelete = { id: entityId, type: entityType };
+      this.entityStatistics = await this.entityService.getEntityStatistics(entityId, entityType);
+      console.log("onDeleteEntity: entityStatistics = " + this.entityStatistics);
+      this.deleteWarnings = this.entityService.getDeleteWarnings(this.entityStatistics, entityType);
+      this.$refs.deleteModal.show();
+    },
+    async handleDeleteModal(confirmed) {
+      console.log("handleDeleteModal: confirmed = " + confirmed);  
+      if (confirmed) { // When clicked on 'Yes', delete entity
+        this.showLoader = true;
+        this.entityService.deleteEntity(this.entityToDelete)
+          .then((success) => {
+            this.showLoader = false;
+            this.$toast.success(
+              `Successfully deleted ${this.entityToDelete.type} ${this.entityToDelete.id}`,
+              this.sharedService.toastNotificationConfig
+            );
+            console.log(`Successfully deleted ${this.entityToDelete.type} ${this.entityToDelete.id}`);
+            // reset current selected entity along with its descendant chain, and route to parent entity page
+            if (this.entityToDelete.type == 'unit') {
+              // update stored unit info with the deleted unit removed from unit list, and current unit ID reset to null
+              // note pthat ush route to /unit/details won't trigger any route, as the current page is already there
+              // to trigger a page refresh, we need to update unit data instead (which includes update on AC data)
+              this.unitEntity.unitList = this.unitEntity.unitList.filter(unit => unit.id !== this.entity.id);
+              this.unitEntity.currentUnit = null;
+              this.selectedCollection = {};
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("refreshing /unit/details after unit deletion");
+              this.onUnitChange();
+            } else if (this.entityToDelete.type == 'collection') {
+              this.selectedCollection = {};
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("routing to /unit/details after collection deletion");
+              this.$router.push("/unit/details");
+            } else if (this.entityToDelete.type == 'item') {
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("routing to /collection/details after item deletion");
+              this.$router.push("/collection/details");
+            } else if (this.entityToDelete.type == 'primaryfile') {
+              this.selectedFile = {};
+              console.log("routing to /collections/items/details after file deletion");
+              this.$router.push("/collections/items/details");
+            }              
+          })
+          .catch((err) => {
+            this.showLoader = false;
+            this.$toast.error(
+              `Failed to delete ${this.entityToDelete.type} ${this.entityToDelete.id}. Please try again later!`,
+              this.sharedService.toastNotificationConfig
+            );
+            console.log(`Failed to delete ${this.entityToDelete.type} ${this.entityToDelete.id}`, err);
+          });
+      } else { // When clicked on 'No', hide the modal
+        console.log("Deleting on " + this.entityToDelete.type + " " + this.entityToDelete.id + " is cancelled.");
+        this.$refs.deleteModal.hide();
+      }
+    },
   },
   beforeRouteLeave(to, from, next) {
     // Show modal only when there's unsaved data
@@ -1469,19 +1610,24 @@ export default {
     }
     else {
       self.unitEntity = uEntity;    
-      console.log("EntityList.mounted: unitList = " + self.unitEntity.unitList + ", currentUnit = " + self.unitEntity.currentUnit);
+      console.log("EntityList.mounted: found unitEntity in local storage: currentUnit = " + self.unitEntity.currentUnit);
     }
 
+    // TODO
+    // Below code results in that unit list is only retrieved (and stored in session storage) once when unit page is first accessed.
+    // This could cause the list out of sync with backend. It's important then upon unit creation/deletion the list be updated.
+    // Even so, corner cases could still happen of other users update the list or updates happen outside of AMP UI.
+    // To avoid inconsistency, we could retrieve unit list upon each mount, but that could cause extra data overhead.
     // retrieve units list if not yet populated
     if (!self.unitEntity.unitList || !self.unitEntity.unitList.length) {
       let unitList = await self.getAllUnits();
-      console.log("EntityList.mounted - after getAllUnits: unitList = " + unitList);
+      // console.log("EntityList.mounted - after getAllUnits: unitList = " + unitList);
     } 
 
     // if currentUnit set, getEntityData for the page 
     if (self.unitEntity.currentUnit) {
       let entity = await self.getEntityData();
-      console.log("EntityList.mounted: mediaSource = " + entity.mediaSource); 
+      // console.log("EntityList.mounted - after getEntityData: mediaSource = " + entity.mediaSource); 
     }
 
     // adjust size of PFile fields for PFile page
@@ -1533,7 +1679,7 @@ export default {
 }
 .media-player {
   width: 50%;
-  margin-right: 15px;
+  margin-right: 15px;       
   display: flex;
   flex-direction: column;
 }
