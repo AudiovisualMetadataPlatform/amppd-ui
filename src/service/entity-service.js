@@ -188,31 +188,31 @@ export default class EntityService extends BaseService {
     getDeleteWarnings(entityStatistics, entityType) {
         let statistics = [], header = '', question = '';
         if (entityStatistics.countCollections) { 
-            statistics.push(entityStatistics.countCollections + " collections");
+            statistics.push(entityStatistics.countCollections + " collection(s)");
         }
         if (entityStatistics.countItems) { 
-            statistics.push(entityStatistics.countItems + " items");
+            statistics.push(entityStatistics.countItems + " item(s)");
         }
         if (entityStatistics.countPrimaryfiles) { 
-            statistics.push(entityStatistics.countPrimaryfiles + " primaryfiles");
+            statistics.push(entityStatistics.countPrimaryfiles + " primaryfile(s)");
         }
         if (entityStatistics.countUnitSupplements) { 
-            statistics.push(entityStatistics.countUnitSupplements + " unit supplements");
+            statistics.push(entityStatistics.countUnitSupplements + " unit supplement(s)");
         }
         if (entityStatistics.countCollectionSupplements) { 
-            statistics.push(entityStatistics.countCollectionSupplements + " collection supplements");
+            statistics.push(entityStatistics.countCollectionSupplements + " collection supplement(s)");
         }
         if (entityStatistics.countItemSupplements) { 
-            statistics.push(entityStatistics.countItemSupplements + " item supplements");
+            statistics.push(entityStatistics.countItemSupplements + " item supplement(s)");
         }
         if (entityStatistics.countPrimaryfileSupplements) { 
-            statistics.push(entityStatistics.countPrimaryfileSupplements + " primaryfile supplements");
+            statistics.push(entityStatistics.countPrimaryfileSupplements + " primaryfile supplement(s)");
         }
         if (entityStatistics.countWorkflowResults) { 
-            statistics.push(entityStatistics.countWorkflowResults + " workflow results");
+            statistics.push(entityStatistics.countWorkflowResults + " workflow result(s)");
         }
         if (entityStatistics.countMgmEvaluationTests) { 
-            statistics.push(entityStatistics.countMgmEvaluationTests + " evaluation test results");
+            statistics.push(entityStatistics.countMgmEvaluationTests + " evaluation test result(s)");
         }
         if (statistics.length) {
             header = `Deleting this ${entityType} will also delelte the following associated data:`;

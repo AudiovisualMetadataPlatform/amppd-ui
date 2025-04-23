@@ -1308,7 +1308,7 @@ export default {
     async getUnitDetails() {
       const self = this;
       try {
-         const unitDetails = await self.entityService.getUnitDetails(
+        const unitDetails = await self.entityService.getUnitDetails(
           self.unitEntity.currentUnit,
           self
         );      
@@ -1336,8 +1336,14 @@ export default {
         JSON.stringify({ ...self.unitEntity })
       );
       console.log("EntityList.onUnitChange: switching to unit " + self.unitEntity.currentUnit);
-      await self.getEntityData();
-      //Checking Access Control
+      // if currentUnit set, getEntityData for the page 
+      if (self.unitEntity.currentUnit) {
+        await self.getEntityData();
+      } else { // otherwise, reset entity data
+        self.entity = {};
+        self.selectedUnit = {};
+      }
+      // update Access Control based on currentUnit
       self.accessControlService.checkAccessControl(this);      
     },
     async toggleCollectionActive(collection) {
@@ -1378,7 +1384,7 @@ export default {
     async getEntityData() {
       // TODO: at each entity level, get its details, no need to get its children as that's already included in details
       const self = this;
-      if (self.baseUrl === "unit" && self.selectedUnit) {
+      if (self.baseUrl === "unit") {
         await self.getUnitDetails();
         self.assignedRolesUnitChanged = true;
         self.settingsRolesUnitChanged = true;
@@ -1528,37 +1534,32 @@ export default {
               this.sharedService.toastNotificationConfig
             );
             console.log(`Successfully deleted ${this.entityToDelete.type} ${this.entityToDelete.id}`);
-            // TODO: 
-            // Resetting selected entity to null for the deleted entity would cause issues with current code design,
-            // as the current page will get refreshed (possibly due to show/hide on the delete confirmation modal),
-            // in which case selected entity could be referenced. 
-            // Restting the selected item id for deleted item wouldn't work either for similar reasons.
-            // Without reset, the current page would get refreshed, wihch means for item and pfile, the page's subcomponent
-            // will try to call API to retrieve its children (getPrimaryFiles/getOutputFileList) and get 500 error.
-            // The current workaround is to catch these errors and ignore them, as the page will route to parent anyways.
-            // The best solution is to prevent the current page from being refreshed in the first place.
-            // route to parent (selected entity) page
+            // reset current selected entity along with its descendant chain, and route to parent entity page
             if (this.entityToDelete.type == 'unit') {
-              // this.selectedUnit = null;
-              // remove stored unit list and current unit info to trigger refresh on unit list
-              sessionStorage.removeItem("unitEntity");
-              console.log("routing to /unit/details with no unit selected");
-              this.$router.push("/unit/details");
+              // update stored unit info with the deleted unit removed from unit list, and current unit ID reset to null
+              // note pthat ush route to /unit/details won't trigger any route, as the current page is already there
+              // to trigger a page refresh, we need to update unit data instead (which includes update on AC data)
+              this.unitEntity.unitList = this.unitEntity.unitList.filter(unit => unit.id !== this.entity.id);
+              this.unitEntity.currentUnit = null;
+              this.selectedCollection = {};
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("refreshing /unit/details after unit deletion");
+              this.onUnitChange();
             } else if (this.entityToDelete.type == 'collection') {
-              // this.selectedCollection = null;
-              console.log("routing to /unit/details");
+              this.selectedCollection = {};
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("routing to /unit/details after collection deletion");
               this.$router.push("/unit/details");
             } else if (this.entityToDelete.type == 'item') {
-              // this.selectedItem = null;
-              // if (this.selectedItem) {
-              //   this.selectedItem.id = null;
-              //   console.log("handleDeleteModal: setting null selectedItem.id");
-              // }
-              console.log("routing to /collection/details");
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("routing to /collection/details after item deletion");
               this.$router.push("/collection/details");
             } else if (this.entityToDelete.type == 'primaryfile') {
-              // this.selectedFile = null;
-              console.log("routing to /collections/items/details");
+              this.selectedFile = {};
+              console.log("routing to /collections/items/details after file deletion");
               this.$router.push("/collections/items/details");
             }              
           })
@@ -1612,6 +1613,11 @@ export default {
       console.log("EntityList.mounted: found unitEntity in local storage: currentUnit = " + self.unitEntity.currentUnit);
     }
 
+    // TODO
+    // Below code results in that unit list is only retrieved (and stored in session storage) once when unit page is first accessed.
+    // This could cause the list out of sync with backend. It's important then upon unit creation/deletion the list be updated.
+    // Even so, corner cases could still happen of other users update the list or updates happen outside of AMP UI.
+    // To avoid inconsistency, we could retrieve unit list upon each mount, but that could cause extra data overhead.
     // retrieve units list if not yet populated
     if (!self.unitEntity.unitList || !self.unitEntity.unitList.length) {
       let unitList = await self.getAllUnits();

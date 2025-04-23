@@ -57,6 +57,7 @@ export default class AccessControlService extends BaseService {
       unitId = uEntity.currentUnit;
       return self.acUnitsActions.filter((ua) => ua.unitId == unitId)[0].actions;
     }
+    return [];
   }
 
   // reset all accessControl fields of the given instance to the permitted value
@@ -120,7 +121,7 @@ export default class AccessControlService extends BaseService {
 
   // populate permissions for current unit (selected in Content Navigation) for non-admin user
   // note that batch/workflow etc are not handled here because they are not tied to current unit
-  async checkAccessControl(instance) {
+  checkAccessControl(instance) {
     const self = instance;
     try {
       self.showLoader = true;

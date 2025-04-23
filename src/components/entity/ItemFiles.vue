@@ -193,12 +193,12 @@ export default {
       files: [],
       showLoader: false,
       dropFiles: [],
-      fileStatistics: {}, // DataentityStatistics for the primaryfile to be deleted
+      // DataentityStatistics for the primaryfile to be deleted
+      fileStatistics: {}, 
       // warnings to display in confirmation modal upon file deletion 
       deleteWarnings: { header: null, statistics: null, question: null },
       // object to hold info of the file to be removed
       fileToRemove: { file: null, index: null }
-      // dropFileName: ""
     };
   },
   computed: {
@@ -252,7 +252,6 @@ export default {
           console.log("ItemFiles.getPrimaryFiles: done for item " + self.selectedItem.id);
         })
         .catch((err) => {
-          // This happens when item just got deleted but the item page still refreshes before routing to parent page
           console.log("ItemFiles.getPrimaryFile: failed for item " + self.selectedItem.id);
         });
     },

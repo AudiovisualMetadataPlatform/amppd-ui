@@ -57,6 +57,7 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
+      // TODO need to reset all data in local storage, not just AC data
         accountService.logout();
         self.isAuthenticated = false;
         self.acIsAdmin = false;
