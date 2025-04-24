@@ -269,6 +269,14 @@
         >
           Save
         </button>
+        <button
+          class="btn btn-danger btn-lg"
+          v-if="accessControl._supplement._delete"
+          :disabled="!supplement.id || !supplement.deletable"
+          @click.prevent="onDeleteSupplement(supplement)"
+        > 
+          Delete Supplement
+        </button>
       </div>
     </form>
   </div>
@@ -802,6 +810,53 @@ export default {
         }
       }
     },
+
+    async onDeleteSupplement(supplement) {
+      console.log("onDeleteSupplement: supplement ID: " + supplement.Id + ", supplement category: " + supplement.category); 
+      this.supplementToDelete = { id: supplementId, type: supplementType };
+      this.supplementStatistics = await this.supplementService.getsupplementStatistics(supplementId, supplementType);
+      console.log("onDeletesupplement: supplementStatistics = " + this.supplementStatistics);
+      this.deleteWarnings = this.supplementService.getDeleteWarnings(this.supplementStatistics, supplementType);
+      this.$refs.deleteModal.show();
+    },
+
+    async handleDeleteModal(confirmed) {
+      console.log("handleDeleteModal: confirmed = " + confirmed);  
+      if (confirmed) { // When clicked on 'Yes', delete supplement
+        this.showLoader = true;
+        this.supplementService.deletesupplement(this.supplementToDelete)
+          .then((success) => {
+            this.showLoader = false;
+            this.$toast.success(
+              `Successfully deleted ${this.supplementToDelete.type} ${this.supplementToDelete.id}`,
+              this.sharedService.toastNotificationConfig
+            );
+            console.log(`Successfully deleted ${this.supplementToDelete.type} ${this.supplementToDelete.id}`);
+            // reset current selected supplement along with its descendant chain, and route to parent supplement page
+            if (this.supplementToDelete.type == 'unit') {
+              // update stored unit info with the deleted unit removed from unit list, and current unit ID reset to null
+              // note pthat ush route to /unit/details won't trigger any route, as the current page is already there
+              // to trigger a page refresh, we need to update unit data instead (which includes update on AC data)
+              this.unitsupplement.unitList = this.unitsupplement.unitList.filter(unit => unit.id !== this.supplement.id);
+              this.unitsupplement.currentUnit = null;
+              this.selectedCollection = {};
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("refreshing /unit/details after unit deletion");
+              this.onUnitChange();
+            } else if (this.supplementToDelete.type == 'collection') {
+              this.selectedCollection = {};
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("routing to /unit/details after collection deletion");
+              this.$router.push("/unit/details");
+            } else if (this.supplementToDelete.type == 'item') {
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("routing to /collection/details after item deletion");
+              this.$router.push("/collection/details");
+            } else if (this.supplementToDelete.type == 'primaryfile') {
+            },
   },
   mounted() {
     const self = this;
