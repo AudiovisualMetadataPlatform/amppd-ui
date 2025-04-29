@@ -194,7 +194,7 @@ export default class EntityService extends BaseService {
             statistics.push(entityStatistics.countItems + " item(s)");
         }
         if (entityStatistics.countPrimaryfiles) { 
-            statistics.push(entityStatistics.countPrimaryfiles + " primaryfile(s)");
+            statistics.push(entityStatistics.countPrimaryfiles + " content file(s)");
         }
         if (entityStatistics.countUnitSupplements) { 
             statistics.push(entityStatistics.countUnitSupplements + " unit supplement(s)");
