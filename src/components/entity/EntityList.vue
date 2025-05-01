@@ -1517,7 +1517,7 @@ export default {
     async onDeleteEntity(entityId, entityType) {
       console.log("onDeleteEntity: entityId = " + entityId + ", entityType = " + entityType); 
       this.entityToDelete = { id: entityId, type: entityType };
-      this.entityStatistics = await this.entityService.getEntityStatistics(entityId, entityType);
+      this.entityStatistics = await this.entityService.getEntityStatistics(this.entityToDelete);
       console.log("onDeleteEntity: entityStatistics = " + this.entityStatistics);
       this.deleteWarnings = this.entityService.getDeleteWarnings(this.entityStatistics, entityType);
       this.$refs.deleteModal.show();

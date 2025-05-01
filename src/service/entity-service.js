@@ -215,7 +215,7 @@ export default class EntityService extends BaseService {
             statistics.push(entityStatistics.countMgmEvaluationTests + " evaluation test result(s)");
         }
         if (statistics.length) {
-            header = `Deleting this ${entityType} will also delelte the following associated data:`;
+            header = `Deleting this ${entityType} will also delete the following associated data:`;
             question = "Do you want to continue?";
         }
         else {
@@ -229,8 +229,8 @@ export default class EntityService extends BaseService {
         return await super.delete_auth(`/${entity.type}s/${entity.id}`); 
     }
 
-    async getEntityStatistics(entityId, entityType) {  
-        return await super.get_auth(`/${entityType}s/${entityId}/statistics`)
+    async getEntityStatistics(entity) {  
+        return await super.get_auth(`/${entity.type}s/${entity.id}/statistics`)
             .then(result => result.data)
     }  
 
