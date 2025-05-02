@@ -27,7 +27,7 @@
               <hr />
               <div class="row">
                 <div class="col-12 marg-b-1">
-                  <label for="item-name" class="form-label">File Name</label>
+                  <label for="item-name" class="form-label">Filename</label>
                   <input
                     v-if="action === 'add' || action === 'replace'"
                     type="text"
@@ -269,9 +269,42 @@
         >
           Save
         </button>
+        <button
+          v-if="canDelete"
+          class="marg-tb-1 mt-2 float-start btn btn-danger btn-lg"
+          :disabled="supplement.fileDetails && (!supplement.fileDetails.id || !supplement.fileDetails.deletable)"
+          @click.prevent="onDeleteSupplement()"
+        > 
+          Delete Supplement
+        </button>
       </div>
     </form>
+    <!-- Delete entity confirmation modal -->
+    <b-modal 
+      ref="deleteModal" 
+      title="Confirmation" 
+      @ok="handleDeleteModal(true)" 
+      @cancel="handleDeleteModal(false)"
+      centered
+      size="md"
+      footerClass="p-2"
+    >
+      <div v-if="deleteWarnings.statistics">
+        <p>{{ deleteWarnings.header }}</p>
+        <ul>
+          <li v-for="(entityCount) in deleteWarnings.statistics">
+            {{ entityCount }}
+          </li>
+        </ul>
+      </div>
+      <p>{{ deleteWarnings.question }} </p>
+      <template #footer="{ ok, cancel }">
+        <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
+        <button type="button" class="btn btn-primary btn-sm" @click="ok();">Yes</button>
+      </template>
+    </b-modal>
   </div>
+
 </template>
 
 <script>
@@ -282,6 +315,7 @@ import ItemService from "@/service/item-service";
 import CollectionService from "@/service/collection-service";
 import PrimaryFileService from "@/service/primary-file-service";
 import SupplementService from "@/service/supplement-service";
+import EntityService from "@/service/entity-service";
 import SharedService from "@/service/shared-service";
 import Loader from "@/components/shared/Loader.vue";
 import ConfigPropertiesService from "@/service/config-properties-service";
@@ -300,6 +334,7 @@ export default {
       fileService: new PrimaryFileService(),
       collectionService: new CollectionService(),
       supplementService: new SupplementService(),
+      entityService: new EntityService(),
       accessControlService: new AccessControlService(),
       configPropertiesService: new ConfigPropertiesService(),
       loading: false,
@@ -320,11 +355,17 @@ export default {
         },
       },
       action: "add",
+      allUnits: [],
+      supplementType: "",
+      viewApiType: "",
       submitted: false,
       moveSupplement: false,
-      allUnits: [],
       canCreate: false,
       canUpdate: false,
+      canDelete: false,
+      supplementToDelete: { id: null, type: null },
+      supplementStatistics: {}, // data statistics for supplement to be deleted     
+      deleteWarnings: { header: null, statistics: null, question: null }  // warnings for supplement deletion 
     };
   },
   computed: {
@@ -344,12 +385,25 @@ export default {
           self.configProperties = await self.configPropertiesService.getConfigProperties();        
         }
 
+        // TODO 
+        // Make unit changable on supplement edit page makes AC ambiguous and complicated:
+        // one would need Delete permission on old unit and Create permission on new unit to change the unit;
+        // if user can't delete in existing unit, the unit dropdownlist should be disabled;
+        // otherwise, the dropdown should only include those in which creation is allowed;
+        // canUpdate should be decided based on Update permission in currently selected unit;
+        // canDelete should be decided based on Delete permission in currently selected unit;
+        // however, what counts asa "current unit", the original one, or the unsaved current one?
+        // For this reason, I suggest we do not allow changing unit on the edit page, 
+        // but provide a Move action if there is a real use case. 
+        // Note that no other entity currently has a Move action use case.
+
         // retrieve accessible units for create/update
         await self.accessControlService.getPermissionsUnits("Create", "Supplement").then((res) => {
           self.allUnits = res.data;
           self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(self.allUnits);
           self.canCreate = self.acIsAdmin || res.data && res.data.length > 0
           self.canUpdate = self.acIsAdmin || self.action !== "view" && self.canCreate;                
+          self.canDelete = self.acIsAdmin; // for new unsaved supplement, only admin can deletea as unit may not be populated yet   
         });
 
         self.loading = false;    
@@ -364,13 +418,13 @@ export default {
       try {
         self.superLoading = true;
         if (self.supplementType === "u-sup") {
-          self.viewApiType = "unitSupplements";
+          self.viewApiType = "unitSupplement";
         } else if (self.supplementType === "c-sup") {
-          self.viewApiType = "collectionSupplements";
+          self.viewApiType = "collectionSupplement";
         } else if (self.supplementType === "i-sup") {
-          self.viewApiType = "itemSupplements";
+          self.viewApiType = "itemSupplement";
         } else if (self.supplementType === "p-sup") {
-          self.viewApiType = "primaryfileSupplements";
+          self.viewApiType = "primaryfileSupplement";
         }
 
         self.supplementService
@@ -427,15 +481,20 @@ export default {
                     break;
                   default:
                     break;
-                }            
-                self.canUpdate = self.acIsAdmin; 
-                if (!self.canUpdate) {
+                }  
+                // check Update-Supplement and Delete-Supplement permissions
+                if (self.acIsAdmin) {
+                  self.canUpdate = true;
+                  self.canDelete = true;                  
+                } else {                
                   let actions = self.acUnitsActions.filter((ua) => ua.unitId == r.unitId)[0].actions;
-                  let actionType = env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE");
                   let targetType = env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT");
-                  console.log("actions:" + actions);
-                  self.canUpdate = actions.filter((a) => a.targetType == targetType && a.actionType == actionType).length > 0;
+                  let actionUpdate = env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE");
+                  let actionDelete = env.getEnv("VUE_APP_AC_ACTIONTYPE_DELETE");
+                  self.canUpdate = actions.filter((a) => a.targetType == targetType && a.actionType == actionUpdate).length > 0;
+                  self.canDelete = actions.filter((a) => a.targetType == targetType && a.actionType == actionDelete).length > 0;
                 }
+                console.log("Current user permissions on supplement: canUpdate: " + self.canUpdate + ", canDelete: " + self.canDelete);
               });
           });
       } catch (error) {
@@ -800,6 +859,49 @@ export default {
             self.sharedService.toastNotificationConfig
           );
         }
+      }
+    },
+
+    async onDeleteSupplement() {
+      console.log("onDeleteSupplement: supplement ID: " + this.supplementId + ", supplement type: " + this.viewApiType); 
+      this.supplementToDelete = { id: this.supplementId, type: this.viewApiType };
+      // statistics only applies to groundtruth primaryfileSupplement  
+      if (this.supplementToDelete.type == "primaryfileSupplement" && 
+        this.supplement.fileDetails.category.startsWith("Groundtruth")) {
+        this.supplementStatistics = await this.entityService.getEntityStatistics(this.supplementToDelete);
+      }
+      console.log("onDeleteSupplement: supplementStatistics = " + this.supplementStatistics);
+      this.deleteWarnings = this.entityService.getDeleteWarnings(this.supplementStatistics, this.supplementToDelete.type);
+      this.$refs.deleteModal.show();
+    },
+
+    async handleDeleteModal(confirmed) {
+      console.log("handleDeleteModal: confirmed = " + confirmed);  
+      if (confirmed) { // When clicked on 'Yes', delete supplement
+        this.loading = true;
+        this.entityService.deleteEntity(this.supplementToDelete)
+          .then((success) => {
+            this.loading = false;
+            this.$toast.success(
+              `Successfully deleted ${this.supplementToDelete.type} ${this.supplementToDelete.id}`,
+              this.sharedService.toastNotificationConfig
+            );
+            console.log(`Successfully deleted ${this.supplementToDelete.type} ${this.supplementToDelete.id}`);
+            // route to supplement list page
+            console.log("routing to /supplemental-files after supplement deletion");
+            this.$router.push("/supplemental-files");
+            })
+          .catch((err) => {
+            this.loading = false;
+            this.$toast.error(
+              `Failed to delete ${this.supplementToDelete.type} ${this.supplementToDelete.id}. Please try again later!`,
+              this.sharedService.toastNotificationConfig
+            );
+            console.log(`Failed to delete ${this.supplementToDelete.type} ${this.supplementToDelete.id}`, err);
+          });
+      } else { // When clicked on 'No', hide the modal
+        console.log("Deleting on " + this.supplementToDelete.type + " " + this.supplementToDelete.id + " is cancelled.");
+        this.$refs.deleteModal.hide();
       }
     },
   },

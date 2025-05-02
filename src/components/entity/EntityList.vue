@@ -520,7 +520,7 @@
                     The only alternative solution is to have frontend always make an extra GET call upon success save.
                     This is kind a performance overhead and not worthwhile for the above rare corner case.
                    -->                  
-                   <button
+                  <button
                     class="btn btn-danger btn-lg"
                     v-if="baseUrl === 'unit' && accessControl._unit._delete"
                     :disabled="!entity.id || entity.deletable != null && !entity.deletable"
@@ -1517,7 +1517,7 @@ export default {
     async onDeleteEntity(entityId, entityType) {
       console.log("onDeleteEntity: entityId = " + entityId + ", entityType = " + entityType); 
       this.entityToDelete = { id: entityId, type: entityType };
-      this.entityStatistics = await this.entityService.getEntityStatistics(entityId, entityType);
+      this.entityStatistics = await this.entityService.getEntityStatistics(this.entityToDelete);
       console.log("onDeleteEntity: entityStatistics = " + this.entityStatistics);
       this.deleteWarnings = this.entityService.getDeleteWarnings(this.entityStatistics, entityType);
       this.$refs.deleteModal.show();
@@ -1617,7 +1617,7 @@ export default {
     // Below code results in that unit list is only retrieved (and stored in session storage) once when unit page is first accessed.
     // This could cause the list out of sync with backend. It's important then upon unit creation/deletion the list be updated.
     // Even so, corner cases could still happen of other users update the list or updates happen outside of AMP UI.
-    // To avoid inconsistency, we could retrieve unit list upon each mount, but that could cause extra data overhead.
+    // To avoid inconsistency, we could retrieve unit list upon each mount, but that could cause extra data overhead
     // retrieve units list if not yet populated
     if (!self.unitEntity.unitList || !self.unitEntity.unitList.length) {
       let unitList = await self.getAllUnits();
