@@ -403,7 +403,7 @@ export default {
           self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(self.allUnits);
           self.canCreate = self.acIsAdmin || res.data && res.data.length > 0
           self.canUpdate = self.acIsAdmin || self.action !== "view" && self.canCreate;                
-          self.canUpdate = self.acIsAdmin; // for new unsaved supplement, only admin can deletea as unit may not be populated yet   
+          self.canDelete = self.acIsAdmin; // for new unsaved supplement, only admin can deletea as unit may not be populated yet   
         });
 
         self.loading = false;    
