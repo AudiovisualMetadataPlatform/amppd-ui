@@ -1572,7 +1572,7 @@ export default {
             console.log(`Failed to delete ${this.entityToDelete.type} ${this.entityToDelete.id}`, err);
           });
       } else { // When clicked on 'No', hide the modal
-        console.log("Deleting on " + this.entityToDelete.type + " " + this.entityToDelete.id + " is cancelled.");
+        console.log(`Deleting on ${this.entityToDelete.type} ${this.entityToDelete.id} is cancelled.`);
         this.$refs.deleteModal.hide();
       }
     },

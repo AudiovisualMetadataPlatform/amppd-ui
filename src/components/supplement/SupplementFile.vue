@@ -900,7 +900,7 @@ export default {
             console.log(`Failed to delete ${this.supplementToDelete.type} ${this.supplementToDelete.id}`, err);
           });
       } else { // When clicked on 'No', hide the modal
-        console.log("Deleting on " + this.supplementToDelete.type + " " + this.supplementToDelete.id + " is cancelled.");
+        console.log(`Deleting on ${this.supplementToDelete.type} ${this.supplementToDelete.id} is cancelled.`);
         this.$refs.deleteModal.hide();
       }
     },

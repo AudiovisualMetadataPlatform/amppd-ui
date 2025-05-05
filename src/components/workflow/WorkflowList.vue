@@ -38,10 +38,10 @@
             </div>
             <div
               v-if="canUpdate()"
-              class="col-lg-2 text-end"
+              class="col-lg-1 text-end px-1"
             >
               <button
-                class="btn btn-primary btn mt-4"
+                class="btn btn-primary mt-4"
                 href="#"
                 data-toggle="popover"
                 data-content="Link goes to galaxy"
@@ -53,6 +53,18 @@
                 Edit
               </button>
             </div>
+            <div
+              v-if="canActivate()"
+              class="col-lg-1 text-end px-1"
+            >
+              <button
+                class="btn btn-warning mt-4"
+                :disabled="workflow.running"
+                @click.prevent="onDeactivate(workflow, index)"
+              >
+                Deactivate
+              </button>
+            </div>
           </div>
 
           <div class="row">
@@ -61,7 +73,6 @@
               <br />
               {{ workflow.creator ? workflow.creator : workflow.owner }}
             </div>
-            <!-- <div class="col"> Creator: </div> -->
             <div class="col">
               Date Created:
               <br />{{ $filters.localDate(workflow.createTime) }}
@@ -70,7 +81,6 @@
               Last Updated:
               <br />{{ $filters.localDate(workflow.updateTime) }}
             </div>
-            <!-- <div class="col"> Version: </div> -->
             <div class="col" v-if="workflow.tags && workflow.tags.length">
               <p class="mb-0">Tags:</p>
               <span
@@ -80,17 +90,6 @@
                 >{{ tag }}</span
               >
             </div>
-            <!-- <div class="col">
-                            Input File Formats:
-                            <br />
-                            <span class="badge bg-secondary">Video</span>
-                        <div class="col">
-                            Input File Formats:
-                            <br />
-                            <span class="badge bg-secondary">Video</span>
-                            <span class="badge bg-secondary">Audio</span>
-                        </div>    <span class="badge bg-secondary">Audio</span>
-                        </div>-->
           </div>
           <b-card class="mgm-card bg-light-gray-1">
             <h3
@@ -189,6 +188,23 @@
         <!-- end workflow // -->
       </b-card>
     </main>
+    <b-modal 
+      ref="deactivateModal" 
+      title="Confirmation" 
+      @ok="handleDeactivateModal(true)" 
+      @cancel="handleDeactivateModal(false)"
+      centered
+      size="md"
+      footerClass="p-2"
+    >
+      <div>
+        <p>If deactivated, all users will be unable to edit or run this workflow. Do you want to continue?</p>
+      </div>
+      <template #footer="{ ok, cancel }">
+        <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
+        <button type="button" class="btn btn-primary btn-sm" @click="ok();">Yes</button>
+      </template>
+    </b-modal>
     <Search
       searchType="workflow-search"
       @handleSearchWorkflows="searchWorkflows"
@@ -218,6 +234,7 @@ export default {
       rightArrowSvg: config.common.icons["right_arrow"],
       activeWorkflowSession: "",
       loading: false,
+      workflowToDeactivate: { id: "", index: -1 },
     };
   },
   computed: {
@@ -231,6 +248,10 @@ export default {
     },
     canUpdate() {
       let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
+      return this.acIsAdmin || this.acActions.includes(actionKey);
+    },
+    canActivate() {
+      let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_ACTIVATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
       return this.acIsAdmin || this.acActions.includes(actionKey);
     },
     searchWorkflows(searchFields) {
@@ -337,6 +358,39 @@ export default {
       const url = this.getMgmNodeUrl(node_id);
       window.open(url, "helpwindow", "width=800, height=500");
     },
+    onDeactivate(workflow, index) {
+      console.log("onDeactivate: workflowId = " + workflow.id, ", index = " + index); 
+      this.workflowToDeactivate = { id: workflow.id, index: index };
+      this.$refs.deactivateModal.show();      
+    },
+    async handleDeactivateModal(confirmed) {
+      console.log("handleDeactivateModal: confirmed = " + confirmed);  
+      if (confirmed) { // When clicked on 'Yes', deactivate workflow
+        this.loading = true;
+        this.workflowService.updateWorkflow(this.workflowToDeactivate.id, false)
+          .then((success) => {
+            this.loading = false;
+            this.$toast.success(
+              `Successfully deactivated workflow ${this.workflowToDeactivate.id}`,
+              this.sharedService.toastNotificationConfig
+            );
+            // remove the workflow from active list
+            this.listOfWorkflows.splice(this.workflowToDeactivate.index, 1);
+            console.log(`Successfully deactivated workflow ${this.workflowToDeactivate.id} at index ${this.workflowToDeactivate.index}`);
+            })
+          .catch((err) => {
+            this.loading = false;
+            this.$toast.error(
+              `Failed to deactivate workflow ${this.workflowToDeactivate.id}. Please try again later!`,
+              this.sharedService.toastNotificationConfig
+            );
+            console.log(`Failed to deactivate workflow ${this.workflowToDeactivate.id} at index ${this.workflowToDeactivate.index}`, err);
+          });
+      } else { // When clicked on 'No', hide the modal
+        console.log(`Deactivating on workflow ${this.workflowToDeactivate.id} is cancelled.`);
+        this.$refs.deactivateModal.hide();
+      }
+    },    
   },
   mounted() {
     const self = this;
