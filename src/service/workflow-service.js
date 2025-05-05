@@ -200,4 +200,8 @@ export default class WorkflowService extends BaseService {
     async createNewWorkflow() {
         return super.post_auth('/workflows/create');
     }
+
+    async updateWorkflow(workflowId, activate = '', publish = '') {
+        return super.patch_auth(`/workflows/${workflowId}?activate=${activate}&publish=${publish}`);
+    }
 }
