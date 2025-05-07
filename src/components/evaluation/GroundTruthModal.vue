@@ -324,7 +324,7 @@ export default {
         formData.append("mediaFile", data.file);
         await self.supplementService
           .addSupplement(
-            "primaryfiles",
+            "primaryfile",
             self.selectedRecord.primaryfileId,
             formData
           )

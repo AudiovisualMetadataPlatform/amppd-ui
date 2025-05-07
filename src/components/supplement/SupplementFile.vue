@@ -631,19 +631,19 @@ export default {
           let newUrlType = "";
           let formDataKey = "";
           if (self.entityType === "unit") {
-            apiType = "units";
+            apiType = "unit";
             newUrlType = "u-sup";
             formDataKey = "unitSupplement";
           } else if (self.entityType === "collection") {
-            apiType = "collections";
+            apiType = "collection";
             newUrlType = "c-sup";
             formDataKey = "collectionSupplement";
           } else if (self.entityType === "item") {
-            apiType = "items";
+            apiType = "item";
             newUrlType = "i-sup";
             formDataKey = "itemSupplement";
           } else if (self.entityType === "primaryFile") {
-            apiType = "primaryfiles";
+            apiType = "primaryfile";
             newUrlType = "p-sup";
             formDataKey = "primaryfileSupplement";
           }
