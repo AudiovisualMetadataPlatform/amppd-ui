@@ -225,7 +225,7 @@ export default {
         statistics.push(fileStatistics.countMgmEvaluationTests + " evaluation test results");
       }
       if (statistics.length) {
-        header = "Deleting this file will also delelte the following associated data:";
+        header = "Deleting this file will also delete the following associated data:";
         question = "Do you want to continue?";
       }
       else {

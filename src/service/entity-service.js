@@ -206,7 +206,7 @@ export default class EntityService extends BaseService {
             statistics.push(entityStatistics.countItemSupplements + " item supplement(s)");
         }
         if (entityStatistics.countPrimaryfileSupplements) { 
-            statistics.push(entityStatistics.countPrimaryfileSupplements + " primaryfile supplement(s)");
+            statistics.push(entityStatistics.countPrimaryfileSupplements + " content file supplement(s)");
         }
         if (entityStatistics.countWorkflowResults) { 
             statistics.push(entityStatistics.countWorkflowResults + " workflow result(s)");
