@@ -4,6 +4,13 @@
       <b-card class="w-100">
         <h2 class>
           Workflows
+          <span class="px-2 my-2">
+            <span class="txt-v px-2 py-2">Active</span>
+            <label class="switch px-2 pt=4 mt=4" :title="activeTitle">
+              <input type="checkbox" v-model="active" @click="onFlipList()"/>
+              <span class="slider round"></span>
+            </label>
+          </span>
           <button
             id="btn-search"
             class="ms-1 btn btn-primary btn-lg marg-b-4 float-end"
@@ -12,7 +19,7 @@
             Search Workflows
           </button>
           <button
-            v-if="canCreate()"
+            v-if="active && canCreate()"
             id="btn-workflow-create"
             class="ms-1 btn btn-primary btn-lg marg-b-4 float-end"
             @click="handleWorkflowCreation()"
@@ -37,7 +44,7 @@
               <span>{{ workflow.annotations[0] }}</span>
             </div>
             <div
-              v-if="canUpdate()"
+              v-if="active && canUpdate()"
               class="col-lg-1 text-end px-1"
             >
               <button
@@ -62,7 +69,7 @@
                 :disabled="workflow.running"
                 @click.prevent="onDeactivate(workflow, index)"
               >
-                Deactivate
+                {{ active ? "Deactivate" : "Activate" }}
               </button>
             </div>
           </div>
@@ -235,11 +242,17 @@ export default {
       activeWorkflowSession: "",
       loading: false,
       workflowToDeactivate: { id: "", index: -1 },
+      active: true, // true to show active workflows, false to show inactive workflows
     };
   },
   computed: {
     acIsAdmin: sync("acIsAdmin"),
     acActions: sync("acActions"),
+    activeTitle() {
+      return this.active ?
+        "Uncheck to show inactive workflows" :
+        "Check to show active workflow";
+    } 
   },
   methods: {
     canCreate() {
@@ -254,7 +267,7 @@ export default {
       let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_ACTIVATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
       return this.acIsAdmin || this.acActions.includes(actionKey);
     },
-    searchWorkflows(searchFields) {
+    async searchWorkflows(searchFields) {
       const self = this;
       const name = searchFields.name;
       const creator = searchFields.creator;
@@ -270,7 +283,7 @@ export default {
       const annotations = searchFields.annotations;
       const tags = searchFields.tags;
       self.workflowService
-        .getActiveFilteredWorkflows(name, creator, dateRange, annotations, tags)
+        .getFilteredWorkflows(this.active, name, creator, dateRange, annotations, tags)
         .then((response) => {
           self.listOfWorkflows = self.sharedService.sortByAlphabatical(
             response.data.rows
@@ -280,10 +293,11 @@ export default {
           console.log(e, "error");
         });
     },
-    getWorkflowList() {
+    async getWorkflowList() {
       const self = this;
+      console.log("getWorkflowList: active = " + this.active);
       self.workflowService
-        .getActiveWorkflows()
+        .getWorkflows(this.active)
         .then((response) => {
           self.listOfWorkflows = self.sharedService.sortByAlphabatical(
             response.data.rows
@@ -358,36 +372,58 @@ export default {
       const url = this.getMgmNodeUrl(node_id);
       window.open(url, "helpwindow", "width=800, height=500");
     },
-    onDeactivate(workflow, index) {
-      console.log("onDeactivate: workflowId = " + workflow.id, ", index = " + index); 
+    async onFlipList() {
+      // for some reason inside onclick handler for checkbox, the status of the v-modal doesn't change
+      // until after the event; fliping it below is a workaround to tackle this
+      this.active = !this.active;
+      console.log("onFlipList: active = " + this.active);
+      await this.getWorkflowList();
+    },
+    async onDeactivate(workflow, index) {
+      console.log("onDeactivate: active = " + this.active + ", workflowId = " + workflow.id, ", index = " + index); 
       this.workflowToDeactivate = { id: workflow.id, index: index };
-      this.$refs.deactivateModal.show();      
+      if (this.active) {
+        // show confirmation for deactivation
+        this.$refs.deactivateModal.show();      
+      }
+      else {
+        // no need to show confirmation for activation
+        await this.deactivateWorkflow();
+      }
+    },    
+    async deactivateWorkflow() {
+      this.loading = true;
+      this.workflowService.updateWorkflow(this.workflowToDeactivate.id, !this.active)
+        .then((success) => {
+          this.loading = false;
+          let action = this.active ? "deactivated" : "activated";
+          let msg = `Successfully ${action} workflow ${this.workflowToDeactivate.id}.`;
+          this.$toast.success(
+            msg,
+            this.sharedService.toastNotificationConfig
+          );
+          // remove the workflow from active/inactive list
+          this.listOfWorkflows.splice(this.workflowToDeactivate.index, 1);
+          console.log(`${msg} at index ${this.workflowToDeactivate.index}`);
+        })
+        .catch((err) => {
+          this.loading = false;
+          let action = this.active ? "deactivate" : "activate";
+          let msg = `Failed to ${action} workflow ${this.workflowToDeactivate.id}`;
+          this.$toast.error(
+            `${msg} Please try again later!`,
+            this.sharedService.toastNotificationConfig
+          );
+          console.log(`${msg} at index ${this.workflowToDeactivate.index}`, err);
+        });
     },
     async handleDeactivateModal(confirmed) {
       console.log("handleDeactivateModal: confirmed = " + confirmed);  
       if (confirmed) { // When clicked on 'Yes', deactivate workflow
-        this.loading = true;
-        this.workflowService.updateWorkflow(this.workflowToDeactivate.id, false)
-          .then((success) => {
-            this.loading = false;
-            this.$toast.success(
-              `Successfully deactivated workflow ${this.workflowToDeactivate.id}`,
-              this.sharedService.toastNotificationConfig
-            );
-            // remove the workflow from active list
-            this.listOfWorkflows.splice(this.workflowToDeactivate.index, 1);
-            console.log(`Successfully deactivated workflow ${this.workflowToDeactivate.id} at index ${this.workflowToDeactivate.index}`);
-            })
-          .catch((err) => {
-            this.loading = false;
-            this.$toast.error(
-              `Failed to deactivate workflow ${this.workflowToDeactivate.id}. Please try again later!`,
-              this.sharedService.toastNotificationConfig
-            );
-            console.log(`Failed to deactivate workflow ${this.workflowToDeactivate.id} at index ${this.workflowToDeactivate.index}`, err);
-          });
+        await this.deactivateWorkflow();
       } else { // When clicked on 'No', hide the modal
-        console.log(`Deactivating on workflow ${this.workflowToDeactivate.id} is cancelled.`);
+        let action = this.active ? "Deactivating" : "Activating";
+        console.log(`${action} on workflow ${this.workflowToDeactivate.id} is cancelled.`);
         this.$refs.deactivateModal.hide();
       }
     },    
