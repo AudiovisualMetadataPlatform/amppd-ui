@@ -4,8 +4,8 @@
       <b-card class="w-100">
         <h2 class>
           Workflows
-          <span class="px-2 my-2">
-            <span class="txt-v px-2 py-2">Active</span>
+          <span class="px-0 my-2">
+            <span class="txt-v px-2 py-2">{{ active ? "Active" : "Inactive" }}</span>
             <label class="switch px-2 pt=4 mt=4" :title="activeTitle">
               <input type="checkbox" v-model="active" @click="onFlipList()"/>
               <span class="slider round"></span>
@@ -241,8 +241,8 @@ export default {
       rightArrowSvg: config.common.icons["right_arrow"],
       activeWorkflowSession: "",
       loading: false,
-      workflowToDeactivate: { id: "", index: -1 },
-      active: true, // true to show active workflows, false to show inactive workflows
+      workflowToDeactivate: { id: "", index: -1 }, // workflow to de/activate
+      active: true, // true if showing active workflows, false if showing inactive workflows
     };
   },
   computed: {
@@ -294,17 +294,21 @@ export default {
         });
     },
     async getWorkflowList() {
-      const self = this;
+      const self = this; // handles both in/active workflows
       console.log("getWorkflowList: active = " + this.active);
+      this.loading = true;
       self.workflowService
         .getWorkflows(this.active)
         .then((response) => {
+          this.loading = true;
           self.listOfWorkflows = self.sharedService.sortByAlphabatical(
             response.data.rows
           );
+          console.log("getWorkflowList: number of workflows retrieved: " + self.listOfWorkflows.length);
         })
         .catch((e) => {
-          console.log(e, "error");
+          this.loading = true;
+          console.log("getWorkflowList: failed to retrieve workflows", e);
         });
     },
     async getWorkflowDetails(index) {
@@ -391,7 +395,7 @@ export default {
         await this.deactivateWorkflow();
       }
     },    
-    async deactivateWorkflow() {
+    async deactivateWorkflow() { // also handles activation
       this.loading = true;
       this.workflowService.updateWorkflow(this.workflowToDeactivate.id, !this.active)
         .then((success) => {
@@ -417,7 +421,7 @@ export default {
           console.log(`${msg} at index ${this.workflowToDeactivate.index}`, err);
         });
     },
-    async handleDeactivateModal(confirmed) {
+    async handleDeactivateModal(confirmed) { // only used by deactivation
       console.log("handleDeactivateModal: confirmed = " + confirmed);  
       if (confirmed) { // When clicked on 'Yes', deactivate workflow
         await this.deactivateWorkflow();
