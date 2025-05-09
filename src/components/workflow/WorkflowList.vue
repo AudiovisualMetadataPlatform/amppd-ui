@@ -6,7 +6,7 @@
           Workflows
           <span class="px-0 my-2">
             <span class="txt-v px-2 py-2">{{ active ? "Active" : "Inactive" }}</span>
-            <label class="switch px-2 pt=4 mt=4" :title="activeTitle">
+            <label class="switch px-2 mt-2" :title="activeTitle">
               <input type="checkbox" v-model="active" @click="onFlipList()"/>
               <span class="slider round"></span>
             </label>
