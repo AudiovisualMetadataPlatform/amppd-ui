@@ -522,8 +522,8 @@
                    -->                  
                   <button
                     class="btn btn-danger btn-lg"
-                    v-if="baseUrl === 'unit' && accessControl._unit._delete"
-                    :disabled="!entity.id || entity.deletable != null && !entity.deletable"
+                    v-if="baseUrl === 'unit' && accessControl._unit._delete && entity.id"
+                    :disabled="entity.deletable != null && !entity.deletable"
                     @click.prevent="onDeleteEntity(entity.id, 'unit')"
                   > 
                     Delete Unit
