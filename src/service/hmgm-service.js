@@ -11,11 +11,13 @@ async function auth_token_required(editorInput, authString) {
         return false;
     }
     // check if the current user is logged in and the locally stored auth token is valid
-    var validated = await accountService.validate();
-    // if yes, no need to ask for HMGM auth string
-    if (validated) {
-        console.log("HMGM authentication: current user is logged in AMP." );
-        return false;
+    if (accountService.currentUserValue) {
+        var validated = await accountService.validate();
+        // if yes, no need to ask for HMGM auth string
+        if (validated) {
+            console.log("HMGM authentication: current user is logged in AMP." );
+            return false;
+        }
     }
     // otherwise, check HMGM auth token
     var hmgmToken = localStorage.getItem(editorInput);
