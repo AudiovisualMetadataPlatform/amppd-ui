@@ -4,7 +4,7 @@
     <b-card class="text-start">
       <div class="d-flex">
         <div class="col-lg">
-          <h2 class="card-title">Output Files</h2>
+          <h2 class="card-title">Workflow Outputs</h2>
         </div>
         <button
           v-if="accessControl._workflowresult._update"

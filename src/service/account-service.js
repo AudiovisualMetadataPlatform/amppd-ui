@@ -95,7 +95,7 @@ async function validate() {
           return true;
       })
       .catch(error => {
-        console.log("IN ERROR");
+        console.log("account-service.validate: Client request authentication failed.");
         return false;
       });
   return success;
