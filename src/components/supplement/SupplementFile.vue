@@ -270,9 +270,9 @@
           Save
         </button>
         <button
-          v-if="canDelete"
+          v-if="canDelete && supplement.fileDetails && supplement.fileDetails.id"
           class="marg-tb-1 mt-2 float-start btn btn-danger btn-lg"
-          :disabled="supplement.fileDetails && (!supplement.fileDetails.id || !supplement.fileDetails.deletable)"
+          :disabled="supplement.fileDetails && !supplement.fileDetails.deletable"
           @click.prevent="onDeleteSupplement()"
         > 
           Delete Supplement
