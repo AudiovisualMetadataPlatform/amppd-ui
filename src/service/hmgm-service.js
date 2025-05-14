@@ -36,8 +36,12 @@ async function auth_token_required(editorInput, authString) {
     return !auth_token_valid(hmgmToken, editorInput, null, authString);
 }
 
-async function auth_token_valid(hmgmToken, editorInput, userPass, authString){   
-    const url = `/hmgm/authorize-editor?hmgmToken=${hmgmToken}&editorInput=${editorInput}&userPass=${userPass}&authString=${authString}`;
+async function auth_token_valid(hmgmToken, editorInput, userPass, authString) {   
+    let token = hmgmToken ? hmgmToken : '';
+    let input = editorInput ? editorInput : '';
+    let pass = userPass ? userPass : '';
+    let auth = authString ? authString : '';
+    const url = `/hmgm/authorize-editor?hmgmToken=${token}&editorInput=${input}&userPass=${pass}&authString=${auth}`;
     baseService.get(url).then(x => {
         if (x.data) {
             const token = x.data;
