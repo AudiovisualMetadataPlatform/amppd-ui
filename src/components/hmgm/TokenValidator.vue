@@ -59,7 +59,6 @@ export default {
   computed: {},
   methods: {
     async submitToken() {
-      console.log("TokenValidator.submitToken starting ...");
       this.valid = await auth_token_valid(null, this.datasetUrl, this.userPass, this.authString);
       console.log("TokenValidator.submitToken: valid = " + this.valid);
       if (this.valid) {

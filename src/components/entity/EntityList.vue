@@ -522,7 +522,7 @@
                    -->                  
                   <button
                     class="btn btn-danger btn-lg"
-                    v-if="baseUrl === 'unit' && accessControl._unit._delete && entity.id"
+                    v-if="baseUrl === 'unit' && entity.id && accessControl._unit._delete"
                     :disabled="entity.deletable != null && !entity.deletable"
                     @click.prevent="onDeleteEntity(entity.id, 'unit')"
                   > 
@@ -530,24 +530,24 @@
                   </button>
                   <button
                     class="btn btn-danger btn-lg"
-                    v-if="baseUrl === 'collection' && accessControl._collection._delete"
-                    :disabled="!entity.id || entity.deletable != null && !entity.deletable"
+                    v-if="baseUrl === 'collection' && entity.id && accessControl._collection._delete"
+                    :disabled="entity.deletable != null && !entity.deletable"
                     @click.prevent="onDeleteEntity(entity.id, 'collection')"
                   > 
                     Delete Collection
                   </button>
                   <button
                     class="btn btn-danger btn-lg"
-                    v-if="baseUrl === 'item' && accessControl._item._delete"
-                    :disabled="!entity.id || entity.deletable != null && !entity.deletable"
+                    v-if="baseUrl === 'item' && entity.id && accessControl._item._delete"
+                    :disabled="entity.deletable != null && !entity.deletable"
                     @click.prevent="onDeleteEntity(entity.id, 'item')"
                   > 
                     Delete Item
                   </button>
                   <button
                     class="btn btn-danger btn-lg"
-                    v-if="baseUrl === 'file' && accessControl._primaryfile._delete"
-                    :disabled="!entity.id || !entity.deletable" 
+                    v-if="baseUrl === 'file' && entity.id && accessControl._primaryfile._delete"
+                    :disabled="!entity.deletable" 
                     @click.prevent="onDeleteEntity(entity.id, 'primaryfile')"
                   > <!-- deletable is always populated for PFile upon returning from save -->
                     Delete File
@@ -568,7 +568,7 @@
           <div
             class
             v-else-if="
-              baseUrl !== 'item' && baseUrl !== 'file' && unitEntity.currentUnit
+              baseUrl !== 'item' && baseUrl !== 'file' && unitEntity.currentUnit && entity.id
             "
           >
             <div
