@@ -42,27 +42,30 @@ async function auth_token_valid(hmgmToken, editorInput, userPass, authString) {
     let pass = userPass ? userPass : '';
     let auth = authString ? authString : '';
     const url = `/hmgm/authorize-editor?hmgmToken=${token}&editorInput=${input}&userPass=${pass}&authString=${auth}`;
-    baseService.get(url).then(x => {
-        if (x.data) {
-            const token = x.data;
+    console.log("hmgm-service.auth_token_valid: starting");
+    try {
+        let result = await baseService.get(url);
+        if (result.data) {
+            const token = result.data;
+            // TODO for security, store HMGM token in sessionStorage or use JWT with expiration date
             localStorage.setItem(editorInput, token);
-            console.log("HMGM authentication succeeded: token = " + token);
+            console.log("hmgm-service.auth_token_valid: HMGM authentication succeeded: token = " + token);
             return true;
         }
         else {
-            console.log("HMGM authentication failed: editorInput = " + editorInput);
+            console.log("hmgm-service.auth_token_valid: HMGM authentication failed: editorInput = " + editorInput);
             return false;
         }
-    }).catch(e=>{
-        console.log("Error during HMGM authentication: editorInput = " + editorInput, e);
+    }
+    catch(e) {
+        console.log("hmgm-service.auth_token_valid: Error during HMGM authentication: editorInput = " + editorInput, e);
         return false;
-    });
+    };
 
     
 }
 
 function getTranscript(datasetPath, reset) {
-
     const url = `/hmgm/transcript-editor?datasetPath=${datasetPath}&reset=${reset}`;
     return baseService.get_token_auth(url, datasetPath)
         // get data
