@@ -3,14 +3,19 @@
     <main class="m-0">
       <b-card class="w-100">
         <h2 class>
-          Workflows
-          <span class="px-0 my-2">
+          {{ active ? "Active" : "Inactive" }} Workflows
+          <button
+            class="btn btn-link btn-lg px-2" 
+            @click="onFlipList()">
+            (see {{ active ? "inactive" : "active" }} workflows)
+          </button>
+          <!-- <span class="px-0 my-2">
             <span class="txt-v px-2 py-2">{{ active ? "Active" : "Inactive" }}</span>
             <label class="switch px-2 mt-2" :title="activeTitle">
               <input type="checkbox" v-model="active" @click="onFlipList()"/>
               <span class="slider round"></span>
             </label>
-          </span>
+          </span> -->
           <button
             id="btn-search"
             class="ms-1 btn btn-primary btn-lg marg-b-4 float-end"
@@ -248,11 +253,11 @@ export default {
   computed: {
     acIsAdmin: sync("acIsAdmin"),
     acActions: sync("acActions"),
-    activeTitle() {
-      return this.active ?
-        "Uncheck to show inactive workflows" :
-        "Check to show active workflow";
-    } 
+    // activeTitle() {
+    //   return this.active ?
+    //     "Uncheck to show inactive workflows" :
+    //     "Check to show active workflow";
+    // } 
   },
   methods: {
     canCreate() {
@@ -377,8 +382,6 @@ export default {
       window.open(url, "helpwindow", "width=800, height=500");
     },
     async onFlipList() {
-      // for some reason inside onclick handler for checkbox, the status of the v-modal doesn't change
-      // until after the event; fliping it below is a workaround to tackle this
       this.active = !this.active;
       console.log("onFlipList: active = " + this.active);
       await this.getWorkflowList();
