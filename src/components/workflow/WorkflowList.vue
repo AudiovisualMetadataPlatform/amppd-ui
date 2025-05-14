@@ -4,13 +4,24 @@
       <b-card class="w-100">
         <h2 class>
           Workflows
-          <span class="px-0 my-2">
+          <b-tabs 
+            v-model="active" 
+            nav-item-class="bsvn-tab"
+            nav-class="bsvn-tab-header"
+            nav-wrapper-class="bsvn-tab-header-wrapper"
+            card
+            class="mt-3"
+          >
+            <b-tab title="Active" />
+            <b-tab title="Inactive" />
+          </b-tabs>
+          <!-- <span class="px-0 my-2">
             <span class="txt-v px-2 py-2">{{ active ? "Active" : "Inactive" }}</span>
             <label class="switch px-2 mt-2" :title="activeTitle">
               <input type="checkbox" v-model="active" @click="onFlipList()"/>
               <span class="slider round"></span>
             </label>
-          </span>
+          </span> -->
           <button
             id="btn-search"
             class="ms-1 btn btn-primary btn-lg marg-b-4 float-end"
