@@ -219,7 +219,8 @@ export default class EntityService extends BaseService {
             question = "Do you want to continue?";
         }
         else {
-            question = `Are you sure you want to delete this ${entityType}?`;
+            let typeStr = entityType.replace("primaryfile", "content file").replace("Supplement", " supplement");
+            question = `Are you sure you want to delete this ${typeStr}?`;
         }
         console.log("getDeleteWarnings question: " + question);
         return {header, statistics, question};

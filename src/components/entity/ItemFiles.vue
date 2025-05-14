@@ -229,7 +229,7 @@ export default {
         question = "Do you want to continue?";
       }
       else {
-        question = "Are you sure you want to delete this file?";
+        question = "Are you sure you want to delete this content file?";
       }
       console.log("getDeleteWarnings question: " + question);
       return {header, statistics, question};
