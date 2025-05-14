@@ -42,7 +42,6 @@ async function auth_token_valid(hmgmToken, editorInput, userPass, authString) {
     let pass = userPass ? userPass : '';
     let auth = authString ? authString : '';
     const url = `/hmgm/authorize-editor?hmgmToken=${token}&editorInput=${input}&userPass=${pass}&authString=${auth}`;
-    console.log("hmgm-service.auth_token_valid: starting");
     try {
         let result = await baseService.get(url);
         if (result.data) {
