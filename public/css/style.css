@@ -49,11 +49,6 @@
   border-color: rgba(255, 255, 0, 0.8) !important;
   color: rgba(127, 127, 127, 0.8) !important;
 }
-
-.btn-warning:hover:disabled, .btn-secondary:hover:disabled, .btn-outline-primary:hover:disabled {
-  background: rgba(187, 187, 187, 0.856) !important;
-  border-color: rgba(187, 187, 187, 0.856) !important;
-  color: #153c4d !important; }
   
 .btn-blue:hover,
 .btn-blue:active,
