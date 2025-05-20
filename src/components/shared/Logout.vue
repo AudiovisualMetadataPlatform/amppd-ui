@@ -58,7 +58,6 @@ export default {
         );
       } else {
       // TODO need to reset all data in local storage, not just AC data
-        accountService.logout();
         self.isAuthenticated = false;
         self.acIsAdmin = false;
         self.acUnitsActions = [];
@@ -66,9 +65,10 @@ export default {
         self.acUnitsOutput = [];
         self.acActions = [];
         self.mgmCategories = [];
+        accountService.logout();
         this.$router.push("/");
         // After successful logout we need to reset the state to prevent from showing old data
-        this.$store.replaceState(defaultState);
+        // this.$store.replaceState(defaultState);
       }
     },
     routeTo(submenu) {

@@ -298,9 +298,9 @@ export default class AccessControlService extends BaseService {
   async initPermissions(instance) {
     const self = instance;
     await this.isAdmin(self);
-    console.log("acIsAdmin = " + self.acIsAdmin);
+    console.log("initPermissions: acIsAdmin = " + self.acIsAdmin);
     if(!self.acIsAdmin) {
-      this.getPermittedActions()
+      await this.getPermittedActions()
         .then((res) => {
           let allUnitActions = res.data;
           if (allUnitActions != undefined) {
@@ -335,8 +335,9 @@ export default class AccessControlService extends BaseService {
               }
               self.acUnitsActions.push({ unitId: unit.unitId, actions });
             }	
-            console.log("acUnitsMedia: " + self.acUnitsMedia);		 
-            console.log("acUnitsOutput: " + self.acUnitsOutput);				 
+            console.log("initPermissions: acUnitsActions: " + self.acUnitsActions);
+            console.log("initPermissions: acUnitsMedia: " + self.acUnitsMedia);		 
+            console.log("initPermissions: acUnitsOutput: " + self.acUnitsOutput);				 
       
             // set up navigation menus permissions
             let allActions = allUnitActions.map(a => a.actions).flat();          
@@ -344,6 +345,7 @@ export default class AccessControlService extends BaseService {
               const { actionType, targetType } = action;
               self.acActions.push(`${actionType}-${targetType}`);
             }
+            console.log("initPermissions: acActions: " + self.acActions);			
           }
         });
     }

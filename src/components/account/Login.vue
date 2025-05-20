@@ -151,13 +151,14 @@ export default {
         return;
       } else {
         var currentUser = await accountService.login(self.email, self.pswd);
-        console.log("Current user: ", currentUser);
+        console.log("Login.checkForm: Current user: ", currentUser);
         if(currentUser === null) {
           self.errors.other_errors.push("Email and password do not match");
           return;
         } else if (currentUser?.token) {
           self.isAuthenticated = true;
           await self.accessControlService.initPermissions(self);
+          console.log("Login.checkForm: acActions: " + self.acActions);
           // Force setting localStorage vuex object for state in vuex-persistedstate
           let vuex = JSON.parse(localStorage.getItem("vuex"));
           localStorage.setItem("vuex", JSON.stringify({
@@ -167,10 +168,12 @@ export default {
             acUnitsOutput: self.acUnitsOutput,
             acActions: self.acActions,
           }));
+          console.log("Login.checkForm: set AC data in vuex to local storage");
           if (self.$route.query.returnUrl) {
-            console.log("going to returnUrl: " + self.$route.query.returnUrl);
+            console.log("Login.checkForm: routing to returnUrl: " + self.$route.query.returnUrl);
             self.$router.push(self.$route.query.returnUrl);
           } else {
+            console.log("Login.checkForm: routing to home: " + self.$route.query.returnUrl);
             self.$router.push("/");
           }
         }
