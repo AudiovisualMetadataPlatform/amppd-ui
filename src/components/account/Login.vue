@@ -158,7 +158,6 @@ export default {
         } else if (currentUser?.token) {
           self.isAuthenticated = true;
           await self.accessControlService.initPermissions(self);
-          console.log("Login.checkForm: acActions: " + self.acActions);
           // Force setting localStorage vuex object for state in vuex-persistedstate
           let vuex = JSON.parse(localStorage.getItem("vuex"));
           localStorage.setItem("vuex", JSON.stringify({
@@ -168,7 +167,7 @@ export default {
             acUnitsOutput: self.acUnitsOutput,
             acActions: self.acActions,
           }));
-          console.log("Login.checkForm: set AC data in vuex to local storage");
+          console.log("Login.checkForm: AC data in vuex is saved in local storage");
           if (self.$route.query.returnUrl) {
             console.log("Login.checkForm: routing to returnUrl: " + self.$route.query.returnUrl);
             self.$router.push(self.$route.query.returnUrl);

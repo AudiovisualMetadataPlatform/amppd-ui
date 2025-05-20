@@ -335,7 +335,7 @@ export default class AccessControlService extends BaseService {
               }
               self.acUnitsActions.push({ unitId: unit.unitId, actions });
             }	
-            console.log("initPermissions: acUnitsActions: " + self.acUnitsActions);
+            // console.log("initPermissions: acUnitsActions: " + self.acUnitsActions);
             console.log("initPermissions: acUnitsMedia: " + self.acUnitsMedia);		 
             console.log("initPermissions: acUnitsOutput: " + self.acUnitsOutput);				 
       
