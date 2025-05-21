@@ -50,10 +50,10 @@
             </div>
             <div
               v-if="active && canUpdate()"
-              class="col-lg-1 text-end px-1"
+              class="col text-end px-1"
             >
               <button
-                class="btn btn-primary mt-4"
+                class="btn btn-primary"
                 href="#"
                 data-toggle="popover"
                 data-content="Link goes to galaxy"
@@ -67,10 +67,11 @@
             </div>
             <div
               v-if="canActivate()"
-              class="col-lg-1 text-end px-1"
+              class="col text-end px-1"
             >
               <button
-                class="btn btn-warning mt-4"
+                class="btn"
+                :class="active ? 'btn-warning' : 'btn-primary'"
                 :disabled="workflow.running"
                 @click.prevent="onDeactivate(workflow, index)"
               >
