@@ -35,18 +35,18 @@
 }
 
 .btn-warning {
-  background: yellow !important;
-  border-color: yellow !important;
+  background: rgb(255, 224, 0) !important;
+  border-color: rgb(255, 224, 0) !important;
   color: #153c4d !important;
 }
 .btn-warning:hover {
-  background: rgb(220, 220, 0) !important;
-  border-color:  rgb(220, 220, 0) !important;
+  background: rgb(220, 200, 0) !important;
+  border-color:  rgb(220, 200, 0) !important;
   color: #153c4d !important;
 }
 .btn-warning:disabled {
-  background: rgba(255, 255, 0, 0.8) !important;
-  border-color: rgba(255, 255, 0, 0.8) !important;
+  background: rgba(255, 224, 0, 0.8) !important;
+  border-color: rgba(255, 224, 0, 0.8) !important;
   color: rgba(127, 127, 127, 0.8) !important;
 }
   

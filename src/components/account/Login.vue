@@ -151,7 +151,7 @@ export default {
         return;
       } else {
         var currentUser = await accountService.login(self.email, self.pswd);
-        console.log("Current user: ", currentUser);
+        console.log("Login.checkForm: Current user: ", currentUser);
         if(currentUser === null) {
           self.errors.other_errors.push("Email and password do not match");
           return;
@@ -167,10 +167,12 @@ export default {
             acUnitsOutput: self.acUnitsOutput,
             acActions: self.acActions,
           }));
+          console.log("Login.checkForm: AC data in vuex is saved in local storage");
           if (self.$route.query.returnUrl) {
-            console.log("going to returnUrl: " + self.$route.query.returnUrl);
+            console.log("Login.checkForm: routing to returnUrl: " + self.$route.query.returnUrl);
             self.$router.push(self.$route.query.returnUrl);
           } else {
+            console.log("Login.checkForm: routing to home: " + self.$route.query.returnUrl);
             self.$router.push("/");
           }
         }

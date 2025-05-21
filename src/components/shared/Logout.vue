@@ -57,18 +57,9 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
-      // TODO need to reset all data in local storage, not just AC data
-        accountService.logout();
         self.isAuthenticated = false;
-        self.acIsAdmin = false;
-        self.acUnitsActions = [];
-        self.acUnitsMedia = [];
-        self.acUnitsOutput = [];
-        self.acActions = [];
-        self.mgmCategories = [];
+        accountService.logout();
         this.$router.push("/");
-        // After successful logout we need to reset the state to prevent from showing old data
-        this.$store.replaceState(defaultState);
       }
     },
     routeTo(submenu) {

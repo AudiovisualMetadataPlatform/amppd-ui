@@ -187,6 +187,7 @@ export default class EntityService extends BaseService {
 
     getDeleteWarnings(entityStatistics, entityType) {
         let statistics = [], header = '', question = '';
+        let typeStr = entityType.replace("primaryfile", "content file").replace("Supplement", " supplement");
         if (entityStatistics.countCollections) { 
             statistics.push(entityStatistics.countCollections + " collection(s)");
         }
@@ -215,11 +216,10 @@ export default class EntityService extends BaseService {
             statistics.push(entityStatistics.countMgmEvaluationTests + " evaluation test result(s)");
         }
         if (statistics.length) {
-            header = `Deleting this ${entityType} will also delete the following associated data:`;
+            header = `Deleting this ${typeStr} will also delete the following associated data:`;
             question = "Do you want to continue?";
         }
-        else {
-            let typeStr = entityType.replace("primaryfile", "content file").replace("Supplement", " supplement");
+        else {            
             question = `Are you sure you want to delete this ${typeStr}?`;
         }
         console.log("getDeleteWarnings question: " + question);
