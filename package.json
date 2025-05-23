@@ -14,7 +14,7 @@
     "@bbc/react-transcript-editor": "https://github.com/AudiovisualMetadataPlatform/react-transcript-editor.git",
     "@vue/cli": "^5.0.8",
     "@vuejs-community/vue-filter-date-format": "^1.6.3",
-    "axios": "^1.7.2",
+    "axios": "^1.8.2",
     "bootstrap": "^5.3.3",
     "bootstrap-vue": "^2.23.1",
     "chart.js": "^4.4.2",
