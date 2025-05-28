@@ -1,6 +1,5 @@
 import BaseService from './base-service.js';
 import { store } from "../store/amp-store.js"; 
-import defaultState from "../store/state.js";
 
 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 const baseService = new BaseService();
