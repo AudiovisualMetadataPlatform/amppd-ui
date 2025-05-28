@@ -1,4 +1,5 @@
 import BaseService from './base-service.js';
+import { store } from "../store/amp-store.js"; 
 
 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 const baseService = new BaseService();
@@ -102,8 +103,24 @@ async function validate() {
 }
 
 function logout() {
-  // remove user from local storage to log user out
-  // also clear up local and session storage
+  // Need to reset AC data etc so that upon user signout or timeout the menu bar will be cleared
+  store.state.isAuthenticated = false;  
+  // store.state.acIsAdmin = false;
+  // store.state.acUnitsActions = [];
+  // store.state.acUnitsMedia = [];
+  // store.state.acUnitsOutput = [];
+  // store.state.acActions = [];
+  // store.state.mgmCategories = []; 
+  store.commit("isAuthenticated"); 
+  // store.commit("acIsAdmin"); 
+  // store.commit("acUnitsActions"); 
+  // store.commit("acUnitsMedia"); 
+  // store.commit("acUnitsOutput"); 
+  // store.commit("acActions"); 
+  // store.commit("mgmCategories");   
+
+  // clear up local and session storage
+  // note that this should be done after above date reset, otherwise it would trigger vuex to be saved back to storage  
   localStorage.clear();
   sessionStorage.clear();
   this.currentUser = null;

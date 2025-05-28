@@ -36,7 +36,6 @@
 import config from "../../assets/constants/common-contant.js"
 import { accountService } from "@/service/account-service";
 import sync from "@/helpers/sync";
-import defaultState from "../../store/state";
 import SharedService from "@/service/shared-service";
 export default {
   name: "logout",
@@ -57,7 +56,6 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
-        self.isAuthenticated = false;
         accountService.logout();
         this.$router.push("/");
       }
