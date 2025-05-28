@@ -57,15 +57,6 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
-        // Note: need to clear out torage after resetting state data, 
-        // otherwise the latter would trigger vuex to be saved back to storage
-        self.isAuthenticated = false;
-        self.acIsAdmin = false;
-        self.acUnitsActions = [];
-        self.acUnitsMedia = [];
-        self.acUnitsOutput = [];
-        self.acActions = [];
-        self.mgmCategories = [];        
         accountService.logout();
         this.$router.push("/");
       }

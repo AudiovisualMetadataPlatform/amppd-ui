@@ -102,15 +102,17 @@ export default {
     orderedMenuList() {
       let self = this;
       // Update menu list based on user permissions when acIsAdmin is updated
-      if(!self.acIsAdmin) {
+      if (!self.acIsAdmin) {
         if(self.acActions.length > 0) {
           // Filter menu list based on user permissions when acActions is updated
           let filteredMenus = self.menuList.filter(menu => {
             return !self.resolvePermissions(menu.permissionKey);
           });
+          console.log ("Sidebar.orderedMenuList: user is not admin, filteredMenus = " + this.filteredMenus);
           return self.sharedService.sortByNumber(filteredMenus, "displayId")
         }
       } else {
+        console.log ("Sidebar.orderedMenuList: user is admin and has access to all menus");        
         return self.sharedService.sortByNumber(self.menuList, "displayId");
       }
     },
