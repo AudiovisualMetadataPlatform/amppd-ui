@@ -2,6 +2,7 @@ import { requestOptions } from "../helpers/request-options";
 import axios from 'axios';
 import { accountService } from '@/service/account-service';
 import { env } from "../helpers/env";
+import router  from "../router";
 
   
 export default class BaseService{
@@ -19,11 +20,20 @@ export default class BaseService{
     errorHandler(error) {
         if ([401, 403].indexOf(error.status) !== -1) {
             // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
+            let path = location.hash.substring(1);
             accountService.logout();
-            location.reload(true);
+            // original code reloads current location, which causes browser reload homepage instead of login page;
+            // better solution would be redirecting to login page with return URL of current page
+            // location.reload(true);
+            console.log("base-service.errorHandler: upon login timeout, location = " + path);
+            router.push({ path: "/account/login", query: { returnUrl: path }});
+            // TODO below is an attempt to avoid error toast message upon timeout,
+            // but it doesn't work, instead it will result in no timeout and no redirect to login
+            // return Promise.accept(error);
         }
-
-        return Promise.reject(error);
+        else {
+            return Promise.reject(error);
+        }
     }
 
     get(url){

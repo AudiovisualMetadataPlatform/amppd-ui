@@ -57,6 +57,7 @@ export default class AccessControlService extends BaseService {
       unitId = uEntity.currentUnit;
       return self.acUnitsActions.filter((ua) => ua.unitId == unitId)[0].actions;
     }
+    return [];
   }
 
   // reset all accessControl fields of the given instance to the permitted value
@@ -110,9 +111,9 @@ export default class AccessControlService extends BaseService {
       this.resetAccessControl(instance, self.acIsAdmin);      
     } catch (error) {
       self.showLoader = false;
-      self.$bvToast.toast(
+      self.$toast.error(
         "Oops! Something went wrong.",
-        self.sharedService.erorrToastConfig
+        self.sharedService.toastNotificationConfig
       );
       console.error(error);
     }
@@ -120,7 +121,7 @@ export default class AccessControlService extends BaseService {
 
   // populate permissions for current unit (selected in Content Navigation) for non-admin user
   // note that batch/workflow etc are not handled here because they are not tied to current unit
-  async checkAccessControl(instance) {
+  checkAccessControl(instance) {
     const self = instance;
     try {
       self.showLoader = true;
@@ -286,9 +287,9 @@ export default class AccessControlService extends BaseService {
       self.showLoader = false;
     } catch (error) {
       self.showLoader = false;
-      self.$bvToast.toast(
+      self.$toast.error(
         "Oops! Something went wrong.",
-        self.sharedService.erorrToastConfig
+        self.sharedService.toastNotificationConfig
       );
       console.error(error);
     }
@@ -297,6 +298,7 @@ export default class AccessControlService extends BaseService {
   async initPermissions(instance) {
     const self = instance;
     await this.isAdmin(self);
+    console.log("initPermissions: acIsAdmin = " + self.acIsAdmin);
     if(!self.acIsAdmin) {
       await this.getPermittedActions()
         .then((res) => {
@@ -333,8 +335,9 @@ export default class AccessControlService extends BaseService {
               }
               self.acUnitsActions.push({ unitId: unit.unitId, actions });
             }	
-            console.log("acUnitsMedia: " + self.acUnitsMedia);		 
-            console.log("acUnitsOutput: " + self.acUnitsOutput);				 
+            // console.log("initPermissions: acUnitsActions: " + self.acUnitsActions);
+            console.log("initPermissions: acUnitsMedia: " + self.acUnitsMedia);		 
+            console.log("initPermissions: acUnitsOutput: " + self.acUnitsOutput);				 
       
             // set up navigation menus permissions
             let allActions = allUnitActions.map(a => a.actions).flat();          
@@ -342,6 +345,7 @@ export default class AccessControlService extends BaseService {
               const { actionType, targetType } = action;
               self.acActions.push(`${actionType}-${targetType}`);
             }
+            console.log("initPermissions: acActions: " + self.acActions);			
           }
         });
     }

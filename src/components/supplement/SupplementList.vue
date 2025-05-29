@@ -8,20 +8,20 @@
       <div class="col-12 bg-light-gray-1">
         <main>
           <div class>
-            <b-card class="m-4 text-left">
+            <b-card class="m-4 text-start">
               <div class="d-flex w-100">
-                <div class="col-3 text-left p-0">
+                <div class="col-3 text-start p-0">
                   <h1 v-if="baseUrl == 'supplement'">Supplemental File</h1>
                   <h2 v-else>
                     Supplemental Files
                   </h2>
                 </div>
                 <div
-                  class="col-9 text-right p0 btn-grp"
+                  class="col-9 text-end p0 btn-grp"
                   v-if="baseUrl !== 'supplement'"
                 >
                   <button
-                    class="btn btn-primary btn-lg btn-edit mr-2"
+                    class="btn btn-primary btn-lg btn-edit me-2"
                     v-if="canCreate()"
                     type="button"
                     @click="onCreate()"
@@ -31,6 +31,7 @@
                   <button
                     class="btn btn-primary btn-lg btn-edit"
                     type="button"
+                    v-b-modal.modal-lg
                     @click="onSearch('listing-supplement')"
                   >
                     Search Files
@@ -40,7 +41,7 @@
               <SupplementFile v-if="baseUrl === 'supplement'" />
               <div class="row row-spl" v-else-if="records && records.length">
                 <b-card
-                  class="w-100 text-left b-card-spl"
+                  class="w-100 text-start b-card-spl"
                   v-for="elem in records"
                   :key="elem.id"
                 >
@@ -50,7 +51,7 @@
                         <h3>{{ elem.name }}</h3>
                         <p>{{ elem.description }}</p>
                       </div>
-                      <div class="col-1 text-right">
+                      <div class="col-1 text-end">
                         <div>
                           <button
                             class="btn btn-primary btn"
@@ -84,7 +85,7 @@
                         </div>
                         <div class="col">
                           Modified Date: <br />{{
-                            elem.modifiedDate | LOCAL_DATE_VALUE
+                            $filters.localDate(elem.modifiedDate)
                           }}
                         </div>
                         <div class="col">
@@ -95,7 +96,7 @@
                   </div>
                 </b-card>
               </div>
-              <div class="col-12 text-left" v-else>
+              <div class="col-12 text-start" v-else>
                 <p>-No records found-</p>
               </div>
             </b-card>
@@ -113,7 +114,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 import SupplementService from "@/service/supplement-service";
@@ -145,11 +146,11 @@ export default {
     baseUrl() {
       const self = this;
       if (
-        window.location.hash.toLowerCase().indexOf("supplemental-files/") > -1
+        window.location.href.toLowerCase().indexOf("supplemental-files/") > -1
       ) {
         return "supplement";
       } else if (
-        window.location.hash.toLowerCase().indexOf("supplemental-files") > -1
+        window.location.href.toLowerCase().indexOf("supplemental-files") > -1
       ) {
         return "list-supplement";
       }
@@ -164,7 +165,6 @@ export default {
     },
     onSearch(type) {
       this.searchType = type;
-      this.$bvModal.show("modal-lg");
     },
     onSearchDone(records) {
       this.records = records && records.length ? records : this.masterRecords;
@@ -178,9 +178,9 @@ export default {
           supplementalFiles = res;
         })
         .catch((err) => {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Unable to retrive Supplemental Files. Please try again!",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         });
       return supplementalFiles;

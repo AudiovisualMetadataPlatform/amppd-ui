@@ -14,11 +14,6 @@
       "
     >
       <h2>Select files</h2>
-      <form
-        class="marg-t-3 filter-form"
-        v-on:submit.prevent
-        v-on:keyup.enter="searchFiles()"
-      >
         <div
           class="container-fluid"
           v-if="
@@ -27,57 +22,13 @@
           "
         >
           <div class="row">
-            <!-- <div class="col-xl-6 col-md-12">
-              <div id="limiter">
-                <strong>Limit results to </strong>
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="inlineCheckbox1"
-                    value="option1"
-                    v-model="searchAudio"
-                  />
-                  <label class="form-check-label" for="inlineCheckbox1"
-                    >Audio</label
-                  >
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="inlineCheckbox2"
-                    value="option2"
-                    v-model="searchVideo"
-                  />
-                  <label class="form-check-label" for="inlineCheckbox2"
-                    >Video</label
-                  >
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="inlineCheckbox3"
-                    value="option3"
-                    v-model="searchOther"
-                  />
-                  <label class="form-check-label" for="inlineCheckbox3"
-                    >Other</label
-                  >
-                </div>
-              </div>
-            </div> -->
             <div class="mb-3" style="margin-left: -0.25rem; margin-top: -15px">
               <button
-                v-if="
-                  !workflowSubmission.workflowDetails.inputWprkflowResultFormats
-                    .length
-                "
+                v-if="!workflowSubmission.workflowDetails.inputWprkflowResultFormats.length"
                 v-on:click="displaySelectBundle"
                 id="select-bundles"
                 type="button"
-                class="btn btn-primary float-right select-bundles"
+                class="btn btn-primary float-end select-bundles"
                 data-toggle="modal"
                 data-target=".select-from-saved-modal"
               >
@@ -86,58 +37,54 @@
             </div>
           </div>
         </div>
-        <div class="form-group">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-12">
-                <div class="input-group mb-3">
-                  <label
-                    for="workflowSubmissionSelectFilesSearch"
-                    class="sr-only"
-                    >Search</label
-                  >
-                  <label
-                    class="form-errors"
-                    v-if="errors.search_error.length"
-                    >{{ errors.search_error }}</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="workflowSubmissionSelectFilesSearch"
-                    placeholder="Search"
-                    v-model="searchWord"
-                    autocomplete="off"
-                  />
-                  <div class="input-group-append">
-                    <button
-                      class="btn"
-                      type="button"
-                      v-on:click="searchFiles()"
-                    >
-                      <svg
-                        data-v-6b33b2c4=""
-                        role="img"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 50 50"
-                        class="svg-search"
-                      >
-                        <title data-v-6b33b2c4="">search</title>
-                        <path
-                          data-v-6b33b2c4=""
-                          d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"
-                        ></path>
-                      </svg>
-                      Search
-                    </button>
-                  </div>
-                </div>
-              </div>
+        <div class="mb-3">
+          <!-- Do not perform form validation for partial workflows -->
+          <form 
+            @submit.prevent="searchFiles"
+            :class="!workflowSubmission.workflowDetails.inputWprkflowResultFormats.length ? 'needs-validation' : ''"
+            ref="searchFilesForm"
+          >
+            <div class="input-group mb-3">
+              <label for="workflowSubmissionSelectFilesSearch" class="visually-hidden">
+                Search
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="workflowSubmissionSelectFilesSearch"
+                placeholder="Search"
+                v-model="searchWord"
+                autocomplete="off"
+                @input="handleSearchChange"
+                :required="!workflowSubmission.workflowDetails.inputWprkflowResultFormats.length"
+              />
+              <button
+                class="btn input-group-text search-btn"
+                type="button"
+                v-on:click="searchFiles()"
+              >
+                <svg
+                  data-v-6b33b2c4=""
+                  role="img"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 50 50"
+                  class="svg-search"
+                >
+                  <title data-v-6b33b2c4="">search</title>
+                  <path
+                    data-v-6b33b2c4=""
+                    d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"
+                  ></path>
+                </svg>
+                Search
+              </button>
+              <label class="invalid-feedback" v-if="errors.search_error.length">
+                {{ errors.search_error }}
+              </label>
             </div>
-          </div>
+          </form>
         </div>
         <div></div>
-      </form>
       <div v-if="workflowSubmissionsearchResults">
         <h4>Search Results</h4>
         <hr class="w-100" />
@@ -175,7 +122,7 @@
                       d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"
                     ></path>
                   </svg>
-                  <span class="sr-only">Toggle hidden content</span>
+                  <span class="visually-hidden">Toggle hidden content</span>
                   {{ item.itemName }}
                 </button>
                 <button class="btn bg-transparent no-bx-shadow">
@@ -183,11 +130,8 @@
                 </button>
                 <!-- -->
                 <button
-                  v-if="
-                    !workflowSubmission.workflowDetails
-                      .inputWprkflowResultFormats.length
-                  "
-                  class="btn btn-link float-right"
+                  v-if="!workflowSubmission.workflowDetails.inputWprkflowResultFormats.length"
+                  class="btn btn-link float-end"
                   v-on:click="addAllFiles(index)"
                   v-bind:disabled="hasValues(index)"
                   :key="updateSelectedFiles"
@@ -271,11 +215,9 @@
                       {{ primaryfile.originalFilename }}
                     </button>
                     <button
-                      class="btn btn-link  add-remove float-right file-list-item-add"
+                      class="btn btn-link  add-remove float-end file-list-item-add"
                       v-on:click="addFile(index, file_index)"
-                      v-bind:disabled="
-                        hasValue(item.primaryfiles[file_index].id)
-                      "
+                      v-bind:disabled="hasValue(item.primaryfiles[file_index].id)"
                     >
                       <svg
                         class="icon-plus"
@@ -326,7 +268,7 @@
           intermediaryWorkflowResults.length
       "
     >
-      <div class="card pad-all-2 marg-t-0">
+      <div class="card p-3">
         <div class="d-flex" style="justify-content: space-between;">
           <h4>
             Select the files to be used as input for the selected workflow
@@ -338,19 +280,18 @@
               )
             "
             type="button"
-            class="btn btn-primary btn-md ml-2"
+            class="btn btn-primary btn-md ms-2 text-nowrap h-100"
             data-toggle="modal"
             data-target=".save-modal"
-            style="height: 2.5rem;"
           >
             Go back
           </button>
         </div>
-        <div class="col-lg-12 marg-t-3 marg-b-2">
+        <div class="col-lg-12 mt-4">
           <h5>
             Content File:
             {{ Array.from(workflowSubmission.selectedFiles.values())[0].name }}
-            <span class="btn btn-light float-right mb-2 mt-1 al-cursor">{{
+            <span class="btn btn-light float-end mb-2 mt-1 al-cursor">{{
               Array.from(workflowSubmission.selectedFiles.values())[0]
                 .originalFilename
             }}</span>
@@ -359,14 +300,13 @@
         <div class="accordion" id="accordionExample">
           <div
             class="card m-0"
-            v-for="(resultLabels, resultLabelIndex) in workflowSubmission
-              .workflowDetails.inputWprkflowResultLabels"
+            v-for="(resultLabels, resultLabelIndex) in workflowSubmission.workflowDetails.inputWprkflowResultLabels"
             :key="resultLabelIndex"
           >
             <div class="card-header" id="headingOne">
               <h2 class="mb-0">
                 <button
-                  class="btn btn-link btn-block text-left"
+                  class="btn btn-link text-start"
                   type="button"
                   data-toggle="collapse"
                   data-target="#collapseOne"
@@ -402,7 +342,7 @@
                           <th scope="col">Step</th>
                           <th scope="col">Output</th>
                           <th scope="col">
-                            <span class="sr-only">actions</span>
+                            <span class="visually-hidden">actions</span>
                           </th>
                         </tr>
                       </thead>
@@ -416,7 +356,7 @@
                         >
                           <td>{{ res.outputLabel }}</td>
                           <td>
-                            {{ new Date(res.dateCreated) | LOCAL_DATE_VALUE }}
+                            {{ $filters.localDate(new Date(res.dateCreated)) }}
                           </td>
                           <td>{{ res.submitter }}</td>
                           <td>{{ res.workflowName }}</td>
@@ -425,14 +365,9 @@
                           <td class="text-center slim-col-12 slim-col-4 ">
                             <b-form-radio
                               v-model="localSelIntWfResult[resultLabelIndex]"
-                              style="font-size:1.25rem;"
-                              :name="
-                                'workflowResult-radios-' + [resultLabelIndex]
-                              "
+                              class="mt-0 fs-5"
+                              :name="'workflowResult-radios-' + [resultLabelIndex]"
                               :value="res"
-                              @change="
-                                onChangeIntWfResult(resultLabelIndex, res)
-                              "
                             />
                           </td>
                         </tr>
@@ -442,7 +377,7 @@
                   <button
                     type="button"
                     id="saveSelection"
-                    class="btn btn-md btn-outline-primary float-right mb-3"
+                    class="btn btn-md btn-outline-primary float-end mb-3"
                     @click="handleAddToSelection(resultLabelIndex)"
                   >
                     Add to selection
@@ -458,7 +393,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "@/helpers/env";
 import SharedService from "@/service/shared-service";
 import WorkflowService from "../../service/workflow-service";
@@ -517,55 +452,23 @@ export default {
   methods: {
     handleAddToSelection(accordionIndex) {
       const self = this;
-      for (
-        let i = 0;
-        i <
-        self.workflowSubmission.workflowDetails.inputWprkflowResultFormats
-          .length;
-        i++
-      ) {
-        if (i === accordionIndex) {
-          if (
-            self.workflowSubmission.selectedIntWfResult[i] &&
-            self.workflowSubmission.selectedIntWfResult[i].id
-          ) {
-            self.workflowSubmission.selectedIntWfResult.splice(
-              i,
-              1,
-              this.localSelIntWfResult[accordionIndex]
-            );
-            break;
-          } else if (
-            self.workflowSubmission.selectedIntWfResult[i] &&
-            !self.workflowSubmission.selectedIntWfResult[i].id
-          ) {
-            self.workflowSubmission.selectedIntWfResult.splice(
-              i,
-              1,
-              this.localSelIntWfResult[accordionIndex]
-            );
-            break;
-          } else {
-            self.workflowSubmission.selectedIntWfResult.splice(
-              accordionIndex,
-              1,
-              this.localSelIntWfResult[accordionIndex]
-            );
-            break;
+      // Check if a file is selected
+      if(self.localSelIntWfResult?.length > 0) {
+        for (let i = 0; i < self.workflowSubmission.workflowDetails.inputWprkflowResultFormats.length; i++) {
+          if (i === accordionIndex) {
+              self.workflowSubmission.selectedIntWfResult
+                .splice(i, 1, this.localSelIntWfResult[accordionIndex]);
+              break;
+          } else if (!self.workflowSubmission.selectedIntWfResult[i]?.id) {
+            self.workflowSubmission.selectedIntWfResult.splice(i, 1, {});
           }
-        } else if (
-          self.workflowSubmission.selectedIntWfResult[i] &&
-          self.workflowSubmission.selectedIntWfResult[i].id
-        ) {
-          console.log("");
-        } else {
-          self.workflowSubmission.selectedIntWfResult.splice(i, 1, {});
         }
+      } else {
+        // Display a warning when no file is selected
+        self.$toast.warning(
+          "Please select a file to add to selection.", self.sharedService.toastNotificationConfig
+        );
       }
-    },
-    onChangeIntWfResult(indexResultLabel, row) {
-      const self = this;
-      // console.log(indexResultLabel, row);
     },
     removeFile(id) {
       let self = this;
@@ -592,6 +495,11 @@ export default {
       if (this.visible == index) {
         this.visible = -1;
       } else this.visible = index;
+    },
+    handleSearchChange() {
+      // Reset form validation
+      const form = this.$refs.searchFilesForm;
+      form.classList.remove("was-validated");
     },
     async searchFiles() {
       let self = this;
@@ -635,14 +543,17 @@ export default {
           self.loading = false;
         } catch (error) {
           console.log(error);
-          self.$bvToast.toast(
+          self.$toast.error(
             "Oops! Something went wrong.",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
           self.loading = false;
         }
       } else {
         self.errors.search_error = "Please enter a search keyword";
+        // Add the form validation for invalid search
+        const form = this.$refs.searchFilesForm
+        form.classList.add("was-validated");
       }
     },
     async addFile(index, file_index) {
@@ -664,23 +575,12 @@ export default {
             self.accordionVisible = [0];
             self.localSelIntWfResult = [];
             self.workflowSubmission.selectedIntWfResult = [];
-            let outputTypesArr =
-              self.workflowSubmission.workflowDetails
-                .inputWprkflowResultFormats;
+            let outputTypesArr = self.workflowSubmission.workflowDetails.inputWprkflowResultFormats;
             let outputTypes = String(outputTypesArr);
-            self.intermediaryWorkflowResults = await self.workflowService.getCompleteWorkflowResultsForPrimaryfileOutputTypes(
-              outputTypes,
-              key
-            );
-            if (
-              self.workflowSubmission.selectedIntWfResult &&
-              self.workflowSubmission.selectedIntWfResult.length
-            ) {
-              for (
-                let i = 0;
-                i < self.workflowSubmission.selectedIntWfResult.length;
-                i++
-              ) {
+            self.intermediaryWorkflowResults = 
+              await self.workflowService.getCompleteWorkflowResultsForPrimaryfileOutputTypes(outputTypes, key);
+            if (self.workflowSubmission.selectedIntWfResult?.length > 0) {
+              for (let i = 0; i < self.workflowSubmission.selectedIntWfResult.length; i++) {
                 self.workflowSubmission.selectedIntWfResult[i] &&
                   delete self.workflowSubmission.selectedIntWfResult[i];
               }
@@ -688,10 +588,7 @@ export default {
             self.loading = false;
           } catch (error) {
             console.log(error);
-            self.$bvToast.toast(
-              "Oops! Something went wrong.",
-              self.sharedService.erorrToastConfig
-            );
+            self.$toast.error("Oops! Something went wrong.", self.sharedService.toastNotificationConfig);
             self.loading = false;
           }
         }
@@ -783,13 +680,6 @@ export default {
 .select-bundles {
   margin: 5px;
 }
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
-  width: inherit;
-}
 .item-name {
   white-space: normal !important;
   text-align: left !important;
@@ -799,5 +689,8 @@ export default {
 }
 .al-cursor {
   cursor: alias !important;
+}
+.search-btn:active {
+  border-color: transparent !important;
 }
 </style>

@@ -28,8 +28,7 @@
             />
           </div>
         </div>
-        <!--
-        <BBCTranscriptEditor
+        <BBCTranscriptEditorWrapper
           :key="key"
           v-if="transcriptDataValue && sttType"
           :transcriptData="transcriptDataValue"
@@ -41,8 +40,7 @@
           :autoSaveContentType="'draftjs'"
           :ref="player"
         >
-        </BBCTranscriptEditor>
-      -->
+        </BBCTranscriptEditorWrapper>
       </div>
     </div>
     <modal v-if="showModal" @close="modalDismiss" class="my-modal">
@@ -129,7 +127,7 @@ import AmpHeader from "@/components/shared/AmpHeader.vue";
 import Loader from "@/components/shared/Loader.vue";
 import Logout from "@/components/shared/Logout.vue";
 import TokenValidator from "@/components/hmgm/TokenValidator";
-// import BBCTranscriptEditor from "@bbc/react-transcript-editor/dist";
+import BBCTranscriptEditorWrapper from "./BBCTranscriptEditorWrapper.vue";
 import Modal from "@/components/shared/Modal.vue";
 import {
   getTranscript,
@@ -144,7 +142,7 @@ export default {
     AmpHeader,
     Loader,
     Logout,
-    // BBCTranscriptEditor,
+    BBCTranscriptEditorWrapper,
     TokenValidator,
     Modal,
   },
@@ -320,8 +318,8 @@ export default {
     this.mediaUrl = this.$route.query.mediaUrl;
 
     let requires_auth_token = await auth_token_required(
-      this.authString,
-      this.datasetUrl
+      this.datasetUrl,
+      this.authString
     );
     if (requires_auth_token === false) {
       this.authValidated();

@@ -6,7 +6,7 @@
       Test Results
     </h3>
     <select
-      class="select custom-select mb-4 select-test"
+      class="select form-select mb-4 select-test"
       v-model="selectedMst.id"
       @change="onInputChange($event)"
       required
@@ -21,7 +21,7 @@
     <div class="w-100" v-if="showTestResults">
       <WorkflowDashboard parent="TestResults" />
       <button
-        class="btn btn-primary btn-lg marg-tb-3 float-right mt-3 mb-3"
+        class="btn btn-primary btn-lg marg-tb-3 float-end mt-3 mb-3"
         type="button"
         @click="onVisualize"
         :disabled="!mgmEvaluation.selectedRecords.length"
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "../../service/shared-service";
 import EvaluationService from "../../service/evaluation-service";
@@ -101,9 +101,9 @@ export default {
         );
         self.showTestResults = true;
       } catch (error) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Oops! Something went wrong.",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         console.error(error.message);
       }

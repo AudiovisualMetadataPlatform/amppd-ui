@@ -1,10 +1,10 @@
 <template>
   <div class="col-lg-5">
     <loader :show="workflowSubmission.loading" />
-    <div class="card pad-all-2">
+    <div class="card p-3">
       <h4>Select workflow</h4>
-      <div class="form-group">
-        <label for="workflow-name-select" class="sr-only">Select list:</label>
+      <div class="mb-3">
+        <label for="workflow-name-select" class="visually-hidden">Select list:</label>
         <select
           class="form-control"
           id="workflow-name-select"
@@ -48,7 +48,7 @@
             </li>
           </ul>
         </div>
-        <div class="pad-all-2"></div>
+        <div class="p-3"></div>
         <h4>Selected Files</h4>
         <div class="container no-pad no-marg">
           <div>
@@ -93,7 +93,7 @@
                       <th scope="col">Workflow</th>
                       <th scope="col">Output</th>
                       <th scope="col">
-                        <span class="sr-only">actions</span>
+                        <span class="visually-hidden">actions</span>
                       </th>
                     </tr>
                   </thead>
@@ -191,7 +191,7 @@
                     {{ file.originalFilename }}
                   </button>
                   <button
-                    class="btn btn-link add-remove float-right file-list-item-add"
+                    class="btn btn-link add-remove float-end file-list-item-add"
                     v-on:click="removeFile(file.id)"
                   >
                     <svg
@@ -274,44 +274,48 @@
       </div></template>
     </modal>
     <SaveBundle />
-    <div>
-      <b-button
+    <!--TODO 
+      fr-done-btn is moved out of below if block as a work-around for the issue that supplementList is empty when the button is empty
+      when the button is first rendered, upon Run Workflow, it's populated but somehow the page doesn't get updated, 
+      so ref to it triggers NPE. A better fix would be to figure out a way to update the page reactively.
+    -->
+    <b-button
         id="fr-done-btn"
         @click="showFRModal = true"
         class="spl-fr-btn"
-      ></b-button>
+      >
+    </b-button>
+    <!-- Check whether supplementList is not empty -->
+    <div v-if="supplementList?.length > 0">
       <b-modal v-model="showFRModal" id="modal-center" centered>
-        <template #modal-header="{}">
+        <template #header>
           <h5 class="text-capitalize">
             Choose the Facial Recognition input file for
             {{ supplementList[0].primaryFileName }}:
           </h5>
         </template>
-        <template #default="{}">
-          <b-form-group v-slot="{ ariaDescribedby }">
+        <template #default>
+          <b-form-radio-group v-model="selectedSupplement" stacked>
             <b-form-radio
               v-for="(supplement, index) in supplementList"
               v-bind:key="index"
-              v-model="selectedSupplement"
-              :aria-describedby="ariaDescribedby"
-              name="some-radios"
               :value="supplement"
               >{{ supplement.name }}</b-form-radio
             >
-          </b-form-group>
-          <div class="row pad-all-2">
-            <div class="float-left">
+          </b-form-radio-group>
+          <div class="row p-3">
+            <div class="float-start">
               <label class="switch">
                 <input type="checkbox" v-model="isActiveSupplementSwitch" />
                 <span class="slider round"></span>
               </label>
             </div>
-            <div class="float-left text-left pad-l-1">
+            <div class="float-start text-start ps-2">
               Use this input for all files in this batch.
             </div>
           </div>
         </template>
-        <template #modal-footer="{ hide }">
+        <template #footer="{ hide }">
           <button class="btn btn-secondary" @click="hide()">
             Cancel
           </button>
@@ -325,7 +329,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "@/helpers/env.js";
 import { requestOptions } from "@/helpers/request-options";
 import Modal from "@/components/shared/Modal.vue";
@@ -349,7 +353,7 @@ export default {
       selectedFilesArray: [],
       errors: [],
       showFRModal: false,
-      supplementList: [],
+      supplementList: [], // list of supplements for a particular Supplement MGM node and particular PFile
       selectedSupplement: [],
       isActiveSupplementSwitch: false,
       defaultFacialRecognition: [],
@@ -712,17 +716,17 @@ export default {
             self.workflowSubmission.selectedWorkflowParameters;
           const supplementNodes = workflowNodes.filter(
             (node) => node.node_id === "supplement"
-          );
+          ); // all Supplement MGM nodes in the workflow
           if (supplementNodes.length) {
-            console.log("Facial recognition operation");
+            console.log("Getting supplements for all PFiles for each MGM in the workflow requiring supplements ...");
             let supplements = await self.getSupplementsForPrimaryfiles(
               supplementNodes
             );
 
             //Empty Content File listing
             const emptySupplementalPFiles = {};
-            for (let i = 0; i < supplements.length; i++) {
-              for (let j = 0; j < supplements[i].length; j++) {
+            for (let i = 0; i < supplements.length; i++) { // loop through each supplementNode
+              for (let j = 0; j < supplements[i].length; j++) { // loop through each PFile for the current supplementNode
                 if (!supplements[i][j].length) {
                   if (Object.keys(emptySupplementalPFiles).length) {
                     let matched = true;
@@ -792,13 +796,13 @@ export default {
 
               let paths = [];
               //User input in the case of multiple supplements are found
-              for (let i = 0; i < supplements.length; i++) {
-                for (let j = 0; j < supplements[i].length; j++) {
+              for (let i = 0; i < supplements.length; i++) { // loop through each supplementNode
+                for (let j = 0; j < supplements[i].length; j++) { // loop through each PFile for the current supplementNode
                   let oneSupplement = [];
-                  if (supplements[i][j].length > 1) {
-                    self.supplementList = supplements[i][j];
+                  if (supplements[i][j].length > 1) { // more than one supplements exist for current supplementNode and PFile
+                    self.supplementList = supplements[i][j]; // list of supplements for current supplementNode and PFile
                     // Toggle button's activity
-                    if (self.defaultFacialRecognition.length) {
+                    if (self.defaultFacialRecognition.length) { // if "Use this supplement for all files" was choosen by now
                       let matched = true;
                       for (let frValue of self.defaultFacialRecognition) {
                         for (let sup of self.supplementList) {
@@ -811,7 +815,7 @@ export default {
                           }
                         }
                       }
-                      if (!matched) {
+                      if (!matched) { // if default supplement doesn't match, ask user to select from current supplement list
                         self.selectedSupplement = supplements[i][j][0];
                         self.showFRModal = true;
                         await self.pauser();
@@ -823,7 +827,7 @@ export default {
                           self.isActiveSupplementSwitch = false;
                         }
                       }
-                    } else {
+                    } else { // no default supplement, ask user to select from current supplement list
                       self.selectedSupplement = supplements[i][j][0];
                       self.showFRModal = true;
                       await self.pauser();
@@ -833,7 +837,7 @@ export default {
                         self.isActiveSupplementSwitch = false;
                       }
                     }
-                  } else {
+                  } else {  // just one supplements exist for current supplementNode and PFile, use that one, no need to choose
                     oneSupplement = supplements[i][j][0];
                   }
                   paths.push({ [j]: oneSupplement.absolutePathname });

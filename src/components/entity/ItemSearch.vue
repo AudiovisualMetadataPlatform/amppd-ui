@@ -3,23 +3,22 @@
     <loader :show="loading" />
     <div class="container-fluid">
       <div class="row expand-h">
-        <div class="col-12 bg-light-gray-1 item-search-container">
+        <div class="col-12 bg-light-gray-1">
           <main class="m-0">
-            <div class="pad-all-3">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <h1 class="col-lg-12">
-                      Item Search
-                      <button
-                        class="btn btn-primary btn-lg btn-edit float-right"
-                        type="button"
-                        @click="onSearch()"
-                      >
-                        Search Item
-                      </button>
-                    </h1>
-                  </div>
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <h1 class="col-lg-12">
+                    Item Search
+                    <button
+                      class="btn btn-primary btn-lg btn-edit float-end"
+                      type="button"
+                      v-b-modal.modal-lg
+                      @click="searchSource = []"
+                    >
+                      Search Item
+                    </button>
+                  </h1>
                 </div>
               </div>
             </div>
@@ -68,11 +67,6 @@ export default {
     searchItems(searchWord) {
       this.refreshData(searchWord);
     },
-    
-    // pop up child component (the Search pop-up ialog)
-    onSearch() {
-      this.$bvModal.show("modal-lg");
-    },
 
     // call item search API 
     async refreshData(searchWord = "") {
@@ -101,14 +95,6 @@ export default {
       }
     },
   },
-
-  updated() {
-    this.onSearch();
-  },
-  
-  mounted() {
-    this.onSearch();
-  },
 };
 </script>
 
@@ -116,8 +102,5 @@ export default {
 @import "../../styles/style.css";
 .item-search {
   width: calc(100% - 64px);
-}
-.item-search-container {
-  margin: 0px 32px;
 }
 </style>

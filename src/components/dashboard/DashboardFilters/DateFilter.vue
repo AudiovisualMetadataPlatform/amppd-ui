@@ -7,7 +7,7 @@
       id="dropdownMenuButton"
       data-toggle="dropdown"
       aria-haspopup="true"
-      aria-expanded="this.workflowDashboard.filtersEnabled.dateFilter ? 'true' : 'false'"
+      :aria-expanded="this.workflowDashboard.filtersEnabled.dateFilter ? 'true' : 'false'"
       v-on:click="setFilterFlags"
     >
       {{
@@ -15,44 +15,38 @@
       }}
     </button>
     <div
-      v-click-outside="closeFilter"
+      v-if="this.displayFilter === true" v-click-outside="closeFilter"
       class="dropdown-menu compact-form"
       :class="{ show: this.displayFilter === true }"
       aria-labelledby="dropdownMenuButton"
     >
       <form class="p-2">
-        <div class="col d-flex flex-wrap justify-content-between">
-          <label
-            for="colFormLabelFrom"
-            class="col-sm-4 col-form-label col-form-label-sm"
-            >From</label
-          >
-          <datepicker
-            v-model="fromDate"
-            class="form-control form-control-sm col-sm-8 my-datepicker"
-            format="MM/dd/yyyy"
-            v-on:input="setDisabledDate()"
-          ></datepicker>
-        </div>
-        <div class="col d-flex flex-wrap justify-content-between">
-          <label
-            for="colFormLabelFrom2"
-            class="col-sm-4 col-form-label col-form-label-sm"
-            >To</label
-          >
+        <div class="row align-items-center">
+          <div class="col-3">
+            <label for="fromDate" class="col-form-label col-form-label-sm">From</label>
+          </div>
+          <div class="col-auto">
+            <datepicker
+              v-model="fromDate"
+              class="form-control form-control-sm col-sm-8 my-datepicker"
+              format="MM/dd/yyyy"
+              v-on:input="setDisabledDate()"></datepicker>
+          </div>
+          <div class="col-3">
+            <label for="toDate" class="col-form-label col-form-label-sm">To</label>
+          </div>
+          <div class="col-auto">
           <datepicker
             v-model="toDate"
             class="form-control form-control-sm col-sm-8 my-datepicker"
             format="MM/dd/yyyy"
-            :disabled-dates="state.disabledDates"
-          ></datepicker>
-        </div>
-        <div class="col d-flex flex-wrap justify-content-between">
-          <div class="col-sm-12">
+            :disabled-dates="state.disabledDates"></datepicker>
+          </div>
+          <div class="col-auto col-12">
             <button
-              class="btn btn-info float-right m-2"
+              class="btn btn-info float-end m-2"
               @click="filterByDate($event)"
-            >
+              >
               Filter
             </button>
           </div>
@@ -62,9 +56,9 @@
   </div>
 </template>
 <script>
-import { sync } from "vuex-pathify";
-import Datepicker from "vuejs-datepicker";
-import ClickOutside from "vue-click-outside";
+import sync from "@/helpers/sync";
+import Datepicker from "vuejs3-datepicker";
+import vClickOutside from "click-outside-vue3";
 export default {
   name: "DateFilter",
   components: {
@@ -103,8 +97,10 @@ export default {
       self.state.disabledDates.to = new Date(self.fromDate);
     },
     closeFilter() {
-      this.displayFilter = false;
-      this.$emit("displayChanged", this.displayFilter);
+      if(this.displayFilter) {
+        this.displayFilter = false;
+        this.$emit("displayChanged", this.displayFilter);
+      }
     },
     filterByDate(e) {
       e.preventDefault();
@@ -149,7 +145,7 @@ export default {
     },
   },
   directives: {
-    ClickOutside,
+    clickOutside: vClickOutside.directive,
   },
   mounted() {
     // prevent click outside event with popupItem.

@@ -7,30 +7,28 @@
       v-for="(mst, i) in sharedService.sortByAlphabatical(mgmCategory.msts)"
       :key="i"
     >
-      <h3
-        class="w-100 d-flex justify-content-between align-items-center mgm-h3 card-title bg-light-gray"
-      >
+      <div
+        class="w-100 d-flex justify-content-between align-items-center mgm-h3 card-title bg-light-gray">
         <button
-          class="btn"
+          class="btn fs-4 "
           :class="visible.includes(i) ? null : 'collapsed'"
           :aria-expanded="visible.includes(i) ? 'true' : 'false'"
           :aria-controls="'mgm' + i"
-          style="font-size:24px; font-weight:400"
           @click="handleVisibility(i)"
         >
-          <span v-html="rightArrowSvg" style="font-size:1.25rem"></span>
-          <span class="sr-only">Toggle hidden content</span>
-          <span class="pl-2" style="font-size:1.25rem">{{ mst.name }}</span>
+          <span v-html="rightArrowSvg" class="fs-5"></span>
+          <span class="visually-hidden">Toggle hidden content</span>
+          <span class="ps-2 fs-5">{{ mst.name }}</span>
         </button>
         <b-form-radio
           v-model="selectedMst.body"
-          style="font-size:1.25rem;"
+          class="fs-5"
           name="mst-radios"
           :value="mst"
           @change="onChangeMst(i, mst)"
-          >&nbsp;select test</b-form-radio
-        >
-      </h3>
+          >select test
+        </b-form-radio>
+      </div>
       <b-collapse
         :id="'mgm' + i"
         class="mgm-content"
@@ -65,7 +63,7 @@
         </div>
       </div>
       <div
-        class="form-group marg-t-1"
+        class="mb-3 mt-2"
         v-if="
           selectedMst.detailBody &&
             selectedMst.mgmScoringParameters &&
@@ -103,9 +101,7 @@
               min="0"
               v-model="testParams[par.name]"
             />
-            <div class="input-group-append">
-              <span class="input-group-text" id="basic-addon2">seconds</span>
-            </div>
+            <span class="input-group-text" id="basic-addon2">seconds</span>
           </div>
           <div class="mb-3" v-else-if="par.type === 'SINGLE_SELECT'">
             <b-form-radio-group
@@ -154,7 +150,7 @@
             selectedMst.mgmScoringParameters.length
               ? "3"
               : "2"
-          }}) Select MGM Outputs to Test
+          }} Select MGM Outputs to Test
         </h3>
         <p class="m-b-0">
           Select the MGM output files to be tested against ground truth data
@@ -172,7 +168,7 @@
           selectedMst.mgmScoringParameters.length
             ? "4"
             : "3"
-        }}) Upload or Select Ground Truth Data
+        }} Upload or Select Ground Truth Data
       </h3>
       <p class="m-b-0">
         Upload a ground truth data file for each MGM output or select previously
@@ -198,10 +194,10 @@
                 <th scope="col" class="slim-col-3 border-top-0">
                   Ground Truth
                 </th>
-                <th scope="col" class="text-right slim-col-4 border-top-0">
+                <th scope="col" class="text-end slim-col-4 border-top-0">
                   Upload/Select Ground Truth
                 </th>
-                <th scope="col" class="text-right slim-col-5 border-top-0">
+                <th scope="col" class="text-end slim-col-5 border-top-0">
                   Remove Row
                 </th>
               </tr>
@@ -226,7 +222,7 @@
                     {{ record.gtSupplement.name }}</span
                   >
                 </td>
-                <td class="slim-col-4 text-right">
+                <td class="slim-col-4 text-end">
                   <button
                     type="button"
                     class="btn btn-outline-primary btn-md  uploadModal"
@@ -241,10 +237,10 @@
                     Upload/Select Ground Truth
                   </button>
                 </td>
-                <td class="text-right slim-col-5">
+                <td class="text-end slim-col-5">
                   <a
                     @click="removeRow(record)"
-                    class="float-right remove-row-top remove-row"
+                    class="float-end remove-row-top remove-row"
                   >
                     <svg
                       class="remove-svg"
@@ -256,8 +252,8 @@
                     >
                       <path
                         d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
-                      ></path></svg
-                    >Remove Row
+                      ></path></svg>
+                      Remove Row
                   </a>
                 </td>
               </tr>
@@ -267,7 +263,7 @@
       </div>
     </div>
     <button
-      class="btn btn-primary btn-lg marg-tb-3 float-right"
+      class="btn btn-primary btn-lg marg-tb-3 float-end"
       type="button"
       @click="onNewTestSubmit"
       :disabled="activeSubmitButton()"
@@ -276,7 +272,7 @@
     </button>
     <button
       type="button"
-      class="btn btn-outline-primary btn-lg mr-2 float-right"
+      class="btn btn-outline-primary btn-lg me-2 float-end"
       @click="onNewTestCancel"
     >
       Cancel
@@ -293,7 +289,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import config from "@/assets/constants/common-contant.js";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
@@ -506,22 +502,22 @@ export default {
                 return response;
               } else {
                 response.validationErrors.map((el) =>
-                  self.$bvToast.toast(el, self.sharedService.erorrToastConfig)
+                  self.$toast.error(el, self.sharedService.toastNotificationConfig)
                 );
               }
             })
             .then((res) => {
               if (res && res.success)
-                self.$bvToast.toast(
+                self.$toast.success(
                   "Test has been successfully submitted.",
-                  self.sharedService.successToastConfig
+                  self.sharedService.toastNotificationConfig
                 );
             });
         } catch (error) {
           self.loading = false;
-          self.$bvToast.toast(
+          self.$toast.error(
             "Something went wrong. Please try again!",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         }
       }
@@ -561,18 +557,18 @@ export default {
       } catch (error) {
         console.log(error);
         self.loading = false;
-        self.$bvToast.toast(
+        self.$toast.error(
           "Oops! Something went wrong.",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
       }
     },
-    onChangeMst(mstIndex, mstObj) {
+    async onChangeMst(mstIndex, mstObj) {
       const self = this;
       self.handleVisibility(mstIndex, "forceOpen");
       self.selectedMst.index = mstIndex;
       self.selectedMst.body = mstObj;
-      self.getDetailsMgmScoringTool(mstObj.id);
+      await self.getDetailsMgmScoringTool(mstObj.id);
       this.testParams = { "Match types": "Yes" };
       self.clearSelectedRecords();
     },
@@ -655,12 +651,6 @@ export default {
   }
 }
 
-.v-pills-card {
-  padding-top: 40px !important;
-}
-.v-pills-body {
-  display: block !important;
-}
 .mst-items {
   align-items: flex-start !important;
 }
@@ -679,69 +669,38 @@ export default {
 }
 .remove-row {
   cursor: pointer;
+  color: #153c4d !important;
+  text-decoration: none !important;
+  &:hover {
+    color: #f4871e !important;
+  }
 }
 .selected-mgm-outputs {
   background-color: #fef4ea;
 }
-
 .btn:focus {
   box-shadow: none !important;
 }
 .mgm-card {
   margin: 10px 0px !important;
 }
-
 .mgm-card .card-body {
   padding: 0px !important;
 }
-
 .mgm-h3 {
   padding: 0.75rem 1.25rem !important;
   border: 1px solid rgba(0, 0, 0, 0.125);
   margin-bottom: 0px;
 }
-
+.mgm-h3 .svg-inline {
+  vertical-align: middle;
+}
 .mgm-card .collapse .card,
 .mgm-card .collapse .card-body {
   border: 0px !important;
 }
-
 .mgm-content {
   padding: 1.25rem !important;
-}
-nav.nav-pills {
-  justify-content: flex-start !important;
-  padding: 0.5rem !important;
-  background: #e9ecef !important;
-  border-radius: 0.5rem !important;
-  list-style: none;
-}
-
-.nav-pills .nav-item.active {
-  background: #153c4d !important;
-  color: white !important;
-}
-
-.nav-item.active .a:link,
-.nav-item.active a {
-  color: white !important;
-}
-
-a:link,
-a {
-  color: #153c4d !important;
-}
-
-.nav-pills .active {
-  border-radius: 0.25rem !important;
-}
-
-a:hover {
-  color: #f4871e;
-  text-decoration: none;
-}
-.nav {
-  list-style: none !important;
 }
 .bg-light-gray {
   background-color: rgba(0, 0, 0, 0.03) !important;
@@ -754,28 +713,6 @@ h3.card-title .btn {
 .card-title {
   margin-bottom: 0px !important;
 }
-
-.nav-pills .nav-link {
-  border-radius: 0.25rem;
-}
-.nav-link:focus,
-.nav-link:hover {
-  text-decoration: none;
-}
-a:hover {
-  color: #f4871e !important;
-  text-decoration: none;
-}
-
-.pointer-events-none {
-  pointer-events: none;
-}
-
-.nav-link {
-  margin-left: auto;
-  margin-right: 0;
-}
-
 .custom-radio .custom-control-input:checked ~ .custom-control-label::after {
   width: 1.25rem !important;
   height: 1.25rem !important;
@@ -798,11 +735,9 @@ a:hover {
   width: 1rem !important;
   height: 1rem !important;
 }
-
 .custom-control-label {
   cursor: pointer !important;
 }
-
 .param-radio
   > .custom-radio
   .custom-control-input:checked

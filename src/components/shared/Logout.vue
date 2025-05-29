@@ -35,8 +35,7 @@
 <script>
 import config from "../../assets/constants/common-contant.js"
 import { accountService } from "@/service/account-service";
-import { sync } from "vuex-pathify";
-import defaultState from "../../store/state";
+import sync from "@/helpers/sync";
 import SharedService from "@/service/shared-service";
 export default {
   name: "logout",
@@ -58,16 +57,7 @@ export default {
         );
       } else {
         accountService.logout();
-        self.isAuthenticated = false;
-        self.acIsAdmin = false;
-        self.acUnitsActions = [];
-        self.acUnitsMedia = [];
-        self.acUnitsOutput = [];
-        self.acActions = [];
-        self.mgmCategories = [];
         this.$router.push("/");
-        // After successful logout we need to reset the state to prevent from showing old data
-        this.$store.replaceState(defaultState);
       }
     },
     routeTo(submenu) {

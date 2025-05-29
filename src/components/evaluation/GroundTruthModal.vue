@@ -2,27 +2,20 @@
   <div>
     <loader :show="loading" />
     <b-modal
-      v-model="showModal"
+      :modelValue="showModal"
+      @update:modelValue="showModal = $event" 
       id="modal-center"
       centered
       no-close-on-backdrop
       size="xl"
     >
-      <template #modal-header="{}">
+      <template #header>
         <h5 class="modal-title" id="exampleModalLongTitle">
           Upload/Select Ground Truth
         </h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span @click="onCancel()">×</span>
-        </button>
       </template>
-      <template #default="{}">
-        <div class="form-row body-m">
+      <template #default>
+        <div class="row body-m">
           <div class="col-12">
             <h3>Select a Ground Truth</h3>
             <div class="scrollDiv gt-table">
@@ -45,7 +38,7 @@
                     <td>
                       {{ supplement.description }}
                     </td>
-                    <td>{{ supplement.createdDate | LOCAL_DATE_VALUE }}</td>
+                    <td>{{ $filters.localDate(supplement.createdDate) }}</td>
                     <td class="text-center slim-col-12">
                       <input
                         type="radio"
@@ -84,10 +77,12 @@
             <h3>Upload Ground Truth</h3>
             <table class="table" v-if="uploadGtFiles && uploadGtFiles.length">
               <thead>
+                <tr>
                 <th>File Label*</th>
                 <th>Filename</th>
                 <th>Description</th>
                 <th></th>
+                </tr>
               </thead>
               <tbody>
                 <tr v-for="(file, index) in uploadGtFiles" :key="file.id">
@@ -119,37 +114,35 @@
                   </td>
                   <td>
                     <button
-                      class="btn btn-primary btn float-right"
+                      class="btn btn-primary btn float-end"
                       @click="handleUploadSaveBtn($event, file)"
                     >
                       Save
                     </button>
                     <button
-                      class="btn btn-link add-remove float-right mr-1"
+                      class="btn btn-link add-remove float-end me-1"
                       @click="removeFile(index)"
                     >
-                      <span v-html="removeIcon" class="pr-1"></span>Remove File
+                      <span v-html="removeIcon" class="pe-1"></span>Remove File
                     </button>
                   </td>
                 </tr>
               </tbody>
             </table>
             <div class="d-flex w-100 mt-3">
-              <div class="input-group image-preview col-11 p-0 mr-1">
+              <div class="input-group w-100 p-0 me-1">
                 <input
                   type="file"
                   :accept="'.' + mstDetails.groundtruthFormat"
-                  class="form-control-file btn btn-light btn"
-                  id="exampleFormControlFile1"
-                  value="Upload"
+                  class="btn btn-light btn w-100"
                   ref="fileupload"
                   @change="getFile"
                   :disabled="uploadGtFiles.length > 0"
                 />
               </div>
-              <div class="col-1 p-0" style="padding: 5px !important;">
+              <div class="p-0 align-self-center">
                 <button
-                  class="btn btn-primary btn float-right"
+                  class="btn btn-primary btn float-end"
                   @click="uploadFile()"
                   :disabled="uploadGtFiles.length > 0"
                 >
@@ -160,7 +153,7 @@
           </div>
         </div>
       </template>
-      <template #modal-footer="{}">
+      <template #footer>
         <button
           type="button"
           class="btn btn-outline-warning"
@@ -178,7 +171,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 import config from "@/assets/constants/common-contant.js";
@@ -251,9 +244,9 @@ export default {
         self.loading = false;
       } catch (error) {
         self.loading = false;
-        self.$bvToast.toast(
-          "Something went wrong.Please try again!",
-          self.sharedService.erorrToastConfig
+        self.$toast.error(
+          "Something went wrong. Please try again!",
+          self.sharedService.toastNotificationConfig
         );
       }
     },
@@ -291,9 +284,9 @@ export default {
       e.preventDefault();
       self.upladFile = true;
       if (!data.name) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Please provide required fields!",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         return;
       }
@@ -331,7 +324,7 @@ export default {
         formData.append("mediaFile", data.file);
         await self.supplementService
           .addSupplement(
-            "primaryfiles",
+            "primaryfile",
             self.selectedRecord.primaryfileId,
             formData
           )
@@ -353,12 +346,12 @@ export default {
             error.response.data.validationErrors
           );
           errorMessages.map((el) =>
-            self.$bvToast.toast(el, self.sharedService.erorrToastConfig)
+            self.$toast.error(el, self.sharedService.toastNotificationConfig)
           );
         } else {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Something went wrong.Please try again!",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         }
       }

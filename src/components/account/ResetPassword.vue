@@ -10,8 +10,8 @@
           <div class="card-body">
             <h2 class="card-title">Reset Password</h2>
 
-            <form>
-              <div class="form-group" v-if="errors.other_errors.length">
+            <form class="needs-validation" ref="resetPasswordForm">
+              <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="form-errors"
                   v-for="error in errors.other_errors"
@@ -20,9 +20,8 @@
                 >
               </div>
 
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="exampleInputEmail1">Email address</label>
-                <!-- <label class="form-errors" v-if="errors.email_error.length">{{errors.email_error}}</label> -->
                 <input
                   type="email"
                   class="form-control"
@@ -31,13 +30,12 @@
                   placeholder="Registered Email address"
                   v-bind:readonly="isReadOnly"
                 />
+                <!-- below line can be removed, as errors.email_error is never populated, and above email input is readonly
+                <label class="invalid-feedback" v-if="errors.email_error">{{errors.email_error}}</label>  -->
               </div>
 
-              <div class="form-group">
-                <label for="password">Password</label>
-                <label class="form-errors" v-if="errors.pswd_error.length">{{
-                  errors.pswd_error
-                }}</label>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
                 <input
                   type="password"
                   class="form-control"
@@ -46,13 +44,11 @@
                   placeholder="Create New Password"
                   v-on:focus="onClick(`pswd`)"
                 />
+                <label class="invalid-feedback" v-if="errors.pswd_error.length">{{errors.pswd_error}}</label>
               </div>
 
-              <div class="form-group">
-                <label for="Password2">Confirm Password</label>
-                <label class="form-errors" v-if="errors.cpswd_error.length">{{
-                  errors.cpswd_error
-                }}</label>
+              <div class="mb-3">
+                <label for="Password2" class="form-label">Confirm Password</label>
                 <input
                   type="password"
                   class="form-control"
@@ -61,6 +57,7 @@
                   placeholder="Confirm New Password"
                   v-on:focus="onClick(`cpswd`)"
                 />
+                <label class="invalid-feedback" v-if="errors.cpswd_error.length">{{errors.cpswd_error}}</label>
               </div>
 
               <button class="btn btn-primary marg-bot-4" v-on:click="reset()">
@@ -117,19 +114,20 @@ export default {
       }
       if (!this.pswd) {
         this.errors.pswd_error = "(Password required)";
-        this.errors.errorExist = true;
       } else if (this.pswd.length < 8) {
         this.errors.pswd_error = "(Password must be at least 8 characters)";
-        this.errors.errorExist = true;
       }
       if (!this.cpswd) {
         this.errors.cpswd_error = "(Confirm Password required)";
-        this.errors.errorExist = true;
       } else if (this.pswd && this.cpswd && this.cpswd != this.pswd) {
         this.errors.other_errors.push("Both password fields must match.");
       }
-
-      if (this.errors.other_errors.length == 0 && !this.errors.errorExist) {
+      const form = this.$refs.resetPasswordForm;
+      if (!form.checkValidity()
+          || this.pswd && this.cpswd && this.cpswd != this.pswd) {
+        form.classList.add("was-validated");
+        return;
+      } else {
         console.log("entered axios if");
         await accountService
           .sendResetRequest(this.reset_token, this.pswd, this.emailid)
@@ -177,13 +175,3 @@ export default {
   },
 };
 </script>
-
-<style lang="css">
-@import "../../styles/style.css";
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
-}
-</style>

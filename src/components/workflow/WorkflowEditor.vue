@@ -26,17 +26,17 @@
         </div>
       </div>
       <b-modal v-model="showModal" id="modal-center" centered>
-        <template #modal-header="{}">
+        <template #header>
           <h5 class="text-capitalize">
             Confirm
           </h5>
         </template>
-        <template #default="{}">
-          <div class="row pad-all-2">
+        <template #default>
+          <div class="row p-3">
             Any unsaved changes will be lost. Do you want to continue?
           </div>
         </template>
-        <template #modal-footer="{ hide }">
+        <template #footer="{ hide }">
           <button class="btn btn-secondary" @click="hide()">
             Go Back
           </button>
@@ -97,9 +97,9 @@ export default {
         })
         .catch((e) => {
           self.showModal = false;
-          self.$bvToast.toast(
+          self.$toast.error(
             "Unable to process your request. Please contact Administrator",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         });
     },

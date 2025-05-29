@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-light-gray-1 pad-all-1">
+  <div class="card bg-light-gray-1 p-2">
     <div class="container-fluid">
       <div class="row">
         <div class="col">
@@ -16,7 +16,7 @@
               <svg
                 aria-hidden="true"
                 focusable="false"
-                class="svg-inline float-right arrow-1"
+                class="svg-inline float-end arrow-1"
                 role="img"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 320 512"
@@ -34,32 +34,32 @@
           <div class="row">
             <div class="col-md-6">
               <dl class="row">
-                <dt class="col-sm-4 text-right">Source Name:</dt>
-                <dd class="col-sm-8 text-left">
+                <dt class="col-sm-4 text-end">Source Name:</dt>
+                <dd class="col-sm-8 text-start">
                   {{ collectionDetails.items[index].externalSource }}
                 </dd>
-                <dt class="col-sm-4 text-right">Source ID:</dt>
-                <dd class="col-sm-8 text-left">
+                <dt class="col-sm-4 text-end">Source ID:</dt>
+                <dd class="col-sm-8 text-start">
                   {{ collectionDetails.items[index].externalId }}
                 </dd>
-                <dt class="col-sm-4 text-right">Created by:</dt>
-                <dd class="col-sm-8 text-left">
+                <dt class="col-sm-4 text-end">Created by:</dt>
+                <dd class="col-sm-8 text-start">
                   {{ collectionDetails.items[index].createdBy }}
                 </dd>
-                <dt class="col-sm-4 text-right">Created Date:</dt>
-                <dd class="col-sm-8 text-left">
+                <dt class="col-sm-4 text-end">Created Date:</dt>
+                <dd class="col-sm-8 text-start">
                   {{ collectionDetails.items[index].createdDate }}
                 </dd>
               </dl>
             </div>
             <div class="col-md-6">
               <dl class="row">
-                <dt class="col-sm-4 text-right">Modified by:</dt>
-                <dd class="col-sm-8 text-left">
+                <dt class="col-sm-4 text-end">Modified by:</dt>
+                <dd class="col-sm-8 text-start">
                   {{ collectionDetails.items[index].modifiedBy }}
                 </dd>
-                <dt class="col-sm-4 text-right">Modifed Date:</dt>
-                <dd class="col-sm-8 text-left">
+                <dt class="col-sm-4 text-end">Modifed Date:</dt>
+                <dd class="col-sm-8 text-start">
                   {{ collectionDetails.items[index].modifiedDate }}
                 </dd>
               </dl>
@@ -68,13 +68,13 @@
         </div>
       </div>
       <div class="row">
-        <div class="col text-right controls">
-          <button class="btn btn-outline-danger btn marg-t-1">Delete</button>
-          <button class="btn btn-outline-primary btn marg-t-1">Edit</button>
-          <button class="btn btn-outline-primary btn marg-t-1">
+        <div class="col text-end controls">
+          <button class="btn btn-outline-danger btn mt-2">Delete</button>
+          <button class="btn btn-outline-primary btn mt-2">Edit</button>
+          <button class="btn btn-outline-primary btn mt-2">
             View workflow results
           </button>
-          <a href="add-files.html" class="btn btn-primary btn marg-t-1"
+          <a href="add-files.html" class="btn btn-primary btn mt-2"
             >Add files</a
           >
         </div>
@@ -85,7 +85,7 @@
         class="container"
       >
         <ul
-          class="list-unstyled file-list marg-t-5"
+          class="list-unstyled file-list"
           v-for="rec in collectionDetails.items[index] &&
             collectionDetails.items[index].primaryFiles"
           :key="rec.id"
@@ -107,7 +107,7 @@
               </svg>
               {{ rec.originalFilename }}
             </button>
-            <button class="btn btn-link add-remove float-right">
+            <button class="btn btn-link add-remove float-end">
               <svg
                 class="icon-minus"
                 version="1.1"
@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import CollectionDetailsService from "../../service/collection-detail-service";
 
 export default {

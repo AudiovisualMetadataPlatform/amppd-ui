@@ -5,31 +5,18 @@
       <div class="container-fluid p-0">
         <div class="row expand-h">
           <div class="col-12 p-0">
-            <main class="ml-5 mr-5">
+            <main class="ms-5 me-5">
               <h1>MGM Test Results</h1>
               <b-overlay rounded="sm" class="mt-2">
                 <div>
                   <div class="">
-                    <b-navbar
-                      id="pills-tab-1"
-                      toggleable="lg"
-                      type="dark"
-                      class="mb-3 nav-pills"
-                    >
-                      <span
-                        v-for="(item, i) in ['Review Scores', 'Review Outputs']"
-                        :key="i"
-                      >
-                        <b-nav-item
-                          :class="selectedResultTab === i ? 'active' : ''"
-                          @click="onChangeResultTab(i)"
-                          >{{ item }}</b-nav-item
-                        >
-                      </span>
-                    </b-navbar>
+                    <b-tabs v-model="selectedResultTab" class="mb-3">
+                      <b-tab title="Review Scores"></b-tab>
+                      <b-tab title="Review Outputs"></b-tab>
+                    </b-tabs>
 
                     <dl
-                      class="d-flex col-12 mt-3 mb-0 pr-0 pl-0"
+                      class="d-flex col-12 mt-3 mb-0 pe-0 ps-0"
                       v-if="selectedResultTab === 0"
                     >
                       <div class="w-100">
@@ -76,11 +63,12 @@
                                 toggleable="lg"
                                 type="dark"
                                 class="mb-3 nav-pills"
+                                container="fluid justify-content-start px-0"
                               >
                                 <span
                                   v-for="(item, i) in ['Bar chart', 'Table']"
                                   :key="i"
-                                  class="nav-item mr-3"
+                                  class="nav-item me-3"
                                 >
                                   <button
                                     class="nav-link"
@@ -97,7 +85,7 @@
                                 </span>
                               </b-navbar>
                               <dl
-                                class="col-12 mt-4 mb-0 pr-0"
+                                class="col-12 mt-4 mb-0 pe-0"
                                 v-if="selectedScoreTab === 0"
                               >
                                 <BarChart
@@ -105,7 +93,7 @@
                                   :data="barChartData"
                                 />
                               </dl>
-                              <dl class="col-12 mt-4 mb-0 pr-0" v-else>
+                              <dl class="col-12 mt-4 mb-0 pe-0" v-else>
                                 <div class="table-responsive scrollingTable">
                                   <table
                                     class="table table-bordered review-scores-table p-0 small-text"
@@ -210,7 +198,7 @@
                               <!-- <div class="card">
                                 <div class="card-body">
                                   <h3>
-                                    Tools<a href="#" class="float-right small"
+                                    Tools<a href="#" class="float-end small"
                                       ><svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="16"
@@ -239,9 +227,9 @@
                         </div>
                       </div>
                     </dl>
-                    <dl class="col-12 mt-3 mb-0 pr-0" v-else>
+                    <dl class="col-12 mt-3 mb-0 pe-0" v-else>
                       <div class="row">
-                        <div class="col-3 pl-0">
+                        <div class="col-3 ps-0">
                           <h2>Files</h2>
                           <form id="myForm">
                             <div class="scroll-div bg-white side-div">
@@ -350,7 +338,7 @@
                                     >
                                       <!-- <button
                                         type="button"
-                                        class="btn btn-link float-right data-pop"
+                                        class="btn btn-link float-end data-pop"
                                         data-title="Filter GT Start"
                                         data-container="body"
                                         data-toggle="popover"
@@ -415,7 +403,7 @@
                                 <div class="card-body">
                                   <h3>
                                     Tools
-                                    <a href="#" class="float-right small">
+                                    <a href="#" class="float-end small">
                                       <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="16"
@@ -482,7 +470,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Loader from "@/components/shared/Loader.vue";
 import SharedService from "@/service/shared-service";
 import EvaluationService from "@/service/evaluation-service";
@@ -547,15 +535,6 @@ export default {
         self.activeScoreTab = "bar-chart";
       }
     },
-    onChangeResultTab(index) {
-      const self = this;
-      self.selectedResultTab = index;
-      if (index === 1) {
-        self.activeResultTab = "review-ouputs";
-      } else {
-        self.activeResultTab = "review-scores";
-      }
-    },
     async networkCalls(testResultIds) {
       const self = this;
       self.loading = true;
@@ -592,9 +571,9 @@ export default {
           self.selectedTestResult.scores
         ).headers[0].field;
       } catch (error) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Oops! Something went wrong.",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         console.error(error.message);
       }
@@ -614,53 +593,9 @@ export default {
 
 <style lang="css">
 @import "../../styles/style.css";
-nav.nav-pills {
-  justify-content: flex-start !important;
-  padding: 0.4rem !important;
-  background: #e9ecef !important;
-  border-radius: 0.5rem !important;
-  list-style: none;
-}
-.nav-pills .nav-item.active {
-  background: #153c4d !important;
-  color: white !important;
-}
 .active-score {
   background: #153c4d !important;
   color: white !important;
-}
-.nav-item.active .a:link,
-.nav-item.active a {
-  color: white !important;
-}
-a:link,
-a {
-  color: #153c4d !important;
-}
-.nav-pills .active {
-  border-radius: 0.25rem !important;
-}
-.nav-pills .nav-link {
-  border-radius: 0.25rem;
-}
-a:hover {
-  color: #f4871e !important;
-  text-decoration: none;
-}
-
-.action-btn-grp {
-  padding: 8px !important;
-}
-.btn-new-test {
-  margin-right: 40px;
-}
-.a-link:hover {
-  cursor: pointer;
-}
-.active-tab {
-  background: #153c4d !important;
-  color: white !important;
-  border-color: #153c4d !important;
 }
 .scrollingDiv {
   height: 600px;

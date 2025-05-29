@@ -1,26 +1,18 @@
 <template>
   <div class="dataTables_wrapper no-footer">
     <loader :show="workflowDashboard.loading" />
-    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap px-0 justify-content-between">
-      <div
-        class="
-          col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12
-          dataTables_length
-          my-auto
-        "
-      >
-        <label>
+    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap px-2 justify-content-between">
+      <div class="dataTables_length my-auto">
+        <label class="ps-1">
           Show 
           <select
             name="myTable_length"
             v-model="workflowDashboard.searchQuery.resultsPerPage"
             aria-controls="myTable"
-            class
             @change="
               refreshData();
               updateUserValues();
-            "
-          >
+            ">
             <option value="10">10</option>
             <option value="25">25</option>
             <option value="50">50</option>
@@ -29,26 +21,18 @@
           Entries 
         </label>
       </div>
-      <b-pagination
-        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100"
-        v-model="workflowDashboard.searchQuery.pageNum"
-        :total-rows="workflowDashboard.searchResult.totalResults"
-        :per-page="workflowDashboard.searchQuery.resultsPerPage"
-        @change="paginate($event)"
-        size="sm"
-        align="center"
-        first-number
-        limit="9"
-        last-number
-        prev-text="Prev"
-        next-text="Next"
-      ></b-pagination>
+      <pagination
+        :pageNum="workflowDashboard.searchQuery.pageNum"
+        :resultsPerPage="Number.parseInt(workflowDashboard.searchQuery.resultsPerPage)"
+        :totalResults="workflowDashboard.searchResult.totalResults"
+        :maxPages="9"
+        @paginate="paginate"
+        :showTotalText="false"
+      />
       <slot name="show-hide-columns"></slot>
     </div>
 
-    <div
-      class="table-responsive"
-    >
+    <div class="table-responsive">
       <table id="myTable" class="table dataTable no-footer">
         <thead>
           <tr v-if="parent === 'NewTest' || parent === 'TestResults'">
@@ -84,10 +68,10 @@
             }"
           >
             <td v-if="checkAvailability('testDate')">
-              {{ new Date(rec.testDate) | LOCAL_DATE_VALUE }}
+              {{ $filters.localDate(new Date(rec.testDate)) }}
             </td>
             <td v-if="checkAvailability('dateCreated')">
-              {{ new Date(rec.dateCreated) | LOCAL_DATE_VALUE }}
+              {{ $filters.localDate(new Date(rec.dateCreated)) }}
             </td>
             <td v-if="checkAvailability('submitter')">{{ rec.submitter }}</td>
             <td v-if="checkAvailability('unit')">{{ rec.unitName }}</td>
@@ -119,8 +103,8 @@
               <a v-if="canAccessLink(rec, false) && outputReady(rec)"
                 @click="workflowResultService.getSymlinkContent(rec, true, parent, $event)"                
                 target="_blank"
-                class="complete-output"
-                >{{ rec.outputName }}
+                class="complete-output">
+                {{ rec.outputName }}
               </a>
               <a v-else-if="canAccessLink(rec, false)"
                 role="link" aria-disabled="true">{{ rec.outputName }}
@@ -130,13 +114,10 @@
             <td v-if="checkAvailability('outputLabel')">            
               <a v-if="canAccessLink(rec, false) && outputReady(rec)"
                 @click="workflowResultService.getSymlinkContent(rec, true, parent, $event)"                
-                target="_blank"
-                class="complete-output"
-                >{{ rec.outputLabel }}
+                target="_blank" class="complete-output">
+                {{ rec.outputLabel }}
               </a>
-              <a v-else-if="canAccessLink(rec, false)"
-                role="link" aria-disabled="true">{{ rec.outputLabel }}
-              </a>         
+              <a v-else-if="canAccessLink(rec, false)" role="link" aria-disabled="true">{{ rec.outputLabel }}</a>         
             <span v-else> {{ rec.outputLabel }} </span>
             </td>
             <td v-if="checkAvailability('groundTruth')">
@@ -145,70 +126,31 @@
             <td v-if="checkAvailability('scores')">
               {{ rec.scores }}
             </td>
-            <td
-              v-if="
-                parent !== 'NewTest' &&
-                  parent !== 'TestResults' &&
-                  checkAvailability('status')
-              "
-            >
-              <button
-                v-if="rec.status === 'COMPLETE'"
-                type="button"
-                class="btn-sm btn btn-success eq-width"
-              >
+            <td v-if="parent !== 'NewTest' && parent !== 'TestResults' && checkAvailability('status')">
+              <button v-if="rec.status === 'COMPLETE'" type="button" class="btn-sm btn btn-success eq-width">
                 Complete
               </button>
-              <button
-                v-else-if="rec.status === 'IN_PROGRESS'"
-                type="button"
-                class="btn-sm btn btn-warning eq-width"
-              >
+              <button v-else-if="rec.status === 'IN_PROGRESS'" type="button" class="btn-sm btn btn-warning eq-width">
                 In Progress
               </button>
-              <button
-                v-else-if="rec.status === 'PAUSED'"
-                type="button"
-                class="btn-sm btn btn-primary eq-width"
-              >
+              <button v-else-if="rec.status === 'PAUSED'" type="button" class="btn-sm btn btn-primary eq-width">
                 Paused
               </button>
-              <button
-                v-else-if="rec.status === 'ERROR'"
-                type="button"
-                class="btn-sm btn btn-danger eq-width"
-              >
+              <button v-else-if="rec.status === 'ERROR'" type="button" class="btn-sm btn btn-danger eq-width">
                 Error
               </button>
-              <button
-                v-else-if="rec.status === 'SCHEDULED'"
-                type="button"
-                class="btn-sm btn btn-blue eq-width"
-              >
+              <button v-else-if="rec.status === 'SCHEDULED'" type="button" class="btn-sm btn btn-blue eq-width">
                 Scheduled
               </button>
-              <button
-                v-else-if="rec.status === 'DELETED'"
-                type="button"
-                class="btn-sm btn eq-width"
-              >
+              <button v-else-if="rec.status === 'DELETED'" type="button" class="btn-sm btn eq-width">
                 Deleted
               </button>
             </td>
             <td
-              v-if="
-                parent !== 'NewTest' &&
-                  parent !== 'TestResults' &&
-                  checkAvailability('actions')
-              "
-              class="toggleActions"
-            >
-              <a
-                class="btn btn-link add-remove to-delete"
-                :class="{
-                  'disabled dis-color': currentUser.username !== rec.submitter,
-                }"
-              >
+              v-if="parent !== 'NewTest' && parent !== 'TestResults' && checkAvailability('actions')"
+              class="toggleActions">
+              <a class="btn btn-link add-remove to-delete"
+                :class="{ 'disabled dis-color': currentUser.username !== rec.submitter }">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="28"
@@ -226,30 +168,18 @@
               </a>
             </td>
             <td
-              v-if="
-                (parent === 'NewTest' || parent === 'TestResults') &&
-                  checkAvailability('addToTest')
-              "
-              class="text-center slim-col-14"
-            >
+              v-if="(parent === 'NewTest' || parent === 'TestResults') && checkAvailability('addToTest')"
+              class="text-center slim-col-14">
               <input
                 class="add-to-test-checkbox"
                 type="checkbox"
                 v-model="mgmEvaluation.selectedRecords"
-                :value="rec"
-              />
+                :value="rec"/>
             </td>
-            <td
-              v-if="parent === 'Deliverables' && checkAvailability('isFinal')"
-              class="slim-col-14"
-            >
+            <td v-if="parent === 'Deliverables' && checkAvailability('isFinal')" class="slim-col-14">
               <label class="switch" title="Final Result">
-                <span class="sr-only">Final Result</span>
-                <input
-                  type="checkbox"
-                  v-model="rec.isFinal"
-                  v-on:click="setWorkflowResultFinal(rec.id)"
-                />
+                <span class="visually-hidden">Final Result</span>
+                <input type="checkbox" v-model="rec.isFinal" v-on:click="setWorkflowResultFinal(rec.id)"/>
                 <span class="slider round"></span>
               </label>
             </td>
@@ -257,11 +187,7 @@
         </tbody>
         <tbody v-else>
           <tr>
-            <td
-              v-if="workflowDashboard.loading"
-              :colspan="columns.length"
-              class="no-results"
-            >
+            <td v-if="workflowDashboard.loading" :colspan="columns.length" class="no-results">
               <i class="fas fa-cog fa-spin"></i> Loading
             </td>
             <td v-else :colspan="columns.length" class="no-results">
@@ -272,38 +198,32 @@
       </table>
     </div>     
      
-    <div v-if="parent !== 'Deliverables'" class="col d-flex flex-wrap justify-content-between">
-      <label>{{ totalText }}</label>
-      <b-pagination
-        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 w-100"
-        v-model="workflowDashboard.searchQuery.pageNum"
-        :total-rows="workflowDashboard.searchResult.totalResults"
-        :per-page="workflowDashboard.searchQuery.resultsPerPage"
-        @change="paginate($event)"
-        size="sm"
-        align="center"
-        first-number
-        limit="9"
-        last-number
-        prev-text="Prev"
-        next-text="Next"
-      ></b-pagination>
+    <div v-if="parent !== 'Deliverables'">
+      <pagination
+        class="col-xl-10 col-lg-10 col-md-10 col-sm-12"
+        :pageNum="workflowDashboard.searchQuery.pageNum"
+        :resultsPerPage="Number.parseInt(workflowDashboard.searchQuery.resultsPerPage)"
+        :totalResults="workflowDashboard.searchResult.totalResults"
+        :maxPages="9"
+        @paginate="paginate"
+        :showTotalText="true"
+      />
     </div>
 
     <!-- Modal for delete confirmation -->
     <b-modal v-model="showModal" id="modal-center" centered>
-      <template #modal-header="{}">
+      <template #header>
         <h5 class="text-capitalize">
           Confirm
         </h5>
       </template>
-      <template #default="{}">
-        <div class="row pad-all-2">
+      <template #default>
+        <div class="row p-3">
           Are you sure you want to delete this result from the Dashboard? This
           action cannot be rolled back.
         </div>
       </template>
-      <template #modal-footer="{ hide }">
+      <template #footer="{ hide }">
         <button class="btn btn-outline" @click="hide()">
           Cancel
         </button>
@@ -316,7 +236,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "@/helpers/env";
 import WorkflowResultService from "../../service/workflow-result-service";
 import SortableHeader from "../shared/SortableHeader";
@@ -324,12 +244,14 @@ import Loader from "@/components/shared/Loader.vue";
 import SharedService from "../../service/shared-service";
 import { accountService } from "@/service/account-service.js";
 import EvaluationService from "@/service/evaluation-service";
+import Pagination from "@/components/shared/Pagination.vue";
 
 export default {
   name: "DashboardTable",
   components: {
     SortableHeader,
     Loader,
+    Pagination,
   },
   data() {
     return {
@@ -464,9 +386,9 @@ export default {
           .deleteWorkflowResult(self.selectedRecord.id)
           .then(() => {
             self.refreshData();
-            self.$bvToast.toast(
+            self.$toast.success(
               "Workflow result has been removed successfully.",
-              self.sharedService.successToastConfig
+              self.sharedService.toastNotificationConfig
             );
           });
       } catch (error) {
@@ -530,9 +452,9 @@ export default {
         self.workflowDashboard.loading = false;
       } catch (error) {
         self.workflowDashboard.loading = false;
-        self.$bvToast.toast(
+        self.$toast.error(
           "Oops! Something went wrong.",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         console.error(error.message);
       }
@@ -620,9 +542,11 @@ export default {
       this.refreshData();
     },
     workflowResultType: function() {
-      this.columns = this.columns.filter(
-        (column) => column.field !== "status" && column.field !== "actions"
-      );
+      if(!this.columns) {
+        this.columns = this.columns.filter(
+          (column) => column.field !== "status" && column.field !== "actions"
+        );
+      }
       this.workflowDashboard.searchQuery.pageNum = 1;
       this.workflowDashboard.searchQuery.filterByTypes = [
         this.workflowResultType,

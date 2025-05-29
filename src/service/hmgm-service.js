@@ -4,54 +4,67 @@ import { env } from "../helpers/env";
 
 const baseService = new BaseService();
 
-async function auth_token_required(auth_string, input_file){
-    if(env.getDisableAuth() == 'true'){
+// User input passcode is required if authentication is turned on and no previous valid HMGM token is stored
+async function auth_token_required(editorInput, authString) {
+    if (env.getDisableAuth() == 'true') {
+        console.log("HMGM authentication: AMP authentication disabled." );
         return false;
     }
     // check if the current user is logged in and the locally stored auth token is valid
-    var validated = await accountService.validate();
-    // if yes, no need to ask for HMGM auth string
-    if(validated===true){
-        return false;
+    if (accountService.currentUserValue) {
+        var validated = await accountService.validate();
+        // if yes, no need to ask for HMGM auth string
+        if (validated) {
+            console.log("HMGM authentication: current user is logged in AMP." );
+            return false;
+        }
     }
-    // otherwise, check HMGM auth string
-    var user_token = localStorage.getItem(input_file);
-    if(!user_token){
-        console.log("No input token defined")
+    // otherwise, check HMGM auth token
+    var hmgmToken = localStorage.getItem(editorInput);
+    if (!hmgmToken) {
+        console.log("HMGM authentication: No HMGM auth token stored. Need user to input passcode.");
         return true;
     }
-    console.log("User token: " + user_token);
-    return !auth_token_valid(auth_string, input_file, user_token);
+    // The following API call to validate HMGM token and auth string is unnecessary in most cases, 
+    // because as long as a previous HMGM token is stored for the editor input (which is unique per HMGM job), 
+    // the token should always be valid, as AMPPD currently doesn't expire HMGM token.
+    // Furthermore, the backend validates HMGM token upon each HMGM API call.
+    // The only situation when revalidating is useful is if the HMGM editor URL provided in the task is modified 
+    // with wrong auth string, or the HMGM token in local storage is somehow compromised, in which case
+    // below API call can prevent the page from being shown before any HMGM API call is made.
+    console.log("HMGM authentication: Found and validating stored HMGM auth token: " + hmgmToken);
+    return !auth_token_valid(hmgmToken, editorInput, null, authString);
 }
 
-async function auth_token_valid(auth_string, input_file, user_token){   
-    if(env.getDisableAuth() == 'true'){
-        console.log("Authenticated disabled: " + success);
-        return true;
-    } 
-
-    // TODO the following API call to check auth string might be unnecessary, 
-    // because the backend validate auth string upon any HMGM API call;
-    // the purpose here might be to prevent the page from being shown beore any HMGM API call is made
-    // although there should be better way to achieve that than using an extra API to check
-    const url = `/hmgm/authorize-editor?authString=${auth_string}&userToken=${user_token}&editorInput=${input_file}`;
-    var success = await baseService.get(url).then(x=>{
-        if(x.data==true){
-            const token = `${input_file};;;;${user_token};;;;${auth_string}`;
-            localStorage.setItem(input_file, token);
+async function auth_token_valid(hmgmToken, editorInput, userPass, authString) {   
+    let token = hmgmToken ? hmgmToken : '';
+    let input = editorInput ? editorInput : '';
+    let pass = userPass ? userPass : '';
+    let auth = authString ? authString : '';
+    const url = `/hmgm/authorize-editor?hmgmToken=${token}&editorInput=${input}&userPass=${pass}&authString=${auth}`;
+    try {
+        let result = await baseService.get(url);
+        if (result.data) {
+            const token = result.data;
+            // TODO for security, store HMGM token in sessionStorage or use JWT with expiration date
+            localStorage.setItem(editorInput, token);
+            console.log("hmgm-service.auth_token_valid: HMGM authentication succeeded: token = " + token);
+            return true;
         }
-        return x.data;
-    }).catch(e=>{
-        console.log("Error: " + e);
+        else {
+            console.log("hmgm-service.auth_token_valid: HMGM authentication failed: editorInput = " + editorInput);
+            return false;
+        }
+    }
+    catch(e) {
+        console.log("hmgm-service.auth_token_valid: Error during HMGM authentication: editorInput = " + editorInput, e);
         return false;
-    });
+    };
 
-    console.log("User authenticated for HMGM editor: " + success);
-    return success;
+    
 }
 
 function getTranscript(datasetPath, reset) {
-
     const url = `/hmgm/transcript-editor?datasetPath=${datasetPath}&reset=${reset}`;
     return baseService.get_token_auth(url, datasetPath)
         // get data

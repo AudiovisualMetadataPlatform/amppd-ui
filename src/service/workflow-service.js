@@ -104,24 +104,55 @@ export default class WorkflowService extends BaseService {
         return tempName;
     }
 
+    // show active published workflows
     getPublishedWorkflows() {
         return super.get_auth('/workflows?showPublished=true');
     }
 
+    // show active un/published workflows
     getActiveWorkflows() {
         return super.get_auth('/workflows');
     }
 
+    // show inactive un/published workflows
     getInactiveWorkflows() {
         return super.get_auth('/workflows?showHidden=true');
     }
 
+    // search active un/published workflows
     getActiveFilteredWorkflows(name, creator, dateRange, annotations, tags) {
         return super.get_auth(`/workflows?name=${name}&creator=${creator}&dateRange=${dateRange}&annotations=${annotations}&tags=${tags}`);
     }
 
+    // search inactive un/published workflows
     getInactiveFilteredWorkflows(name, creator, dateRange, annotations, tags) {
         return super.get_auth(`/workflows?showHidden=true&name=${name}&creator=${creator}&dateRange=${dateRange}&annotations=${annotations}&tags=${tags}`);
+    }
+
+    // search in/active un/published workflows
+    getFilteredWorkflows(active, name, creator, dateRange, annotations, tags) {
+        let paramA = active ? '' : 'showHidden=true&';
+        let param = `?${paramA}name=${name}&creator=${creator}&dateRange=${dateRange}&annotations=${annotations}&tags=${tags}`;
+        console.log("getFilteredWorkflows: param = " + param);
+        return super.get_auth(`/workflows${param}`);        
+    }
+
+    // by default, show active and un/published workflows
+    getWorkflows(active=true, publish=false) {
+        let paramA = active ? '' : 'showHidden=true';
+        let paramP = publish ? 'showPublished=true' : '';
+        let param = ''
+        if (paramA && paramP) {
+            param = '?' + paramA + '&' + paramP;
+        }
+        else if (paramA) {
+            param = '?' + paramA ;
+        }
+        else if (paramP) {
+            param = '?' + paramP ;
+        }
+        console.log("getWorkflows: param = " + param);
+        return super.get_auth(`/workflows${param}`);
     }
 
     async getWorkflowDetails(id) {
@@ -199,5 +230,9 @@ export default class WorkflowService extends BaseService {
 
     async createNewWorkflow() {
         return super.post_auth('/workflows/create');
+    }
+
+    async updateWorkflow(workflowId, activate = '', publish = '') {
+        return super.patch_auth(`/workflows/${workflowId}?activate=${activate}&publish=${publish}`);
     }
 }

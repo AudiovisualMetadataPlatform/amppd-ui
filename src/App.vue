@@ -16,7 +16,7 @@
           target="popup"
           @click="routeToHelp($event)"
         >
-          <span class="sr-only"
+          <span class="visually-hidden"
             ><title>
               Help, opens a new window for help topics for this page.
             </title></span
@@ -28,10 +28,12 @@
   </div>
 </template>
 <script>
+
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import config from "./assets/constants/common-contant.js";
 import { env } from "@/helpers/env.js";
-import "vue-mediaelement/src";
+import "mediaelement";
+
 export default {
   components: {
     Sidebar,

@@ -11,7 +11,7 @@
             image collections.
           </h2>
           <div class="container-fluid cards home-cards-container">
-            <div class="row row-eq-height pad-all-2 bottom-btns">
+            <div class="row pt-0 p-3 bottom-btns">
               <div
                 class="col-4 eq-height"
                 v-for="card in cardList"
@@ -19,13 +19,13 @@
               >
                 <div class="card home-card">
                   <h5 class="card-header">
-                    <span v-html="card.icon" class="mr-2 card-head"></span
+                    <span v-html="card.icon" class="me-2 card-head"></span
                     >{{ card.header }}
                   </h5>
                   <div class="card-body">
                     <p class="card-text">{{ card.desc }}</p>
                     <a
-                      class="btnbtn btn-link tab-link"
+                      class="btn btn-link tab-link"
                       role="tab"
                       @click="routeToHelp($event, card.link)"
                       >{{ card.linkText ? card.linkText : "Learn more" }}
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "@/helpers/env";
 import config from "@/assets/constants/common-contant.js";
 import SharedService from "@/service/shared-service";
@@ -106,7 +106,12 @@ body,
   margin-top: -5px;
 }
 .tab-link {
+  color: #153c4d !important;
+  text-decoration: none !important;
   cursor: pointer;
+  &:hover {
+    color: #f4871e !important;
+  }
 }
 .card-head > svg {
   margin-top: -1px;

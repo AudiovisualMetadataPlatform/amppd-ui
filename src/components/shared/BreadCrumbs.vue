@@ -1,6 +1,6 @@
 <template>
-  <div class="col-12 p-0 fl-right" v-if="breadCrumbs && breadCrumbs.length">
-    <b-breadcrumb :items="breadCrumbs"></b-breadcrumb>
+  <div class="col-12 p-1" v-if="breadCrumbs && breadCrumbs.length">
+    <b-breadcrumb class="float-end" :items="breadCrumbs" />
   </div>
 </template>
 <script>
@@ -13,7 +13,6 @@ export default {
       let breadCrumbs = [];
       // needed to handle the intermediary entries for nested vue routes
       let breadcrumb = "";
-      let lastIndexFound = 0;
       for (let i = 0; i < pathArray.length; ++i) {
         breadcrumb = `${breadcrumb}${"/"}${pathArray[i]}`;
         if (
@@ -30,8 +29,13 @@ export default {
   },
 };
 </script>
-<style scoped>
-.breadcrumb {
-  justify-content: right;
+<style>
+.breadcrumb li.breadcrumb-item a {
+  color: #153c4d !important;
+  text-decoration: none !important;
+}
+
+.breadcrumb li.breadcrumb-item a:hover {
+  color: #f4871e !important;
 }
 </style>

@@ -2,18 +2,14 @@
   <div class="container-fluid workflows">
     <loader :show="workflowSubmission.loading" />
     <div class="row">
-      <!-- <Sidebar/> -->
       <div class="col-12 bg-light-gray-1">
         <main class="m-0">
-          <!-- <Logout/> -->
-          <div class="pad-all-3">
-            <div class="card">
-              <div class="card-body">
-                <div class="container-fluid">
-                  <div class="row">
-                    <SelectFiles />
-                    <SelectWorkflow />
-                  </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="container-fluid">
+                <div class="row">
+                  <SelectFiles />
+                  <SelectWorkflow />
                 </div>
               </div>
             </div>
@@ -24,7 +20,7 @@
   </div>
 </template>
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import SelectFiles from "@/components/workflow/SelectFiles.vue";
 import SelectWorkflow from "@/components/workflow/SelectWorkflow.vue";

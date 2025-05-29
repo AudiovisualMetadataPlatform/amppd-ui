@@ -4,7 +4,7 @@
       <slot>{{ label || propertyName }}</slot>
       <div
         style="width: 20px; height: 20px"
-        class="ml-2"
+        class="ms-2"
         :class="[
           {
             sorting: !isSorted,

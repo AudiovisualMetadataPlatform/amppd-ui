@@ -26,7 +26,7 @@
     >
       <form class="main-dropdown">
         <div class="container-fluid">
-          <label for="colFormLabelSearch" class=" bold">Workflow Name</label>
+          <label for="colFormLabelSearch" class="bold form-label">Workflow Name</label>
           <div class="input-group mb-3">
             <typeahead
               :source="getWorkflows"
@@ -38,21 +38,19 @@
               class="form-control bootstrap-typeahead"
               placeholder="Search Workflow Name"
             />
-            <div class="input-group-append">
-              <button class="btn btn-outline" id="btn-search" type="submit">
-                <svg
-                  class="svg-search"
-                  role="img"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 50 50"
-                >
-                  <title>search</title>
-                  <path
-                    d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"
-                  ></path>
-                </svg>
-              </button>
-            </div>
+            <button class="btn btn-outline input-group-text" id="btn-search" type="submit">
+              <svg
+                class="svg-search"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 50 50"
+              >
+                <title>search</title>
+                <path
+                  d="M47.3 43.4c0 0.9-0.3 1.7-1 2.4 -0.7 0.7-1.5 1-2.4 1 -0.9 0-1.7-0.3-2.4-1l-9-9c-3.1 2.2-6.6 3.3-10.5 3.3 -2.5 0-4.9-0.5-7.2-1.5 -2.3-1-4.2-2.3-5.9-3.9s-3-3.6-3.9-5.9c-1-2.3-1.5-4.7-1.5-7.2 0-2.5 0.5-4.9 1.5-7.2 1-2.3 2.3-4.2 3.9-5.9s3.6-3 5.9-3.9c2.3-1 4.7-1.5 7.2-1.5 2.5 0 4.9 0.5 7.2 1.5 2.3 1 4.2 2.3 5.9 3.9s3 3.6 3.9 5.9c1 2.3 1.5 4.7 1.5 7.2 0 3.8-1.1 7.3-3.3 10.5l9 9C47 41.7 47.3 42.5 47.3 43.4zM30.4 29.9c2.3-2.3 3.4-5.1 3.4-8.3 0-3.2-1.1-6-3.4-8.3 -2.3-2.3-5.1-3.4-8.3-3.4 -3.2 0-6 1.1-8.3 3.4 -2.3 2.3-3.4 5.1-3.4 8.3 0 3.2 1.1 6 3.4 8.3 2.3 2.3 5.1 3.4 8.3 3.4C25.4 33.4 28.1 32.2 30.4 29.9z"
+                ></path>
+              </svg>
+            </button>
           </div>
         </div>
       </form>
@@ -92,10 +90,10 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import _ from "underscore";
 import Typeahead from "../../shared/TypeAhead.vue";
-import ClickOutside from "vue-click-outside";
+import vClickOutside from "click-outside-vue3";
 
 export default {
   name: "WorkflowFilter",
@@ -160,7 +158,7 @@ export default {
     },
   },
   directives: {
-    ClickOutside,
+    clickOutside: vClickOutside.directive,
   },
   mounted() {
     // prevent click outside event with popupItem.

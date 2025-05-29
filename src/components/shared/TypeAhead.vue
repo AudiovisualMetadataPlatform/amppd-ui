@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 export default {
   name: "Typeahead",
   props: {

@@ -9,7 +9,6 @@
       <div class="col-12 bg-light-gray-1">
         <main :class="!unitEntity.currentUnit ? 'mb-3' : 'mb-5'">
           <!-- AmpHeader - Details page -->
-
           <b-card
             class="text-center mt-5 mb-3"
             :class="
@@ -22,14 +21,14 @@
                 : 'mb-3'
             "
           >
-            <h1 class="text-left">
+            <h1 class="text-start">
               <span class="text-capitalize">{{
                 baseUrl === "file" ? "Content File" : baseUrl
               }}</span>
               Details
               <button
                 v-if="baseUrl === 'item' && entity.parentType === 'item-search'"
-                class="btn btn-primary btn-lg float-right"
+                class="btn btn-primary btn-lg float-end"
                 type="button"
                 @click="handleSearchItem()"
               >
@@ -53,11 +52,11 @@
                     height="495.4px"
                   ></mediaelement>
                 </div>
-                <div class="float-left">
+                <div class="float-start media-info-btn">
                   <b-button
                     v-b-toggle.collapse-1
                     variant="outline-primary"
-                    class="btn-lg media-info-btn"
+                    class="btn-lg"
                   >
                     <span v-html="infoSvg"></span>
                     Media Information
@@ -84,9 +83,9 @@
                 }"
               >
                 <div v-if="baseUrl === 'file'">
-                  <div class="col-12 text-left form-group p-0 flex-div">
+                  <div class="col-12 text-start mb-3 p-0 flex-div">
                     <div style="width: 48%">
-                      <label>
+                      <label class="form-label">
                         <span class="text-capitalize">{{ baseUrl }}</span>
                         Name:
                       </label>
@@ -104,7 +103,7 @@
                       />
                     </div>
                     <div style="width: 48%">
-                      <label>Original Name:</label>
+                      <label class="form-label">Original Name:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -113,8 +112,8 @@
                       />
                     </div>
                   </div>
-                  <div class="col-12 text-left form-group p-0">
-                    <label>Description:</label>
+                  <div class="col-12 text-start mb-3 p-0">
+                    <label class="form-label">Description:</label>
                     <textarea
                       class="form-control w-100"
                       v-model="entity.description"
@@ -126,9 +125,9 @@
                       @change="onInputChange"
                     ></textarea>
                   </div>
-                  <div class="col-12 text-left form-group p-0 flex-div">
+                  <div class="col-12 text-start mb-3 p-0 flex-div">
                     <div style="width: 48%">
-                      <label>Created By:</label>
+                      <label class="form-label">Created By:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -137,18 +136,18 @@
                       />
                     </div>
                     <div style="width: 48%">
-                      <label>Date Created:</label>
+                      <label class="form-label">Date Created:</label>
                       <input
                         type="text"
                         class="form-control w-100"
-                        :value="entity.createdDate | LOCAL_DATE_VALUE"
+                        :value="$filters.localDate(entity.createdDate)"
                         :disabled="true"
                       />
                     </div>
                   </div>
-                  <div class="col-12 text-left form-group p-0 flex-div">
+                  <div class="col-12 text-start mb-3 p-0 flex-div">
                     <div style="width: 48%">
-                      <label>Modified By:</label>
+                      <label class="form-label">Modified By:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -161,7 +160,7 @@
                       <input
                         type="text"
                         class="form-control w-100"
-                        :value="entity.modifiedDate | LOCAL_DATE_VALUE"
+                        :value="$filters.localDate(entity.modifiedDate )"
                         :disabled="true"
                       />
                     </div>
@@ -171,15 +170,15 @@
                 <div v-else>
                   <div class="row">
                     <div
-                      class="text-left form-group"
+                      class="text-start mb-3"
                       :class="baseUrl === 'unit' ? 'col-6' : 'col-12'"
                     >
-                      <label>
+                      <label class="form-label">
                         <span class="text-capitalize">{{ baseUrl }}</span> Name:
                       </label>
                       <select
                         v-if="baseUrl == 'unit'"
-                        class="select custom-select w-100"
+                        class="select form-select w-100"
                         v-model="unitEntity.currentUnit"
                         @change="onUnitChange"
                         required
@@ -210,12 +209,12 @@
                       />
                     </div>
                     <div
-                      class="col-6 text-left form-group"
+                      class="col-6 text-start mb-3"
                       v-if="baseUrl === 'unit' && unitEntity.currentUnit"
                     >
-                      <label>Task Manager:</label>
+                      <label class="form-label">Task Manager:</label>
                       <select
-                        class="select custom-select w-100"
+                        class="select form-select w-100"
                         v-model="entity.taskManager"
                         :disabled="
                           showEdit ||
@@ -236,10 +235,10 @@
                     </div>
                   </div>
                   <div
-                    class="col-12 text-left form-group p-0"
+                    class="col-12 text-start mb-3 p-0"
                     v-if="baseUrl === 'file'"
                   >
-                    <label>Original Name:</label>
+                    <label class="form-label">Original Name:</label>
                     <input
                       type="text"
                       class="form-control w-100"
@@ -249,9 +248,9 @@
                   </div>
                   <div
                     v-if="unitEntity.currentUnit"
-                    class="col-12 text-left form-group p-0 expand-ani"
+                    class="col-12 text-start mb-3 p-0 expand-ani"
                   >
-                    <label>Description:</label>
+                    <label class="form-label">Description:</label>
                     <textarea
                       class="form-control w-100"
                       v-model="entity.description"
@@ -268,8 +267,8 @@
                   </div>
 
                   <div class="row" v-if="baseUrl === 'item'">
-                    <div class="col-6 text-left form-group">
-                      <label>Unit:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Unit:</label>
                       <input
                         v-if="
                           (isCreatePage || selectedItem.selectedItemId) &&
@@ -288,8 +287,8 @@
                         :disabled="true"
                       />
                     </div>
-                    <div class="col-6 text-left form-group">
-                      <label>Collection:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Collection:</label>
                       <input
                         v-if="
                           (isCreatePage || selectedItem.selectedItemId) &&
@@ -311,8 +310,8 @@
                   </div>
 
                   <div class="row" v-if="baseUrl === 'item'">
-                    <div class="col-6 text-left form-group">
-                      <label>Created By:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Created By:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -320,20 +319,20 @@
                         :disabled="true"
                       />
                     </div>
-                    <div class="col-6 text-left form-group">
-                      <label>Date Created:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Date Created:</label>
                       <input
                         type="text"
                         class="form-control w-100"
-                        :value="entity.createdDate | LOCAL_DATE_VALUE"
+                        :value="$filters.localDate(entity.createdDate)"
                         :disabled="true"
                       />
                     </div>
                   </div>
 
                   <div class="row" v-if="baseUrl === 'item'">
-                    <div class="col-6 text-left form-group">
-                      <label>Modified By:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Modified By:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -341,12 +340,12 @@
                         :disabled="true"
                       />
                     </div>
-                    <div class="col-6 text-left form-group">
-                      <label>Modified Date:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">Modified Date:</label>
                       <input
                         type="text"
                         class="form-control w-100"
-                        :value="entity.modifiedDate | LOCAL_DATE_VALUE"
+                        :value="$filters.localDate(entity.modifiedDate )"
                         :disabled="true"
                       />
                     </div>
@@ -357,8 +356,8 @@
                     class="col-12 p-0 expand-ani"
                   >
                     <div class="row">
-                      <div class="col-3 text-left form-group">
-                        <label>Created By:</label>
+                      <div class="col-3 text-start mb-3">
+                        <label class="form-label">Created By:</label>
                         <input
                           type="text"
                           class="form-control w-100"
@@ -366,17 +365,17 @@
                           :disabled="true"
                         />
                       </div>
-                      <div class="col-3 text-left form-group">
-                        <label>Date Created:</label>
+                      <div class="col-3 text-start mb-3">
+                        <label class="form-label">Date Created:</label>
                         <input
                           type="text"
                           class="form-control w-100"
-                          :value="entity.createdDate | LOCAL_DATE_VALUE"
+                          :value="$filters.localDate(entity.createdDate)"
                           :disabled="true"
                         />
                       </div>
-                      <div class="col-3 text-left form-group">
-                        <label>Modified By:</label>
+                      <div class="col-3 text-start mb-3">
+                        <label class="form-label">Modified By:</label>
                         <input
                           type="text"
                           class="form-control w-100"
@@ -385,12 +384,12 @@
                         />
                       </div>
 
-                      <div class="col-3 text-left form-group">
-                        <label>Modified Date:</label>
+                      <div class="col-3 text-start mb-3">
+                        <label class="form-label">Modified Date:</label>
                         <input
                           type="text"
                           class="form-control w-100"
-                          :value="entity.modifiedDate | LOCAL_DATE_VALUE"
+                          :value="$filters.localDate(entity.modifiedDate )"
                           :disabled="true"
                         />
                       </div>
@@ -398,10 +397,10 @@
                   </div>
 
                   <div class="row" v-if="baseUrl === 'item'">
-                    <div class="col-6 text-left form-group">
-                      <label>External Source:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">External Source:</label>
                       <select
-                        class="select custom-select w-100"
+                        class="select form-select w-100"
                         :disabled="
                           baseUrl === 'item' && !accessControl._item._update
                         "
@@ -415,8 +414,8 @@
                         >
                       </select>
                     </div>
-                    <div class="col-6 text-left form-group">
-                      <label>External Id:</label>
+                    <div class="col-6 text-start mb-3">
+                      <label class="form-label">External Id:</label>
                       <input
                         type="text"
                         class="form-control w-100"
@@ -430,10 +429,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="d-flex float-right">
+                <div class="d-flex float-end">
                   <a
                     v-if="unitEntity.currentUnit && baseUrl === 'unit' && accessControl._role._read"
-                    class="btn btn-lg btn-outline-primary mr-2"
+                    class="btn btn-lg btn-outline-primary me-2"
                     :class="{ activeBtn: showRolesSettings }"
                     id="pills-unit-roles-tab"
                     data-toggle="pill"
@@ -462,7 +461,7 @@
                   </a>
                   <a
                     v-if="unitEntity.currentUnit && baseUrl === 'unit' && accessControl._roleassignment._read"
-                    class="btn btn-lg btn-outline-primary mr-2"
+                    class="btn btn-lg btn-outline-primary me-2"
                     :class="{ activeBtn: showAssignRoles }"
                     id="pills-assign-tab"
                     data-toggle="pill"
@@ -499,7 +498,7 @@
                         (baseUrl === 'file' &&
                           accessControl._primaryfile._update)
                     "
-                    class="w-100 text-right p-0 expand-ani"
+                    class="text-end p-0 expand-ani"
                   >
                     <button
                       class="btn btn-primary btn-lg btn-edit"
@@ -508,18 +507,58 @@
                     >
                       Save
                     </button>
-                  </div>
+                  </div>               
                 </div>
+                <div class="d-flex float-start text-end m-0 p-0 expand-ani">
+                  <!-- TODO
+                    deletable is null only when non-asset entity is just saved and no GET API has been called on it, 
+                    in which case we can allow delete, as it most likely would be deletable at this point.
+                    The only exception is if the current user continues all the way to create PFiles under
+                    this entity, and someone else happens to run workflows on these PFiles right away
+                    before the current user has a chance to trigger a GET request on the entity.
+                    There is no easy way on backend to populate deletable without customizing the GET entity endpoints.
+                    The only alternative solution is to have frontend always make an extra GET call upon success save.
+                    This is kind a performance overhead and not worthwhile for the above rare corner case.
+                   -->                  
+                  <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'unit' && entity.id && accessControl._unit._delete"
+                    :disabled="entity.deletable != null && !entity.deletable"
+                    @click.prevent="onDeleteEntity(entity.id, 'unit')"
+                  > 
+                    Delete Unit
+                  </button>
+                  <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'collection' && entity.id && accessControl._collection._delete"
+                    :disabled="entity.deletable != null && !entity.deletable"
+                    @click.prevent="onDeleteEntity(entity.id, 'collection')"
+                  > 
+                    Delete Collection
+                  </button>
+                  <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'item' && entity.id && accessControl._item._delete"
+                    :disabled="entity.deletable != null && !entity.deletable"
+                    @click.prevent="onDeleteEntity(entity.id, 'item')"
+                  > 
+                    Delete Item
+                  </button>
+                  <button
+                    class="btn btn-danger btn-lg"
+                    v-if="baseUrl === 'file' && entity.id && accessControl._primaryfile._delete"
+                    :disabled="!entity.deletable" 
+                    @click.prevent="onDeleteEntity(entity.id, 'primaryfile')"
+                  > <!-- deletable is always populated for PFile upon returning from save -->
+                    Delete File
+                  </button>
+                </div>                                  
               </form>
             </div>
           </b-card>
-
           <!-- AmpHeader - Details page Ends here-->
           <div
-            v-if="
-              baseUrl === 'item' &&
-                (selectedItem.id || selectedItem.selectedItemId)
-            "
+            v-if="baseUrl === 'item' && (selectedItem.id || selectedItem.selectedItemId)"
           >
             <ItemFiles></ItemFiles>
           </div>
@@ -529,7 +568,7 @@
           <div
             class
             v-else-if="
-              baseUrl !== 'item' && baseUrl !== 'file' && unitEntity.currentUnit
+              baseUrl !== 'item' && baseUrl !== 'file' && unitEntity.currentUnit && entity.id
             "
           >
             <div
@@ -540,9 +579,9 @@
               role="tabpanel"
               aria-labelledby="pills-assign-tab"
             >
-              <div class="card card-body marg-t-0 bg-light-gray-1 b-card-spl">
-                <div class="form-group">
-                  <label v-if="accessControl._roleassignment._update" for="formGroupExampleInpu bold">Select User</label>
+              <div class="card card-body bg-light-gray-1 b-card-spl">
+                <div class="mb-3">
+                  <label v-if="accessControl._roleassignment._update" for="formGroupExampleInpu" class="form-label fw-bold">Select User</label>
                   <div v-if="accessControl._roleassignment._update" data-v-4ae6b2fb="" class="">
                     <div data-v-4ae6b2fb="" class="input-group mb-3">
                       <input
@@ -564,27 +603,24 @@
                         >
                       </datalist>
 
-                      <div data-v-4ae6b2fb="" class="input-group-append">
-                        <button
-                          class="marg-tb-1 btn btn-primary btn-save add-btn"
-                          v-on:click="handleAddUser"
-                        >
-                          Add
-                        </button>
-                      </div>
+                      <button
+                        class="marg-tb-1 btn btn-primary btn-save add-btn input-group-text"
+                        v-on:click="handleAddUser">
+                        Add
+                      </button>
                     </div>
                   </div>
-                  <ul class="list-group marg-t-2 mb-2 role-assign-ul">
+                  <ul class="list-group mb-2 role-assign-ul">
                     <li
                       class="list-group-item d-flex"
                       v-for="(user, userIndex) in assignedRoles.users"
                       :key="userIndex"
                     >
-                      <div class="bold pad-r-3 u-width">
+                      <div class="fw-bold pe-4 u-width">
                         {{ user.username }}
                       </div>
                       <div
-                        class="form-check form-check-inline mr-4"
+                        class="form-check form-check-inline me-4"
                         v-for="(role, roleIndex) in assignedRoles.roles"
                         :key="role.id"
                       >
@@ -613,7 +649,7 @@
                       </div>
                     </li>
                   </ul>
-                  <div v-if="accessControl._roleassignment._update" class="float-right">
+                  <div v-if="accessControl._roleassignment._update" class="float-end mt-1">
                     <button
                       type="submit"
                       class="marg-tb-1 btn btn-primary btn-save"
@@ -633,7 +669,7 @@
               role="tabpanel"
               aria-labelledby="pills-unit-roles-tab"
             >
-              <div class="card card-body marg-t-0">
+              <div class="card card-body">
                 <div class="table-responsive-lg">
                   <table id="myTable" class="table w-100 permissions">
                     <thead>
@@ -659,7 +695,7 @@
                       <tr>
                         <td
                           colspan="7"
-                          class="table-primary hdr-2 slim-col-1 font-weight-bold"
+                          class="table-primary hdr-2 slim-col-1 fw-bold"
                         >
                           <span>{{ actionLabel }}</span>
                         </td>
@@ -691,7 +727,7 @@
                       </tr>
                     </tbody>
                   </table>
-                  <div v-if="accessControl._role_unit._update" class="float-right">
+                  <div v-if="accessControl._role_unit._update" class="float-end">
                     <button
                       type="submit"
                       class="marg-tb-1 btn btn-primary btn-save"
@@ -703,17 +739,17 @@
                 </div>
               </div>
             </div>
-            <b-card class="m-0 text-left expand-ani">
+            <b-card class="m-0 text-start expand-ani">
               <!-- Title - Listing page -->
 
               <!-- Title - Unit Details page  -->
               <div class="d-flex w-100" v-if="baseUrl == 'unit'">
-                <div class="col-3 text-left p-0">
+                <div class="col-3 text-start p-0">
                   <h2>Unit Collections</h2>
                 </div>
-                <div class="col-9 text-right p0 btn-grp">
+                <div class="col-9 text-end p0 btn-grp">
                   <button
-                    class="btn btn-primary btn-lg btn-edit mr-2"
+                    class="btn btn-primary btn-lg btn-edit me-2"
                     v-if="accessControl._collection._create"
                     type="button"
                     @click="onCreateCollection()"
@@ -723,6 +759,7 @@
                   <button
                     class="btn btn-primary btn-lg btn-edit"
                     type="button"
+                    v-b-modal.modal-lg
                     @click="onSearch('listing-collection')"
                   >
                     Search Collections
@@ -731,12 +768,12 @@
               </div>
               <!-- Title - Collection Details page  -->
               <div class="d-flex w-100" v-if="baseUrl == 'collection'">
-                <div class="col-3 text-left">
+                <div class="col-3 text-start">
                   <h2>Collection Items</h2>
                 </div>
-                <div class="col-9 text-right p-0 btn-grp">
+                <div class="col-9 text-end p-0 btn-grp">
                   <button
-                    class="btn btn-primary btn-lg btn-edit mr-2"
+                    class="btn btn-primary btn-lg btn-edit me-2"
                     type="button"
                     v-if="accessControl._item._create"
                     @click="onCreateItem"
@@ -746,6 +783,7 @@
                   <button
                     class="btn btn-primary btn-lg btn-edit"
                     type="button"
+                    v-b-modal.modal-lg
                     @click="onSearch('listing-item')"
                   >
                     Search Items
@@ -754,7 +792,7 @@
               </div>
               <div class="row row-spl" v-if="records && records.length">
                 <b-card
-                  class="m-3 w-100 text-left b-card-spl"
+                  class="m-3 w-100 text-start b-card-spl"
                   v-for="elem in records"
                   :key="elem.id"
                 >
@@ -782,15 +820,15 @@
                               accessControl._collection._read) ||
                             baseUrl !== 'unit'
                         "
-                        class="col-1 text-right"
+                        class="col-1 text-end"
                       >
                         <!-- TODO
                           Remove active button for now until we fix the issue with inactive workflow result
                         <div                          
                           v-if="baseUrl === 'unit' && accessControl._collection._activate"
-                          class="d-flex float-right"
+                          class="d-flex float-end"
                         >
-                          <span class="mr-1">Active</span>
+                          <span class="me-1">Active</span>
                           <label
                             class="switch"
                             :title="elem.active ? 'Deactivate' : 'Activate'"
@@ -807,12 +845,9 @@
                         <div
                           v-if="
                             (elem.active &&
-                              baseUrl === 'unit' &&
-                              accessControl._collection._read) ||
-                              (baseUrl === 'collection' &&
-                                accessControl._item._read)
-                          "
-                          class="float-right"
+                              baseUrl === 'unit' && accessControl._collection._read) ||
+                              (baseUrl === 'collection' && accessControl._item._read)"
+                          class="float-end"
                         >
                           <button
                             class="btn btn-primary btn"
@@ -820,7 +855,7 @@
                           >
                             View
                           </button>
-                        </div>
+                        </div>                     
                       </div>
                     </div>
 
@@ -836,43 +871,86 @@
                       "
                       v-if="purpose"
                     >
+                      <div class="col-3" v-if="baseUrl == 'unit'">
+                        <label class="form-label">Task Manager</label>
+                        <p class="mb-0">{{ elem.taskManager }}</p>
+                      </div>
                       <div class="col-2" v-if="baseUrl == 'collection'">
-                        <label>Source Name</label>
+                        <label class="form-label">Source Name</label>
                         <p class="mb-0">{{ elem.externalSource }}</p>
                       </div>
                       <div class="col-2" v-if="baseUrl == 'collection'">
-                        <label>Source Id</label>
+                        <label class="form-label">Source Id</label>
                         <p class="mb-0">{{ elem.externalId }}</p>
                       </div>
                       <div class="col-2">
-                        <label>Date Created:</label>
+                        <label class="form-label">Date Created:</label>
                         <p class="mb-0">
-                          {{ elem.createdDate | LOCAL_DATE_VALUE }}
+                          {{ $filters.localDate(elem.createdDate ) }}
                         </p>
                       </div>
                       <div class="col-2">
-                        <label>Created By</label>
+                        <label class="form-label">Created By</label>
                         <p class="mb-0">{{ elem.createdBy }}</p>
                       </div>
                       <div class="col-2">
-                        <label>Modified By</label>
+                        <label class="form-label">Modified By</label>
                         <p class="mb-0">{{ elem.modifiedBy }}</p>
                       </div>
                       <div class="col-2">
-                        <label>Modified Date</label>
+                        <label class="form-label">Modified Date</label>
                         <p class="mb-0">
-                          {{ elem.modifiedDate | LOCAL_DATE_VALUE }}
+                          {{ $filters.localDate(elem.modifiedDate ) }}
                         </p>
                       </div>
                     </div>
                   </div>
                 </b-card>
               </div>
-              <div class="col-12 text-left" v-else>
+              <div class="col-12 text-start" v-else>
                 <p>-No records found-</p>
               </div>
             </b-card>
           </div>
+          <!-- Unsaved changes confirm/leave modal -->
+          <b-modal 
+            ref="leaveModal"
+            title="Notification"
+            @ok="handleLeaveModal(true)"
+            @cancel="handleLeaveModal(false)"
+            hide-header-close
+            no-close-on-backdrop
+          >
+            <p>Changes you have made may not be saved.</p>
+            <template #footer="{ok, cancel}">
+              <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">Cancel</button>
+              <button type="button" class="btn btn-primary btn-sm" @click="ok();">Leave</button>
+            </template>
+          </b-modal>
+          <!-- Delete entity confirmation modal -->
+          <b-modal 
+            ref="deleteModal" 
+            title="Confirmation" 
+            @ok="handleDeleteModal(true, )" 
+            @cancel="handleDeleteModal(false)"
+            centered
+            size="md"
+            footerClass="p-2"
+          >
+            <div v-if="deleteWarnings.statistics">
+              <p>{{ deleteWarnings.header }}</p>
+              <ul>
+                <li v-for="(entityCount) in deleteWarnings.statistics">
+                  {{ entityCount }}
+                </li>
+              </ul>
+            </div>
+            <p>{{ deleteWarnings.question }} </p>
+            <template #footer="{ ok, cancel }">
+              <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
+              <button type="button" class="btn btn-primary btn-sm" @click="ok();">Yes</button>
+            </template>
+          </b-modal>
         </main>
       </div>
     </div>
@@ -886,7 +964,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import config from "../../assets/constants/common-contant.js";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import Logout from "@/components/shared/Logout.vue";
@@ -954,6 +1032,9 @@ export default {
       userList: [],
       idsExcluding: [],
       selectedUser: "",
+      entityToDelete: { id: null, type: null },
+      entityStatistics: {}, // data statistics for entity to be deleted     
+      deleteWarnings: { header: null, statistics: null, question: null }  // warnings for entity deletion 
     };
   },
   computed: {
@@ -967,29 +1048,29 @@ export default {
     configProperties: sync("configProperties"),
     baseUrl() {
       const self = this;
-      if (window.location.hash.toLowerCase().indexOf("unit") > -1) {
+      if (window.location.href.toLowerCase().indexOf("unit") > -1) {
         return "unit";
-      } else if (window.location.hash.toLowerCase().indexOf("file") > -1) {
+      } else if (window.location.href.toLowerCase().indexOf("file") > -1) {
         return "file";
       } else if (
-        window.location.hash.toLowerCase().indexOf("collection") > -1 &&
-        window.location.hash.toLowerCase().indexOf("item") === -1
+        window.location.href.toLowerCase().indexOf("collection") > -1 &&
+        window.location.href.toLowerCase().indexOf("item") === -1
       ) {
         return "collection";
-      } else if (window.location.hash.toLowerCase().indexOf("item") > -1) {
+      } else if (window.location.href.toLowerCase().indexOf("item") > -1) {
         return "item";
       }
       return "";
     },
     purpose() {
-      return window.location.hash.toLowerCase().indexOf("details") > -1
+      return window.location.href.toLowerCase().indexOf("details") > -1
         ? "details"
         : "";
     },
     isCreatePage() {
       return (
-        window.location.hash.toLowerCase().indexOf("create") > -1 ||
-        window.location.hash.toLowerCase().indexOf("add-item") > -1
+        window.location.href.toLowerCase().indexOf("create") > -1 ||
+        window.location.href.toLowerCase().indexOf("add-item") > -1
       );
     },
     mediaInfo() {
@@ -1027,25 +1108,25 @@ export default {
         .updateRoleAssignments(self.unitEntity.currentUnit, self.newRoles)
         .then(async (res) => {
           if (res.added.length || res.deleted.length) {
-            self.$bvToast.toast(
-              "User role assignments have been updated successfully.",
-              self.sharedService.successToastConfig
+            self.$toast.success(
+              "User role assignments have been updated successfully.", 
+              self.sharedService.toastNotificationConfig
             );
           }
           if (res.failed.length) {
             for (let i = 0; i < res.failed.length; i++) {
-              self.$bvToast.toast(
+              self.$toast.error(
                 `Failed to update ${res.failed[i].roleName} role assignments for ${res.failed[i].username}`,
-                self.sharedService.erorrToastConfig
+                self.sharedService.toastNotificationConfig
               );
             }
           }
           self.refreshRoleAssignments(true);
         })
         .catch((e) => {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Oops! Something went wrong.",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
           console.log(e);
         });
@@ -1204,22 +1285,22 @@ export default {
         .then(async (res) => {
           let nFailed = roles.length - res.length;
           if (nFailed === 0) {
-            self.$bvToast.toast(
+            self.$toast.success(
               "Roles permission configuration have been updated successfully.",
-              self.sharedService.successToastConfig
+              self.sharedService.toastNotificationConfig
             );
           } else {
-              self.$bvToast.toast(
+              self.$toast.error(
                 `Failed to update ${nFailed} roles with permissions configuration`,
-                self.sharedService.erorrToastConfig
+                self.sharedService.toastNotificationConfig
               );
           }          
           self.refreshRolesSettings(true);
         })
         .catch((e) => {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Oops! Something went wrong.",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
           console.log(e);
         });
@@ -1227,7 +1308,6 @@ export default {
     async getUnitDetails() {
       const self = this;
       try {
-        // self.showLoader = true;
         const unitDetails = await self.entityService.getUnitDetails(
           self.unitEntity.currentUnit,
           self
@@ -1237,9 +1317,7 @@ export default {
           self.entity = unitDetails.response;
           this.getUnitCollections();
         }
-        // self.showLoader = false;
       } catch (error) {
-        // self.showLoader = false;
         console.log(error);
       }
     },
@@ -1257,9 +1335,16 @@ export default {
         "unitEntity",
         JSON.stringify({ ...self.unitEntity })
       );
-      await self.getEntityData();
-      //Checking Access Control
-      self.accessControlService.checkAccessControl(this);
+      console.log("EntityList.onUnitChange: switching to unit " + self.unitEntity.currentUnit);
+      // if currentUnit set, getEntityData for the page 
+      if (self.unitEntity.currentUnit) {
+        await self.getEntityData();
+      } else { // otherwise, reset entity data
+        self.entity = {};
+        self.selectedUnit = {};
+      }
+      // update Access Control based on currentUnit
+      self.accessControlService.checkAccessControl(this);      
     },
     async toggleCollectionActive(collection) {
       collection.active = !collection.active;
@@ -1271,19 +1356,14 @@ export default {
     async getAllUnits() {
       const self = this;
       try {
-        // self.showLoader = true;
         
         self.unitService.getAllUnits().then((res) => {
           self.allUnits = res.data;
           self.unitEntity.unitList = self.sharedService.sortByAlphabatical(this.allUnits);
-          // self.showLoader = false;
-          if (
-            self.unitEntity.unitList &&
-            self.unitEntity.unitList.length === 1
-          ) {
-            // TODO need to save unitEntity as well in this branch
+          if (self.unitEntity.unitList && self.unitEntity.unitList.length === 1) {            
             self.unitEntity.currentUnit = self.unitEntity.unitList[0].id;
             self.onUnitChange();
+            console.log("EntityList.getAllUnits: got only 1 unit");
           } else {
             let uEntity = JSON.parse(sessionStorage.getItem("unitEntity"));
             if (!uEntity)
@@ -1293,25 +1373,29 @@ export default {
               );
             const unitSelectHtml = document.getElementById("unit-select");
             if (unitSelectHtml) unitSelectHtml.focus();
+            console.log("EntityList.getAllUnits: got " + self.unitEntity.unitList.length + " units.");
           }
-          console.log("EntityList.getAllUnits: unitList = " + self.unitEntity.unitList);
           return self.unitEntity.unitList;
         });        
       } catch (error) {
-        console.log(error);
+        console.log("Error in EntityList.getAllUnits:", error);
       }
     },
     async getEntityData() {
       // TODO: at each entity level, get its details, no need to get its children as that's already included in details
       const self = this;
-      if (self.baseUrl === "unit" && self.selectedUnit) {
+      if (self.baseUrl === "unit") {
         await self.getUnitDetails();
         self.assignedRolesUnitChanged = true;
         self.settingsRolesUnitChanged = true;
+        console.log("EntityList.getEntityData: done for unit " + self.entity.id);
       } else if (self.baseUrl === "collection") {
+        // TODO below is a workaround to fix veux sync issue when selectedCollection does not get updated upon reload/push
         // if current collection exists but fields not populated, get its details
-        if (self.selectedCollection && self.selectedCollection.id && !self.selectedCollection.name) {
+        if (self.selectedCollection && self.selectedCollection.id && 
+          (!self.selectedCollection.name || !self.selectedCollection.deletable)) {
           self.selectedCollection = await self.collectionService.getCollectionDetails(self.selectedCollection.id);
+          console.log("EntityList.getEntityData for collection: populated selectedCollection " + self.selectedCollection.id);
         }
         self.entity = self.selectedCollection;
         if (self.selectedCollection && !self.isCreatePage)
@@ -1320,35 +1404,41 @@ export default {
           self.selectedCollection = self.entity = {};
           self.showEdit = false;
         }
+        console.log("EntityList.getEntityData: done for collection " + self.entity.id);
       } else if (self.baseUrl === "item") {
+        // TODO below is a tmp fix for the case when loading the page for a newly created item, 
+        // selectedItem.id is null, while selectedItem.selectedItemId is populated
+        if (!self.selectedItem.id && self.selectedItem.selectedItemId) {
+          self.selectedItem.id = self.selectedItem.selectedItemId;
+          console.log("EntityList.getEntityData for item: populated selectedItem.id: " + self.selectedItem.id);
+        }
         self.entity = self.selectedItem;
         if (self.isCreatePage) {
           self.selectedItem = self.entity = {};
           self.showEdit = false;
         }
+        console.log("EntityList.getEntityData: done for item " + self.entity.id);
+        // note: getPrimaryFiles is done in ItemFiles
       } else if (self.baseUrl === "file") {
-        // self.showLoader = true;
         self.entity = self.selectedFile;
         if (self.accessControl._primaryfile_media._read) {
           let mediaSourceUrl = await self.workflowResultService.getMediaSymlink(
             self.selectedFile.id
           );
           self.entity.mediaSource = mediaSourceUrl;
-          console.log("EntityList.getEntityData: mediaSource = " + self.entity.mediaSource);
+          console.log("EntityList.getEntityData for file: got meidaSource: " + self.entity.mediaSource);
         }
-        let mediaSourceType = await self.primaryFileService.getPrimaryFile(
+        let mediaSourceFile = await self.primaryFileService.getPrimaryFile(
           self.selectedFile.id
         );
-        self.entity.mediaInfo = mediaSourceType.mediaInfo;
-        self.entity.mediaType = mediaSourceType.mimeType.substring(0, 5);
-        console.log("EntityList.getEntityData: mediaType = " + self.entity.mediaType);
-        // self.showLoader = false;
+        self.entity.mediaInfo = mediaSourceFile.mediaInfo;
+        self.entity.mediaType = mediaSourceFile.mimeType.substring(0, 5);
+        console.log("EntityList.getEntityData: done for file " + self.entity.id);
       }
       return self.entity;
     },
     async getUnitCollections() {
       const self = this;
-      // self.showLoader = true;
       self.collectionService
         .getCollectionByUnitId(self.selectedUnit.id)
         .then((response) => {
@@ -1358,7 +1448,6 @@ export default {
             self.records = self.sharedService.sortByAlphabatical(self.records);
             self.masterRecords = JSON.parse(JSON.stringify(self.records));
           }
-          // self.showLoader = false;
 
           //Adding expand animation css
           const expandAniHtml = document.getElementsByClassName("expand-ani");
@@ -1369,11 +1458,9 @@ export default {
     },
     async getCollectionItems() {
       const self = this;
-      // self.showLoader = true;
       self.itemService
         .getCollectionItems(self.selectedCollection.id)
         .then((response) => {
-          // self.showLoader = false;
           if (response && response.data && response.data._embedded) {
             self.records =
               response.data._embedded[Object.keys(response.data._embedded)[0]];
@@ -1381,15 +1468,14 @@ export default {
             self.masterRecords = JSON.parse(JSON.stringify(self.records));
           }
         });
-        // self.showLoader = false;
     },
-    onView(objInstance) {
+    onView(childEntity) {
       const self = this;
-      if (self.baseUrl === "collection" && self.purpose) {
-        self.selectedItem = objInstance;
+      if (self.baseUrl === "collection" && self.purpose) {        
+        self.selectedItem = childEntity;
         self.$router.push("/collections/items/details");
       } else if (self.baseUrl === "unit" && self.purpose) {
-        self.selectedCollection = objInstance;
+        self.selectedCollection = childEntity;
         self.$router.push("/collection/details");
       }
     },
@@ -1411,7 +1497,6 @@ export default {
     },
     onSearch(type) {
       this.searchType = type;
-      this.$bvModal.show("modal-lg");
     },
     onSearchDone(records) {
       this.records = records && records.length ? records : this.masterRecords;
@@ -1422,28 +1507,82 @@ export default {
     handleSearchItem() {
       this.$router.push("/collections/items/item-search");
     },
+    handleLeaveModal(confirmed) {
+      if (confirmed) {
+        this.next();
+      } else {
+        this.next(false);
+      }
+    },
+    async onDeleteEntity(entityId, entityType) {
+      console.log("onDeleteEntity: entityId = " + entityId + ", entityType = " + entityType); 
+      this.entityToDelete = { id: entityId, type: entityType };
+      this.entityStatistics = await this.entityService.getEntityStatistics(this.entityToDelete);
+      console.log("onDeleteEntity: entityStatistics = " + this.entityStatistics);
+      this.deleteWarnings = this.entityService.getDeleteWarnings(this.entityStatistics, entityType);
+      this.$refs.deleteModal.show();
+    },
+    async handleDeleteModal(confirmed) {
+      console.log("handleDeleteModal: confirmed = " + confirmed);  
+      if (confirmed) { // When clicked on 'Yes', delete entity
+        this.showLoader = true;
+        this.entityService.deleteEntity(this.entityToDelete)
+          .then((success) => {
+            this.showLoader = false;
+            this.$toast.success(
+              `Successfully deleted ${this.entityToDelete.type} ${this.entityToDelete.id}`,
+              this.sharedService.toastNotificationConfig
+            );
+            console.log(`Successfully deleted ${this.entityToDelete.type} ${this.entityToDelete.id}`);
+            // reset current selected entity along with its descendant chain, and route to parent entity page
+            if (this.entityToDelete.type == 'unit') {
+              // update stored unit info with the deleted unit removed from unit list, and current unit ID reset to null
+              // note pthat ush route to /unit/details won't trigger any route, as the current page is already there
+              // to trigger a page refresh, we need to update unit data instead (which includes update on AC data)
+              this.unitEntity.unitList = this.unitEntity.unitList.filter(unit => unit.id !== this.entity.id);
+              this.unitEntity.currentUnit = null;
+              this.selectedCollection = {};
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("refreshing /unit/details after unit deletion");
+              this.onUnitChange();
+            } else if (this.entityToDelete.type == 'collection') {
+              this.selectedCollection = {};
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("routing to /unit/details after collection deletion");
+              this.$router.push("/unit/details");
+            } else if (this.entityToDelete.type == 'item') {
+              this.selectedItem = {};
+              this.selectedFile = {};
+              console.log("routing to /collection/details after item deletion");
+              this.$router.push("/collection/details");
+            } else if (this.entityToDelete.type == 'primaryfile') {
+              this.selectedFile = {};
+              console.log("routing to /collections/items/details after file deletion");
+              this.$router.push("/collections/items/details");
+            }              
+          })
+          .catch((err) => {
+            this.showLoader = false;
+            this.$toast.error(
+              `Failed to delete ${this.entityToDelete.type} ${this.entityToDelete.id}. Please try again later!`,
+              this.sharedService.toastNotificationConfig
+            );
+            console.log(`Failed to delete ${this.entityToDelete.type} ${this.entityToDelete.id}`, err);
+          });
+      } else { // When clicked on 'No', hide the modal
+        console.log(`Deleting on ${this.entityToDelete.type} ${this.entityToDelete.id} is cancelled.`);
+        this.$refs.deleteModal.hide();
+      }
+    },
   },
   beforeRouteLeave(to, from, next) {
+    // Show modal only when there's unsaved data
     if (this.isDataChanged) {
-      this.$bvModal
-        .msgBoxConfirm(`Changes you have made may not be saved.`, {
-          title: "Notification",
-          size: "md",
-          buttonSize: "sm",
-          //   okVariant: 'danger',
-          okTitle: "Leave",
-          cancelTitle: "Cancel",
-          footerClass: "p-2", 
-          hideHeaderClose: true,
-          centered: false,
-          noCloseOnBackdrop: true,
-        })
-        .then((value) => {
-          if (value) next();
-        })
-        .catch((err) => {
-          // An error occurred
-        });
+      // Assign next to this.next to be used by modal actions in 'handleLeaveModal'
+      this.next = next;
+      this.$refs.leaveModal.show();
     } else {
       next();
     }
@@ -1451,7 +1590,7 @@ export default {
   async mounted() {
     const self = this;
     
-    console.log ("EntityList.mounted start: showLoader = " + this.showLoader);
+    // console.log ("EntityList.mounted start: showLoader = " + this.showLoader);
 
     // retrieve configProperties if not yet populated
     if (!self.configProperties || Object.keys(self.configProperties).length === 0) {
@@ -1471,19 +1610,24 @@ export default {
     }
     else {
       self.unitEntity = uEntity;    
-      console.log("EntityList.mounted: unitList = " + self.unitEntity.unitList + ", currentUnit = " + self.unitEntity.currentUnit);
+      console.log("EntityList.mounted: found unitEntity in local storage: currentUnit = " + self.unitEntity.currentUnit);
     }
 
+    // TODO
+    // Below code results in that unit list is only retrieved (and stored in session storage) once when unit page is first accessed.
+    // This could cause the list out of sync with backend. It's important then upon unit creation/deletion the list be updated.
+    // Even so, corner cases could still happen of other users update the list or updates happen outside of AMP UI.
+    // To avoid inconsistency, we could retrieve unit list upon each mount, but that could cause extra data overhead
     // retrieve units list if not yet populated
     if (!self.unitEntity.unitList || !self.unitEntity.unitList.length) {
       let unitList = await self.getAllUnits();
-      console.log("EntityList.mounted - after getAllUnits: unitList = " + unitList);
+      // console.log("EntityList.mounted - after getAllUnits: unitList = " + unitList);
     } 
 
     // if currentUnit set, getEntityData for the page 
     if (self.unitEntity.currentUnit) {
       let entity = await self.getEntityData();
-      console.log("EntityList.mounted: mediaSource = " + entity.mediaSource); 
+      // console.log("EntityList.mounted - after getEntityData: mediaSource = " + entity.mediaSource); 
     }
 
     // adjust size of PFile fields for PFile page
@@ -1495,7 +1639,7 @@ export default {
     }
 
     this.showLoader = false;
-    console.log ("EntityList.mounted end: showLoader = " + this.showLoader);
+    // console.log ("EntityList.mounted end: showLoader = " + this.showLoader);
   },
 };
 </script>
@@ -1520,12 +1664,12 @@ export default {
 .extra-padding {
   padding-bottom: 40px;
 }
-.float-left {
+.float-start {
   position: relative;
   margin-top: 10px;
 }
 .media-info-btn {
-  position: absolute;
+  margin-right: auto;
 }
 .media-details {
   margin-top: 60px !important;
@@ -1535,7 +1679,9 @@ export default {
 }
 .media-player {
   width: 50%;
-  margin-right: 15px;
+  margin-right: 15px;       
+  display: flex;
+  flex-direction: column;
 }
 video {
   margin-top: 0px;

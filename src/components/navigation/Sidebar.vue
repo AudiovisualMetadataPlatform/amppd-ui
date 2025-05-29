@@ -10,7 +10,7 @@
 
         <b-collapse id="nav-collapse" class="nav-menus" is-nav>
           <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto" v-if="isAuthenticated">
+          <b-navbar-nav class="ms-auto" v-if="isAuthenticated">
             <span
               class="nav-span"
               v-for="menu in orderedMenuList"
@@ -18,24 +18,18 @@
             >
               <b-nav-item
                 :id="menu.url"
-                @click="routeTo(menu)"
-                :class="{ 
-                  'd-none': resolvePermissions(menu.permissionKey)
-                }"
+                @click.prevent="routeTo(menu)"
                 v-if="!menu.children && menu.url !== '/mgm-evaluation'"
               >
                 <span v-html="menu.icon"></span>
-                <span class="pl-2 menu-name">{{ menu.name }}</span>
+                <span class="ps-2 menu-name">{{ menu.name }}</span>
               </b-nav-item>
               <b-nav-item-dropdown
-                :class="{ 
-                  'd-none': resolvePermissions(menu.permissionKey)
-                }"
                 v-else
               >
                 <template #button-content>
                   <span v-html="menu.icon"></span>
-                  <span class="pl-2  menu-name">{{ menu.name }}</span>
+                  <span class="ps-2  menu-name">{{ menu.name }}</span>
                   <span
                     v-if="menu.dropdownIcon"
                     v-html="menu.dropdownIcon"
@@ -82,7 +76,7 @@
 import config from "../../assets/constants/common-contant.js";
 import Logout from "@/components/shared/Logout.vue";
 import BreadCrumbs from "@/components/shared/BreadCrumbs.vue";
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import SharedService from "../../service/shared-service.js";
 import EvaluationService from "@/service/evaluation-service";
 import { env } from "@/helpers/env";
@@ -107,7 +101,20 @@ export default {
     acActions: sync("acActions"),
     orderedMenuList() {
       let self = this;
-      return this.sharedService.sortByNumber(self.menuList, "displayId");
+      // Update menu list based on user permissions when acIsAdmin is updated
+      if (!self.acIsAdmin) {
+        if(self.acActions.length > 0) {
+          // Filter menu list based on user permissions when acActions is updated
+          let filteredMenus = self.menuList.filter(menu => {
+            return !self.resolvePermissions(menu.permissionKey);
+          });
+          console.log ("Sidebar.orderedMenuList: user is not admin, filteredMenus = " + this.filteredMenus);
+          return self.sharedService.sortByNumber(filteredMenus, "displayId")
+        }
+      } else {
+        console.log ("Sidebar.orderedMenuList: user is admin and has access to all menus");        
+        return self.sharedService.sortByNumber(self.menuList, "displayId");
+      }
     },
   },
   methods: {
@@ -121,6 +128,7 @@ export default {
           "Workflow editor session is active. Please click on done button before leaving the page."
         );
       } else {
+        console.log("routing to home");
         self.$router.push("/");
       }
     },
@@ -135,6 +143,7 @@ export default {
             self.$router.push(`${menu.url}/${data.id}`);
           }
       } else {
+        console.log("routing to menu");
         self.$router.push(`${menu.url}`).catch(error => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
@@ -196,12 +205,6 @@ export default {
 
 <style lang="css">
 @import "../../styles/style.css";
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
-}
 nav ul li {
   list-style: none;
   font-size: 1rem;

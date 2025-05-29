@@ -10,21 +10,18 @@
           <div class="card-body">
             <h2 class="card-title">Forgot Password</h2>
 
-            <form>
-              <div class="form-group" v-if="errors.other_errors.length">
+            <form class="needs-validation" ref="forgotPasswordForm">
+              <div class="mb-3" v-if="errors.other_errors.length">
                 <label
-                  class="form-errors"
+                  class="invalid-feedback"
                   v-for="error in errors.other_errors"
                   v-bind:key="error"
                   >{{ error }}</label
                 >
               </div>
 
-              <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <label class="form-errors" v-if="errors.email_error.length">{{
-                  errors.email_error
-                }}</label>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
                 <input
                   type="email"
                   class="form-control"
@@ -32,12 +29,16 @@
                   v-model="email"
                   placeholder="Enter email address"
                   v-on:focus="onClick(`email`)"
+                  required
                 />
+                <div class="invalid-feedback" v-if="errors.email_error.length">
+                  {{ errors.email_error }}
+                </div>
               </div>
 
               <button
                 type="submit"
-                class="btn btn-primary marg-bot-4"
+                class="btn btn-primary mb-3"
                 v-on:click="sendEmail()"
               >
                 Send email
@@ -46,8 +47,10 @@
                 Click to <a href="/" v-on:click="loginClicked()">Sign in</a>.
               </p>
 
-              <div class="form-group" v-if="resend_email">
-                <label>An email with a link to reset password has been sent. Please use the link as soon as possible as it will expire in a short time.</label>
+              <div class="mb-3" v-if="resend_email">
+                <label class="form-label">
+                  An email with a link to reset password has been sent. Please use the link as soon as possible as it will expire in a short time.
+                </label>
                 <span><a href="#" @click="sendEmail()">&nbsp; Resend Email</a></span>
               </div>
             </form>
@@ -97,6 +100,9 @@ export default {
       if (!this.email) {
         console.log("email blank");
         this.errors.email_error = "Email required.";
+        // Only use validation on invalid input
+        const form = self.$refs.forgotPasswordForm;
+        form.classList.add("was-validated");
       }
 
       if (this.errors.email_error == "") {
@@ -124,6 +130,9 @@ export default {
       this.$router.push("/");
     },
     onClick(data) {
+      // Reset form validation on focus
+      const form = this.$refs.forgotPasswordForm;
+      form.classList.remove("was-validated");
       if (data == "email") this.errors.email_error = "";
     },
   },
@@ -134,12 +143,14 @@ export default {
 };
 </script>
 
-<style lang="css">
+<style scoped>
 @import "../../styles/style.css";
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
+a {
+  color: #153c4d !important;
+  text-decoration: none !important;
+
+  &:hover {
+    color: #f4871e !important;
+  }
 }
 </style>

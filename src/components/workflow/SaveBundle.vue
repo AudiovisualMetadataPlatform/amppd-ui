@@ -7,13 +7,10 @@
       class="my-modal"
     >
       <template #header><h3>Save file selection as a bundle</h3></template>
-      <template #body><div class="input-group mb-3">
-        <form>
-          <div class="form-group">
-            <label for="name">Bundle Name</label>
-            <label class="form-errors" v-if="inputError.length">{{
-              inputError
-            }}</label>
+      <template #body>
+        <form class="needs-validation" ref="saveBundleForm">
+          <div class="mb-3">
+            <label for="name" class="form-label">Bundle Name</label>
             <input
               type="text"
               id="name"
@@ -22,10 +19,12 @@
               placeholder="Enter bundle name"
               v-model="bundleName"
               v-on:focus="clearError"
+              required
             />
+            <label class="invalid-feedback" v-if="inputError.length">{{inputError}}</label>
           </div>
-          <div class="form-group">
-            <label for="description">Bundle Description</label>
+          <div class="mb-3">
+            <label for="description" class="form-label">Bundle Description</label>
             <input
               type="text"
               id="description"
@@ -36,7 +35,7 @@
             />
           </div>
         </form>
-      </div></template>
+      </template>
       <template #footer><div class="action-buttons">
         <input
           type="button"
@@ -60,25 +59,29 @@
       class="my-modal"
     >
       <template #header><h3>Confirm</h3></template>
-      <template #body><div>
-        A bundle owned by you with name "{{ bundle.name }}" and description "{{
-          bundle.description
-        }}" already exists, do you want to overwrite it?
-      </div>></template>
-      <template #footer><div class="action-buttons">
-        <input
-          type="button"
-          class="secondary-button"
-          v-on:click="showConfirmUpdate = false"
-          value="No"
-        />
-        <input
-          type="button"
-          class="primary-button"
-          v-on:click="updateConfirmed"
-          value="Yes"
-        />
-      </div></template>
+      <template #body>
+          <div>
+          A bundle owned by you with name "{{ bundle.name }}" and description "{{
+            bundle.description
+          }}" already exists, do you want to overwrite it?
+        </div>
+      </template>
+      <template #footer>
+        <div class="action-buttons">
+          <input
+            type="button"
+            class="secondary-button"
+            v-on:click="showConfirmUpdate = false"
+            value="No"
+          />
+          <input
+            type="button"
+            class="primary-button"
+            v-on:click="updateConfirmed"
+            value="Yes"
+          />
+        </div>
+      </template>
     </modal>
 
     <modal
@@ -104,7 +107,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Modal from "@/components/shared/Modal.vue";
 import WorkflowService from "../../service/workflow-service";
 
@@ -140,7 +143,7 @@ export default {
   methods: {
     async saveBundle() {
       console.log(
-        `Saving bundle with name ${this.bundleName} and description ${this.bundleDescription} ...`
+        `Saving bundle with name ${this.bundleName.length} and description ${this.bundleDescription} ...`
       );
       if (!this.validateBundleInputs()) return;
 
@@ -180,6 +183,8 @@ export default {
     validateBundleInputs() {
       if (this.bundleName.length === 0) {
         this.inputError = "(Bundle name required!)";
+        const form = this.$refs.saveBundleForm;
+        form.classList.add('was-validated');
         return false;
       }
       return true;
@@ -292,12 +297,5 @@ export default {
 .action-buttons {
   display: flex;
   justify-content: flex-end;
-}
-
-.form-errors {
-  color: red;
-  margin: 0 !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
 }
 </style>

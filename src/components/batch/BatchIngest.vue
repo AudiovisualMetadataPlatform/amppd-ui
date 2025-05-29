@@ -7,49 +7,40 @@
         <div class="col-12 bg-light-gray-1">
           <main class="m-0">
             <!-- <Logout/> -->
-            <div class="pad-all-3">
-              <div class="card">
-                <div class="card-body">
-                  <h1 class="text-left">
-                    <span>Unit Details</span>
-                  </h1>
-                  <div class="text-left form-group col-12">
-                    <label>
-                      <span>Unit Name:</span>
-                    </label>
-                    <select
-                      class="select custom-select w-100"
-                      v-model="batchUnits.currentUnit"
-                      @change="onUnitChange"
-                      required
-                      id="unit-select"
-                      ><option value="" disabled selected
-                        >- Choose Unit -</option
-                      >
-                      <option
-                        v-for="option in batchUnits.unitList"
-                        :key="option.id"
-                        :value="option.id"
-                        >{{ option.name }}</option
-                      >
-                    </select>
-                  </div>
+            <div class="card">
+              <div class="card-body">
+                <h1 class="text-start">
+                  <span>Unit Details</span>
+                </h1>
+                <div class="text-start mb-3 col-12">
+                  <label class="form-label">Unit Name:</label>
+                  <select
+                    class="select form-select w-100"
+                    v-model="batchUnits.currentUnit"
+                    @change="onUnitChange"
+                    required
+                    id="unit-select"
+                    ><option value="" disabled selected
+                      >- Choose Unit -</option
+                    >
+                    <option
+                      v-for="option in batchUnits.unitList"
+                      :key="option.id"
+                      :value="option.id"
+                      >{{ option.name }}</option
+                    >
+                  </select>
                 </div>
               </div>
             </div>
-            <div class="pad-all-3"
-              :class="unitName.length === 0 ? 'batch-disabled' : 'batch-enabled'">
+            <div :class="unitName.length === 0 ? 'batch-disabled' : 'batch-enabled'">
               <div class="card">
                 <div class="card-body">
                   <div class="row">
                     <h1 class="col-lg-12">
                       Batch Ingest
                       <button
-                        class="
-                          btn btn-outline-primary btn-lg
-                          marg-bot-3
-                          float-right
-                        "
+                        class="btn btn-outline-primary btn-lg mb-4 float-end"
                         :disabled="unitName.length === 0"
                         @click="batchIngestTemplate()"
                       >
@@ -68,16 +59,14 @@
                     </div>
                     <div class="col-lg-3"></div>
                   </div>
-                  <div class="form-row">
+                  <div class="row">
                     <div class="col-lg-6">
                       <input
-                        type="file"
-                        class="form-control-file btn btn-light btn-lg"
-                        id="exampleFormControlFile1"
-                        ref="inputFile"
-                        value="Upload batch manifest"
-                        :disabled="inProgress || unitName.length === 0"
                         v-bind="filename"
+                        type="file"
+                        class="btn btn-light btn-lg"
+                        ref="inputFile"
+                        :disabled="inProgress || unitName.length === 0"
                         accept=".csv"
                         @change="
                           filesChange($event.target.name, $event.target.files);
@@ -311,12 +300,6 @@ export default {
 @import "../../styles/style.css";
 .main-margin-min {
   margin: 0.5em !important;
-}
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
 }
 
 .modal-open {

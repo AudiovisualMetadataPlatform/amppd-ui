@@ -1,14 +1,14 @@
 <template>
   <div class="w-100">
     <loader :show="showLoader" />
-    <b-card class="text-left">
+    <b-card class="text-start">
       <div class="d-flex">
         <div class="col-lg">
-          <h2 class="card-title">Output Files</h2>
+          <h2 class="card-title">Workflow Outputs</h2>
         </div>
         <button
           v-if="accessControl._workflowresult._update"
-          class="btn btn-primary btn float-right"
+          class="btn btn-primary btn float-end"
           type="button"
           @click="onAliasSave"
         >
@@ -34,7 +34,7 @@
             <!-- -->
             <tr v-for="output in listOfOutputList" :key="output.id">
               <td>
-                <p>{{ new Date(output.dateCreated) | LOCAL_DATE_VALUE }}</p>
+                <p>{{ $filters.localDate(new Date(output.dateCreated)) }}</p>
               </td>
               <td>
                 {{ output.submitter }}
@@ -79,7 +79,7 @@
   </div>
 </template>
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Loader from "@/components/shared/Loader.vue";
 import WorkflowResultService from "../../service/workflow-result-service";
 import config from "../../assets/constants/common-contant.js";
@@ -123,15 +123,15 @@ export default {
             self.aliasChanges[i].outputLabel
           );
         }
-        self.$bvToast.toast(
+        self.$toast.success(
           "Output results have been updated successfully.",
-          self.sharedService.successToastConfig
+          self.sharedService.toastNotificationConfig
         );
         self.aliasChanges = [];
       } catch (error) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Unable to save changes. Please try again!",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
       }
     },

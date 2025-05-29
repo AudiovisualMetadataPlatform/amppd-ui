@@ -9,33 +9,32 @@
         <h2 class="card-title">Approve User</h2>
         <form>
           <div class="error">
-            <p v-if="errors.length">
+            <p v-if="errors.length"></p>
             <b>Please correct the following error(s):</b>
             <ul>
             <li v-for="error in errors" v-bind:key="error"><span>{{ error }}</span></li>
             </ul>
-            </p>
           </div>
-          <div class="form-group">
-            <label for="userId">User ID: {{this.$route.params.id}}</label>
+          <div class="mb-3">
+            <label for="userId" class="form-label">User ID: {{this.$route.params.id}}</label>
           </div>
-          <div class="form-group">
-            <label for="email">Email: {{approve_user_emailId}}</label>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email: {{approve_user_emailId}}</label>
           </div>
-          <div class="form-group" v-if="isUserApproved">
-            <label>The user has already been approved. </label>
+          <div class="mb-3" v-if="isUserApproved">
+            <label class="form-label">The user has already been approved. </label>
           </div>
-          <div class="form-group" v-if="isRequested" >
+          <div class="mb-3" v-if="isRequested" >
             <button class="btn btn-primary marg-bot-4" v-on:click="approveUser()" :disabled="disableAction">Approve</button>
           </div>
-          <div class="form-group" v-if="isRequested">
+          <div class="mb-3" v-if="isRequested">
             <button class="btn btn-primary marg-bot-4" v-on:click="rejectUser()" :disabled="disableAction">Reject</button>
           </div>
-          <div class="form-group" v-if="approve_user">
-            <label>The user has been approved. </label>
+          <div class="mb-3" v-if="approve_user">
+            <label class="form-label">The user has been approved. </label>
           </div>
-          <div class="form-group" v-if="reject_user">
-            <label>The user has been rejected successfully. </label>
+          <div class="mb-3" v-if="reject_user">
+            <label class="form-label">The user has been rejected successfully. </label>
           </div>
         </form>
       </div>  
@@ -137,12 +136,3 @@ export default {
 };
 </script>
 
-<style lang="css">
-@import "../../styles/style.css";
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
-}
-</style>

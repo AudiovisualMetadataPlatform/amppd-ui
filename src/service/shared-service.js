@@ -1,22 +1,9 @@
 export default class SharedService {
     constructor() {
-        this.erorrToastConfig = {
+        this.toastNotificationConfig = {
             title: "Notification",
-            appendToast: true,
-            variant: "danger",
-            autoHideDelay: 5000,
-        };
-        this.successToastConfig = {
-            title: "Notification",
-            appendToast: true,
-            variant: "success",
-            autoHideDelay: 5000,
-        };
-        this.warningToastConfig = {
-            title: "Notification",
-            appendToast: true,
-            variant: "warning",
-            autoHideDelay: 5000,
+            position: "top-right",
+            delay: 5000,
         };
     }
 
@@ -152,29 +139,6 @@ export default class SharedService {
         }
 
         return arrayObj;
-    }
-
-    //Confirmation window
-    showConfirmationWindow(
-        instance,
-        message = "Are you sure you want to delete?",
-        title = "Confirmation",
-        variant = "primary",
-        okTitle = "Yes",
-        cancelTitle = "No"
-    ) {
-        const msgBox = instance.msgBoxConfirm("Are you sure you want to delete?", {
-            title: title,
-            size: "md",
-            buttonSize: "sm",
-            okVariant: variant,
-            okTitle: okTitle,
-            cancelTitle: cancelTitle,
-            footerClass: "p-2",
-            hideHeaderClose: false,
-            centered: true,
-        });
-        return msgBox;
     }
 
     /***

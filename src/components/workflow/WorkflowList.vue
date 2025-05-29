@@ -3,20 +3,30 @@
     <main class="m-0">
       <b-card class="w-100">
         <h2 class>
-          Workflows
+          {{ active ? "Active" : "Inactive" }} Workflows
+          <button
+            class="btn btn-link btn-lg px-2" 
+            @click="onFlipList()">
+            (see {{ active ? "inactive" : "active" }} workflows)
+          </button>
+          <!-- <span class="px-0 my-2">
+            <span class="txt-v px-2 py-2">{{ active ? "Active" : "Inactive" }}</span>
+            <label class="switch px-2 mt-2" :title="activeTitle">
+              <input type="checkbox" v-model="active" @click="onFlipList()"/>
+              <span class="slider round"></span>
+            </label>
+          </span> -->
           <button
             id="btn-search"
-            class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
-            data-toggle="modal"
-            data-target=".bd-example-modal-lg-2"
-            @click="handleWorkflowSearch()"
+            class="ms-1 btn btn-primary btn-lg marg-b-4 float-end"
+            v-b-modal.modal-lg
           >
             Search Workflows
           </button>
           <button
-            v-if="canCreate()"
+            v-if="active && canCreate()"
             id="btn-workflow-create"
-            class="ml-1 btn btn-primary btn-lg marg-b-4 float-right"
+            class="ms-1 btn btn-primary btn-lg marg-b-4 float-end"
             @click="handleWorkflowCreation()"
             :disabled="activeWorkflowSession"
           >
@@ -32,18 +42,18 @@
         >
           <div class="row">
             <div class="col-lg-10">
-              <h3 contenteditable="true" class="pointer-events-none">
+              <h3 contenteditable="true" class="pe-none">
                 {{ workflow.name }}
               </h3>
               <!-- <p contenteditable="true">{{ workflow.description }}</p> -->
               <span>{{ workflow.annotations[0] }}</span>
             </div>
             <div
-              v-if="canUpdate()"
-              class="col-lg-2 text-right"
+              v-if="active && canUpdate()"
+              class="col text-end px-1"
             >
               <button
-                class="btn btn-primary btn marg-t-5"
+                class="btn btn-primary"
                 href="#"
                 data-toggle="popover"
                 data-content="Link goes to galaxy"
@@ -55,6 +65,19 @@
                 Edit
               </button>
             </div>
+            <div
+              v-if="canActivate()"
+              class="col text-end px-1"
+            >
+              <button
+                class="btn"
+                :class="active ? 'btn-warning' : 'btn-primary'"
+                :disabled="workflow.running"
+                @click.prevent="onDeactivate(workflow, index)"
+              >
+                {{ active ? "Deactivate" : "Activate" }}
+              </button>
+            </div>
           </div>
 
           <div class="row">
@@ -63,36 +86,23 @@
               <br />
               {{ workflow.creator ? workflow.creator : workflow.owner }}
             </div>
-            <!-- <div class="col"> Creator: </div> -->
             <div class="col">
               Date Created:
-              <br />{{ workflow.createTime | LOCAL_DATE_VALUE }}
+              <br />{{ $filters.localDate(workflow.createTime) }}
             </div>
             <div class="col">
               Last Updated:
-              <br />{{ workflow.updateTime | LOCAL_DATE_VALUE }}
+              <br />{{ $filters.localDate(workflow.updateTime) }}
             </div>
-            <!-- <div class="col"> Version: </div> -->
             <div class="col" v-if="workflow.tags && workflow.tags.length">
               <p class="mb-0">Tags:</p>
               <span
-                class="badge badge-secondary"
+                class="badge bg-secondary"
                 v-for="tag in workflow.tags"
                 :key="tag"
                 >{{ tag }}</span
               >
             </div>
-            <!-- <div class="col">
-                            Input File Formats:
-                            <br />
-                            <span class="badge badge-secondary">Video</span>
-                        <div class="col">
-                            Input File Formats:
-                            <br />
-                            <span class="badge badge-secondary">Video</span>
-                            <span class="badge badge-secondary">Audio</span>
-                        </div>    <span class="badge badge-secondary">Audio</span>
-                        </div>-->
           </div>
           <b-card class="mgm-card bg-light-gray-1">
             <h3
@@ -100,16 +110,15 @@
               @click="getWorkflowDetails(index)"
             >
               <button
-                class="btn"
+                class="btn fs-4 mgm-param-toggle"
                 :class="workflow.visible ? null : 'collapsed'"
                 :aria-expanded="workflow.visible ? 'true' : 'false'"
                 :aria-controls="'mgm' + index"
-                style="font-size:24px; font-weight:400"
                 @click="workflow.visible = !workflow.visible"
               >
-                <span v-html="rightArrowSvg" style="font-size:24px"></span>
-                <span class="sr-only">Toggle hidden content</span>
-                <span class="pl-3">MGM Parameter Settings</span>
+                <span v-html="rightArrowSvg" class="fs-4"></span>
+                <span class="visually-hidden">Toggle hidden content</span>
+                <span class="ps-3">MGM Parameter Settings</span>
               </button>
             </h3>
             <b-collapse
@@ -117,96 +126,98 @@
               class="mgm-content"
               v-model="workflow.visible"
             >
-              <div
-                :class="{
-                  'p-2':
-                    !workflow || !workflow.details || !workflow.details.length,
-                }"
+              <b-overlay
+                :show="!workflow || !workflow.details"
+                rounded="sm"
               >
-                <b-overlay
-                  :show="!workflow || !workflow.details"
-                  rounded="sm"
-                  c
+                <b-tabs
+                  id="pills-tab-1"
+                  nav-item-class="bsvn-tab"
+                  nav-class="bsvn-tab-header"
+                  nav-wrapper-class="bsvn-tab-header-wrapper"
+                  card
+                  v-if="workflow.details && workflow.details.length"
                 >
-                  <b-navbar
-                    id="pills-tab-1"
-                    toggleable="lg"
-                    type="dark"
-                    class="nav-pills"
+                  <b-tab v-if="workflow.details?.length == 0 || !workflow.details">
+                    No step specified in workflow.
+                  </b-tab>
+                  <b-tab
+                    v-for="(node, i) in workflow.details"
+                    :key="i"
+                    :title="node.nodeName"
+                    @click="onChangeNode(index, i)"
+                    :active="workflow.selectedNode === i"
                   >
-                    <span v-if="!workflow.details || workflow.details.length==0">
-                      No step specified in workflow.
-                    </span>
-                    <span v-for="(node, i) in workflow.details" :key="i">
-                      <b-nav-item
-                        :class="
-                          node && workflow.selectedNode === i ? 'active' : ''
-                        "
-                        @click="onChangeNode(index, i)"
-                        >{{ node.nodeName }}</b-nav-item
+                    <dl class="d-flex col-12 mt-3 mb-0 pe-0 ps-3">
+                      <div
+                        v-if="workflow.details[workflow.selectedNode].params.length==0"
+                        class="me-5 d-flex"
                       >
-                    </span>
-                  </b-navbar>
-
-                  <dl
-                    class="d-flex col-12 mt-3 mb-0 pr-0"
-                    v-if="
-                      workflow && workflow.details && workflow.details.length
-                    "
+                        No parameter specified.
+                      </div>
+                      <div
+                        class="me-5 d-flex"
+                        v-for="(p, paramIndex) in workflow.details[workflow.selectedNode].params"
+                        :key="paramIndex"
+                      >
+                        <label class="fw-bold mb-0">{{ p.name }}:</label>
+                        <span class="ms-2">{{ p.value }}</span>
+                      </div>
+                    </dl>
+                  </b-tab> 
+                </b-tabs>
+                <a
+                  class="btn btn-primary nav-link align-items-center float-end mb-2"
+                  id="pills-ner-tab-2"
+                  role="tab"
+                  @click="
+                    routeToHelp(
+                    $event,
+                    workflow.details[workflow.selectedNode].node_id
+                    )
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-file-text me-1"
+                    viewBox="0 0 16 16"
                   >
-                    <div
-                      v-if="workflow.details[workflow.selectedNode].params.length==0"
-                      class="mr-5 d-flex"
-                    >
-                      No parameter specified.
-                    </div>
-                    <div
-                      class="mr-5 d-flex"
-                      v-for="(p, paramIndex) in workflow.details[
-                        workflow.selectedNode
-                      ].params"
-                      :key="paramIndex"
-                    >
-                      <label class="font-weight-bold mb-0">{{ p.name }}:</label>
-                      <span class="ml-2">{{ p.value }}</span>
-                    </div>
-                    <a
-                      class="btn btn-primary float-right nav-link"
-                      id="pills-ner-tab-2"
-                      role="tab"
-                      @click="
-                        routeToHelp(
-                          $event,
-                          workflow.details[workflow.selectedNode].node_id
-                        )
-                      "
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        class="bi bi-file-text"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"
-                        ></path>
-                        <path
-                          d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"
-                        ></path>
-                      </svg>
-                      Tool documentation
-                    </a>
-                  </dl>
-                </b-overlay>
-              </div>
+                    <path
+                      d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"
+                    ></path>
+                    <path
+                      d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"
+                    ></path>
+                  </svg>
+                  Tool Documentation
+                </a>
+              </b-overlay>
             </b-collapse>
           </b-card>
         </b-card>
         <!-- end workflow // -->
       </b-card>
     </main>
+    <b-modal 
+      ref="deactivateModal" 
+      title="Confirmation" 
+      @ok="handleDeactivateModal(true)" 
+      @cancel="handleDeactivateModal(false)"
+      centered
+      size="md"
+      footerClass="p-2"
+    >
+      <div>
+        <p>If deactivated, all users will be unable to edit or run this workflow. Do you want to continue?</p>
+      </div>
+      <template #footer="{ ok, cancel }">
+        <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
+        <button type="button" class="btn btn-primary btn-sm" @click="ok();">Yes</button>
+      </template>
+    </b-modal>
     <Search
       searchType="workflow-search"
       @handleSearchWorkflows="searchWorkflows"
@@ -216,7 +227,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import WorkflowService from "../../service/workflow-service";
 import config from "../../assets/constants/common-contant.js";
 import SharedService from "../../service/shared-service";
@@ -236,23 +247,33 @@ export default {
       rightArrowSvg: config.common.icons["right_arrow"],
       activeWorkflowSession: "",
       loading: false,
+      workflowToDeactivate: { id: "", index: -1 }, // workflow to de/activate
+      active: true, // true if showing active workflows, false if showing inactive workflows
     };
   },
   computed: {
     acIsAdmin: sync("acIsAdmin"),
     acActions: sync("acActions"),
+    // activeTitle() {
+    //   return this.active ?
+    //     "Uncheck to show inactive workflows" :
+    //     "Check to show active workflow";
+    // } 
   },
   methods: {
     canCreate() {
       let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_CREATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
-      console.log("actionKey" + actionKey);
       return this.acIsAdmin || this.acActions.includes(actionKey);
     },
     canUpdate() {
       let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
       return this.acIsAdmin || this.acActions.includes(actionKey);
     },
-    searchWorkflows(searchFields) {
+    canActivate() {
+      let actionKey = env.getEnv("VUE_APP_AC_ACTIONTYPE_ACTIVATE") + "-" + env.getEnv("VUE_APP_AC_TARGETTYPE_WORKFLOW")
+      return this.acIsAdmin || this.acActions.includes(actionKey);
+    },
+    async searchWorkflows(searchFields) {
       const self = this;
       const name = searchFields.name;
       const creator = searchFields.creator;
@@ -268,7 +289,7 @@ export default {
       const annotations = searchFields.annotations;
       const tags = searchFields.tags;
       self.workflowService
-        .getActiveFilteredWorkflows(name, creator, dateRange, annotations, tags)
+        .getFilteredWorkflows(this.active, name, creator, dateRange, annotations, tags)
         .then((response) => {
           self.listOfWorkflows = self.sharedService.sortByAlphabatical(
             response.data.rows
@@ -278,17 +299,22 @@ export default {
           console.log(e, "error");
         });
     },
-    getWorkflowList() {
-      const self = this;
+    async getWorkflowList() {
+      const self = this; // handles both in/active workflows
+      console.log("getWorkflowList: active = " + this.active);
+      this.loading = true;
       self.workflowService
-        .getActiveWorkflows()
+        .getWorkflows(this.active)
         .then((response) => {
+          this.loading = true;
           self.listOfWorkflows = self.sharedService.sortByAlphabatical(
             response.data.rows
           );
+          console.log("getWorkflowList: number of workflows retrieved: " + self.listOfWorkflows.length);
         })
         .catch((e) => {
-          console.log(e, "error");
+          this.loading = true;
+          console.log("getWorkflowList: failed to retrieve workflows", e);
         });
     },
     async getWorkflowDetails(index) {
@@ -305,20 +331,14 @@ export default {
         const workflowDetails = wfDetails.tempParams;
         self.listOfWorkflows[index].details = workflowDetails;
         self.listOfWorkflows[index].selectedNode = 0;
-        this.$set(self.listOfWorkflows, index, self.listOfWorkflows[index]);
+        self.listOfWorkflows.index = self.listOfWorkflows[index];
       }
     },
     onChangeNode(workflowIndex, nodeIndex) {
       const self = this;
       self.listOfWorkflows[workflowIndex].selectedNode = nodeIndex;
-      this.$set(
-        self.listOfWorkflows,
-        workflowIndex,
-        self.listOfWorkflows[workflowIndex]
-      );
-    },
-    async handleWorkflowSearch() {
-      this.$bvModal.show("modal-lg");
+      self.listOfWorkflows.workflowIndex = self.listOfWorkflows[workflowIndex];
+      self.listOfWorkflows[workflowIndex].visible = true;
     },
     async handleWorkflowCreation() {
       const self = this;
@@ -329,9 +349,9 @@ export default {
           self.routeToEditorPage(workflowId);
         })
         .catch((e) => {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Unable to process your request. Please contact Administrator",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         });
     },
@@ -343,9 +363,9 @@ export default {
           this.$router.push(`/workflow/edit?id=${workflowId}`);
         })
         .catch((e) => {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Unable to process your request. Please contact Administrator",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         });
     },
@@ -362,6 +382,59 @@ export default {
       const url = this.getMgmNodeUrl(node_id);
       window.open(url, "helpwindow", "width=800, height=500");
     },
+    async onFlipList() {
+      this.active = !this.active;
+      console.log("onFlipList: active = " + this.active);
+      await this.getWorkflowList();
+    },
+    async onDeactivate(workflow, index) {
+      console.log("onDeactivate: active = " + this.active + ", workflowId = " + workflow.id, ", index = " + index); 
+      this.workflowToDeactivate = { id: workflow.id, index: index };
+      if (this.active) {
+        // show confirmation for deactivation
+        this.$refs.deactivateModal.show();      
+      }
+      else {
+        // no need to show confirmation for activation
+        await this.deactivateWorkflow();
+      }
+    },    
+    async deactivateWorkflow() { // also handles activation
+      this.loading = true;
+      this.workflowService.updateWorkflow(this.workflowToDeactivate.id, !this.active)
+        .then((success) => {
+          this.loading = false;
+          let action = this.active ? "deactivated" : "activated";
+          let msg = `Successfully ${action} workflow ${this.workflowToDeactivate.id}.`;
+          this.$toast.success(
+            msg,
+            this.sharedService.toastNotificationConfig
+          );
+          // remove the workflow from active/inactive list
+          this.listOfWorkflows.splice(this.workflowToDeactivate.index, 1);
+          console.log(`${msg} at index ${this.workflowToDeactivate.index}`);
+        })
+        .catch((err) => {
+          this.loading = false;
+          let action = this.active ? "deactivate" : "activate";
+          let msg = `Failed to ${action} workflow ${this.workflowToDeactivate.id}`;
+          this.$toast.error(
+            `${msg} Please try again later!`,
+            this.sharedService.toastNotificationConfig
+          );
+          console.log(`${msg} at index ${this.workflowToDeactivate.index}`, err);
+        });
+    },
+    async handleDeactivateModal(confirmed) { // only used by deactivation
+      console.log("handleDeactivateModal: confirmed = " + confirmed);  
+      if (confirmed) { // When clicked on 'Yes', deactivate workflow
+        await this.deactivateWorkflow();
+      } else { // When clicked on 'No', hide the modal
+        let action = this.active ? "Deactivating" : "Activating";
+        console.log(`${action} on workflow ${this.workflowToDeactivate.id} is cancelled.`);
+        this.$refs.deactivateModal.hide();
+      }
+    },    
   },
   mounted() {
     const self = this;
@@ -371,95 +444,47 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .btn:focus {
   box-shadow: none !important;
 }
 .mgm-card {
   margin: 10px 0px !important;
 }
-
 .mgm-card .card-body {
   padding: 0px !important;
 }
-
 .mgm-h3 {
   padding: 0.75rem 1.25rem !important;
   border: 1px solid rgba(0, 0, 0, 0.125);
   margin-bottom: 0px;
 }
-
+.mgm-param-toggle {
+  &:focus, &:active {
+    border-color: transparent !important;
+  }
+}
 .mgm-card .collapse .card,
 .mgm-card .collapse .card-body {
-  /* padding: 10px !important; */
   border: 0px !important;
 }
-
 .mgm-content {
   padding: 1.25rem !important;
-}
-nav.nav-pills {
-  justify-content: flex-start !important;
-  padding: 0.5rem !important;
-  background: #e9ecef !important;
-  border-radius: 0.5rem !important;
-  list-style: none;
-}
-
-.nav-pills .nav-item.active {
-  background: #153c4d !important;
-  color: white !important;
-}
-
-.nav-item.active .a:link,
-.nav-item.active a {
-  color: white !important;
-}
-
-a:link,
-a {
-  color: #153c4d !important;
-}
-
-.nav-pills .active {
-  border-radius: 0.25rem !important;
-}
-
-a:hover {
-  color: #f4871e;
-  text-decoration: none;
-}
-.nav {
-  list-style: none !important;
 }
 .bg-light-gray {
   background-color: rgba(0, 0, 0, 0.03) !important;
 }
 h3.card-title .btn {
-  /* font-size: 1.5rem; */
   line-height: 1rem;
   text-decoration: none;
   color: #153c4d;
 }
+a#pills-ner-tab-2 {
+  padding: 0.5rem 1rem;
 
-.nav-pills .nav-link {
-  border-radius: 0.25rem;
-}
-.nav-link:focus,
-.nav-link:hover {
-  text-decoration: none;
-}
-a:hover {
-  color: #f4871e !important;
-  text-decoration: none;
-}
-
-.pointer-events-none {
-  pointer-events: none;
-}
-
-.nav-link {
-  margin-left: auto;
-  margin-right: 0;
+  &:hover {
+    color: #f4871e !important;
+    text-decoration: none;
+  }
 }
 </style>

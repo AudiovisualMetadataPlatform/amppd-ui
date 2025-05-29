@@ -268,8 +268,8 @@ export default {
     console.log("callback = " + this.callback);
 
     let requires_auth_token = await auth_token_required(
-      this.authString,
-      this.resourcePath
+      this.resourcePath,
+      this.authString
     );
     if (requires_auth_token === false) {
       this.authValidated();

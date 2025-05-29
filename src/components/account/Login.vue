@@ -10,9 +10,8 @@
         <div class="card col-6">
           <div class="card-body">
             <h2 class="card-title">Sign In</h2>
-
-            <form>
-              <div class="form-group" v-if="errors.other_errors.length">
+            <form class="needs-validation" ref="loginUserForm">
+              <div class="mb-3" v-if="errors.other_errors.length">
                 <label
                   class="form-errors"
                   v-for="error in errors.other_errors"
@@ -20,52 +19,45 @@
                   >{{ error }}</label
                 >
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <label class="form-errors" v-if="errors.email_error.length">{{
-                  errors.email_error
-                }}</label>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
                 <input
-                  type="email"
+                  type="text"
                   class="form-control"
                   id="exampleInputEmail1"
                   v-model="email"
                   placeholder="Enter email address"
-                  v-on:focus="onClick(`email`)"
+                  v-on:focus="onClick()"
+                  required
                 />
+                <label class="invalid-feedback" v-if="errors.email_error.length">{{ errors.email_error }}</label>
               </div>
-
-              <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <label class="form-errors" v-if="errors.pswd_error.length">{{
-                  errors.pswd_error
-                }}</label>
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
                 <input
                   type="password"
                   class="form-control"
                   id="exampleInputPassword1"
                   v-model="pswd"
                   placeholder="Password"
-                  v-on:focus="onClick(`pswd`)"
+                  v-on:focus="onClick()"
+                  required
                 />
-                <p class="forgot-psw form-text text-muted">
-                  <router-link
-                    :to="{ name: 'forgot-password', query: { email: email } }"
-                    >Forgot Password?</router-link
-                  >
-                </p>
+                <label class="invalid-feedback" v-if="errors.pswd_error.length">{{ errors.pswd_error }}</label>
               </div>
-
-              <button
-                type="submit"
-                class="btn btn-primary marg-bot-4"
-                v-on:click="checkForm()"
-              >
+              <p class="forgot-psw form-text text-muted">
+                <router-link
+                  :to="{ name: 'forgot-password', query: { email: email } }"
+                >
+                  Forgot Password?
+                </router-link>
+              </p>
+              <button type="submit" class="btn btn-primary mb-4" v-on:click="checkForm($event)">
                 Sign In
               </button>
               <p class="form-text text-muted">
                 Don't have an account?
-                <a href="#" v-on:click="registerClicked()">Sign up</a>.
+                <a href="#" @click.prevent="registerClicked()">Sign up</a>.
               </p>
             </form>
           </div>
@@ -78,7 +70,7 @@
 <script>
 import AmpHeader from "@/components/shared/AmpHeader.vue";
 import { accountService } from "@/service/account-service";
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import AccessControlService from "@/service/access-control-service";
 import SharedService from "@/service/shared-service";
 import Loader from "@/components/shared/Loader.vue";
@@ -143,40 +135,46 @@ export default {
           console.log(e);
       }
     },
-    async checkForm() {
+    async checkForm(event) {
       event.preventDefault();
       let self = this;
-      this.errors.other_errors = [];
-      if (!this.email) {
-        this.errors.email_error = "(Email required)";
+      self.errors.other_errors = [];
+      const form = self.$refs.loginUserForm;
+      if (!self.email) {
+        self.errors.email_error = "(Email required)";
       }
-      if (!this.pswd) {
-        this.errors.pswd_error = "(Password required)";
+      if (!self.pswd) {
+        self.errors.pswd_error = "(Password required)";
       }
-      if (this.errors.email_error == "" && this.errors.pswd_error == "") {
-        var currentUser = await accountService.login(this.email, this.pswd);
-        console.log("current user:" + currentUser);
-        console.log("AUTH:");
-        if (currentUser && currentUser.token) {
+      if (!form.checkValidity()) {
+        form.classList.add("was-validated");
+        return;
+      } else {
+        var currentUser = await accountService.login(self.email, self.pswd);
+        console.log("Login.checkForm: Current user: ", currentUser);
+        if(currentUser === null) {
+          self.errors.other_errors.push("Email and password do not match");
+          return;
+        } else if (currentUser?.token) {
           self.isAuthenticated = true;
-          await self.accessControlService.initPermissions(this);
+          await self.accessControlService.initPermissions(self);
           // Force setting localStorage vuex object for state in vuex-persistedstate
           let vuex = JSON.parse(localStorage.getItem("vuex"));
           localStorage.setItem("vuex", JSON.stringify({
             ...vuex,
-            acUnitsActions: this.acUnitsActions,
-            acUnitsMedia: this.acUnitsMedia,
-            acUnitsOutput: this.acUnitsOutput,
-            acActions: this.acActions,
+            acUnitsActions: self.acUnitsActions,
+            acUnitsMedia: self.acUnitsMedia,
+            acUnitsOutput: self.acUnitsOutput,
+            acActions: self.acActions,
           }));
-          if (this.$route.query.returnUrl) {
-            console.log("going to " + this.$route.query.returnUrl);
-            this.$router.push(this.$route.query.returnUrl);
+          console.log("Login.checkForm: AC data in vuex is saved in local storage");
+          if (self.$route.query.returnUrl) {
+            console.log("Login.checkForm: routing to returnUrl: " + self.$route.query.returnUrl);
+            self.$router.push(self.$route.query.returnUrl);
           } else {
-            this.$router.push("/");
+            console.log("Login.checkForm: routing to home: " + self.$route.query.returnUrl);
+            self.$router.push("/");
           }
-        } else {
-          this.errors.other_errors.push("Email and password do not match");
         }
       }
     },
@@ -186,9 +184,13 @@ export default {
     forgotPassword() {
       this.$router.push("/account/forgot-password");
     },
-    onClick(data) {
-      if (data == "email") this.errors.email_error = "";
-      else this.errors.pswd_error = "";
+    onClick() {
+      // Reset form validation on focus
+      const form = this.$refs.loginUserForm;
+      form.classList.contains("was-validated") && form.classList.remove("was-validated");
+      // Reset error messages
+      this.errors.email_error = "";
+      this.errors.pswd_error = "";
     },
   },
   mounted() {
@@ -197,12 +199,13 @@ export default {
 };
 </script>
 
-<style lang="css">
+<style scoped>
 @import "../../styles/style.css";
-.form-errors {
-  color: red;
-  margin: 0% !important;
-  font-size: 0.9rem;
-  padding-left: 3px;
+a {
+  color: #153c4d !important;
+  text-decoration: none !important;
+  &:hover {
+    color: #f4871e !important;
+  }
 }
 </style>

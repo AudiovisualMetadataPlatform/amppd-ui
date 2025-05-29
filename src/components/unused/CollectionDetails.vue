@@ -7,7 +7,7 @@
           <main class="m-0">
             <Logout />
             <h1>Collection Details</h1>
-            <div class="pad-all-3">
+            <div class="p-4">
               <div class="card">
                 <div class="card-body">
                   <div class="row">
@@ -24,9 +24,9 @@
                       <br />MODIFIED DATE: {{ collectionDetails.modifiedDate }}
                     </p>
 
-                    <div class="form-group col-lg-6">
-                      <label for="collection-name">Task Manager</label>
-                      <select class="browser-default custom-select" disabled>
+                    <div class="mb-3 col-lg-6">
+                      <label for="collection-name" class="form-label">Task Manager</label>
+                      <select class="browser-default form-select" disabled>
                         <option value="1">
                           {{ collectionDetails.taskManager }}
                         </option>
@@ -36,18 +36,18 @@
 
                     <div class="container-fluid">
                       <div class="row">
-                        <div class="col controls text-right">
+                        <div class="col controls text-end">
                           <button
-                            class="btn btn-outline-danger btn-lg marg-bot-1"
+                            class="btn btn-outline-danger btn-lg mb-2"
                           >
                             Delete
                           </button>
                           <button
-                            class="btn btn-outline-primary btn-lg marg-bot-1"
+                            class="btn btn-outline-primary btn-lg mb-2"
                           >
                             Edit
                           </button>
-                          <button class="btn btn-primary btn-lg marg-bot-1">
+                          <button class="btn btn-primary btn-lg mb-2">
                             View workflow results
                           </button>
                         </div>
@@ -60,7 +60,7 @@
                   v-for="(rec, index) in collectionDetails &&
                     collectionDetails.items"
                   :key="rec.id"
-                  class="pad-all-3 my-collection"
+                  class="p-4 my-collection"
                 >
                   <!-- collection name/description -->
                   <CollectionDetailsItemCard :index="index" />
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import Logout from "@/components/shared/Logout.vue";
 import CollectionDetailsService from "../../service/collection-detail-service";

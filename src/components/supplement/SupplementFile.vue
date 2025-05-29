@@ -4,17 +4,15 @@
     <form>
       <div
         v-if="action !== 'view' || action === 'replace'"
-        class="marg-t-2 panel panel-default hidden-container"
+        class="mt-3 panel panel-default hidden-container"
       >
         <div class="panel-heading"><strong>Upload files</strong></div>
         <div class="panel-body">
           <div class="mb-4 file-upload bg-light-gray-1">
-            <label for="file-upload" class="file-upload-box">
+            <label for="file-upload" class="file-upload-box form-label mb-0">
               <input
                 type="file"
-                class="form-control-file btn btn-light btn-lg"
-                id="exampleFormControlFile1"
-                value="upload"
+                class="btn btn-light btn-lg w-100"
                 @change="filesChange"
               />
             </label>
@@ -23,13 +21,13 @@
       </div>
 
       <div id="upload-details-body">
-        <div class="marg-t-3 panel panel-default">
+        <div class="mt-4 panel panel-default">
           <div class="hidden-container">
             <div>
               <hr />
               <div class="row">
                 <div class="col-12 marg-b-1">
-                  <label for="item-name">File Name</label>
+                  <label for="item-name" class="form-label">Filename</label>
                   <input
                     v-if="action === 'add' || action === 'replace'"
                     type="text"
@@ -51,7 +49,7 @@
                       v-if="canUpdate"
                     >
                       <button
-                        class="btn btn-outline btn-right add-remove float-right button-replace"
+                        class="btn btn-outline btn-right add-remove float-end button-replace"
                         id="replaceFile"
                         @click="replaceFile($event)"
                       >
@@ -88,8 +86,8 @@
                 </div>
               </div>
               <div class="mt-3 row">
-                <div class="form-group  col-6">
-                  <label for="sup-item-name">Supplemental File Name*</label>
+                <div class="mb-3  col-6">
+                  <label for="sup-item-name" class="form-label">Supplemental File Name*</label>
                   <input
                     type="text"
                     class="form-control"
@@ -103,10 +101,10 @@
                     :disabled="!canUpdate"
                   />
                 </div>
-                <div class="form-group col-6">
-                  <label for="category-name">Category*</label>
+                <div class="mb-3 col-6">
+                  <label for="category-name" class="form-label">Category*</label>
                   <select
-                    class="select custom-select w-100"
+                    class="select form-select w-100"
                     v-model="supplement.fileDetails.category"
                     required
                     :class="{
@@ -126,9 +124,9 @@
                   </select>
                 </div>
               </div>
-              <div class="row marg-b-2">
+              <div class="row">
                 <div class="col-12">
-                  <label for="description">Description</label>
+                  <label for="description" class="form-label">Description</label>
                   <textarea
                     id="description"
                     class="form-control textArea"
@@ -141,10 +139,10 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="form-group col-6">
-            <label for="unit-name">Unit*</label>
+          <div class="mb-3 col-6">
+            <label for="unit-name" class="form-label">Unit*</label>
             <select
-              class="select custom-select w-100"
+              class="select form-select w-100"
               v-model="supplement.fileDetails.unit"
               @change="onInputChange('unit', true)"
               required
@@ -161,10 +159,10 @@
               >
             </select>
           </div>
-          <div class="form-group  col-6">
-            <label for="collection-name">Collection</label>
+          <div class="mb-3  col-6">
+            <label for="collection-name" class="form-label">Collection</label>
             <select
-              class="select custom-select w-100"
+              class="select form-select w-100"
               v-model="supplement.fileDetails.collection"
               @change="onInputChange('collection', true)"
               :disabled="
@@ -182,10 +180,10 @@
           </div>
         </div>
         <div class="row">
-          <div class="form-group  col-6">
-            <label for="item-name">Item</label>
+          <div class="mb-3  col-6">
+            <label for="item-name" class="form-label">Item</label>
             <select
-              class="select custom-select w-100"
+              class="select form-select w-100"
               v-model="supplement.fileDetails.item"
               @change="onInputChange('item', true)"
               :disabled="
@@ -200,10 +198,10 @@
               >
             </select>
           </div>
-          <div class="form-group  col-6">
-            <label for="primary-file-name">Content File</label>
+          <div class="mb-3  col-6">
+            <label for="primary-file-name" class="form-label">Content File</label>
             <select
-              class="select custom-select w-100"
+              class="select form-select w-100"
               v-model="supplement.fileDetails.primaryFile"
               @change="onInputChange('primaryFile', true)"
               :disabled="
@@ -224,7 +222,7 @@
         </div>
         <div class="row">
           <div class="col">
-            <label for="created-by">Created by</label>
+            <label for="created-by" class="form-label">Created by</label>
             <input
               type="text"
               class="form-control"
@@ -234,17 +232,17 @@
             />
           </div>
           <div class="col">
-            <label for="create-date">Date Created</label>
+            <label for="create-date" class="form-label">Date Created</label>
             <input
               type="text"
               class="form-control"
               id="create_date"
-              :value="supplement.fileDetails.createdDate | LOCAL_DATE_VALUE"
+              :value="$filters.localDate(supplement.fileDetails.createdDate)"
               disabled
             />
           </div>
           <div class="col">
-            <label for="modified-by">Modified by</label>
+            <label for="modified-by" class="form-label">Modified by</label>
             <input
               type="text"
               class="form-control"
@@ -254,36 +252,70 @@
             />
           </div>
           <div class="col">
-            <label for="modified-date">Modified Date </label>
+            <label for="modified-date" class="form-label">Modified Date </label>
             <input
               type="text"
               class="form-control"
               id="modified_date"
-              :value="supplement.fileDetails.modifiedDate | LOCAL_DATE_VALUE"
+              :value="$filters.localDate(supplement.fileDetails.modifiedDate)"
               disabled
             />
           </div>
         </div>
         <button
           v-if="canUpdate"
-          class="marg-tb-1 mt-2 float-right  btn btn-primary btn-lg btn-edit"
+          class="marg-tb-1 mt-2 float-end  btn btn-primary btn-lg btn-edit"
           @click="saveFile($event, supplement.fileDetails)"
         >
           Save
         </button>
+        <button
+          v-if="canDelete && supplement.fileDetails && supplement.fileDetails.id"
+          class="marg-tb-1 mt-2 float-start btn btn-danger btn-lg"
+          :disabled="supplement.fileDetails && !supplement.fileDetails.deletable"
+          @click.prevent="onDeleteSupplement()"
+        > 
+          Delete Supplement
+        </button>
       </div>
     </form>
+    <!-- Delete entity confirmation modal -->
+    <b-modal 
+      ref="deleteModal" 
+      title="Confirmation" 
+      @ok="handleDeleteModal(true)" 
+      @cancel="handleDeleteModal(false)"
+      centered
+      size="md"
+      footerClass="p-2"
+    >
+      <div v-if="deleteWarnings.statistics">
+        <p>{{ deleteWarnings.header }}</p>
+        <ul>
+          <li v-for="(entityCount) in deleteWarnings.statistics">
+            {{ entityCount }}
+          </li>
+        </ul>
+      </div>
+      <p>{{ deleteWarnings.question }} </p>
+      <template #footer="{ ok, cancel }">
+        <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
+        <button type="button" class="btn btn-primary btn-sm" @click="ok();">Yes</button>
+      </template>
+    </b-modal>
   </div>
+
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "@/helpers/env";
 import UnitService from "@/service/unit-service";
 import ItemService from "@/service/item-service";
 import CollectionService from "@/service/collection-service";
 import PrimaryFileService from "@/service/primary-file-service";
 import SupplementService from "@/service/supplement-service";
+import EntityService from "@/service/entity-service";
 import SharedService from "@/service/shared-service";
 import Loader from "@/components/shared/Loader.vue";
 import ConfigPropertiesService from "@/service/config-properties-service";
@@ -302,6 +334,7 @@ export default {
       fileService: new PrimaryFileService(),
       collectionService: new CollectionService(),
       supplementService: new SupplementService(),
+      entityService: new EntityService(),
       accessControlService: new AccessControlService(),
       configPropertiesService: new ConfigPropertiesService(),
       loading: false,
@@ -322,11 +355,17 @@ export default {
         },
       },
       action: "add",
+      allUnits: [],
+      supplementType: "",
+      viewApiType: "",
       submitted: false,
       moveSupplement: false,
-      allUnits: [],
       canCreate: false,
       canUpdate: false,
+      canDelete: false,
+      supplementToDelete: { id: null, type: null },
+      supplementStatistics: {}, // data statistics for supplement to be deleted     
+      deleteWarnings: { header: null, statistics: null, question: null }  // warnings for supplement deletion 
     };
   },
   computed: {
@@ -346,12 +385,25 @@ export default {
           self.configProperties = await self.configPropertiesService.getConfigProperties();        
         }
 
+        // TODO 
+        // Make unit changable on supplement edit page makes AC ambiguous and complicated:
+        // one would need Delete permission on old unit and Create permission on new unit to change the unit;
+        // if user can't delete in existing unit, the unit dropdownlist should be disabled;
+        // otherwise, the dropdown should only include those in which creation is allowed;
+        // canUpdate should be decided based on Update permission in currently selected unit;
+        // canDelete should be decided based on Delete permission in currently selected unit;
+        // however, what counts asa "current unit", the original one, or the unsaved current one?
+        // For this reason, I suggest we do not allow changing unit on the edit page, 
+        // but provide a Move action if there is a real use case. 
+        // Note that no other entity currently has a Move action use case.
+
         // retrieve accessible units for create/update
         await self.accessControlService.getPermissionsUnits("Create", "Supplement").then((res) => {
           self.allUnits = res.data;
           self.supplement["allUnits"] = self.sharedService.sortByAlphabatical(self.allUnits);
           self.canCreate = self.acIsAdmin || res.data && res.data.length > 0
           self.canUpdate = self.acIsAdmin || self.action !== "view" && self.canCreate;                
+          self.canDelete = self.acIsAdmin; // for new unsaved supplement, only admin can deletea as unit may not be populated yet   
         });
 
         self.loading = false;    
@@ -366,13 +418,13 @@ export default {
       try {
         self.superLoading = true;
         if (self.supplementType === "u-sup") {
-          self.viewApiType = "unitSupplements";
+          self.viewApiType = "unitSupplement";
         } else if (self.supplementType === "c-sup") {
-          self.viewApiType = "collectionSupplements";
+          self.viewApiType = "collectionSupplement";
         } else if (self.supplementType === "i-sup") {
-          self.viewApiType = "itemSupplements";
+          self.viewApiType = "itemSupplement";
         } else if (self.supplementType === "p-sup") {
-          self.viewApiType = "primaryfileSupplements";
+          self.viewApiType = "primaryfileSupplement";
         }
 
         self.supplementService
@@ -429,15 +481,20 @@ export default {
                     break;
                   default:
                     break;
-                }            
-                self.canUpdate = self.acIsAdmin; 
-                if (!self.canUpdate) {
+                }  
+                // check Update-Supplement and Delete-Supplement permissions
+                if (self.acIsAdmin) {
+                  self.canUpdate = true;
+                  self.canDelete = true;                  
+                } else {                
                   let actions = self.acUnitsActions.filter((ua) => ua.unitId == r.unitId)[0].actions;
-                  let actionType = env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE");
                   let targetType = env.getEnv("VUE_APP_AC_TARGETTYPE_SUPPLEMENT");
-                  console.log("actions:" + actions);
-                  self.canUpdate = actions.filter((a) => a.targetType == targetType && a.actionType == actionType).length > 0;
+                  let actionUpdate = env.getEnv("VUE_APP_AC_ACTIONTYPE_UPDATE");
+                  let actionDelete = env.getEnv("VUE_APP_AC_ACTIONTYPE_DELETE");
+                  self.canUpdate = actions.filter((a) => a.targetType == targetType && a.actionType == actionUpdate).length > 0;
+                  self.canDelete = actions.filter((a) => a.targetType == targetType && a.actionType == actionDelete).length > 0;
                 }
+                console.log("Current user permissions on supplement: canUpdate: " + self.canUpdate + ", canDelete: " + self.canDelete);
               });
           });
       } catch (error) {
@@ -541,9 +598,9 @@ export default {
 
     successMessage() {
       const self = this;
-      self.$bvToast.toast(
+      self.$toast.success(
         "Supplemental file has been successfully updated.",
-        self.sharedService.successToastConfig
+        self.sharedService.toastNotificationConfig
       );
     },
 
@@ -552,16 +609,16 @@ export default {
       e.preventDefault();
       self.submitted = true;
       if (!data.name || !data.category || !self.entityId) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Please provide required fields!",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         return;
       }
       if (self.action === "replace" && !data.file) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Please choose a file!",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         return;
       }
@@ -574,19 +631,19 @@ export default {
           let newUrlType = "";
           let formDataKey = "";
           if (self.entityType === "unit") {
-            apiType = "units";
+            apiType = "unit";
             newUrlType = "u-sup";
             formDataKey = "unitSupplement";
           } else if (self.entityType === "collection") {
-            apiType = "collections";
+            apiType = "collection";
             newUrlType = "c-sup";
             formDataKey = "collectionSupplement";
           } else if (self.entityType === "item") {
-            apiType = "items";
+            apiType = "item";
             newUrlType = "i-sup";
             formDataKey = "itemSupplement";
           } else if (self.entityType === "primaryFile") {
-            apiType = "primaryfiles";
+            apiType = "primaryfile";
             newUrlType = "p-sup";
             formDataKey = "primaryfileSupplement";
           }
@@ -614,9 +671,9 @@ export default {
               self.$router
                 .push(`/supplemental-files/${newUrlType}/${response.id}`)
                 .then(() => {
-                  self.$bvToast.toast(
+                  self.$toast.success(
                     "Supplemental file has been successfully created.",
-                    self.sharedService.successToastConfig
+                    self.sharedService.toastNotificationConfig
                   );
                 });
             });
@@ -794,14 +851,57 @@ export default {
             error.response.data.validationErrors
           );
           errorMessages.map((el) =>
-            self.$bvToast.toast(el, self.sharedService.erorrToastConfig)
+            self.$toast.error(el, self.sharedService.toastNotificationConfig)
           );
         } else {
-          self.$bvToast.toast(
+          self.$toast.error(
             "Something went wrong.Please try again!",
-            self.sharedService.erorrToastConfig
+            self.sharedService.toastNotificationConfig
           );
         }
+      }
+    },
+
+    async onDeleteSupplement() {
+      console.log("onDeleteSupplement: supplement ID: " + this.supplementId + ", supplement type: " + this.viewApiType); 
+      this.supplementToDelete = { id: this.supplementId, type: this.viewApiType };
+      // statistics only applies to groundtruth primaryfileSupplement  
+      if (this.supplementToDelete.type == "primaryfileSupplement" && 
+        this.supplement.fileDetails.category.startsWith("Groundtruth")) {
+        this.supplementStatistics = await this.entityService.getEntityStatistics(this.supplementToDelete);
+      }
+      console.log("onDeleteSupplement: supplementStatistics = " + this.supplementStatistics);
+      this.deleteWarnings = this.entityService.getDeleteWarnings(this.supplementStatistics, this.supplementToDelete.type);
+      this.$refs.deleteModal.show();
+    },
+
+    async handleDeleteModal(confirmed) {
+      console.log("handleDeleteModal: confirmed = " + confirmed);  
+      if (confirmed) { // When clicked on 'Yes', delete supplement
+        this.loading = true;
+        this.entityService.deleteEntity(this.supplementToDelete)
+          .then((success) => {
+            this.loading = false;
+            this.$toast.success(
+              `Successfully deleted ${this.supplementToDelete.type} ${this.supplementToDelete.id}`,
+              this.sharedService.toastNotificationConfig
+            );
+            console.log(`Successfully deleted ${this.supplementToDelete.type} ${this.supplementToDelete.id}`);
+            // route to supplement list page
+            console.log("routing to /supplemental-files after supplement deletion");
+            this.$router.push("/supplemental-files");
+            })
+          .catch((err) => {
+            this.loading = false;
+            this.$toast.error(
+              `Failed to delete ${this.supplementToDelete.type} ${this.supplementToDelete.id}. Please try again later!`,
+              this.sharedService.toastNotificationConfig
+            );
+            console.log(`Failed to delete ${this.supplementToDelete.type} ${this.supplementToDelete.id}`, err);
+          });
+      } else { // When clicked on 'No', hide the modal
+        console.log(`Deleting on ${this.supplementToDelete.type} ${this.supplementToDelete.id} is cancelled.`);
+        this.$refs.deleteModal.hide();
       }
     },
   },

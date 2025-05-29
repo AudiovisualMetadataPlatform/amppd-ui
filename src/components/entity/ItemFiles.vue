@@ -1,7 +1,7 @@
 <template>
   <div class="w-100">
     <loader :show="showLoader" />
-    <b-card class="text-left">
+    <b-card class="text-start">
       <h2 class="mb-3">Content Files</h2>
       <table
         class="table"
@@ -11,10 +11,12 @@
         "
       >
         <thead>
+          <tr>
           <th>File Label</th>
           <th>Filename</th>
           <th>Description</th>
           <th></th>
+          </tr>
         </thead>
         <tbody>
           <tr
@@ -47,25 +49,26 @@
             </td>
             <td>
               <button
-                class="btn btn-primary btn float-right"
+                class="btn btn-primary btn float-end"
                 @click="onView(file)"
                 v-if="!file.file && accessControl._primaryfile._read"
               >
                 View
               </button>
               <button
-                class="btn btn-primary btn float-right"
+                class="btn btn-primary btn float-end"
                 @click="saveFile(file, index)"
                 v-if="file.file && accessControl._primaryfile._create"
               >
                 Save
               </button>
               <button
-                class="btn btn-link add-remove float-right mr-1"
+                class="btn btn-danger float-end me-2"
                 v-if="accessControl._primaryfile._delete"
-                @click="removeFile(index)"
+                :disabled="file.id && !file.deletable"
+                @click="deleteFile(index)"
               >
-                <span v-html="removeIcon" class="pr-1"></span>Remove File
+                Delete File
               </button>
             </td>
           </tr>
@@ -83,7 +86,7 @@
             aria-valuemax="100"
             style="width: 60%"
           >
-            <span class="sr-only">60% Complete</span>
+            <span class="visually-hidden">60% Complete</span>
           </div>
         </div>
       </div>
@@ -102,21 +105,18 @@
         <div class="panel-body"
           v-if="accessControl._primaryfile._create"
         >
-          <div class="d-flex w-100 mt-3">
-            <div class="input-group image-preview col-11 p-0 mr-1">
-              <!-- <label for="exampleFormControlFile1" class="form-control-file btn btn-light btn-lg"><button>Browse</button></label> -->
+          <div class="d-flex mt-3">
+            <div class="p-0 me-1 w-100">
               <input
                 type="file"
-                class="form-control-file btn btn-light btn-lg"
-                id="exampleFormControlFile1"
-                value="Upload"
+                class="btn btn-light btn-lg w-100"
                 ref="fileupload"
                 @change="getFile"
               />
             </div>
-            <div class="col-1 p-0" style="padding: 5px !important;">
+            <div class="p-0 align-self-center">
               <button
-                class="btn btn-primary btn-lg float-right"
+                class="btn btn-primary btn-lg float-end"
                 @click="uploadFile()"
                 :disabled="dropFiles.length > 0"
               >
@@ -137,11 +137,35 @@
         </div>
       </div>
     </b-card>
+    <!-- Remove file confirmation modal -->
+    <b-modal 
+      ref="confirmModal" 
+      title="Confirmation" 
+      @ok="handleConfirmModal(true)" 
+      @cancel="handleConfirmModal(false)"
+      centered
+      size="md"
+      footerClass="p-2"
+    >
+      <div v-if="deleteWarnings.statistics">
+			  <p>{{ deleteWarnings.header }}</p>
+        <ul>
+          <li v-for="(entityCount) in deleteWarnings.statistics">
+            {{ entityCount }}
+          </li>
+        </ul>
+		  </div>
+			<p>{{ deleteWarnings.question }} </p>
+      <template #footer="{ ok, cancel }">
+        <button type="button" class="btn btn-secondary btn-sm" @click="cancel();">No</button>
+        <button type="button" class="btn btn-primary btn-sm" @click="ok();">Yes</button>
+      </template>
+    </b-modal>
   </div>
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import sync from "@/helpers/sync";
 import { env } from "../../helpers/env";
 import Sidebar from "@/components/navigation/Sidebar.vue";
 import Logout from "@/components/shared/Logout.vue";
@@ -169,7 +193,12 @@ export default {
       files: [],
       showLoader: false,
       dropFiles: [],
-      // dropFileName: ""
+      // DataentityStatistics for the primaryfile to be deleted
+      fileStatistics: {}, 
+      // warnings to display in confirmation modal upon file deletion 
+      deleteWarnings: { header: null, statistics: null, question: null },
+      // object to hold info of the file to be removed
+      fileToRemove: { file: null, index: null }
     };
   },
   computed: {
@@ -180,12 +209,33 @@ export default {
     selectedFile: sync("selectedFile"),
     accessControl: sync("accessControl"),
     isCreatePage() {
-      return window.location.hash.toLowerCase().indexOf("add-item") > -1;
+      return window.location.href.toLowerCase().indexOf("add-item") > -1;
     },
   },
   methods: {
+    getDeleteWarnings(fileStatistics) {
+      let statistics = [], header = '', question = '';
+      if (fileStatistics.countPrimaryfileSupplements) { 
+        statistics.push(fileStatistics.countPrimaryfileSupplements + " primaryfile supplements");
+      }
+      if (fileStatistics.countWorkflowResults) { 
+        statistics.push(fileStatistics.countWorkflowResults + " workflow results");
+      }
+      if (fileStatistics.countMgmEvaluationTests) { 
+        statistics.push(fileStatistics.countMgmEvaluationTests + " evaluation test results");
+      }
+      if (statistics.length) {
+        header = "Deleting this file will also delete the following associated data:";
+        question = "Do you want to continue?";
+      }
+      else {
+        question = "Are you sure you want to delete this content file?";
+      }
+      console.log("getDeleteWarnings question: " + question);
+      return {header, statistics, question};
+    },
     onCancel() {
-      var result = confirm("Are you sure want to cancel!");
+      var result = confirm("Are you sure you want to cancel?");
       if (result) this.showEdit = !this.showEdit;
     },
     async getPrimaryFiles() {
@@ -199,6 +249,10 @@ export default {
               self.primaryFiles._embedded.primaryfiles
             );
           }
+          console.log("ItemFiles.getPrimaryFiles: done for item " + self.selectedItem.id);
+        })
+        .catch((err) => {
+          console.log("ItemFiles.getPrimaryFile: failed for item " + self.selectedItem.id);
         });
     },
     getFile(e) {
@@ -208,7 +262,6 @@ export default {
     getDropFile(e) {
       const self = this;
       self.dropFiles = e.dataTransfer.files;
-      //  self.dropFileName = self.dropFiles[0].name;
       this.uploadFile();
     },
     uploadFile() {
@@ -234,13 +287,14 @@ export default {
     saveFile(data, index) {
       const self = this;
       if (!self.selectedItem.id && !self.selectedItem.selectedItemId) {
-        self.$bvToast.toast(
+        self.$toast.error(
           "Item details cannot be found to add content file",
-          self.sharedService.erorrToastConfig
+          self.sharedService.toastNotificationConfig
         );
         return;
       } else if (!self.selectedItem.id && self.selectedItem.selectedItemId) {
         self.selectedItem.id = self.selectedItem.selectedItemId;
+        console.log("saveFile: selectedItem id is " + self.selectedItem.id);
       }
 
       const formData = new FormData();
@@ -265,7 +319,8 @@ export default {
         .uploadFile(self.selectedItem.id, formData)
         .then((el) => {
           self.showLoader = false;
-          this.$set(self.primaryFiles._embedded.primaryfiles, index, el.data);
+          self.primaryFiles._embedded.primaryfiles[index] = el.data;
+          console.log("Saved file " + self.primaryFiles._embedded.primaryfiles[index]);
         })
         .catch((error) => {
           self.showLoader = false;
@@ -278,17 +333,19 @@ export default {
               error.response.data.validationErrors
             );
             errorMessages.map((el) =>
-              self.$bvToast.toast(el, self.sharedService.erorrToastConfig)
+              self.$toast.error(el, self.sharedService.toastNotificationConfig)
             );
+            console.log("saveFile validationErrors: " + errorMessages);
           } else {
-            self.$bvToast.toast(
+            self.$toast.error(
               "Something went wrong.Please try again!",
-              self.sharedService.erorrToastConfig
+              self.sharedService.toastNotificationConfig
             );
+            console.log("saveFile errors: " + error);
           }
         });
     },
-    removeFile(index) {
+    deleteFile(index) {
       const self = this;
       if (self.primaryFiles._embedded.primaryfiles[index].file)
         self.primaryFiles._embedded.primaryfiles.splice(index, 1);
@@ -309,40 +366,20 @@ export default {
         self.itemService
           .addItemToCollection(self.selectedItem)
           .then((reponse) => {
-            self.$bvToast.toast("Item added successfully", {
-              title: "Notification",
-              appendToast: true,
-              variant: "success",
-              autoHideDelay: 5000,
-            });
+            self.$toast.success("Item added successfully", self.sharedService.toastNotificationConfig);
             self.$router.push("/collection/details");
           })
           .catch((error) => {
-            self.$bvToast.toast("Failed to add an Item", {
-              title: "Notification",
-              appendToast: true,
-              variant: "danger",
-              autoHideDelay: 5000,
-            });
+            self.$toast.error("Failed to add an Item", self.sharedService.toastNotificationConfig);
           });
       } else {
         self.itemService
           .updateItem(self.selectedItem)
           .then((reponse) => {
-            self.$bvToast.toast("Item updated successfully", {
-              title: "Notification",
-              appendToast: true,
-              variant: "success",
-              autoHideDelay: 5000,
-            });
+            self.$toast.success("Item updated successfully", self.sharedService.toastNotificationConfig);
           })
           .catch((error) => {
-            self.$bvToast.toast("Failed to add an Item", {
-              title: "Notification",
-              appendToast: true,
-              variant: "danger",
-              autoHideDelay: 5000,
-            });
+            self.$toast.error("Failed to add an Item", self.sharedService.toastNotificationConfig);
           });
       }
     },
@@ -355,29 +392,42 @@ export default {
       }
     },
     async onRemovePrimaryFile(file, index) {
+      // Set file info for the current file chosen to be removed
+      this.fileToRemove = { file, index }
+      this.fileStatistics = await this.fileService.getPrimaryfileStatistics(file.id);
+      console.log("onRemovePrimaryFile: " + this.fileStatistics);
+      this.deleteWarnings = this.getDeleteWarnings(this.fileStatistics);
+      this.$refs.confirmModal.show();
+    },
+    async handleConfirmModal(confirmed) {
       const self = this;
-      const confirmMessage = await self.sharedService.showConfirmationWindow(
-        self.$bvModal
-      );
-      if (confirmMessage) {
+      const { file, index } = self.fileToRemove;
+      console.log("handleConfirmModal: confirmed = " + confirmed + ", file = " + file + ", index = " + index);
+      // When clicked on 'Yes', and info of file to be removed are available remove file
+      if (confirmed && file) {
+        console.log("Removing file " + file + " at index " + index);
         self.showLoader = true;
         self.fileService
-          .removePrimaryFile(file.id)
+          .deletePrimaryFile(file.id)
           .then((success) => {
             self.showLoader = false;
             self.primaryFiles._embedded.primaryfiles.splice(index, 1);
-            self.$bvToast.toast(
+            self.$toast.success(
               "Content file has been removed successfully.",
-              self.sharedService.successToastConfig
+              self.sharedService.toastNotificationConfig
             );
           })
           .catch((err) => {
             self.showLoader = false;
-            self.$bvToast.toast(
+            self.$toast.error(
               "Unable to remove a content file. Please try again later!",
-              self.sharedService.erorrToastConfig
+              self.sharedService.toastNotificationConfig
             );
           });
+      } else {
+        console.log("Removing file action cancelled.");
+        // When clicked on 'No', hide the modal
+        this.$refs.confirmModal.hide();
       }
     },
   },
@@ -390,7 +440,10 @@ export default {
   },
   mounted() {
     const self = this;
-    if (self.selectedItem && self.selectedItem.id) self.getPrimaryFiles();
+    if (self.selectedItem && self.selectedItem.id) {
+      console.log("ItemFiles.mounted: callinging getPrimaryFiles on item " + self.selectedItem.id);
+      self.getPrimaryFiles();
+    }
   },
 };
 </script>
@@ -428,17 +481,5 @@ export default {
   background-color: #007bff;
   transition: width 0.6s ease;
 }
-.btn-primary {
-  background: #f4871e !important;
-  border-color: #f4871e !important;
-  color: #153c4d !important;
-}
 
-.btn-primary:hover,
-.btn-secondary:hover,
-.btn-outline-primary:hover {
-  background: #153c4d !important;
-  border-color: #153c4d v;
-  color: #fff !important;
-}
 </style>

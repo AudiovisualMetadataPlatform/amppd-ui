@@ -27,7 +27,7 @@ export default class SupplementService extends BaseService {
 
   async addSupplement(type, id, formData) {
     return await super
-      .post_auth(`/${type}/${id}/addSupplement`, formData)
+      .post_auth(`/${type}s/${id}/addSupplement`, formData)
       .then((result) => result.data);
   }
 
@@ -39,11 +39,11 @@ export default class SupplementService extends BaseService {
   async getSupplement(projection, type, id) {
     if (projection) {
       return await super
-        .get_auth(`/${type}/${id}?projection=detail`)
+        .get_auth(`/${type}s/${id}?projection=detail`)
         .then((result) => result.data);
     } else {
       return await super
-        .get_auth(`/${type}/${id}`)
+        .get_auth(`/${type}s/${id}`)
         .then((result) => result.data);
     }
   }
@@ -55,7 +55,7 @@ export default class SupplementService extends BaseService {
 
   async updateSupplement(type, id, obj) {
     return await super
-      .patch_auth(`/${type}/${id}`, obj)
+      .patch_auth(`/${type}s/${id}`, obj)
       .then((result) => result.data);
   }
 
@@ -66,7 +66,7 @@ export default class SupplementService extends BaseService {
 
   async replaceSupplementFile(type, id, fileData) {
     return await super
-      .post_auth(`/${type}/${id}/upload`, fileData)
+      .post_auth(`/${type}s/${id}/upload`, fileData)
       .then((result) => result.data);
   }
 
@@ -78,7 +78,7 @@ export default class SupplementService extends BaseService {
   async moveSupplementFile(currentSupType, currentSupId, parentId, parentType) {
     return await super
       .post_auth(
-        `/${currentSupType}/${currentSupId}/move?parentId=${parentId}&parentType=${parentType}`
+        `/${currentSupType}s/${currentSupId}/move?parentId=${parentId}&parentType=${parentType}`
       )
       .then((result) => result.data);
   }

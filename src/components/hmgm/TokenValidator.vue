@@ -5,11 +5,11 @@
       <template #body><div>
         Enter the editor password to view the page:
         <div class="form-input">
-          <label class="form-errors" v-if="invalidInput"
-            >Invalid password</label
-          >
+          <label class="form-errors form-label" v-if="!valid">
+            Invalid password
+          </label>
           <input
-            v-model="userToken"
+            v-model="userPass"
             type="text"
             v-on:keyup.enter="submitToken"
           />
@@ -52,21 +52,16 @@ export default {
   },
   data() {
     return {
-      userToken: null,
-      invalidInput: false,
+      userPass: null,
+      valid: true,
     };
   },
   computed: {},
   methods: {
     async submitToken() {
-      var valid = await auth_token_valid(
-        this.authString,
-        this.datasetUrl,
-        this.userToken
-      );
-      console.log(valid);
-      this.invalidInput = !valid;
-      if (valid) {
+      this.valid = await auth_token_valid(null, this.datasetUrl, this.userPass, this.authString);
+      console.log("TokenValidator.submitToken: valid = " + this.valid);
+      if (this.valid) {
         this.$emit("validAuth");
       }
     },
