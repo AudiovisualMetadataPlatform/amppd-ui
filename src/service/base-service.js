@@ -27,9 +27,13 @@ export default class BaseService{
             // location.reload(true);
             console.log("base-service.errorHandler: upon login timeout, location = " + path);
             router.push({ path: "/account/login", query: { returnUrl: path }});
+            // TODO below is an attempt to avoid error toast message upon timeout,
+            // but it doesn't work, instead it will result in no timeout and no redirect to login
+            // return Promise.accept(error);
         }
-
-        return Promise.reject(error);
+        else {
+            return Promise.reject(error);
+        }
     }
 
     get(url){
