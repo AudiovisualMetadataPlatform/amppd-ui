@@ -426,7 +426,8 @@ export default {
     },
     handleSeeHelp(ev) {
       ev.preventDefault();
-      const helpUrl = env.getEnv("VUE_APP_DOC_WORKFLOW_SUBMISSIONS_ERROR_HELP");
+      const helpUrl = env.getEnv("VUE_APP_DOC_SUPPLEMENTAL_FILES_IN_WORKFLOWS
+");
       window.open(helpUrl, "helpwindow", "width=800, height=500");
       return;
     },

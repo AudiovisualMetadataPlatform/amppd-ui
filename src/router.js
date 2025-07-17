@@ -328,7 +328,7 @@ var router = createRouter({
           { text: "Item Details", href: "#/collections/items/details" },
           { text: "Content File Details" },
         ],
-        helpUrl: env.getEnv("VUE_APP_DOC_PRIMARY_FILE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_CONTENT_FILE"),
       },
     },
     {
@@ -385,7 +385,7 @@ var router = createRouter({
           },
           { text: "Content File Details" },
         ],
-        helpUrl: env.getEnv("VUE_APP_DOC_PRIMARY_FILE"),
+        helpUrl: env.getEnv("VUE_APP_DOC_CONTENT_FILE"),
       },
     },
     {
