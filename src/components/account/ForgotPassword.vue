@@ -11,6 +11,15 @@
             <h2 class="card-title">Forgot Password</h2>
 
             <form class="needs-validation" ref="forgotPasswordForm">
+              <div class="mb-3" v-if="other_errors.length">
+                <label
+                  class="alert alert-danger" role="alert"
+                  v-for="error in other_errors"
+                  v-bind:key="error"
+                  >{{ error }}
+                </label>                
+              </div>
+
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email address</label>
                 <input
@@ -24,11 +33,6 @@
                 />
                 <div class="invalid-feedback" v-if="email_error.length">
                   {{ email_error }}
-                </div>
-                <div class="invalid-feedback" 
-                    v-for="error in other_errors"
-                    v-bind:key="error"
-                    >{{ error }}               
                 </div>
               </div>
 
@@ -90,15 +94,15 @@ export default {
     async sendEmail() {
       event.preventDefault();
       let self = this;
-    
-      // Only use validation on invalid input
-      const form = self.$refs.forgotPasswordForm;
-      form.classList.add("was-validated");
+      self.resend_email = false;
+      self.other_errors = [];
 
-      this.other_errors = [];
       if (!this.email || !this.email.includes("@")) {
         console.log("Email address blank or invalid");
         this.email_error = "Valid email address required.";
+        // Only use validation on invalid input
+        const form = self.$refs.forgotPasswordForm;
+        form.classList.add("was-validated");
       }
 
       if (this.email_error == "") {
