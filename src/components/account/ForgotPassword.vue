@@ -11,15 +11,6 @@
             <h2 class="card-title">Forgot Password</h2>
 
             <form class="needs-validation" ref="forgotPasswordForm">
-              <div class="mb-3" v-if="errors.other_errors.length">
-                <label
-                  class="invalid-feedback"
-                  v-for="error in errors.other_errors"
-                  v-bind:key="error"
-                  >{{ error }}</label
-                >
-              </div>
-
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email address</label>
                 <input
@@ -31,8 +22,13 @@
                   v-on:focus="onClick(`email`)"
                   required
                 />
-                <div class="invalid-feedback" v-if="errors.email_error.length">
-                  {{ errors.email_error }}
+                <div class="invalid-feedback" v-if="email_error.length">
+                  {{ email_error }}
+                </div>
+                <div class="invalid-feedback" 
+                    v-for="error in other_errors"
+                    v-bind:key="error"
+                    >{{ error }}               
                 </div>
               </div>
 
@@ -71,10 +67,8 @@ export default {
   },
   data() {
     return {
-      errors: {
-        email_error: "",
-        other_errors: [],
-      },
+      email_error: "",
+      other_errors: [],
       email: null,
       auth_status: false,
       reset_token: "",
@@ -96,33 +90,33 @@ export default {
     async sendEmail() {
       event.preventDefault();
       let self = this;
-      this.errors.other_errors = [];
-      if (!this.email) {
-        console.log("email blank");
-        this.errors.email_error = "Email required.";
-        // Only use validation on invalid input
-        const form = self.$refs.forgotPasswordForm;
-        form.classList.add("was-validated");
+    
+      // Only use validation on invalid input
+      const form = self.$refs.forgotPasswordForm;
+      form.classList.add("was-validated");
+
+      this.other_errors = [];
+      if (!this.email || !this.email.includes("@")) {
+        console.log("Email address blank or invalid");
+        this.email_error = "Valid email address required.";
       }
 
-      if (this.errors.email_error == "") {
+      if (this.email_error == "") {
         await accountService
           .sendForgotPswdEmailRequest(this.email)
           .then((response) => {
             self.auth_status = response.success;
-            self.errors.other_errors = response.errors;
+            self.other_errors = response.errors;
           })
           .catch((e) => {
-            console.log(e);
+            console.log("Error while sending sendForgotPswdEmailRequest", e);
           });
-        console.log(
-          "auth status is:" +
-            self.auth_status +
-            " and token is:" +
-            self.reset_token
-        );
-        if (this.errors.other_errors.length == 0 && self.auth_status) {
+        if (this.other_errors.length == 0 && self.auth_status) {
           this.resend_email = true;
+          console.log("Forgot password emali sent successfully.");
+        }
+        else {
+          console.log("sendForgotPswdEmailRequest response error: " + self.other_errors[0]);
         }
       }
     },
@@ -133,7 +127,7 @@ export default {
       // Reset form validation on focus
       const form = this.$refs.forgotPasswordForm;
       form.classList.remove("was-validated");
-      if (data == "email") this.errors.email_error = "";
+      if (data == "email") this.email_error = "";
     },
   },
 
