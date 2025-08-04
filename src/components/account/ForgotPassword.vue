@@ -95,19 +95,23 @@ export default {
       event.preventDefault();
       let self = this;
       self.resend_email = false;
+      self.email_error = "";
       self.other_errors = [];
 
-      if (!this.email || !this.email.includes("@")) {
-        console.log("Email address blank or invalid");
-        this.email_error = "Valid email address required.";
+      // TODO below regexp validation doesn't trigger error msg label display=none to be updated to not none in some cases, for foo@bar is tested invalid, but error label display = none.
+      // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      // if (!self.email || !emailRegex.test(self.email)) {
+      if (!self.email || !self.email.includes("@")) {
+        console.log("Validation error: Email address is blank or invalid!");      
+        self.email_error = "Valid email address required.";
         // Only use validation on invalid input
         const form = self.$refs.forgotPasswordForm;
         form.classList.add("was-validated");
       }
 
-      if (this.email_error == "") {
+      if (self.email_error == "") {
         await accountService
-          .sendForgotPswdEmailRequest(this.email)
+          .sendForgotPswdEmailRequest(self.email)
           .then((response) => {
             self.auth_status = response.success;
             self.other_errors = response.errors;
@@ -115,8 +119,8 @@ export default {
           .catch((e) => {
             console.log("Error while sending sendForgotPswdEmailRequest", e);
           });
-        if (this.other_errors.length == 0 && self.auth_status) {
-          this.resend_email = true;
+        if (self.other_errors.length == 0 && self.auth_status) {
+          self.resend_email = true;
           console.log("Forgot password emali sent successfully.");
         }
         else {
