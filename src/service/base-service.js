@@ -18,7 +18,9 @@ export default class BaseService{
     }
 
     errorHandler(error) {
-        // only redirect to login for timeout requests, not for user login request
+        // only redirect to login for timeout requests, not for user login request, which is checked , ideally by the request URL, 
+        // but conveniently here, by whether currentUser is populated. The only exception corner case would be if a user is already login, 
+        // but attempt another login and fails. In reality, this would never happen, because the Login page smartly calls logout upon mounted,
         if ([401, 403].indexOf(error.status) !== -1 && accountService.currentUser) {
             // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
             let path = location.hash.substring(1);
