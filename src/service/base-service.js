@@ -18,7 +18,8 @@ export default class BaseService{
     }
 
     errorHandler(error) {
-        if ([401, 403].indexOf(error.status) !== -1) {
+        // only redirect to login for timeout requests, not for user login request
+        if ([401, 403].indexOf(error.status) !== -1 && accountService.currentUser) {
             // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
             let path = location.hash.substring(1);
             accountService.logout();
