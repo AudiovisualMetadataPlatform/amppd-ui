@@ -154,6 +154,7 @@ export default {
         console.log("Login.checkForm: Current user: ", currentUser);
         if(currentUser === null) {
           self.errors.other_errors.push("Email and password do not match");
+          console.log("Login failed.");
           return;
         } else if (currentUser?.token) {
           self.isAuthenticated = true;
