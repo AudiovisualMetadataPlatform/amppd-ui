@@ -11,13 +11,13 @@
             <h2 class="card-title">Forgot Password</h2>
 
             <form class="needs-validation" ref="forgotPasswordForm">
-              <div class="mb-3" v-if="errors.other_errors.length">
+              <div class="mb-3" v-if="other_errors.length">
                 <label
-                  class="invalid-feedback"
-                  v-for="error in errors.other_errors"
+                  class="alert alert-danger" role="alert"
+                  v-for="error in other_errors"
                   v-bind:key="error"
-                  >{{ error }}</label
-                >
+                  >{{ error }}
+                </label>                
               </div>
 
               <div class="mb-3">
@@ -31,8 +31,8 @@
                   v-on:focus="onClick(`email`)"
                   required
                 />
-                <div class="invalid-feedback" v-if="errors.email_error.length">
-                  {{ errors.email_error }}
+                <div class="invalid-feedback" v-if="email_error.length">
+                  {{ email_error }}
                 </div>
               </div>
 
@@ -71,10 +71,8 @@ export default {
   },
   data() {
     return {
-      errors: {
-        email_error: "",
-        other_errors: [],
-      },
+      email_error: "",
+      other_errors: [],
       email: null,
       auth_status: false,
       reset_token: "",
@@ -96,33 +94,37 @@ export default {
     async sendEmail() {
       event.preventDefault();
       let self = this;
-      this.errors.other_errors = [];
-      if (!this.email) {
-        console.log("email blank");
-        this.errors.email_error = "Email required.";
+      self.resend_email = false;
+      self.email_error = "";
+      self.other_errors = [];
+
+      // TODO below regexp validation doesn't trigger error msg label display=none to be updated to not none in some cases, for foo@bar is tested invalid, but error label display = none.
+      // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      // if (!self.email || !emailRegex.test(self.email)) {
+      if (!self.email || !self.email.includes("@")) {
+        console.log("Validation error: Email address is blank or invalid!");      
+        self.email_error = "Valid email address required.";
         // Only use validation on invalid input
         const form = self.$refs.forgotPasswordForm;
         form.classList.add("was-validated");
       }
 
-      if (this.errors.email_error == "") {
+      if (self.email_error == "") {
         await accountService
-          .sendForgotPswdEmailRequest(this.email)
+          .sendForgotPswdEmailRequest(self.email)
           .then((response) => {
             self.auth_status = response.success;
-            self.errors.other_errors = response.errors;
+            self.other_errors = response.errors;
           })
           .catch((e) => {
-            console.log(e);
+            console.log("Error while sending sendForgotPswdEmailRequest", e);
           });
-        console.log(
-          "auth status is:" +
-            self.auth_status +
-            " and token is:" +
-            self.reset_token
-        );
-        if (this.errors.other_errors.length == 0 && self.auth_status) {
-          this.resend_email = true;
+        if (self.other_errors.length == 0 && self.auth_status) {
+          self.resend_email = true;
+          console.log("Forgot password emali sent successfully.");
+        }
+        else {
+          console.log("sendForgotPswdEmailRequest response error: " + self.other_errors[0]);
         }
       }
     },
@@ -133,7 +135,7 @@ export default {
       // Reset form validation on focus
       const form = this.$refs.forgotPasswordForm;
       form.classList.remove("was-validated");
-      if (data == "email") this.errors.email_error = "";
+      if (data == "email") this.email_error = "";
     },
   },
 

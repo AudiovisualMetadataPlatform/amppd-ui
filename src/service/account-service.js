@@ -84,8 +84,7 @@ function login(username, password) {
           return this.currentUser;
       })
       .catch(error => {
-        console.log("Error");
-        console.log(error);
+        console.log("Error with authentication request: ", error);
         return null;
       });
 }
